@@ -15,7 +15,7 @@ class PrimaryButtonAuthentication {
       width: double.infinity,
       child: TextButton(
         onPressed: () {
-          // TODO login logic
+          // TODO login/register logic
         }, 
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Constant.orange40),
@@ -26,8 +26,8 @@ class PrimaryButtonAuthentication {
           )
         ),
         child: isLoginPage 
-          ? Text("Login", style: _style,) 
-          : Text("Sign up", style: _style,),
+          ? const Text("Login", style: _style,) 
+          : const Text("Sign up", style: _style,),
       ),
     );
   }

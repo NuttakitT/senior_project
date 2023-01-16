@@ -3,11 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/assets/constant.dart';
 
 class AdditionalLoginButton {
-  static TextStyle _style(bool isFacebookLogin) => const TextStyle(
+  static TextStyle _style(bool isFacebookLogin) => TextStyle(
     fontFamily: Constant.font,
     fontWeight: FontWeight.w400,
     fontSize: 16,
-    color: Colors.white
+    color: isFacebookLogin ? Colors.white : Constant.whiteBlack60
   );
 
   static Widget widget(bool isFacebookLogin) {
@@ -15,7 +15,9 @@ class AdditionalLoginButton {
       height: 40,
       width: double.infinity,
       child: TextButton(
-        onPressed: () {}, 
+        onPressed: () {
+          // TODO additional login logic
+        }, 
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
             isFacebookLogin 
@@ -33,7 +35,8 @@ class AdditionalLoginButton {
           children: isFacebookLogin 
             ? [
                 const Icon(
-                  FontAwesomeIcons.facebook
+                  FontAwesomeIcons.facebook,
+                  color: Colors.white,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.5),
@@ -45,14 +48,15 @@ class AdditionalLoginButton {
               ]
             : [
                 const Icon(
-                  FontAwesomeIcons.google
+                  FontAwesomeIcons.google,
+                  color: Colors.black,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.5),
                   child: Text(
-                      "Login with Google", 
-                      style: _style(true),
-                    ),
+                    "Login with Google", 
+                    style: _style(false),
+                  ),
                 ) 
               ]
         )

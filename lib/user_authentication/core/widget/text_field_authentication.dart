@@ -40,7 +40,7 @@ class TextFieldAuthentication {
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     onPressed: () {
-                      // TODO state management
+                      // TODO state management password visibility
                     }, 
                     icon: const Icon(
                       Icons.visibility,
