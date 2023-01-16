@@ -1,13 +1,10 @@
-import 'gender.dart';
-import 'role.dart';
-
 class AppUser {
   late String id;
-  late Role role;
+  late int role;
   late String name;
   late String email;
   late String phone;
-  late Gender gender;
+  late int gender;
   late DateTime birthday;
   String? profileImageUrl;
   String? linkId;
@@ -23,23 +20,29 @@ class AppUser {
     gender = detail["gender"]!;
     role = detail["role"]!;
     birthday = detail["birthday"]!;
-    if (detail.keys.contains("profileImageUrl")) {
-      profileImageUrl = detail["profileImageUrl"]!;
-    }
-    if (detail.keys.contains("linkId")) {
-      linkId = detail["linkId"]!;
-    }
+    profileImageUrl = detail["profileImageUrl"]!;
+    linkId = detail["linkId"]!;
   }
 
   String get getName => name;
-  String get getRole => role.toString();
   String get getEmail => email;
   String get getBirthday => birthday.toString();
   String get getPhone => phone;
   String? get getProfileImageUrl => profileImageUrl;
   String? get getLinkId => linkId;
+  String get getRole {
+    if(role == 0) return "admin";
+    if(role == 1) return "student";
+    return "teacher";
+  }
+  String get getGender {
+    if(gender == 0) return "male";
+    return "female";
+  }
+
   set setProfileImageUrl(String url) => profileImageUrl = url;
   set setBirthday(DateTime birthday) => this.birthday = birthday;
   set setName(String name) => this.name = name;
   set setPhone(String phone) => this.phone = phone;
+  set setGender(int gender) => this.gender = gender;
 }
