@@ -14,6 +14,8 @@ class Constant {
   static const whiteBlack40 = Color(0xFF9C9FA1);
   static const whiteBlack50 = Color(0xFF838689);
   static const whiteBlack60 = Color(0xFF6B6E71);
+  static const whiteBlack80 = Color(0xFF393E42);
+  static const whiteBlack90 = Color(0xFF21262B);
 
   static const orange400B = TextStyle(
     fontWeight: FontWeight.bold, 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 import 'package:senior_project/user_authentication/login_page/view/desktop/widget/additional_login_button_desktop.dart';
 import 'package:senior_project/user_authentication/login_page/view/desktop/widget/back_plate_desktop.dart';
-import 'package:senior_project/user_authentication/login_page/view/desktop/widget/page_indicator_desktop.dart';
+import 'package:senior_project/user_authentication/core/desktop/widget/page_indicator_desktop.dart';
 import 'package:senior_project/user_authentication/login_page/view/desktop/widget/primary_button_authentication_desktop.dart';
 import 'package:senior_project/user_authentication/login_page/view/desktop/widget/text_field_authentication_desktop.dart';
 

@@ -11,11 +11,11 @@ class PageIndicatorDesktop {
           height: 48,
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
             border: Border.all(
               color: pageState ? Constant.orange40 : Constant.whiteBlack20, 
               width: 2
             ),
+            shape: BoxShape.circle,
             color: pageState ? Colors.white : Constant.whiteBlack15,
           ),
           child: Container(
@@ -23,8 +23,8 @@ class PageIndicatorDesktop {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
               color: pageState ? Constant.orange40 : Constant.whiteBlack15,
+              shape: BoxShape.circle,
             ),
             child: Text(
               pageNumber,
