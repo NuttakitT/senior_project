@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/assets/constant.dart';
 
-class AdditionalLoginButton {
+class AdditionalLoginButtonDesktop {
   static TextStyle _style(bool isFacebookLogin) => TextStyle(
     fontFamily: Constant.font,
     fontWeight: FontWeight.w400,

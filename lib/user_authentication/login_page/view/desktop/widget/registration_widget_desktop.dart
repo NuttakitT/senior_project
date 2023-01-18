@@ -1,14 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
-import 'package:senior_project/user_authentication/core/widget/additional_login_button.dart';
-import 'package:senior_project/user_authentication/core/widget/back_plate.dart';
-import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
-import 'package:senior_project/user_authentication/core/widget/primary_button_authentication.dart';
-import 'package:senior_project/user_authentication/core/widget/text_field_authentication.dart';
+import 'package:senior_project/user_authentication/core/widget/desktop/additional_login_button_desktop.dart';
+import 'package:senior_project/user_authentication/core/widget/desktop/back_plate_desktop.dart';
+import 'package:senior_project/user_authentication/core/widget/desktop/page_indicator_desktop.dart';
+import 'package:senior_project/user_authentication/core/widget/desktop/primary_button_authentication_desktop.dart';
+import 'package:senior_project/user_authentication/core/widget/desktop/text_field_authentication_desktop.dart';
 
-class RegistrationWidget extends StatelessWidget {
-  const RegistrationWidget({super.key});
+class RegistrationWidgetDesktop extends StatelessWidget {
+  const RegistrationWidgetDesktop({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +16,8 @@ class RegistrationWidget extends StatelessWidget {
 
     return Column(
       children: [
-        PageIndicator.widget(),
-        BackPlateWidget.widget( 
+        PageIndicatorDesktop.widget(),
+        BackPlateWidgetDesktop.widget( 
           context,
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -47,19 +47,19 @@ class RegistrationWidget extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 24),
-                child: TextFieldAuthentication.widget("Username", false),
+                child: TextFieldAuthenticationDesktop.widget("Username", false),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: TextFieldAuthentication.widget("Email", false),
+                child: TextFieldAuthenticationDesktop.widget("Email", false),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: TextFieldAuthentication.widget("Password", true),
+                child: TextFieldAuthenticationDesktop.widget("Password", true),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 56),
-                child: PrimaryButtonAuthentication.widget(true)
+                child: PrimaryButtonAuthenticationDesktop.widget(true)
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 84),
@@ -97,11 +97,11 @@ class RegistrationWidget extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 43),
-                child: AdditionalLoginButton.widget(true),
+                child: AdditionalLoginButtonDesktop.widget(true),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: AdditionalLoginButton.widget(false),
+                child: AdditionalLoginButtonDesktop.widget(false),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),

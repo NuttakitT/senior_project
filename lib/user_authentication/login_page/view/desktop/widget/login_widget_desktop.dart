@@ -1,19 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
-import 'package:senior_project/user_authentication/core/widget/additional_login_button.dart';
-import 'package:senior_project/user_authentication/core/widget/back_plate.dart';
-import 'package:senior_project/user_authentication/core/widget/primary_button_authentication.dart';
-import 'package:senior_project/user_authentication/core/widget/text_field_authentication.dart';
+import 'package:senior_project/user_authentication/core/widget/desktop/additional_login_button_desktop.dart';
+import 'package:senior_project/user_authentication/core/widget/desktop/back_plate_desktop.dart';
+import 'package:senior_project/user_authentication/core/widget/desktop/primary_button_authentication_desktop.dart';
+import 'package:senior_project/user_authentication/core/widget/desktop/text_field_authentication_desktop.dart';
 
-class LoginWidget extends StatelessWidget {
-  const LoginWidget({super.key});
+class LoginWidgetDesktop extends StatelessWidget {
+  const LoginWidgetDesktop({super.key});
 
   @override
   Widget build(BuildContext context) {
     String welcomeText = "Welcome back!  Please login to your account.\nSo you can send task to admin.";
 
-    return BackPlateWidget.widget( 
+    return BackPlateWidgetDesktop.widget( 
       context,
       Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -43,15 +43,15 @@ class LoginWidget extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 56),
-            child: TextFieldAuthentication.widget("Username or Mail", false),
+            child: TextFieldAuthenticationDesktop.widget("Username or Mail", false),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: TextFieldAuthentication.widget("Password", true),
+            child: TextFieldAuthenticationDesktop.widget("Password", true),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 64),
-            child: PrimaryButtonAuthentication.widget(true)
+            child: PrimaryButtonAuthenticationDesktop.widget(true)
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16),
@@ -107,11 +107,11 @@ class LoginWidget extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 43),
-            child: AdditionalLoginButton.widget(true),
+            child: AdditionalLoginButtonDesktop.widget(true),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: AdditionalLoginButton.widget(false),
+            child: AdditionalLoginButtonDesktop.widget(false),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16),

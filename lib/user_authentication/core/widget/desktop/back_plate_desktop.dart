@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 
 // TODO check size when has templete
-class BackPlateWidget {
+class BackPlateWidgetDesktop {
   static Widget widget(BuildContext context, Widget child) {
     return Container(
       width: 502,

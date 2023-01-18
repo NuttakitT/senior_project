@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 
-class PrimaryButtonAuthentication {
+class PrimaryButtonAuthenticationDesktop {
   static const TextStyle _style =  TextStyle(
     fontFamily: Constant.font,
     fontWeight: FontWeight.w600,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 
 // TODO fix this to listen state from view model
-class PageIndicator {
+class PageIndicatorDesktop {
   static Widget _indicatorIcon(String pageNumber, String pageName, bool pageState) {
     return Column(
       children: [
