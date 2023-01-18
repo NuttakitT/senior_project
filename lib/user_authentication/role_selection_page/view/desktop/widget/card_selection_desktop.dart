@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/user_authentication/role_selection_page/core/assets/text_constant.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/desktop/widget/selection_idicator.dart';
 
 class CardSelectionDesktop extends StatefulWidget {
@@ -77,19 +78,19 @@ class _CardSelectionDesktopState extends State<CardSelectionDesktop> {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 16),
                                     child: Text(
-                                      "\u00b7 Send help-desk task to admin.",
+                                      TextConstant.studentFeatureText[0],
                                       style: subStyle,
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 16),
                                     child: Text(
-                                      "\u00b7 Frequently Ask Questions",
+                                      TextConstant.studentFeatureText[2],
                                       style: subStyle,
                                     ),
                                   ),
                                   Text(
-                                    "\u00b7 Contact teacher with social media.",
+                                    TextConstant.studentFeatureText[4],
                                     style: subStyle,
                                   ),
                                 ],
@@ -101,12 +102,12 @@ class _CardSelectionDesktopState extends State<CardSelectionDesktop> {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 16),
                                   child: Text(
-                                    "\u00b7 Community Board.",
+                                    TextConstant.studentFeatureText[1],
                                     style: subStyle,
                                   ),
                                 ),
                                 Text(
-                                  "\u00b7 Booking CPE rooms.",
+                                  TextConstant.studentFeatureText[3],
                                   style: subStyle,
                                 ),
                               ],
@@ -120,12 +121,12 @@ class _CardSelectionDesktopState extends State<CardSelectionDesktop> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: Text(
-                              "\u00b7 All Features like a role “Student”.",
+                              TextConstant.teacherFeatureText[0],
                               style: subStyle,
                             ),
                           ),
                           Text(
-                            "\u00b7 Can link your profile with “Contact Card” for update card.",
+                            TextConstant.teacherFeatureText[1],
                             style: subStyle,
                           ),
                         ],

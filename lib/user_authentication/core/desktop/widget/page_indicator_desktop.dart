@@ -3,7 +3,8 @@ import 'package:senior_project/assets/constant.dart';
 
 // TODO fix this to listen state from view model
 class PageIndicator extends StatefulWidget {
-  const PageIndicator({super.key});
+  final double width;
+  const PageIndicator({super.key, required this.width});
 
   @override
   State<PageIndicator> createState() => _PageIndicatorState();
@@ -68,7 +69,7 @@ class _PageIndicatorState extends State<PageIndicator> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Container(
-            width: 200,
+            width: widget.width,
             height: 2,
             color: Constant.whiteBlack15, // TODO add state listener to this line
           ),
