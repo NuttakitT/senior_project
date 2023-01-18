@@ -50,7 +50,7 @@ class _CardSelectionDesktopState extends State<CardSelectionDesktop> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SelectionIdicator.widget(true), // TODO listen state form view model
+            SelectionIdicator(isSelected: isSelectedCard), // TODO listen state form view model
             Padding(
               padding: const EdgeInsets.only(left: 24),
               child: Column(

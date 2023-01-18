@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 
 // TODO fix this to listen state from view model
-class PageIndicatorDesktop {
+class PageIndicator extends StatefulWidget {
+  const PageIndicator({super.key});
+
+  @override
+  State<PageIndicator> createState() => _PageIndicatorState();
+}
+
+class _PageIndicatorState extends State<PageIndicator> {
   static Widget _indicatorIcon(String pageNumber, String pageName, bool pageState) {
     return Column(
       children: [
@@ -53,7 +60,8 @@ class PageIndicatorDesktop {
     );
   }
 
-  static Widget widget() {
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       alignment: const Alignment(0, -0.45),
       children: [

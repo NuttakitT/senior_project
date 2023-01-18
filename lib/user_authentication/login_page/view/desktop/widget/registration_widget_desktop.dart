@@ -16,7 +16,7 @@ class RegistrationWidgetDesktop extends StatelessWidget {
 
     return Column(
       children: [
-        PageIndicatorDesktop.widget(),
+        const PageIndicator(), // TODO add padding
         BackPlateWidgetDesktop.widget( 
           context,
           Column(
