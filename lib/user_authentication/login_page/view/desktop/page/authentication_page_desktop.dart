@@ -10,7 +10,7 @@ class AuthenticationPageDesktop extends StatefulWidget {
 class _AuthenticationPageDesktop extends State<AuthenticationPageDesktop> {
   @override
   Widget build(BuildContext context) {
-    // TODO move this to view model
+    // TODO desktop templete 
     return Container();
   }
 }
