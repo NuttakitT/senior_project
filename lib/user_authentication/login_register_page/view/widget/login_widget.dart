@@ -6,16 +6,12 @@ import 'package:senior_project/user_authentication/login_register_page/view/widg
 import 'package:senior_project/user_authentication/login_register_page/view/widget/text_field_authentication.dart';
 
 class LoginWidget extends StatelessWidget {
-  const LoginWidget({super.key});
-
-  // TODO edit breakpoint to view model
-  static const double mobileWidthBreakpoint = 360;
+  final bool isMobileSite;
+  const LoginWidget({super.key, required this.isMobileSite});
 
   @override
   Widget build(BuildContext context) {
     String welcomeText = "Welcome back! Please login to your account.\nSo you can send task to admin.";
-    // TODO edit breakpoint to view model
-    final bool isMobileSite = MediaQuery.of(context).size.width <= mobileWidthBreakpoint; 
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

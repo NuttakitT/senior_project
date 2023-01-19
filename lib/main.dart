@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/page/authentication_page.dart';
-import 'package:senior_project/user_authentication/role_selection_page/view/desktop/page/role_selection_page_desktop.dart';
+import 'package:senior_project/user_authentication/role_selection_page/view/page/role_selection_page.dart';
 import 'firebase_options.dart';
 // * test ceck web on desktop/mobile size
 // * import 'package:flutter/foundation.dart';

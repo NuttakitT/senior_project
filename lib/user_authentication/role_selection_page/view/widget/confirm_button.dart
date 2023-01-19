@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 
-class RoleSelctionButton {
-  static Widget button(bool isConfirmButton, double width) {
+class ConfirmButton {
+  static Widget button(bool isConfirmButton, bool isMobileSite) {
     return SizedBox(
-      width: width,
+      width: isMobileSite ? 140 : 180,
       height: 40,
       child: TextButton(
         onPressed: () {
@@ -24,21 +24,21 @@ class RoleSelctionButton {
           )
         ),
         child: isConfirmButton
-          ? const Text(
+          ? Text(
             "Confirm",
             style: TextStyle(
               fontFamily: Constant.font,
               fontWeight: FontWeight.w600,
-              fontSize: 18,
+              fontSize: isMobileSite ? 16 : 18,
               color: Colors.white
             ),
           )
-          : const Text(
+          : Text(
             "Back",
             style: TextStyle(
               fontFamily: Constant.font,
               fontWeight: FontWeight.w600,
-              fontSize: 18,
+              fontSize: isMobileSite ? 16 : 18,
               color: Constant.orange40
             ),
           ),

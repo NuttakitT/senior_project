@@ -2,21 +2,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/additional_login_button.dart';
-import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/primary_button_authentication.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/text_field_authentication.dart';
 
 class RegistrationWidget extends StatelessWidget {
-  const RegistrationWidget({super.key});
-
-  // TODO edit breakpoint to view model
-  static const double mobileWidthBreakpoint = 360;
+  final bool isMobileSite;
+  const RegistrationWidget({super.key, required this.isMobileSite});
 
   @override
   Widget build(BuildContext context) {
     String welcomeText = "Let’s get you to my website and\nyou can send the task to admin for help.";
-    // TODO edit breakpoint to view model
-    final bool isMobileSite = MediaQuery.of(context).size.width <= mobileWidthBreakpoint;
 
     return Column(
       children: [

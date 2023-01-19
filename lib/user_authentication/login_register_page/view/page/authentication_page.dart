@@ -13,7 +13,7 @@ class AuthenticationPage extends StatefulWidget {
 
 class _AuthenticationPage extends State<AuthenticationPage> {
   // TODO edit breakpoint to view model
-  static const double mobileWidthBreakpoint = 360;
+  static const double mobileWidthBreakpoint = 430;
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +29,10 @@ class _AuthenticationPage extends State<AuthenticationPage> {
             child: Column(
               children: [
                 PageIndicator(
-                  width: isMobileSite ? 150 : 200, 
+                  width: isMobileSite ? 120 : 200, 
                   isMobileSize: isMobileSite,
                 ),
-                const RegistrationWidget()
+                RegistrationWidget(isMobileSite: isMobileSite,)
               ],
             ),
           );
@@ -46,7 +46,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
             BackPlateWidgetDesktop.widget(
               context, 
               {"width": 502, "height": MediaQuery.of(context).size.height * 0.8,},
-              const RegistrationWidget()
+              RegistrationWidget(isMobileSite: isMobileSite,)
             ),
           ],
         );
@@ -65,7 +65,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
 //                   width: isMobileSite ? 150 : 200, 
 //                   isMobileSize: isMobileSite,
 //                 ),
-//                 const RegistrationWidget()
+//                 const RegistrationWidget(isMobileSite: isMobileSite,)
 //               ],
 //             ),
 //           );
@@ -78,7 +78,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
 //             ),
 //             BackPlateWidgetDesktop.widget(
 //               context, 
-//               const RegistrationWidget()
+//               const RegistrationWidget(isMobileSite: isMobileSite,)
 //             ),
 //           ],
 //         );
@@ -87,10 +87,10 @@ class _AuthenticationPage extends State<AuthenticationPage> {
 // if (isMobileSite) {
 //           return const Padding(
 //             padding: EdgeInsets.symmetric(horizontal: 16),
-//             child: LoginWidget(),
+//             child: LoginWidget(isMobileSite: isMobileSite,),
 //           );
 //         }
 //         return BackPlateWidgetDesktop.widget(
 //           context, 
-//           const LoginWidget()
+//           const LoginWidget(isMobileSite: isMobileSite,)
 //         );
