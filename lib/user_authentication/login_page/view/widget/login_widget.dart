@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
-import 'package:senior_project/user_authentication/login_page/view/desktop/widget/additional_login_button.dart';
-import 'package:senior_project/user_authentication/login_page/view/desktop/widget/primary_button_authentication.dart';
-import 'package:senior_project/user_authentication/login_page/view/desktop/widget/text_field_authentication.dart';
+import 'package:senior_project/user_authentication/login_page/view/widget/additional_login_button.dart';
+import 'package:senior_project/user_authentication/login_page/view/widget/primary_button_authentication.dart';
+import 'package:senior_project/user_authentication/login_page/view/widget/text_field_authentication.dart';
 
 class LoginWidget extends StatelessWidget {
   const LoginWidget({super.key});

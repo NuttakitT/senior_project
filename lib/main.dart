@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:senior_project/user_authentication/login_page/view/desktop/page/authentication_page.dart';
+import 'package:senior_project/user_authentication/login_page/view/page/authentication_page.dart';
 import 'firebase_options.dart';
 // * test ceck web on desktop/mobile size
 // * import 'package:flutter/foundation.dart';
