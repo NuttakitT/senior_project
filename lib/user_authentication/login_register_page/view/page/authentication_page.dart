@@ -29,7 +29,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
             child: Column(
               children: [
                 PageIndicator(
-                  width: isMobileSite ? 120 : 200, 
+                  width: isMobileSite ? 160 : 200, 
                   isMobileSize: isMobileSite,
                 ),
                 RegistrationWidget(isMobileSite: isMobileSite,)
@@ -40,7 +40,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
         return Column(
           children: [
             PageIndicator(
-              width: isMobileSite ? 150 : 200, 
+              width: isMobileSite ? 160 : 200, 
               isMobileSize: isMobileSite,
             ),
             BackPlateWidgetDesktop.widget(
@@ -62,7 +62,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
 //             child: Column(
 //               children: [
 //                 PageIndicator(
-//                   width: isMobileSite ? 150 : 200, 
+//                   width: isMobileSite ? 178 : 200, 
 //                   isMobileSize: isMobileSite,
 //                 ),
 //                 const RegistrationWidget(isMobileSite: isMobileSite,)
@@ -73,7 +73,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
 //         return Column(
 //           children: [
 //             PageIndicator(
-//               width: isMobileSite ? 150 : 200, 
+//               width: isMobileSite ? 178 : 200, 
 //               isMobileSize: isMobileSite,
 //             ),
 //             BackPlateWidgetDesktop.widget(
@@ -81,16 +81,4 @@ class _AuthenticationPage extends State<AuthenticationPage> {
 //               const RegistrationWidget(isMobileSite: isMobileSite,)
 //             ),
 //           ],
-//         );
-
-// * login page
-// if (isMobileSite) {
-//           return const Padding(
-//             padding: EdgeInsets.symmetric(horizontal: 16),
-//             child: LoginWidget(isMobileSite: isMobileSite,),
-//           );
-//         }
-//         return BackPlateWidgetDesktop.widget(
-//           context, 
-//           const LoginWidget(isMobileSite: isMobileSite,)
 //         );
