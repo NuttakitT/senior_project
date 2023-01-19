@@ -20,6 +20,7 @@ class RoleSelectionPage extends StatelessWidget {
           width: double.infinity,
           child: Text(
             "Selec Your Role",
+            textAlign: isMobileSite ? TextAlign.center : TextAlign.start,
             style: TextStyle(
               fontFamily: Constant.font,
               fontWeight: FontWeight.w700,
