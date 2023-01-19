@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 
-class TextFieldAuthenticationDesktop {
+class TextFieldAuthentication {
   static Widget widget(String hintText, bool isPasswordField) {
     return Container(
       alignment: Alignment.centerLeft,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
-import 'package:senior_project/user_authentication/core/desktop/widget/page_indicator_desktop.dart';
+import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/desktop/widget/card_selection_desktop.dart';
 import 'package:senior_project/user_authentication/role_selection_page/core/widget/role_selection_confirm_button.dart';
 
@@ -18,7 +18,7 @@ class RoleSelectionPage extends StatelessWidget {
         children: [
           const Padding(
             padding: EdgeInsets.only(bottom: 80),
-            child: PageIndicator(width: 280,),
+            child: PageIndicator(width: 280, isMobileSize: false,),
           ),
           const SizedBox(
             width: double.infinity,

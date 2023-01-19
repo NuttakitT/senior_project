@@ -4,19 +4,29 @@ import 'package:senior_project/assets/constant.dart';
 // TODO fix this to listen state from view model
 class PageIndicator extends StatefulWidget {
   final double width;
-  const PageIndicator({super.key, required this.width});
+  final bool isMobileSize;
+  const PageIndicator({
+    super.key, 
+    required this.width, 
+    required this.isMobileSize
+  });
 
   @override
   State<PageIndicator> createState() => _PageIndicatorState();
 }
 
 class _PageIndicatorState extends State<PageIndicator> {
-  static Widget _indicatorIcon(String pageNumber, String pageName, bool pageState) {
+  static Widget _indicatorIcon(
+    String pageNumber, 
+    String pageName, 
+    bool pageState,
+    bool isMobileSize
+    ) {
     return Column(
       children: [
         Container(
-          width: 48,
-          height: 48,
+          width: isMobileSize ? 28 : 48,
+          height: isMobileSize ? 28 : 48,
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             border: Border.all(
@@ -28,19 +38,19 @@ class _PageIndicatorState extends State<PageIndicator> {
           ),
           child: Container(
             alignment: Alignment.center,
-            width: 44,
-            height: 44,
+            width: isMobileSize ? 24 : 44,
+            height: isMobileSize ? 24 : 44,
             decoration: BoxDecoration(
               color: pageState ? Constant.orange40 : Constant.whiteBlack15,
               shape: BoxShape.circle,
             ),
             child: Text(
               pageNumber,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontFamily: Constant.font,
                 fontWeight: FontWeight.w600,
-                fontSize: 24
+                fontSize: isMobileSize ? 16 : 24
               ),
             ),
           ),
@@ -53,7 +63,7 @@ class _PageIndicatorState extends State<PageIndicator> {
               color: pageState ? Constant.orange50 : Constant.whiteBlack40,
               fontFamily: Constant.font,
               fontWeight: FontWeight.w600,
-              fontSize: 18
+              fontSize: isMobileSize ? 14 : 18
             ),
           ),
         )
@@ -64,7 +74,7 @@ class _PageIndicatorState extends State<PageIndicator> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: const Alignment(0, -0.45),
+      alignment: Alignment(0, widget.isMobileSize ? -0.5 : -0.45),
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -81,11 +91,11 @@ class _PageIndicatorState extends State<PageIndicator> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: _indicatorIcon("1", "Login", true)
+                child: _indicatorIcon("1", "Login", true, widget.isMobileSize)
               ),
               const Divider(),
               Expanded(
-                child: _indicatorIcon("2", "Selecte role", false)
+                child: _indicatorIcon("2", "Selecte role", false, widget.isMobileSize)
               )
             ],
           ),

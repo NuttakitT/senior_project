@@ -6,7 +6,7 @@ class BackPlateWidgetDesktop {
   static Widget widget(BuildContext context, Widget child) {
     return Container(
       width: 502,
-      height: MediaQuery.of(context).size.height * 0.83,
+      height: MediaQuery.of(context).size.height * 0.8,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       decoration: BoxDecoration(
         color: Constant.orange5,

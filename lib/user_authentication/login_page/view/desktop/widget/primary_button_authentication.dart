@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 
-class PrimaryButtonAuthenticationDesktop {
-  static const TextStyle _style =  TextStyle(
+class PrimaryButtonAuthentication {
+  static TextStyle _style(bool isMobileSite) =>  TextStyle(
     fontFamily: Constant.font,
     fontWeight: FontWeight.w600,
-    fontSize: 20,
+    fontSize: isMobileSite ? 16 : 20,
     color: Colors.white
   );
 
-  static Widget widget(bool isLoginPage) {
+  static Widget widget(bool isLoginPage, bool isMobileSite) {
     return SizedBox(
       height: 40,
       width: double.infinity,
@@ -26,8 +26,8 @@ class PrimaryButtonAuthenticationDesktop {
           )
         ),
         child: isLoginPage 
-          ? const Text("Login", style: _style,) 
-          : const Text("Sign up", style: _style,),
+          ? Text("Login", style: _style(isMobileSite),) 
+          : Text("Sign up", style: _style(isMobileSite),),
       ),
     );
   }
