@@ -16,7 +16,7 @@ class BackPlateWidgetDesktop {
           border: Border.all(color: Constant.orange70),
           borderRadius: const BorderRadius.all(Radius.circular(16))
         ),
-        child: SingleChildScrollView(child: child), // TODO check scrollable again w/ templete
+        child: child, // TODO check scrollable again w/ templete
       ),
     );
   }
