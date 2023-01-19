@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
-import 'package:senior_project/user_authentication/role_selection_page/core/assets/card_text_style.dart';
-import 'package:senior_project/user_authentication/role_selection_page/core/assets/text_constant.dart';
+import 'package:senior_project/user_authentication/role_selection_page/assets/card_text_style.dart';
+import 'package:senior_project/user_authentication/role_selection_page/assets/text_constant.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/widget/student_text_alignment.dart';
 
 class CardSelection extends StatefulWidget {
