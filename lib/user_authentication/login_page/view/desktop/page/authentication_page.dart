@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
-import 'package:senior_project/user_authentication/login_page/view/desktop/widget/back_plate_desktop.dart';
+import 'package:senior_project/user_authentication/login_page/view/desktop/widget/desktop/back_plate_desktop.dart';
 import 'package:senior_project/user_authentication/login_page/view/desktop/widget/login_widget.dart';
 import 'package:senior_project/user_authentication/login_page/view/desktop/widget/registration_widget.dart';
 
