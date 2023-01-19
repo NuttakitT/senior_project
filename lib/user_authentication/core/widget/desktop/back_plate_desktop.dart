@@ -3,10 +3,10 @@ import 'package:senior_project/assets/constant.dart';
 
 // TODO check size when has templete
 class BackPlateWidgetDesktop {
-  static Widget widget(BuildContext context, Widget child) {
+  static Widget widget(BuildContext context, Map<String, double> size, Widget child) {
     return Container(
-      width: 502,
-      height: MediaQuery.of(context).size.height * 0.8,
+      width: size["width"],
+      height: size["height"],
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       decoration: BoxDecoration(
         color: Constant.orange5,
