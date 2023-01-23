@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 
 class PageIndicator extends StatefulWidget {
   final double width;
@@ -31,25 +31,25 @@ class _PageIndicatorState extends State<PageIndicator> {
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             border: Border.all(
-              color: pageState ? Constant.orange40 : Constant.whiteBlack20, 
+              color: pageState ? ColorConstant.orange40 : ColorConstant.whiteBlack20, 
               width: 2
             ),
             shape: BoxShape.circle,
-            color: pageState ? Colors.white : Constant.whiteBlack15,
+            color: pageState ? Colors.white : ColorConstant.whiteBlack15,
           ),
           child: Container(
             alignment: Alignment.center,
             width: isMobileSize ? 24 : 44,
             height: isMobileSize ? 24 : 44,
             decoration: BoxDecoration(
-              color: pageState ? Constant.orange40 : Constant.whiteBlack15,
+              color: pageState ? ColorConstant.orange40 : ColorConstant.whiteBlack15,
               shape: BoxShape.circle,
             ),
             child: Text(
               pageNumber,
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: Constant.font,
+                fontFamily: ColorConstant.font,
                 fontWeight: FontWeight.w600,
                 fontSize: isMobileSize ? 16 : 24
               ),
@@ -61,8 +61,8 @@ class _PageIndicatorState extends State<PageIndicator> {
           child: Text(
             pageName,
             style: TextStyle(
-              color: pageState ? Constant.orange50 : Constant.whiteBlack40,
-              fontFamily: Constant.font,
+              color: pageState ? ColorConstant.orange50 : ColorConstant.whiteBlack40,
+              fontFamily: ColorConstant.font,
               fontWeight: FontWeight.w600,
               fontSize: isMobileSize ? 14 : 18
             ),
@@ -82,7 +82,7 @@ class _PageIndicatorState extends State<PageIndicator> {
           child: Container(
             width: widget.width,
             height: 2,
-            color: widget.indicatorsState[1] ? Constant.orange40 : Constant.whiteBlack15,
+            color: widget.indicatorsState[1] ? ColorConstant.orange40 : ColorConstant.whiteBlack15,
           ),
         ),
         Container(

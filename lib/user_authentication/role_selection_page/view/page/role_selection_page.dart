@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/user_authentication/core/widget/desktop/back_plate_desktop.dart';
 import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
@@ -21,10 +21,10 @@ class RoleSelectionPage extends StatelessWidget {
             "Selec Your Role",
             textAlign: isMobileSite ? TextAlign.center : TextAlign.start,
             style: TextStyle(
-              fontFamily: Constant.font,
+              fontFamily: ColorConstant.font,
               fontWeight: FontWeight.w700,
               fontSize: isMobileSite ? 28 : 32,
-              color: isMobileSite ? Constant.whiteBlack80 : Constant.orange70
+              color: isMobileSite ? ColorConstant.whiteBlack80 : ColorConstant.orange70
             ),
           ),
         ),

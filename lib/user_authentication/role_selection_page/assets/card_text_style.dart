@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 
 class CardTextStyle {
   static double _scaleText(double breakpointPixel) {
@@ -22,15 +22,15 @@ class CardTextStyle {
   }
 
   static TextStyle headerStyle(bool isMobileSite) => TextStyle(
-    fontFamily: Constant.font,
+    fontFamily: ColorConstant.font,
     fontWeight: FontWeight.w500,
     fontSize: isMobileSite ? 20 : 24,
-    color: Constant.whiteBlack80
+    color: ColorConstant.whiteBlack80
   );
   static TextStyle subStyle(double breakpointPixel) => TextStyle(
-    fontFamily: Constant.font,
+    fontFamily: ColorConstant.font,
     fontWeight: FontWeight.w300,
     fontSize:  _scaleText(breakpointPixel),
-    color: Constant.whiteBlack90
+    color: ColorConstant.whiteBlack90
   );
 }

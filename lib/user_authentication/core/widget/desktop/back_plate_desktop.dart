@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 
 // TODO check size when has templete
 class BackPlateWidgetDesktop {
@@ -12,8 +12,8 @@ class BackPlateWidgetDesktop {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
         decoration: BoxDecoration(
-          color: Constant.orange5,
-          border: Border.all(color: Constant.orange70),
+          color: ColorConstant.orange5,
+          border: Border.all(color: ColorConstant.orange70),
           borderRadius: const BorderRadius.all(Radius.circular(16))
         ),
         child: child, // TODO check scrollable again w/ templete

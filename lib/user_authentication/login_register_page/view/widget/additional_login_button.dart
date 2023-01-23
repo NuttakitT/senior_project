@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 
 class AdditionalLoginButton {
   static TextStyle _style(bool isFacebookLogin, bool isMobileSite) => TextStyle(
-    fontFamily: Constant.font,
+    fontFamily: ColorConstant.font,
     fontWeight: FontWeight.w400,
     fontSize: isMobileSite ? 14 : 16,
-    color: isFacebookLogin ? Colors.white : Constant.whiteBlack60
+    color: isFacebookLogin ? Colors.white : ColorConstant.whiteBlack60
   );
 
   static Widget widget(bool isFacebookLogin, bool isMobileSite) {
@@ -21,7 +21,7 @@ class AdditionalLoginButton {
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
             isFacebookLogin 
-              ? Constant.facebookColor
+              ? ColorConstant.facebookColor
               : Colors.white
           ),
           shape: MaterialStateProperty.all(

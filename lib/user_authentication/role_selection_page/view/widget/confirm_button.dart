@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 
 class ConfirmButton {
   static Widget button(BuildContext context, bool isConfirmButton, bool isMobileSite) {
@@ -16,10 +16,10 @@ class ConfirmButton {
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
-            isConfirmButton ? Constant.orange40 : Colors.white
+            isConfirmButton ? ColorConstant.orange40 : Colors.white
           ),
           side: MaterialStateProperty.all(
-            const BorderSide(color: Constant.orange40)
+            const BorderSide(color: ColorConstant.orange40)
           ),
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
@@ -31,7 +31,7 @@ class ConfirmButton {
           ? Text(
             "Confirm",
             style: TextStyle(
-              fontFamily: Constant.font,
+              fontFamily: ColorConstant.font,
               fontWeight: FontWeight.w600,
               fontSize: isMobileSite ? 16 : 18,
               color: Colors.white
@@ -40,10 +40,10 @@ class ConfirmButton {
           : Text(
             "Back",
             style: TextStyle(
-              fontFamily: Constant.font,
+              fontFamily: ColorConstant.font,
               fontWeight: FontWeight.w600,
               fontSize: isMobileSite ? 16 : 18,
-              color: Constant.orange40
+              color: ColorConstant.orange40
             ),
           ),
       ),

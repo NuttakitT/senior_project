@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/additional_login_button.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/primary_button_authentication.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/text_field_authentication.dart';
@@ -24,8 +24,8 @@ class RegistrationWidget extends StatelessWidget {
             Text(
               "Sign up",
               style: TextStyle(
-                color: isMobileSite ? Constant.whiteBlack80 : Constant.orange90,
-                fontFamily: Constant.font,
+                color: isMobileSite ? ColorConstant.whiteBlack80 : ColorConstant.orange90,
+                fontFamily: ColorConstant.font,
                 fontWeight: FontWeight.w600,
                 fontSize: isMobileSite ? 28 : 40
               ),
@@ -41,8 +41,8 @@ class RegistrationWidget extends StatelessWidget {
                     welcomeText,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      color: Constant.whiteBlack60,
-                      fontFamily: Constant.font,
+                      color: ColorConstant.whiteBlack60,
+                      fontFamily: ColorConstant.font,
                       fontWeight: FontWeight.w400,
                       fontSize: 18
                     ),
@@ -83,7 +83,7 @@ class RegistrationWidget extends StatelessWidget {
                   Expanded(
                     child: Container(
                       height: 1,
-                      color: Constant.whiteBlack30,
+                      color: ColorConstant.whiteBlack30,
                     ),
                   ),
                   const Divider(),
@@ -92,8 +92,8 @@ class RegistrationWidget extends StatelessWidget {
                     child: Text(
                       "or",
                       style: TextStyle(
-                        color: Constant.whiteBlack30,
-                      fontFamily: Constant.font,
+                        color: ColorConstant.whiteBlack30,
+                      fontFamily: ColorConstant.font,
                       fontWeight: FontWeight.w400,
                       fontSize: 16
                       ),
@@ -103,7 +103,7 @@ class RegistrationWidget extends StatelessWidget {
                   Expanded(
                     child: Container(
                       height: 1,
-                      color: Constant.whiteBlack30,
+                      color: ColorConstant.whiteBlack30,
                     ),
                   )
                 ],
@@ -125,8 +125,8 @@ class RegistrationWidget extends StatelessWidget {
                     TextSpan(
                       text: "Already have an account ",
                       style: TextStyle(
-                        color: Constant.whiteBlack40,
-                        fontFamily: Constant.font,
+                        color: ColorConstant.whiteBlack40,
+                        fontFamily: ColorConstant.font,
                         fontWeight: FontWeight.w400,
                         fontSize: isMobileSite ? 12 : 14
                       )
@@ -134,8 +134,8 @@ class RegistrationWidget extends StatelessWidget {
                     TextSpan(
                       text: "Log in",
                       style: TextStyle(
-                        color: Constant.orange90,
-                        fontFamily: Constant.font,
+                        color: ColorConstant.orange90,
+                        fontFamily: ColorConstant.font,
                         fontWeight: FontWeight.w500,
                         fontSize: isMobileSite ? 12 : 14
                       ),

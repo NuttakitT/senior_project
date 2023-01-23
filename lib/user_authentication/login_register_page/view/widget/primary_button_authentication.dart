@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/register_view_model.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/page/role_selection_page.dart';
 
 class PrimaryButtonAuthentication {
   static TextStyle _style(bool isMobileSite) =>  TextStyle(
-    fontFamily: Constant.font,
+    fontFamily: ColorConstant.font,
     fontWeight: FontWeight.w600,
     fontSize: isMobileSite ? 16 : 20,
     color: Colors.white
@@ -43,7 +43,7 @@ class PrimaryButtonAuthentication {
           }
         }, 
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Constant.orange40),
+          backgroundColor: MaterialStateProperty.all(ColorConstant.orange40),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8)

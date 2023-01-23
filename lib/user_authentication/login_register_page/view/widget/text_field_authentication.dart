@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/register_view_model.dart';
 
 class TextFieldAuthentication extends StatefulWidget {
@@ -42,7 +42,7 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
       height: 40,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Constant.whiteBlack50),
+        border: Border.all(color: ColorConstant.whiteBlack50),
         borderRadius: const BorderRadius.all(Radius.circular(8))
       ),
       child:  Row(
@@ -58,8 +58,8 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
                 decoration: InputDecoration.collapsed(
                   hintText: _hintText[widget.hintMode],
                   hintStyle: const TextStyle(
-                    color: Constant.whiteBlack30,
-                    fontFamily: Constant.font,
+                    color: ColorConstant.whiteBlack30,
+                    fontFamily: ColorConstant.font,
                     fontWeight: FontWeight.w400,
                     fontSize: 14
                   )
@@ -83,7 +83,7 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
                     }, 
                     icon: const Icon(
                       Icons.visibility,
-                      color: Constant.whiteBlack50,
+                      color: ColorConstant.whiteBlack50,
                     )
                   ),
                 );

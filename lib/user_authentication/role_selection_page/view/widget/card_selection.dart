@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/user_authentication/role_selection_page/assets/card_text_style.dart';
 import 'package:senior_project/user_authentication/role_selection_page/assets/text_constant.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/widget/student_text_alignment.dart';
@@ -44,11 +44,11 @@ class _CardSelectionState extends State<CardSelection> {
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Constant.orange40,
+              color: ColorConstant.orange40,
             ),
             borderRadius: BorderRadius.circular(16),
             color: (widget.isStudentCard && isStudentCardSelected) || (!widget.isStudentCard && !isStudentCardSelected) 
-              ? Constant.orange5 
+              ? ColorConstant.orange5 
               : Colors.white
           ),
           child: Row(
@@ -62,7 +62,7 @@ class _CardSelectionState extends State<CardSelection> {
                   color: Colors.white,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Constant.orange40,
+                    color: ColorConstant.orange40,
                     width: 2
                   )
                 ),
@@ -71,7 +71,7 @@ class _CardSelectionState extends State<CardSelection> {
                   height: 12,
                   decoration: BoxDecoration(
                     color: (widget.isStudentCard && isStudentCardSelected) || (!widget.isStudentCard && !isStudentCardSelected)  
-                      ? Constant.orange40 
+                      ? ColorConstant.orange40 
                       : Colors.white,
                     shape: BoxShape.circle
                   ),
