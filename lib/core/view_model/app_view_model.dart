@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class MobileStateViewModel extends ChangeNotifier {
+class AppViewModel extends ChangeNotifier {
   late bool _isMobileSite;
   final double _mobileWidthBreakpoint = 430;
 

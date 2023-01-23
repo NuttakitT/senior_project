@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/core/view_model/mobile_state_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
 import 'package:senior_project/user_authentication/core/widget/desktop/back_plate_desktop.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/login_widget.dart';
@@ -64,8 +64,8 @@ class _AuthenticationPage extends State<AuthenticationPage> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<MobileStateViewModel>().selectView(MediaQuery.of(context).size.width);
-    bool isMobileSite = context.watch<MobileStateViewModel>().getMobileSiteState;
+    context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
+    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
     bool isLoginPage = context.watch<PageViewModel>().getPageState;
     
     // TODO templete

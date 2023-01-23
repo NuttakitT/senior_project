@@ -16,28 +16,40 @@ class RegisterViewModel extends ChangeNotifier {
     if (inputType == 0) {
       registerModel.setUsername = input;
     } else if (inputType == 1) {
-      registerModel.setEmail = input;
+      final bool emailValid = 
+        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(input);
+      if (emailValid) {
+        registerModel.setEmail = input;
+      }
     } else if (inputType == 2) {
       registerModel.setPassword = input;
-    } else {
-      registerModel.setGender = int.parse(input);
-    }
+    } 
   }
 
-  Future<Map<String, dynamic>> createUser(
-    String username, 
-    String email, 
-    String password
-  ) async {
+  bool checkUserInput() {
+    if(registerModel.getPassword == null) {
+      return false;
+    } 
+    if(registerModel.getEmail == null) {
+      return false;
+    } 
+    if(registerModel.getUsername == null) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<Map<String, dynamic>> createUser() async {
     try {
       final creadential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email, 
-        password: password
+        email: registerModel.getEmail as String, 
+        password: registerModel.getPassword as String
       );
       FirebaseServices("user").addDocument({
         "id": creadential.user!.uid,
         "email": creadential.user!.email as String,
-        "username": username,
+        "username": registerModel.getUsername as String,
       });
       return {"success": true};
     } on FirebaseAuthException catch (e) {

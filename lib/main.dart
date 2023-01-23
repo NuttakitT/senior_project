@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/core/view_model/mobile_state_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/page/authentication_page.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/page_view_model.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/register_view_model.dart';
@@ -17,7 +17,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => RegisterViewModel()),
         ChangeNotifierProvider(create: (context) => PageViewModel()),
-        ChangeNotifierProvider(create: (context) => MobileStateViewModel()),
+        ChangeNotifierProvider(create: (context) => AppViewModel()),
         ChangeNotifierProvider(create: (context) => RoleSelectionViewModel()),
       ],
       child: const MyApp(),

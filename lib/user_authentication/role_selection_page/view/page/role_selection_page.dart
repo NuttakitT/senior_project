@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/constant.dart';
-import 'package:senior_project/core/view_model/mobile_state_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/user_authentication/core/widget/desktop/back_plate_desktop.dart';
 import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/widget/card_selection.dart';
@@ -63,11 +63,11 @@ class RoleSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<MobileStateViewModel>().selectView(MediaQuery.of(context).size.width);
+    context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
     context.read<RoleSelectionViewModel>().calculateTextBreakpoint(
       MediaQuery.of(context).size.width
     );
-    bool isMobileSite = context.watch<MobileStateViewModel>().getMobileSiteState;
+    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
     bool isTextBreakpoint = context.watch<RoleSelectionViewModel>().getTextBreakpoint;
 
     // TODO templete / check scaffold
