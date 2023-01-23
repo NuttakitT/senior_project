@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 
 class ConfirmButton {
-  static Widget button(bool isConfirmButton, bool isMobileSite) {
+  static Widget button(BuildContext context, bool isConfirmButton, bool isMobileSite) {
     return SizedBox(
       width: isMobileSite ? 140 : 180,
       height: 40,
       child: TextButton(
         onPressed: () {
-          // TODO add button logic
+          if (isConfirmButton) {
+            // TODO add logic to main site
+          } else {
+            Navigator.pop(context);
+          }
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(

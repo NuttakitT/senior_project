@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/constant.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/additional_login_button.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/primary_button_authentication.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/text_field_authentication.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/page_view_model.dart';
 
 class LoginWidget extends StatelessWidget {
   final bool isMobileSite;
@@ -12,7 +14,7 @@ class LoginWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String welcomeText = "Welcome back! Please login to your account.\nSo you can send task to admin.";
-
+    
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,15 +50,21 @@ class LoginWidget extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(top: isMobileSite ? 40 : 56),
-          child: TextFieldAuthentication.widget("Username or Mail", false),
+          child: const TextFieldAuthentication(
+            hintMode: 1, 
+            isPasswordField: false
+          ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: TextFieldAuthentication.widget("Password", true),
+        const Padding(
+          padding: EdgeInsets.only(top: 16),
+          child: TextFieldAuthentication(
+            hintMode: 2, 
+            isPasswordField: true
+          ),
         ),
         Padding(
           padding: EdgeInsets.only(top: isMobileSite ? 80 : 64),
-          child: PrimaryButtonAuthentication.widget(true, isMobileSite)
+          child: PrimaryButtonAuthentication.widget(context, true, isMobileSite)
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16),
@@ -142,7 +150,7 @@ class LoginWidget extends StatelessWidget {
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      // TODO link to sign up
+                      context.read<PageViewModel>().changeViewState();
                     }
                 )
               ]

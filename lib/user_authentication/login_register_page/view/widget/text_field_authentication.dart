@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/constant.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/register_view_model.dart';
 
-class TextFieldAuthentication {
-  static Widget widget(String hintText, bool isPasswordField) {
+class TextFieldAuthentication extends StatefulWidget {
+  final int hintMode;
+  final bool isPasswordField;
+  const TextFieldAuthentication({
+    super.key,
+    required this.hintMode,
+    required this.isPasswordField
+  });
+
+  @override
+  State<TextFieldAuthentication> createState() => _TextFieldAuthenticationState();
+}
+
+class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
+  final List<String> _hintText = ["Username", "E-mail", "Password"];
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
       width: double.infinity,
@@ -18,9 +36,11 @@ class TextFieldAuthentication {
             child: Padding(
               padding: const EdgeInsets.only(left: 16),
               child: TextField(
-                obscureText: isPasswordField,
+                obscureText: widget.isPasswordField 
+                  ? context.watch<RegisterViewModel>().visibilityText
+                  : false,
                 decoration: InputDecoration.collapsed(
-                  hintText: hintText,
+                  hintText: _hintText[widget.hintMode],
                   hintStyle: const TextStyle(
                     color: Constant.whiteBlack30,
                     fontFamily: Constant.font,
@@ -28,19 +48,22 @@ class TextFieldAuthentication {
                     fontSize: 14
                   )
                 ),
+                onChanged: (text) {
+                  context.read<RegisterViewModel>().getUserInput(widget.hintMode, text);
+                },
               ),
             ),
           ),
           const Divider(),
           Builder(
             builder: (context) {
-              if(isPasswordField) {
+              if(widget.isPasswordField) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 16),
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     onPressed: () {
-                      // TODO state management password visibility
+                      context.read<RegisterViewModel>().changeVisibilityTextState();
                     }, 
                     icon: const Icon(
                       Icons.visibility,

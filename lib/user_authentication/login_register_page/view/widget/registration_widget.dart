@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/constant.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/additional_login_button.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/primary_button_authentication.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/text_field_authentication.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/page_view_model.dart';
 
 class RegistrationWidget extends StatelessWidget {
   final bool isMobileSite;
@@ -12,7 +14,7 @@ class RegistrationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String welcomeText = "Let’s get you to my website and\nyou can send the task to admin for help.";
-
+    
     return Column(
       children: [
         Column(
@@ -50,19 +52,28 @@ class RegistrationWidget extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(top: isMobileSite ? 40 : 24),
-              child: TextFieldAuthentication.widget("Username", false),
+              child: const TextFieldAuthentication(
+                hintMode: 0, 
+                isPasswordField: false
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: TextFieldAuthentication.widget("Email", false),
+            const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: TextFieldAuthentication(
+                hintMode: 1, 
+                isPasswordField: false
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: TextFieldAuthentication.widget("Password", true),
+            const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: TextFieldAuthentication(
+                hintMode: 2, 
+                isPasswordField: true
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(top: isMobileSite ? 24 : 56),
-              child: PrimaryButtonAuthentication.widget(true, isMobileSite)
+              child: PrimaryButtonAuthentication.widget(context, false, isMobileSite)
             ),
             Padding(
               padding: EdgeInsets.only(top: isMobileSite ? 92 : 64),
@@ -130,7 +141,7 @@ class RegistrationWidget extends StatelessWidget {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          // TODO link to log in
+                          context.read<PageViewModel>().changeViewState();
                         }
                     )
                   ]

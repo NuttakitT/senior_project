@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/constant.dart';
 import 'package:senior_project/user_authentication/role_selection_page/assets/card_text_style.dart';
 import 'package:senior_project/user_authentication/role_selection_page/assets/text_constant.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/widget/student_text_alignment.dart';
+import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
 
 class CardSelection extends StatefulWidget {
   final bool isStudentCard;
@@ -19,20 +21,20 @@ class CardSelection extends StatefulWidget {
   State<CardSelection> createState() => _CardSelectionState();
 }
 
-class _CardSelectionState extends State<CardSelection> {
-  // TODO change card seleted state
-  bool isSelectedCard = false;
+class _CardSelectionState extends State<CardSelection> {  
 
   @override
   Widget build(BuildContext context) {
+    bool isStudentCardSelected = context.watch<RoleSelectionViewModel>().getStudentCardSelected;
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return InkWell(
       onTap: () {
-        // TODO change card seleted state
-        setState(() {
-          isSelectedCard = !isSelectedCard;
-        });
+        if (widget.isStudentCard && !isStudentCardSelected) {
+          context.read<RoleSelectionViewModel>().changeCardSelectedState(true);
+        } else if(!widget.isStudentCard && isStudentCardSelected) {
+          context.read<RoleSelectionViewModel>().changeCardSelectedState(false);
+        }
       },
       child: ConstrainedBox(
         constraints: const BoxConstraints(
@@ -45,12 +47,13 @@ class _CardSelectionState extends State<CardSelection> {
               color: Constant.orange40,
             ),
             borderRadius: BorderRadius.circular(16),
-            color: isSelectedCard ? Constant.orange5 : Colors.white
+            color: (widget.isStudentCard && isStudentCardSelected) || (!widget.isStudentCard && !isStudentCardSelected) 
+              ? Constant.orange5 
+              : Colors.white
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // TODO listen state form view model
               Container(
                 width: 24,
                 height: 24,
@@ -67,7 +70,9 @@ class _CardSelectionState extends State<CardSelection> {
                   width: 12,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: isSelectedCard ? Constant.orange40 : Colors.white,
+                    color: (widget.isStudentCard && isStudentCardSelected) || (!widget.isStudentCard && !isStudentCardSelected)  
+                      ? Constant.orange40 
+                      : Colors.white,
                     shape: BoxShape.circle
                   ),
                 ),

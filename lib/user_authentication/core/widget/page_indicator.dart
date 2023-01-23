@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/constant.dart';
 
-// TODO fix this to listen state from view model
 class PageIndicator extends StatefulWidget {
   final double width;
+  final List<bool> indicatorsState;
   final bool isMobileSize;
   const PageIndicator({
     super.key, 
     required this.width, 
+    required this.indicatorsState,
     required this.isMobileSize
   });
 
@@ -81,7 +82,7 @@ class _PageIndicatorState extends State<PageIndicator> {
           child: Container(
             width: widget.width,
             height: 2,
-            color: Constant.whiteBlack15, // TODO add state listener to this line
+            color: widget.indicatorsState[1] ? Constant.orange40 : Constant.whiteBlack15,
           ),
         ),
         Container(
@@ -91,11 +92,11 @@ class _PageIndicatorState extends State<PageIndicator> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: _indicatorIcon("1", "Login", true, widget.isMobileSize)
+                child: _indicatorIcon("1", "Login", widget.indicatorsState[0], widget.isMobileSize)
               ),
               const Divider(),
               Expanded(
-                child: _indicatorIcon("2", "Selecte role", false, widget.isMobileSize)
+                child: _indicatorIcon("2", "Selecte role", widget.indicatorsState[1], widget.isMobileSize)
               )
             ],
           ),
