@@ -18,6 +18,21 @@ class TextFieldAuthentication extends StatefulWidget {
 
 class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
   final List<String> _hintText = ["Username", "E-mail", "Password"];
+  final controller = TextEditingController();
+
+  @override
+  void initState() {
+    controller.addListener(() {
+      context.read<RegisterViewModel>().getUserInput(widget.hintMode, controller.text);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +51,7 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
             child: Padding(
               padding: const EdgeInsets.only(left: 16),
               child: TextField(
+                controller: controller,
                 obscureText: widget.isPasswordField 
                   ? context.watch<RegisterViewModel>().visibilityText
                   : false,
@@ -48,9 +64,9 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
                     fontSize: 14
                   )
                 ),
-                onChanged: (text) {
-                  context.read<RegisterViewModel>().getUserInput(widget.hintMode, text);
-                },
+                // onChanged: (text) {
+                //   context.read<RegisterViewModel>().getUserInput(widget.hintMode, text);
+                // },
               ),
             ),
           ),
