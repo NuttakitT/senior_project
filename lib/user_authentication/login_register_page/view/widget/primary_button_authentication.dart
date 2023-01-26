@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/page/role_selection_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class PrimaryButtonAuthentication {
   static TextStyle _style(bool isMobileSite) =>  TextStyle(

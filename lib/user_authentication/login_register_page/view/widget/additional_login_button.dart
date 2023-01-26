@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 
 class AdditionalLoginButton {
   static TextStyle _style(bool isFacebookLogin, bool isMobileSite) => TextStyle(
@@ -10,13 +13,19 @@ class AdditionalLoginButton {
     color: isFacebookLogin ? Colors.white : ColorConstant.whiteBlack60
   );
 
-  static Widget widget(bool isFacebookLogin, bool isMobileSite) {
+  static Widget widget(BuildContext context, bool isFacebookLogin, bool isMobileSite) {
     return SizedBox(
       height: isMobileSite ? 32 : 40,
       width: double.infinity,
       child: TextButton(
-        onPressed: () {
-          // TODO additional login logic
+        onPressed: () async {
+          bool isSuccess = isFacebookLogin 
+            ? await context.read<AuthenticationViewModel>().facebookSignIn()
+            : await context.read<AuthenticationViewModel>().googleSignIn();
+          if (isSuccess) {
+            // TODO link to main page
+            print("${FirebaseAuth.instance.currentUser?.email}");
+          } 
         }, 
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(

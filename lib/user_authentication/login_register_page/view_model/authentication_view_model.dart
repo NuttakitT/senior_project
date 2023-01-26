@@ -90,4 +90,40 @@ class AuthenticationViewModel extends ChangeNotifier {
       return {"success": false, "comment": e.toString()};
     }
   }
+  
+  Future<bool> googleSignIn() async {
+    try {
+      GoogleAuthProvider provider = GoogleAuthProvider();
+      provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+      final creadential = await FirebaseAuth.instance.signInWithPopup(provider);
+      FirebaseServices("user").setDocument(
+        creadential.user!.uid,
+        {
+          "id": creadential.user!.uid,
+          "email": creadential.user!.email as String,
+        }
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> facebookSignIn() async {
+    try {
+      FacebookAuthProvider  provider = FacebookAuthProvider ();
+      provider.addScope("email");
+      final creadential = await FirebaseAuth.instance.signInWithPopup(provider);
+      FirebaseServices("user").setDocument(
+        creadential.user!.uid,
+        {
+          "id": creadential.user!.uid,
+          "email": creadential.user!.email as String,
+        }
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

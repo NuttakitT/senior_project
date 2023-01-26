@@ -120,11 +120,11 @@ class LoginWidget extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 24),
-          child: AdditionalLoginButton.widget(true, isMobileSite),
+          child: AdditionalLoginButton.widget(context, true, isMobileSite),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16),
-          child: AdditionalLoginButton.widget(false, isMobileSite),
+          child: AdditionalLoginButton.widget(context, false, isMobileSite),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16),
