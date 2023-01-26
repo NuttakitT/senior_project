@@ -20,8 +20,8 @@ class AdditionalLoginButton {
       child: TextButton(
         onPressed: () async {
           bool isSuccess = isFacebookLogin 
-            ? await context.read<AuthenticationViewModel>().facebookSignIn()
-            : await context.read<AuthenticationViewModel>().googleSignIn();
+            ? await context.read<AuthenticationViewModel>().facebookSignIn(context)
+            : await context.read<AuthenticationViewModel>().googleSignIn(context);
           if (isSuccess) {
             // TODO link to main page
             print("${FirebaseAuth.instance.currentUser?.email}");

@@ -4,4 +4,5 @@ class App {
   AppUser? _user;
 
   AppUser get getUser => _user as AppUser;
+  set setAppUser(AppUser user) => _user = user;
 }

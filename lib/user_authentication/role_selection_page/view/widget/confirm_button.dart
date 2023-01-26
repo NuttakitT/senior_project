@@ -11,8 +11,8 @@ class ConfirmButton {
       child: TextButton(
         onPressed: () async {
           bool isSuccess = isConfirmButton 
-            ? await context.read<RoleSelectionViewModel>().confirmButtonLogic()
-            : await context.read<RoleSelectionViewModel>().backButtonLogic();
+            ? await context.read<RoleSelectionViewModel>().confirmButtonLogic(context)
+            : await context.read<RoleSelectionViewModel>().backButtonLogic(context);
           if (isSuccess) {
              if (isConfirmButton) {
             // TODO add logic to main site

@@ -13,14 +13,15 @@ class AppUser {
 
   // * map structure include the attribute of this class
   AppUser.overloaddedConstructor(Map<String, dynamic> detail) {
-    _name = detail["name"]!;
-    _email = detail["email"]!;
-    _phone = detail["phone"]!;
-    _gender = detail["gender"]!;
-    _role = detail["role"]!;
-    _birthday = detail["birthday"]!;
-    _profileImageUrl = detail["profileImageUrl"]!;
-    _linkId = detail["linkId"]!;
+    _username = detail.keys.contains("username") ? detail["username"] : null;
+    _name = detail.keys.contains("name") ? detail["name"] : null;
+    _email = detail.keys.contains("email") ? detail["email"] : null;
+    _phone = detail.keys.contains("phone") ? detail["phone"] : null;
+    _gender = detail.keys.contains("gender") ? int.parse(detail["gender"]) : null;
+    _role = detail.keys.contains("role") ? int.parse(detail["role"]) : null;
+    _birthday = detail.keys.contains("birthday") ? detail["birthday"] : null;
+    _profileImageUrl = detail.keys.contains("profileImageUrl") ? detail["profileImageUrl"] : null;
+    _linkId = detail.keys.contains("linkId") ? detail["linkId"] : null;
   }
 
   String? get getUsername => _username;
@@ -50,4 +51,5 @@ class AppUser {
   set setPhone(String phone) => _phone = phone;
   set setGender(int gender) => _gender = gender;
   set setLinkId(String linkId) => _linkId = linkId;
+  set setRole(int role) => _role = role;
 }

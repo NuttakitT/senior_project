@@ -23,8 +23,8 @@ class PrimaryButtonAuthentication {
           );
           if (allInputValid) {
             Map<String, dynamic> isCreateSuccess = isLoginPage 
-              ? await context.read<AuthenticationViewModel>().loginUser()
-              : await context.read<AuthenticationViewModel>().createUser();
+              ? await context.read<AuthenticationViewModel>().loginUser(context)
+              : await context.read<AuthenticationViewModel>().createUser(context);
             if (isCreateSuccess["success"]) {
               if (!isLoginPage) {
                 // ignore: use_build_context_synchronously
