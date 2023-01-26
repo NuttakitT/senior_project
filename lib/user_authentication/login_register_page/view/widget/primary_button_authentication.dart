@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/register_view_model.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/page/role_selection_page.dart';
 
 class PrimaryButtonAuthentication {
@@ -21,9 +21,9 @@ class PrimaryButtonAuthentication {
           if (isLoginPage) {
             // TODO login logic
           } else {
-            bool allInputValid = context.read<RegisterViewModel>().checkUserInput();
+            bool allInputValid = context.read<AuthenticationViewModel>().checkUserInput();
             if (allInputValid) {
-              Map<String, dynamic> isCreateSuccess = await context.read<RegisterViewModel>().createUser();
+              Map<String, dynamic> isCreateSuccess = await context.read<AuthenticationViewModel>().createUser();
               if (isCreateSuccess["success"]) {
                 // ignore: use_build_context_synchronously
                 Navigator.push(

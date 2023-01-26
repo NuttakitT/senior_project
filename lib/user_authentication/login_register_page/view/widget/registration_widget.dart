@@ -5,7 +5,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/additional_login_button.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/primary_button_authentication.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/text_field_authentication.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/page_view_model.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 
 class RegistrationWidget extends StatelessWidget {
   final bool isMobileSite;
@@ -141,7 +141,7 @@ class RegistrationWidget extends StatelessWidget {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          context.read<PageViewModel>().changeViewState();
+                          context.read<AuthenticationViewModel>().changeViewState();
                         }
                     )
                   ]

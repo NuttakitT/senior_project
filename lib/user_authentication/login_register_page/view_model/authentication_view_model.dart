@@ -3,9 +3,17 @@ import 'package:flutter/foundation.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/user_authentication/login_register_page/model/register_model.dart';
 
-class RegisterViewModel extends ChangeNotifier {
+class AuthenticationViewModel extends ChangeNotifier {
   RegisterModel registerModel = RegisterModel();
   late bool visibilityText = true;
+  bool _isShowLoinPage = true;
+
+  void changeViewState() {
+    _isShowLoinPage = !_isShowLoinPage;
+    notifyListeners();
+  }
+
+  bool get getPageState => _isShowLoinPage;
 
   void changeVisibilityTextState() {
     visibilityText = !visibilityText;

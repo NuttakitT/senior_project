@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/register_view_model.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 
 class TextFieldAuthentication extends StatefulWidget {
   final int hintMode;
@@ -23,7 +23,7 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
   @override
   void initState() {
     controller.addListener(() {
-      context.read<RegisterViewModel>().getUserInput(widget.hintMode, controller.text);
+      context.read<AuthenticationViewModel>().getUserInput(widget.hintMode, controller.text);
     });
     super.initState();
   }
@@ -53,7 +53,7 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
               child: TextField(
                 controller: controller,
                 obscureText: widget.isPasswordField 
-                  ? context.watch<RegisterViewModel>().visibilityText
+                  ? context.watch<AuthenticationViewModel>().visibilityText
                   : false,
                 decoration: InputDecoration.collapsed(
                   hintText: _hintText[widget.hintMode],
@@ -64,9 +64,6 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
                     fontSize: 14
                   )
                 ),
-                // onChanged: (text) {
-                //   context.read<RegisterViewModel>().getUserInput(widget.hintMode, text);
-                // },
               ),
             ),
           ),
@@ -79,7 +76,7 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     onPressed: () {
-                      context.read<RegisterViewModel>().changeVisibilityTextState();
+                      context.read<AuthenticationViewModel>().changeVisibilityTextState();
                     }, 
                     icon: const Icon(
                       Icons.visibility,

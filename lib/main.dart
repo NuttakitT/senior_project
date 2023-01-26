@@ -3,8 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/page/authentication_page.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/page_view_model.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/register_view_model.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
 import 'firebase_options.dart';
 
@@ -15,8 +14,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => RegisterViewModel()),
-        ChangeNotifierProvider(create: (context) => PageViewModel()),
+        ChangeNotifierProvider(create: (context) => AuthenticationViewModel()),
         ChangeNotifierProvider(create: (context) => AppViewModel()),
         ChangeNotifierProvider(create: (context) => RoleSelectionViewModel()),
       ],
