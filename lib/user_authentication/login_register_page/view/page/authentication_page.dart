@@ -5,7 +5,7 @@ import 'package:senior_project/user_authentication/core/widget/page_indicator.da
 import 'package:senior_project/user_authentication/core/widget/desktop/back_plate_desktop.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/login_widget.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/widget/registration_widget.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/page_view_model.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 
 class AuthenticationPage extends StatefulWidget {
   const AuthenticationPage({super.key});
@@ -66,7 +66,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
   Widget build(BuildContext context) {
     context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
-    bool isLoginPage = context.watch<PageViewModel>().getPageState;
+    bool isLoginPage = context.watch<AuthenticationViewModel>().getPageState;
     
     // TODO templete
     return Builder(
