@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +23,6 @@ class AdditionalLoginButton {
             : await context.read<AuthenticationViewModel>().googleSignIn(context);
           if (isSuccess) {
             // TODO link to main page
-            print("${FirebaseAuth.instance.currentUser?.email}");
           } 
         }, 
         style: ButtonStyle(
