@@ -75,11 +75,14 @@ class AuthenticationViewModel extends ChangeNotifier {
         email: registerModel.getEmail as String, 
         password: registerModel.getPassword as String
       );
-      FirebaseServices("user").addDocument({
-        "id": creadential.user!.uid,
-        "email": creadential.user!.email as String,
-        "username": registerModel.getUsername as String,
-      });
+      FirebaseServices("user").setDocument(
+        creadential.user!.uid,
+        {
+          "id": creadential.user!.uid,
+          "email": creadential.user!.email as String,
+          "username": registerModel.getUsername as String,
+        }
+      );
       return {"success": true};
     } on FirebaseAuthException catch (e) {
       return {"success": false, "comment": e.code};

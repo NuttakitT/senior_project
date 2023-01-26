@@ -7,6 +7,15 @@ class FirebaseServices {
     _collection = FirebaseFirestore.instance.collection(collectionName);
   }
 
+  Future<bool> setDocument(String docId, Map<String, dynamic> detail) async {
+    try {
+      await _collection.doc(docId).set(detail);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> addDocument(Map<String, dynamic> detail) async {
     try {
       await _collection.add(detail);
