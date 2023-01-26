@@ -78,10 +78,21 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
                     onPressed: () {
                       context.read<AuthenticationViewModel>().changeVisibilityTextState();
                     }, 
-                    icon: const Icon(
-                      Icons.visibility,
-                      color: ColorConstant.whiteBlack50,
-                    )
+                    icon: Builder(
+                      builder: (context) {
+                        bool isVisibility = context.watch<AuthenticationViewModel>().getVisibilityState;
+                        if (isVisibility) {
+                          return const Icon(
+                            Icons.visibility,
+                            color: ColorConstant.whiteBlack50,
+                          );
+                        }
+                        return const Icon(
+                          Icons.visibility_off,
+                          color: ColorConstant.whiteBlack50,
+                        );
+                      },
+                    ),
                   ),
                 );
               }
