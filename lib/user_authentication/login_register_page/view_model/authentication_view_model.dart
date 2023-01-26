@@ -5,18 +5,18 @@ import 'package:senior_project/user_authentication/login_register_page/model/reg
 
 class AuthenticationViewModel extends ChangeNotifier {
   RegisterModel registerModel = RegisterModel();
-  late bool visibilityText = true;
-  bool _isShowLoinPage = true;
+  
 
-  bool get getPageState => _isShowLoinPage;
+  bool get getPageState => registerModel.getIsShowLoginPage;
+  bool get getVisibilityState => registerModel.getVisibilityState;
 
   void changeViewState() {
-    _isShowLoinPage = !_isShowLoinPage;
+    registerModel.changeShowPageState();
     notifyListeners();
   }
 
   void changeVisibilityTextState() {
-    visibilityText = !visibilityText;
+    registerModel.changeVisibilityState();
     notifyListeners();
   }
 

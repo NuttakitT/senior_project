@@ -53,7 +53,7 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
               child: TextField(
                 controller: controller,
                 obscureText: widget.isPasswordField 
-                  ? context.watch<AuthenticationViewModel>().visibilityText
+                  ? context.watch<AuthenticationViewModel>().getVisibilityState
                   : false,
                 decoration: InputDecoration.collapsed(
                   hintText: _hintText[widget.hintMode],

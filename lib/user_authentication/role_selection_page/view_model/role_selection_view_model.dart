@@ -1,25 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
+import 'package:senior_project/user_authentication/role_selection_page/model/role_selection_model.dart';
 
 class RoleSelectionViewModel extends ChangeNotifier{
-  final double _textBreakpoint = 620;
-  late bool _isTextBreakpoint;
-  bool _isStudentCardSelected = true;
+  RoleSelectionModel model = RoleSelectionModel();
 
-  bool get getTextBreakpoint => _isTextBreakpoint;
-  bool get getStudentCardSelected => _isStudentCardSelected;
+  bool get getTextBreakpoint => model.getIsTextbreakpoint as bool;
+  bool get getStudentCardSelected => model.getIsStudentCardSelected;
 
   void calculateTextBreakpoint(double pixelWidth) {
-    if (pixelWidth <= _textBreakpoint) {
-      _isTextBreakpoint = true;
-    } else {
-      _isTextBreakpoint = false;
-    }
+    model.calculateTextBreakpoint(pixelWidth);
   }
 
   void changeCardSelectedState(bool isSelected) {
-    _isStudentCardSelected = isSelected;
+    model.changeStudentCardSelectedState();
     notifyListeners();
   }
 
@@ -27,7 +22,7 @@ class RoleSelectionViewModel extends ChangeNotifier{
     try {
       FirebaseServices service = FirebaseServices("user");
       String uid = FirebaseAuth.instance.currentUser!.uid;
-      await service.editDocument(uid, {"role": _isStudentCardSelected ? 1 : 2});
+      await service.editDocument(uid, {"role": getStudentCardSelected ? 1 : 2});
       return true;
     } catch (e) {
       return false;
