@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/page/role_selection_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PrimaryButtonAuthentication {
   static TextStyle _style(bool isMobileSite) =>  TextStyle(
@@ -18,13 +19,15 @@ class PrimaryButtonAuthentication {
       width: double.infinity,
       child: TextButton(
         onPressed: () async {
-          if (isLoginPage) {
-            // TODO login logic
-          } else {
-            bool allInputValid = context.read<AuthenticationViewModel>().checkUserInput();
-            if (allInputValid) {
-              Map<String, dynamic> isCreateSuccess = await context.read<AuthenticationViewModel>().createUser();
-              if (isCreateSuccess["success"]) {
+          bool allInputValid = context.read<AuthenticationViewModel>().checkkUserInput(
+            isLoginPage ? false : true
+          );
+          if (allInputValid) {
+            Map<String, dynamic> isCreateSuccess = isLoginPage 
+              ? await context.read<AuthenticationViewModel>().loginUser()
+              : await context.read<AuthenticationViewModel>().createUser();
+            if (isCreateSuccess["success"]) {
+              if (!isLoginPage) {
                 // ignore: use_build_context_synchronously
                 Navigator.push(
                   context, 
@@ -33,13 +36,15 @@ class PrimaryButtonAuthentication {
                   })
                 );
               } else {
-                // TODO show err
-                print("craete user err ${isCreateSuccess["comment"]}");
+                // TODO change to main page
               }
             } else {
-              // TODO show error
-              print("input error");
+              // TODO show err
+              print("craete user err ${isCreateSuccess["comment"]}");
             }
+          } else {
+            // TODO show error
+            print("input error");
           }
         }, 
         style: ButtonStyle(

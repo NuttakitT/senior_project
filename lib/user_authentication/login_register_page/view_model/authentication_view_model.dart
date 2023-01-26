@@ -8,12 +8,12 @@ class AuthenticationViewModel extends ChangeNotifier {
   late bool visibilityText = true;
   bool _isShowLoinPage = true;
 
+  bool get getPageState => _isShowLoinPage;
+
   void changeViewState() {
     _isShowLoinPage = !_isShowLoinPage;
     notifyListeners();
   }
-
-  bool get getPageState => _isShowLoinPage;
 
   void changeVisibilityTextState() {
     visibilityText = !visibilityText;
@@ -35,17 +35,38 @@ class AuthenticationViewModel extends ChangeNotifier {
     } 
   }
 
-  bool checkUserInput() {
+  bool checkkUserInput(bool isRegister) {
     if(registerModel.getPassword == null) {
       return false;
     } 
     if(registerModel.getEmail == null) {
       return false;
     } 
-    if(registerModel.getUsername == null) {
+    if(isRegister && registerModel.getUsername == null) {
       return false;
     }
     return true;
+  }
+
+  bool checkIsUserLogin() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      return true;
+    }  
+    return false;
+  }
+
+  Future<Map<String, dynamic>> loginUser() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: registerModel.getEmail as String, 
+        password: registerModel.getPassword as String
+      );
+      return {"success": true};
+    } on FirebaseAuthException catch (e) {
+      return {"success": false, "comment": e.code};
+    } catch (e) {
+      return {"success": false, "comment": e.toString()};
+    }
   }
 
   Future<Map<String, dynamic>> createUser() async {
