@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/user_authentication/login_register_page/view/page/authentication_page.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
+import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
 import 'firebase_options.dart';
-// * Testing database
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthenticationViewModel()),
+        ChangeNotifierProvider(create: (context) => AppViewModel()),
+        ChangeNotifierProvider(create: (context) => RoleSelectionViewModel()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,41 +33,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const Scaffold(
+        body: AuthenticationPage(),
+      ),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          // * Testing database
-          child: FutureBuilder(
-            future: FirebaseFirestore.instance.collection("dummy").get(),
-            builder: ((context, snapshot) {
-              if (snapshot.hasError) {
-                return Text("Error occur: ${snapshot.error}");
-              }
-              if (snapshot.connectionState == ConnectionState.done) {
-                String text = snapshot.data?.docs.first.get("dummy_field");
-                return Text("Test successed, qurey text: $text");
-              }
-              return Text("Connection state: ${snapshot.connectionState}");
-            }),
-          ),
-        ));
   }
 }
