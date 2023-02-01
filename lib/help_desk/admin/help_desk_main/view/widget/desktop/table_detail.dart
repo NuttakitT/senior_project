@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/action_button.dart';
 
 class TableDetail{
+  static List<String> actionItem = ["Change Status", "Change Priority", "Message"];
+
   static TextStyle _detailTextStyle(double size, Color color) {
     return TextStyle(
       fontFamily: ColorConstant.font,
@@ -158,30 +161,13 @@ class TableDetail{
             ),
         ),
       ),
-      Flexible(
+      const Flexible(
         fit: FlexFit.tight,
         child: 
-        // DropdownButton(
-        //   items: [],
-        //   onChanged: (value) {
-        //     // TODO set provider state
-        //   },
-        // )
-        
-        
-        RotatedBox(
-            quarterTurns: 1,
-            child: IconButton(
-              iconSize: 20,
-              color: ColorConstant.whiteBlack60,
-              icon: const Icon(
-                Icons.keyboard_control, 
-              ),
-              onPressed: () {
-                // TODO action pop-up
-              },
-            ),
-          ),
+        Align(
+          alignment: Alignment.center,
+          child: ActionButton(),
+        )
       )
     ];
   }

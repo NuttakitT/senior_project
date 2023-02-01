@@ -63,17 +63,6 @@ class _TaskTableState extends State<TaskTable> {
               child: Column(
                 children: [
                   detail(),
-                  detail(),
-                  detail(),
-                  detail(),
-                  detail(),
-                  detail(),
-                  detail(),
-                  detail(),
-                  detail(),
-                  detail(),
-                  detail(),
-                  detail(),
                 ],
               ),
             ),

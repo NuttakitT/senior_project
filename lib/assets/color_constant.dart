@@ -32,6 +32,7 @@ class ColorConstant {
   // * Color section
   static const facebookColor = Color(0xFF4267B2);
   static const orange5 = Color(0xFFFFF3E0);
+  static const orange10 = Color(0xFFFFE0B2);
   static const orange30 = Color(0xFFFFB74D);
   static const orange40 = Color(0xFFFFA726);
   static const orange50 = Color(0xFFFF9800);
