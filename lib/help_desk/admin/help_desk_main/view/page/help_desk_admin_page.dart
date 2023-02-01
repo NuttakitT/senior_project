@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/create_task_pop_up.dart';
 import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/task_table.dart';
 
 class HelpDeskAdminPage extends StatelessWidget {
@@ -45,6 +46,12 @@ class HelpDeskAdminPage extends StatelessWidget {
                     child: TextButton(
                       onPressed: () {
                         // TODO pop-up create task page
+                        showDialog(
+                          context: context, 
+                          builder: (context) {
+                            return const CreateTaskPopup();
+                          }
+                        );
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(ColorConstant.orange40),

@@ -157,7 +157,16 @@ class TableDetail{
       ),
       Flexible(
         fit: FlexFit.tight,
-        child: RotatedBox(
+        child: 
+        // DropdownButton(
+        //   items: [],
+        //   onChanged: (value) {
+        //     // TODO set provider state
+        //   },
+        // )
+        
+        
+        RotatedBox(
             quarterTurns: 1,
             child: IconButton(
               iconSize: 20,
