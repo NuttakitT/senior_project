@@ -150,10 +150,13 @@ class TableDetail{
       ),
       Flexible(
         fit: FlexFit.tight,
-        child: Text(
-            detail["time"],
-            style: _detailTextStyle(14, ColorConstant.whiteBlack60),
-          ),
+        child: Container(
+          alignment: Alignment.center,
+          child: Text(
+              detail["time"],
+              style: _detailTextStyle(14, ColorConstant.whiteBlack60),
+            ),
+        ),
       ),
       Flexible(
         fit: FlexFit.tight,

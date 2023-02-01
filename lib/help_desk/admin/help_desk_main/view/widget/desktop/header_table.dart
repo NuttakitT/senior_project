@@ -15,8 +15,8 @@ class HeaderTable {
       color: ColorConstant.orange40,
       height: 69,
       child: Row(
-        children: const [
-          Flexible(
+        children: [
+          const Flexible(
             flex: 2,
             fit: FlexFit.tight,
             child: Text(
@@ -24,7 +24,7 @@ class HeaderTable {
               style: _headerTextStyle,
             ),
           ),
-          Flexible(
+          const Flexible(
             flex: 3,
             fit: FlexFit.tight,
             child: Text(
@@ -32,21 +32,21 @@ class HeaderTable {
               style: _headerTextStyle,
             ),
           ),
-          Flexible(
+          const Flexible(
             fit: FlexFit.tight,
             child: Text(
               "Priority",
               style: _headerTextStyle,
             ),
           ),
-          Flexible(
+          const Flexible(
             fit: FlexFit.tight,
             child: Text(
               "Status",
               style: _headerTextStyle,
             ),
           ),
-          Flexible(
+          const Flexible(
             flex: 2,
             fit: FlexFit.tight,
             child: Text(
@@ -56,16 +56,22 @@ class HeaderTable {
           ),
           Flexible(
             fit: FlexFit.tight,
-            child: Text(
-              "Time",
-              style: _headerTextStyle,
+            child: Container(
+              alignment: Alignment.center,
+              child: const Text(
+                "Time",
+                style: _headerTextStyle,
+              ),
             ),
           ),
           Flexible(
             fit: FlexFit.tight,
-            child: Text(
-              "Action",
-              style: _headerTextStyle,
+            child: Container(
+              alignment: Alignment.center,
+              child: const Text(
+                "Action",
+                style: _headerTextStyle,
+              ),
             ),
           ),
         ],
