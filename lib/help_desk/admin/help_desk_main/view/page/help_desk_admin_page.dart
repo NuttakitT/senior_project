@@ -1,94 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/create_task_pop_up.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/task_table.dart';
+import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/desktop_widget.dart';
 
-class HelpDeskAdminPage extends StatelessWidget {
+class HelpDeskAdminPage extends StatefulWidget {
   const HelpDeskAdminPage({super.key});
 
   @override
+  State<HelpDeskAdminPage> createState() => _HelpDeskAdminPageState();
+}
+
+class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
+  @override
   Widget build(BuildContext context) {
-    // TODO templete w/ horizontal scrollable
-    final controller = ScrollController();
-    return Scrollbar(
-      scrollbarOrientation: ScrollbarOrientation.bottom,
-      thumbVisibility: true,
-      controller: controller,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        controller: controller,
-        child: SizedBox(
-          width: 1008,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const Text(
-                    "HelpDesk",
-                    style: TextStyle(
-                      fontFamily: ColorConstant.font,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 32,
-                      color: ColorConstant.whiteBlack80
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Container(
-                        height: 1,
-                        color: ColorConstant.whiteBlack20,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    child: TextButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context, 
-                          builder: (context) {
-                            return const CreateTaskPopup();
-                          }
-                        );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(ColorConstant.orange40),
-                        side: MaterialStateProperty.all(
-                          const BorderSide(color: ColorConstant.orange40)
-                        ),
-                        shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8))
-                          )
-                        )
-                      ),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.add, color: Colors.white,),
-                          Text(
-                            "Create task",
-                            style: TextStyle(
-                              fontFamily: ColorConstant.font,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                              color: Colors.white
-                            ),
-                          )
-                        ],
-                      )
-                    ),
-                  ),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 33),
-                child: TaskTable(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    // TODO templete
+    return const DesktopWidget();
   }
 }

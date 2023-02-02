@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/assets/color_constant.dart';
+import 'package:intl/intl.dart';
 import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/header_table.dart';
 import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/table_detail.dart';
 
@@ -21,7 +21,7 @@ class _TaskTableState extends State<TaskTable> {
       "priority": "Urgent", // 0-3 (low, medium, high, urgent)
       "status": "Complete", // 0-2 (not start, pending, complete)
       "category": "Register, Modcom, Camp",
-      "time": "${DateTime.now().hour}:${DateTime.now().minute}"
+      "time": DateFormat('hh:mm a').format(DateTime.now())
     },
     {
       "username": "Runn",
@@ -31,7 +31,7 @@ class _TaskTableState extends State<TaskTable> {
       "priority": "Medium", // 0-3 (low, medium, high, urgent)
       "status": "In Progress", // 0-2 (not start, pending, complete)
       "category": "Register, Modcom, Camp",
-      "time": "${DateTime.now().hour}:${DateTime.now().minute}"
+      "time": DateFormat('hh:mm a').format(DateTime.now())
     },
   ];
 
