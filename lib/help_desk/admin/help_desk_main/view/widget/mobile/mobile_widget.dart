@@ -16,7 +16,7 @@ class MobileWidget extends StatelessWidget {
         "taskHeader": "Lorem ipsu n n nnnnnasdnnnnnnnnnnnnnnnnnnnasdnnnnnnm",
         "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqscasaaa sadasdsa s ad asd sa sad sa as asd asasdasd asas asdas aaaaaaaaaaaaaaaaaaaaaaaaa.",
         "priority": 0, // 0-3 (low, medium, high, urgent)
-        "status": 1, // 0-2 (not start, pending, complete)
+        "status": 2, // 0-2 (not start, pending, complete)
         "category": "Register, Modcom, Camp, aaaaa, maaaaaaaa,aaaaaaaaa,aaaaaaaaa",
         "time": DateFormat('hh:mm a').format(DateTime.now())
       },
@@ -45,6 +45,13 @@ class MobileWidget extends StatelessWidget {
     ];
 
     // TODO edit templete
-    return TaskCard(detail: data[0]);
+    return Column(
+      children: [
+
+        TaskCard(detail: data[0]),
+        TaskCard(detail: data[1]),
+        TaskCard(detail: data[2]),
+      ],
+    );
   }
 }

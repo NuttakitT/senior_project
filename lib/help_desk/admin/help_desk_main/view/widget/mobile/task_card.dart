@@ -38,7 +38,7 @@ class _TaskCardState extends State<TaskCard> {
     );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
       child: FittedBox(
         fit: BoxFit.scaleDown,
         child: Container(
@@ -59,26 +59,30 @@ class _TaskCardState extends State<TaskCard> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 220,
-                        padding: const EdgeInsets.only(right: 16),
-                        child: RichText(
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: widget.detail["taskHeader"],
-                                style: const TextStyle(
-                                  fontFamily: ColorConstant.font,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                  color: ColorConstant.whiteBlack80
-                                ),
-                              )
-                            ],
-                          ),
-                        )
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 220
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: RichText(
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: widget.detail["taskHeader"],
+                                  style: const TextStyle(
+                                    fontFamily: ColorConstant.font,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 20,
+                                    color: ColorConstant.whiteBlack80
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ),
                       ),
                       Text(
                         widget.detail["id"],
