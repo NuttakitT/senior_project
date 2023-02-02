@@ -49,6 +49,12 @@ class ColorConstant {
   static const whiteBlack80 = Color(0xFF393E42);
   static const whiteBlack90 = Color(0xFF21262B);
   static const success5 = Color(0xFFE5F8F2);
+  static const success10 = Color(0xFFCCF1E5);
   static const success30 = Color(0xFF66D6B1);
+  static const success40 = Color(0xFF33C997);
   static const success50 = Color(0xFF00BB7D);
+  static const warning5 = Color(0xFFFFF8E5);
+  static const warning10 = Color(0xFFFFF1CC);
+  static const warning30 = Color(0xFFFFD666);
+  static const warning50 = Color(0xFFFFBB00);
 }

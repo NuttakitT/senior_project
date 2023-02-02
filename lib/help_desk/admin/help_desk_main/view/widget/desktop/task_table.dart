@@ -11,25 +11,38 @@ class TaskTable extends StatefulWidget {
 }
 
 class _TaskTableState extends State<TaskTable> {
-  // * Test data
+  // TODO edit to provider
   final data = [
     {
+      "id": "#123",
       "username": "Runn",
       "email": "runn@gmail.com",
       "taskHeader": "Lorem ipsum",
       "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
-      "priority": "Urgent", // 0-3 (low, medium, high, urgent)
-      "status": "Complete", // 0-2 (not start, pending, complete)
+      "priority": 3, // 0-3 (low, medium, high, urgent)
+      "status": 2, // 0-2 (not start, pending, complete)
       "category": "Register, Modcom, Camp",
       "time": DateFormat('hh:mm a').format(DateTime.now())
     },
     {
+      "id": "#456",
       "username": "Runn",
       "email": "runn@gmail.com",
       "taskHeader": "Lorem ipsum",
       "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
-      "priority": "Medium", // 0-3 (low, medium, high, urgent)
-      "status": "In Progress", // 0-2 (not start, pending, complete)
+      "priority": 1, // 0-3 (low, medium, high, urgent)
+      "status": 1, // 0-2 (not start, pending, complete)
+      "category": "Register, Modcom, Camp",
+      "time": DateFormat('hh:mm a').format(DateTime.now())
+    },
+    {
+      "id": "#456",
+      "username": "Runn",
+      "email": "runn@gmail.com",
+      "taskHeader": "Lorem ipsum",
+      "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
+      "priority": 0, // 0-3 (low, medium, high, urgent)
+      "status": 0, // 0-2 (not start, pending, complete)
       "category": "Register, Modcom, Camp",
       "time": DateFormat('hh:mm a').format(DateTime.now())
     },
@@ -37,13 +50,13 @@ class _TaskTableState extends State<TaskTable> {
 
   final _vController = ScrollController();
 
-  Widget detail(Map<String, dynamic> detail) {
+  Widget detail(BuildContext context, Map<String, dynamic> detail) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       color: Colors.white,
       height: 80,
       child: Row(
-        children: TableDetail.widget(detail),
+        children: TableDetail.widget(context, detail),
       ),
     );
   }
@@ -62,8 +75,9 @@ class _TaskTableState extends State<TaskTable> {
               controller: _vController,
               child: Column(
                 children: [
-                  detail(data[0]),
-                  detail(data[1]),
+                  detail(context, data[0]),
+                  detail(context ,data[1]),
+                  detail(context, data[2]),
                 ],
               ),
             ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/action_button.dart';
+import 'package:senior_project/help_desk/admin/help_desk_main/assets/status_color.dart';
+import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/core/action_button.dart';
+import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/core/priority_icon.dart';
+import 'package:senior_project/help_desk/admin/help_desk_main/view_model/task_view_model.dart';
 
 class TableDetail{
-  // TODO add more color status and priority
   static TextStyle _detailTextStyle(double size, Color color) {
     return TextStyle(
       fontFamily: ColorConstant.font,
@@ -13,7 +16,11 @@ class TableDetail{
     );
   }
 
-  static List<Widget> widget(Map<String, dynamic> detail) {
+  static List<Widget> widget(BuildContext context, Map<String, dynamic> detail) {
+    List<Color> statusColor = StatusColor.getColor(false, detail["status"]);
+    String priority = context.watch<TaskViewModel>().convertToString(false, detail["priority"]);
+    String status = context.watch<TaskViewModel>().convertToString(true, detail["status"]);
+
     return [
       Flexible(
         flex: 2,
@@ -102,13 +109,13 @@ class TableDetail{
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Icon(
-                  Icons.keyboard_double_arrow_up, 
+                Icon(
+                  PriorityIcon.getIcon(detail["priority"]),
                   color: ColorConstant.whiteBlack80,
                   size: 12,
                 ),
                 Text(
-                  detail["priority"],
+                  priority,
                   style: _detailTextStyle(9.5, ColorConstant.whiteBlack80),
                 )
               ],
@@ -124,16 +131,16 @@ class TableDetail{
             height: 24,
             padding: const EdgeInsets.symmetric(horizontal: 9.5, vertical: 4),
             decoration: BoxDecoration(
-              border: Border.all(color: ColorConstant.success30),
+              border: Border.all(color: statusColor[1]),
               borderRadius: BorderRadius.circular(8),
-              color: ColorConstant.success5
+              color: statusColor[0]
             ),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                detail["status"],
+                status,
                 textAlign: TextAlign.center,
-                style: _detailTextStyle(10.5, ColorConstant.success50),
+                style: _detailTextStyle(10.5, statusColor[2]),
               ),
             ),
           ),
