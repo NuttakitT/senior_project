@@ -28,8 +28,8 @@ class _TaskTableState extends State<TaskTable> {
       "email": "runn@gmail.com",
       "taskHeader": "Lorem ipsum",
       "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
-      "priority": "Urgent", // 0-3 (low, medium, high, urgent)
-      "status": "Complete", // 0-2 (not start, pending, complete)
+      "priority": "Medium", // 0-3 (low, medium, high, urgent)
+      "status": "In Progress", // 0-2 (not start, pending, complete)
       "category": "Register, Modcom, Camp",
       "time": "${DateTime.now().hour}:${DateTime.now().minute}"
     },
@@ -37,13 +37,13 @@ class _TaskTableState extends State<TaskTable> {
 
   final _vController = ScrollController();
 
-  Widget detail() {
+  Widget detail(Map<String, dynamic> detail) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       color: Colors.white,
       height: 80,
       child: Row(
-        children: TableDetail.widget(data[0]),
+        children: TableDetail.widget(detail),
       ),
     );
   }
@@ -62,7 +62,8 @@ class _TaskTableState extends State<TaskTable> {
               controller: _vController,
               child: Column(
                 children: [
-                  detail(),
+                  detail(data[0]),
+                  detail(data[1]),
                 ],
               ),
             ),

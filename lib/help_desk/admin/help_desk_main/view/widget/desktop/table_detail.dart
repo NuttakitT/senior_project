@@ -3,8 +3,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/action_button.dart';
 
 class TableDetail{
-  static List<String> actionItem = ["Change Status", "Change Priority", "Message"];
-
+  // TODO add more color status and priority
   static TextStyle _detailTextStyle(double size, Color color) {
     return TextStyle(
       fontFamily: ColorConstant.font,
@@ -93,6 +92,7 @@ class TableDetail{
         child: Padding(
           padding: const EdgeInsets.only(right: 20),
           child: Container(
+            height: 24,
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
             decoration: BoxDecoration(
               border: Border.all(color: ColorConstant.whiteBlack15),
@@ -109,7 +109,7 @@ class TableDetail{
                 ),
                 Text(
                   detail["priority"],
-                  style: _detailTextStyle(12, ColorConstant.whiteBlack80),
+                  style: _detailTextStyle(9.5, ColorConstant.whiteBlack80),
                 )
               ],
             ),
@@ -121,16 +121,20 @@ class TableDetail{
         child: Padding(
           padding: const EdgeInsets.only(right: 20),
           child: Container(
+            height: 24,
             padding: const EdgeInsets.symmetric(horizontal: 9.5, vertical: 4),
             decoration: BoxDecoration(
               border: Border.all(color: ColorConstant.success30),
               borderRadius: BorderRadius.circular(8),
               color: ColorConstant.success5
             ),
-            child: Text(
-              detail["status"],
-              textAlign: TextAlign.center,
-              style: _detailTextStyle(10.5, ColorConstant.success50),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                detail["status"],
+                textAlign: TextAlign.center,
+                style: _detailTextStyle(10.5, ColorConstant.success50),
+              ),
             ),
           ),
         ),

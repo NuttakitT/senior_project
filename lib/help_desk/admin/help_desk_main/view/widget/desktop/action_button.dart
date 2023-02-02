@@ -88,46 +88,51 @@ class ActionButton extends StatefulWidget {
 class _ActionButtonState extends State<ActionButton> {
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton(
-      icon: const RotatedBox(
-        quarterTurns: 1,
-        child: Icon(
-            Icons.keyboard_control, 
-          ),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        splashColor: ColorConstant.orange10
       ),
-      itemBuilder: (context) {
-        return <PopupMenuEntry>[
-          PopupSubMenuItem(
-            title: "Status", 
-            items: const ["Not start", "In progress", "Done"],
-            onSelected: (value) {
-              // TODO change status logic
-            }
-          ),
-          PopupSubMenuItem(
-            title: "Priority", 
-            items: const ["Urgent", "High", "Medium", "Low"],
-            onSelected: (value) {
-              // TODO change priority logic
-            }
-          ),
-          PopupMenuItem(
-            value: 3,
-            child: const Text(
-              "Message",
-              style: TextStyle(
-                fontFamily: ColorConstant.font,
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-                color: ColorConstant.whiteBlack80
-              ),
+      child: PopupMenuButton(
+        icon: const RotatedBox(
+          quarterTurns: 1,
+          child: Icon(
+              Icons.keyboard_control, 
             ),
-            onTap: () {
-              // TODO change to reply channel page
-            },
-          ),
-        ];
-      },
+        ),
+        itemBuilder: (context) {
+          return <PopupMenuEntry>[
+            PopupSubMenuItem(
+              title: "Status", 
+              items: const ["Not start", "In progress", "Done"],
+              onSelected: (value) {
+                // TODO change status logic
+              }
+            ),
+            PopupSubMenuItem(
+              title: "Priority", 
+              items: const ["Urgent", "High", "Medium", "Low"],
+              onSelected: (value) {
+                // TODO change priority logic
+              }
+            ),
+            PopupMenuItem(
+              value: 3,
+              child: const Text(
+                "Message",
+                style: TextStyle(
+                  fontFamily: ColorConstant.font,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: ColorConstant.whiteBlack80
+                ),
+              ),
+              onTap: () {
+                // TODO change to reply channel page
+              },
+            ),
+          ];
+        },
+      ),
     );
   }
 }
