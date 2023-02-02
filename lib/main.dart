@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const Scaffold(
-        body: HelpDeskAdminPage(),
+        body: SafeArea(child: HelpDeskAdminPage()),
       ),
     );
   }
