@@ -19,6 +19,9 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24)
+      ),
       content: SizedBox(
         width: 1000,
         child: Column(

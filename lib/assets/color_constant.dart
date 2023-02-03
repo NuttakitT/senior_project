@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ColorConstant {
   static const font = "Roboto";
+  static const interFont = "Inter";
 
   // white
   final white14B = const TextStyle(

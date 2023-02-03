@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/mobile/setting_pop_up.dart';
 import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/mobile/task_card.dart';
 
 class MobileWidget extends StatefulWidget {
@@ -122,7 +123,12 @@ class _MobileWidgetState extends State<MobileWidget> {
                 alignment: AlignmentDirectional.centerEnd,
                 child: IconButton(
                   onPressed: () {
-                    // TODO pop up setting
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                        return const SettingPopUp();
+                      }
+                    );
                   }, 
                   padding: EdgeInsets.only(right: 18.25 + _scaleText(pixelWidth)),
                   iconSize: 28 + _scaleText(pixelWidth),
@@ -160,9 +166,18 @@ class _MobileWidgetState extends State<MobileWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // TODO listen to provider state
-                        menu("All", true),
-                        menu("Not start", false),
-                        menu("In progress", false),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: menu("All", true),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: menu("Not start", false),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: menu("In progress", false),
+                        ),
                         menu("Closed", false),
                       ],
                     ),
