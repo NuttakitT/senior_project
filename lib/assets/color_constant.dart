@@ -37,6 +37,7 @@ class ColorConstant {
   static const orange30 = Color(0xFFFFB74D);
   static const orange40 = Color(0xFFFFA726);
   static const orange50 = Color(0xFFFF9800);
+  static const orange60 = Color(0xFFFB8C00);
   static const orange70 = Color(0xFFF57C00);
   static const orange90 = Color(0xFFE65100);
   static const whiteBlack5 = Color(0xFFF3F3F3);
