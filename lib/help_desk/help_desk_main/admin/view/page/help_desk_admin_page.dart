@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/desktop_widget.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/mobile/mobile_widget.dart';
+import 'package:senior_project/help_desk/help_desk_main/admin/view/widget/desktop/desktop_widget.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/view/widget/mobile/mobile_widget.dart';
 
 class HelpDeskAdminPage extends StatefulWidget {
   const HelpDeskAdminPage({super.key});

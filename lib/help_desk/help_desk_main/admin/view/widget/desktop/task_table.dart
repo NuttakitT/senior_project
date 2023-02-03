@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/header_table.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/desktop/table_detail.dart';
+import 'package:senior_project/help_desk/help_desk_main/admin/view/widget/desktop/header_table.dart';
+import 'package:senior_project/help_desk/help_desk_main/admin/view/widget/desktop/table_detail.dart';
 
 class TaskTable extends StatefulWidget {
   const TaskTable({super.key});

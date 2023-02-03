@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/assets/status_color.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/core/priority_icon.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view_model/task_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/assets/status_color.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/view/widget/priority_icon.dart';
+import 'package:senior_project/help_desk/help_desk_main/admin/view_model/task_view_model.dart';
 
 class TaskCard extends StatefulWidget {
   final Map<String, dynamic> detail;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/mobile/setting_pop_up.dart';
-import 'package:senior_project/help_desk/admin/help_desk_main/view/widget/mobile/task_card.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/view/widget/mobile/setting_pop_up.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/view/widget/mobile/task_card.dart';
 
 class MobileWidget extends StatefulWidget {
   const MobileWidget({super.key});
