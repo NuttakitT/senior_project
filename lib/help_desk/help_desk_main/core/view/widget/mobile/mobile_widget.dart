@@ -48,6 +48,9 @@ class _MobileWidgetState extends State<MobileWidget> {
       "time": DateFormat('hh:mm a').format(DateTime.now())
     },
   ];
+
+  // TODO listen to user provider
+  bool isAdmin = true;
   
   final ScrollController _vContraoller = ScrollController();
   final ScrollController _menuController = ScrollController();
@@ -119,25 +122,32 @@ class _MobileWidgetState extends State<MobileWidget> {
                   ),
                 ),
               ),
-              Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: IconButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context, 
-                      builder: (context) {
-                        return const SettingPopUp();
-                      }
+              Builder(
+                builder: (context) {
+                  if (isAdmin) {
+                    return Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context, 
+                            builder: (context) {
+                              return const SettingPopUp();
+                            }
+                          );
+                        }, 
+                        padding: EdgeInsets.only(right: 18.25 + _scaleText(pixelWidth)),
+                        iconSize: 28 + _scaleText(pixelWidth),
+                        // alignment: Alignment.centerRight,
+                        color: ColorConstant.whiteBlack80,
+                        icon: const Icon(
+                          Icons.settings_outlined
+                        )
+                      ),
                     );
-                  }, 
-                  padding: EdgeInsets.only(right: 18.25 + _scaleText(pixelWidth)),
-                  iconSize: 28 + _scaleText(pixelWidth),
-                  // alignment: Alignment.centerRight,
-                  color: ColorConstant.whiteBlack80,
-                  icon: const Icon(
-                    Icons.settings_outlined
-                  )
-                ),
+                  }
+                  return Container();
+                }
               )
             ],
           ),
