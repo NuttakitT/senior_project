@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_main/admin/view/widget/desktop/create_task_pop_up.dart';
-import 'package:senior_project/help_desk/help_desk_main/admin/view/widget/desktop/task_table.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/create_task_pop_up.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/task_table.dart';
 
 class DesktopWidget extends StatelessWidget {
   const DesktopWidget({super.key});

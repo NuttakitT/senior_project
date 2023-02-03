@@ -10,7 +10,7 @@ class HelpDeskMainView extends StatefulWidget {
 
 class _HelpDeskMainViewState extends State<HelpDeskMainView> {
   // TODO: change viewModel to Provider
-  HelpDeskViewModel viewModel = HelpDeskViewModel();
+  HelpDeskMainViewModel viewModel = HelpDeskMainViewModel();
 
   @override
   void initState() {
