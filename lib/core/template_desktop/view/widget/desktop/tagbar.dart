@@ -22,22 +22,21 @@ class _TagBarState extends State<TagBar> {
               color:
                   select == true ? ColorConstant.orange20 : ColorConstant.blue0,
               borderRadius: BorderRadius.circular(8)),
-          height: 40, //height = 40
-          width: 280, //lenght = 280
+          height: 40,
+          width: 280,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Expanded(
-                  child: Text(
-                    widget.name,
-                    style: const TextStyle(
-                        fontSize: 20,
-                        color: ColorConstant.whiteBlack80,
-                        fontWeight: FontWeight.normal),
-                  ),
+                child: Text(
+                  widget.name,
+                  style: const TextStyle(
+                      fontSize: 20,
+                      color: ColorConstant.whiteBlack80,
+                      fontWeight: FontWeight.normal),
+                  textAlign: TextAlign.left,
                 ),
               ),
             ],

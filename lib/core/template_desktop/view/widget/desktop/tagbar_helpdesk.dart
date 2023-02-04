@@ -29,36 +29,35 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
           width: 280,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.name,
-                    style: const TextStyle(
-                        fontSize: 20,
-                        color: ColorConstant.whiteBlack80,
-                        fontWeight: FontWeight.normal),
-                    textAlign: TextAlign.left,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.name,
+                  style: const TextStyle(
+                      fontSize: 20,
+                      color: ColorConstant.whiteBlack80,
+                      fontWeight: FontWeight.normal),
+                  textAlign: TextAlign.left,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: select == true
+                          ? ColorConstant.white
+                          : ColorConstant.blue5),
+                  height: 24,
+                  width: 40,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  child: const Text(
+                    //TODO Pull data from back-end
+                    "191",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: ColorConstant.whiteBlack80),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: select == true
-                            ? ColorConstant.white
-                            : ColorConstant.blue5),
-                    height: 24,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                    child: const Text(
-                      //TODO Pull data from back-end
-                      "191",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: ColorConstant.whiteBlack80),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

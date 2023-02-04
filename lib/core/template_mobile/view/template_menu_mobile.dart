@@ -15,9 +15,11 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
   final IconData logout = Icons.logout_rounded;
   final String login_text = 'Login';
   final String logout_text = 'Logout';
+  final double text_base_point = 250;
 
   @override
   Widget build(BuildContext context) {
+    final double screen_width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: ColorConstant.whiteBlack80),
@@ -41,31 +43,31 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
       ),
       body: widget.content,
       drawer: Drawer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(top: 16, right: 16, bottom: 24),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: InkWell(
-                      child: const Icon(
-                        Icons.cancel_rounded,
-                        color: ColorConstant.whiteBlack80,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 16, right: 16, bottom: 24),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        child: const Icon(
+                          Icons.cancel_rounded,
+                          color: ColorConstant.whiteBlack80,
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
                       ),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: InkWell(
-                    child: Container(
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: InkWell(
                       child: Row(
                         children: const [
                           Padding(
@@ -84,17 +86,14 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                           )
                         ],
                       ),
+                      onTap: () {
+                        //TODO when click link to home page
+                      },
                     ),
-                    onTap: () {
-                      //TODO when click link to home page
-                      print("close");
-                    },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: InkWell(
-                    child: Container(
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: InkWell(
                       child: Row(
                         children: const [
                           Padding(
@@ -113,20 +112,17 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                           )
                         ],
                       ),
+                      onTap: () {
+                        //TODO when click link to helpdesk page
+                      },
                     ),
-                    onTap: () {
-                      //TODO when click link to helpdesk page
-                      print("close");
-                    },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: InkWell(
-                    child: Container(
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: InkWell(
                       child: Row(
-                        children: const [
-                          Padding(
+                        children: [
+                          const Padding(
                             padding: EdgeInsets.only(
                                 top: 16, bottom: 16, left: 16, right: 8),
                             child: Icon(
@@ -135,24 +131,23 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                             ),
                           ),
                           Text(
-                            'Room Reservation',
-                            style: TextStyle(
+                            (screen_width <= text_base_point)
+                                ? 'Room \nReservation'
+                                : 'Room Reservation',
+                            style: const TextStyle(
                                 fontSize: 24,
                                 color: ColorConstant.whiteBlack80),
                           )
                         ],
                       ),
+                      onTap: () {
+                        //TODO when click link to room reservation page
+                      },
                     ),
-                    onTap: () {
-                      //TODO when click link to room reservation page
-                      print("close");
-                    },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: InkWell(
-                    child: Container(
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: InkWell(
                       child: Row(
                         children: const [
                           Padding(
@@ -171,20 +166,17 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                           )
                         ],
                       ),
+                      onTap: () {
+                        //TODO when click link to My profile page
+                      },
                     ),
-                    onTap: () {
-                      //TODO when click link to My profile page
-                      print("close");
-                    },
                   ),
-                ),
-              ],
-            ),
-            //TODO set state login to logout
-            Padding(
-              padding: const EdgeInsets.only(bottom: 24),
-              child: InkWell(
-                child: Container(
+                ],
+              ),
+              //TODO set state login to logout
+              Padding(
+                padding: const EdgeInsets.only(bottom: 24),
+                child: InkWell(
                   child: Row(
                     children: [
                       Padding(
@@ -203,14 +195,13 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                       )
                     ],
                   ),
+                  onTap: () {
+                    //TODO when click link to login/logout page
+                  },
                 ),
-                onTap: () {
-                  //TODO when click link to login/logout page
-                  print("close");
-                },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

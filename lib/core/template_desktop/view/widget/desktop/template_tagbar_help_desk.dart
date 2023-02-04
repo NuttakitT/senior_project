@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar.dart';
+import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar_helpdesk.dart';
 import 'package:senior_project/assets/color_constant.dart';
 
-//call function from tagbar.dart
-class TemplateTagBarHome extends StatefulWidget {
-  const TemplateTagBarHome({super.key});
+//call function from tabtag_help.dart
+class TemplateTagBarHelpDesk extends StatefulWidget {
+  const TemplateTagBarHelpDesk({super.key});
   @override
-  State<TemplateTagBarHome> createState() => _TemplateTagBarHomeState();
+  State<TemplateTagBarHelpDesk> createState() => _TemplateTagBarHelpDeskState();
 }
 
-class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
+class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,45 +52,22 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              child: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 8),
-                    child: Text(
-                      "Tag Post",
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: ColorConstant.whiteBlack80,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 1,
-                      color: ColorConstant.whiteBlack20,
-                    ),
-                  )
-                ],
-              ),
+            const Padding(
+              padding: EdgeInsets.only(top: 8, bottom: 8),
+              child: TagBarHelpDesk(name: "All status"),
+            ),
+            const Divider(),
+            const Padding(
+              padding: EdgeInsets.only(top: 8, bottom: 8),
+              child: TagBarHelpDesk(name: "Not Start"),
             ),
             const Padding(
               padding: EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBar(name: "All tag post"),
+              child: TagBarHelpDesk(name: "In Progress"),
             ),
             const Padding(
               padding: EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBar(name: "Register"),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBar(name: "FAQ"),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBar(name: "Document"),
+              child: TagBarHelpDesk(name: "Closed"),
             )
           ],
         ),
