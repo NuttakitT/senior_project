@@ -19,7 +19,7 @@ class _TemplateNavBarState extends State<TemplateNavBar> {
           borderRadius: BorderRadius.only(bottomRight: Radius.circular(36)),
           color: ColorConstant.white),
       width: 72,
-      height: 700,
+      height: double.infinity,
       child: const MainMenu(),
     );
   }

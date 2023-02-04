@@ -3,8 +3,8 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_navbar.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_faq.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_faq_admin.dart';
-import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_help_admin.dart';
-import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_helpdesk.dart';
+import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_help_desk_admin.dart';
+import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_help_desk.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_home.dart';
 
 class TemplateDesktop extends StatefulWidget {
@@ -55,46 +55,44 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
       ),
       body: SizedBox(
         width: double.infinity,
-        height: 1024,
+        height: double.infinity,
         child: Scrollbar(
-          controller: vertical,
+          controller: horizontal,
           thumbVisibility: true,
-          scrollbarOrientation: ScrollbarOrientation.right,
           child: SingleChildScrollView(
-            controller: vertical,
-            scrollDirection: Axis.vertical,
-            child: Scrollbar(
-              controller: horizontal,
-              thumbVisibility: true,
-              scrollbarOrientation: ScrollbarOrientation.bottom,
-              child: SingleChildScrollView(
-                controller: horizontal,
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    TemplateNavBar(),
-                    Builder(builder: (context) {
-                      if (widget.faqmenu == true) {
-                        return TagBarFaq();
-                      }
-                      if (widget.faqmenuadmin == true) {
-                        return TagBarFaqAdmin();
-                      }
-                      if (widget.helpdesk == true) {
-                        return TagBarHelp();
-                      }
-                      if (widget.helpdeskadmin == true) {
-                        return TagBarHelpAdmin();
-                      }
-                      if (widget.home == true) {
-                        return TagBarHome();
-                      }
-                      return Container();
-                    }),
-                    Container(child: widget.content)
-                  ],
+            controller: horizontal,
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 400,
+                  child: Stack(
+                    alignment: AlignmentDirectional.topStart,
+                    children: [
+                      Builder(builder: (context) {
+                        if (widget.faqmenu == true) {
+                          return const TemplateTagBarFaq();
+                        }
+                        if (widget.faqmenuadmin == true) {
+                          return const TemplateTagBarFaqAdmin();
+                        }
+                        if (widget.helpdesk == true) {
+                          return const TemplateTagBarHelpDesk();
+                        }
+                        if (widget.helpdeskadmin == true) {
+                          return const TemplateTagBarHelpDeskAdmin();
+                        }
+                        if (widget.home == true) {
+                          return const TemplateTagBarHome();
+                        }
+                        return Container();
+                      }),
+                      const TemplateNavBar(),
+                    ],
+                  ),
                 ),
-              ),
+                Container(child: widget.content)
+              ],
             ),
           ),
         ),
