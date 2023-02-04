@@ -3,58 +3,56 @@ import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar_
 import 'package:senior_project/assets/color_constant.dart';
 
 //call function from tabtag_help.dart
-class TagBarHelpAdmin extends StatefulWidget {
-  const TagBarHelpAdmin({super.key});
+class TemplateTagBarHelpDeskAdmin extends StatefulWidget {
+  const TemplateTagBarHelpDeskAdmin({super.key});
   @override
-  State<TagBarHelpAdmin> createState() => _TagBarHelpAdminState();
+  State<TemplateTagBarHelpDeskAdmin> createState() =>
+      _TemplateTagBarHelpDeskAdminState();
 }
 
-class _TagBarHelpAdminState extends State<TagBarHelpAdmin> {
+class _TemplateTagBarHelpDeskAdminState
+    extends State<TemplateTagBarHelpDeskAdmin> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      //padding in box
-      padding: const EdgeInsets.all(0),
-      child: Container(
-        decoration: const BoxDecoration(color: ColorConstant.blue0),
-        width: 328,
-        height: 1080,
+    return Container(
+      padding: const EdgeInsets.only(left: 72),
+      decoration: const BoxDecoration(color: ColorConstant.blue0),
+      width: 400,
+      height: double.infinity,
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InkWell(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 16, right: 24, left: 24, bottom: 40),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: ColorConstant.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                          width: 1, color: ColorConstant.whiteBlack30)),
-                  height: 40,
-                  child: Row(
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.only(right: 4, left: 16),
-                        child: Icon(
-                          Icons.search_rounded,
-                          color: ColorConstant.whiteBlack30,
-                        ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 16, right: 24, left: 24, bottom: 40),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: ColorConstant.white,
+                    borderRadius: BorderRadius.circular(16)),
+                height: 40,
+                width: 280,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(right: 4, left: 16),
+                      child: const Icon(
+                        Icons.search_rounded,
+                        color: ColorConstant.whiteBlack30,
                       ),
-                      Text(
-                        "Search...",
-                        style: TextStyle(
-                            color: ColorConstant.whiteBlack30, fontSize: 16),
+                    ),
+                    const Expanded(
+                      child: TextField(
+                        decoration: InputDecoration.collapsed(
+                            hintText: "search...",
+                            hintStyle: TextStyle(
+                                color: ColorConstant.whiteBlack30,
+                                fontSize: 16)),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              onTap: () {
-                //TODO Search text
-                print("searcher");
-              },
             ),
             const Padding(
               padding: EdgeInsets.only(top: 8, bottom: 8),

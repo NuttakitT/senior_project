@@ -3,57 +3,56 @@ import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar.
 import 'package:senior_project/assets/color_constant.dart';
 
 //call function from tabtag.dart
-class TagBarFaqAdmin extends StatefulWidget {
-  const TagBarFaqAdmin({super.key});
+class TemplateTagBarFaqAdmin extends StatefulWidget {
+  const TemplateTagBarFaqAdmin({super.key});
   @override
-  State<TagBarFaqAdmin> createState() => _TagBarFaqAdminState();
+  State<TemplateTagBarFaqAdmin> createState() => _TemplateTagBarFaqAdminState();
 }
 
-class _TagBarFaqAdminState extends State<TagBarFaqAdmin> {
+class _TemplateTagBarFaqAdminState extends State<TemplateTagBarFaqAdmin> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      //padding in box
-      padding: const EdgeInsets.all(0),
-      child: Container(
-        decoration: const BoxDecoration(color: ColorConstant.blue0),
-        width: 328,
-        height: 700,
+    return Container(
+      padding: const EdgeInsets.only(left: 72),
+      decoration: const BoxDecoration(color: ColorConstant.blue0),
+      width: 400,
+      height: double.infinity,
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InkWell(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 16, right: 24, left: 24, bottom: 40),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: ColorConstant.white,
-                      borderRadius: BorderRadius.circular(16)),
-                  height: 40,
-                  child: Row(
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.only(right: 4, left: 16),
-                        child: Icon(
-                          Icons.search_rounded,
-                          color: ColorConstant.whiteBlack30,
-                        ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 16, right: 24, left: 24, bottom: 40),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: ColorConstant.white,
+                    borderRadius: BorderRadius.circular(16)),
+                height: 40,
+                width: 280,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(right: 4, left: 16),
+                      child: const Icon(
+                        Icons.search_rounded,
+                        color: ColorConstant.whiteBlack30,
                       ),
-                      Text(
-                        "Search...",
-                        style: TextStyle(
-                            color: ColorConstant.whiteBlack30, fontSize: 16),
+                    ),
+                    const Expanded(
+                      child: TextField(
+                        decoration: InputDecoration.collapsed(
+                            hintText: "search...",
+                            hintStyle: TextStyle(
+                                color: ColorConstant.whiteBlack30,
+                                fontSize: 16)),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              onTap: () {
-                //TODO Search text
-                print("searcher");
-              },
             ),
+            //tittle
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
               child: Row(
@@ -85,9 +84,7 @@ class _TagBarFaqAdminState extends State<TagBarFaqAdmin> {
                     ),
                     onTap: () {
                       //TODO Add Content in FAQ for Admin
-                      setState(() {
-                        print("add form");
-                      });
+                      setState(() {});
                     },
                   ),
                 ],

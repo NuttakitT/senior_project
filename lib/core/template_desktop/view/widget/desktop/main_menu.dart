@@ -43,9 +43,7 @@ class _MainMenuState extends State<MainMenu> {
                       ),
                     ),
                     //TODO change page when click button
-                    onTap: () {
-                      print("change page");
-                    },
+                    onTap: () {},
                   ),
                 ),
               ),
@@ -78,9 +76,7 @@ class _MainMenuState extends State<MainMenu> {
                       ),
                     ),
                     //TODO change page when click button
-                    onTap: () {
-                      print("change page");
-                    },
+                    onTap: () {},
                   ),
                 ),
               ),
@@ -111,9 +107,7 @@ class _MainMenuState extends State<MainMenu> {
                       ),
                     ),
                     //TODO change page when click button
-                    onTap: () {
-                      print("change page");
-                    },
+                    onTap: () {},
                   ),
                 ),
               ),
@@ -144,9 +138,7 @@ class _MainMenuState extends State<MainMenu> {
                       ),
                     ),
                     //TODO change page when click button
-                    onTap: () {
-                      print("change page");
-                    },
+                    onTap: () {},
                   ),
                 ),
               ),
@@ -177,9 +169,7 @@ class _MainMenuState extends State<MainMenu> {
                       ),
                     ),
                     //TODO change page when click button
-                    onTap: () {
-                      print("change page");
-                    },
+                    onTap: () {},
                   ),
                 ),
               ),
@@ -205,12 +195,10 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                   //TODO change page when click button
-                  onTap: () {
-                    print("change page");
-                  },
+                  onTap: () {},
                 ),
               ),
-              Divider(),
+              const Divider(),
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: InkWell(
@@ -229,9 +217,7 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                   //TODO change page when click button
-                  onTap: () {
-                    print("change page");
-                  },
+                  onTap: () {},
                 ),
               ),
             ],
