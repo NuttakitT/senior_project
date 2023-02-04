@@ -3,15 +3,15 @@ import 'package:senior_project/assets/color_constant.dart';
 
 class StatusColor {
   static final List<Color> _desktopCompleteColor = [
-    ColorConstant.success5,
-    ColorConstant.success30,
-    ColorConstant.success50,
+    ColorConstant.green5,
+    ColorConstant.green30,
+    ColorConstant.green50,
   ];
 
   static final List<Color> _desktopPendingColor = [
-    ColorConstant.warning5,
-    ColorConstant.warning30,
-    ColorConstant.warning50,
+    ColorConstant.yellow5,
+    ColorConstant.yellow30,
+    ColorConstant.yellow50,
   ];
 
   static final List<Color> _desktopNotStartColor = [
@@ -21,13 +21,13 @@ class StatusColor {
   ];
 
   static final List<Color> _mobileCompleteColor = [
-    ColorConstant.success10,
-    ColorConstant.success40,
+    ColorConstant.green10,
+    ColorConstant.green40,
   ];
 
   static final List<Color> _mobilePendingColor = [
-    ColorConstant.warning10,
-    ColorConstant.warning50,
+    ColorConstant.yellow10,
+    ColorConstant.yellow50,
   ];
 
   static final List<Color> _mobileNotStartColor = [
