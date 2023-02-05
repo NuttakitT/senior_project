@@ -10,6 +10,7 @@ import 'package:senior_project/core/template_desktop/view/widget/desktop/templat
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_home.dart';
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/page/authentication_page.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
@@ -37,12 +38,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Test',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const TemplateMenuMobile(
-          content: Text("data"),
-        ));
+      title: 'Test',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      // home: const TemplateMenuMobile(
+      //   content: Text("data"),
+      // )
+      home: HelpDeskMainView(key: key),
+    );
   }
 }
