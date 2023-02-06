@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         faqmenuadmin: false, 
         helpdesk: false, 
         helpdeskadmin: false, 
-        home: false,
+        home: true,
         content: Text("test")
       )
     );

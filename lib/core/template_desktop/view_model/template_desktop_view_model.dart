@@ -1,20 +1,58 @@
 import 'package:flutter/foundation.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
-  List<bool> templateState = [true, false, false, false, false, false];
+  List<bool> _navBarState = [true, false, false, false, false, false];
+  List<bool> _helpDeskTagBarAdmin = [true, false, false, false, false, false, false, false]; 
+  // TODO query amount from db
+  List<bool> _homeTagBar = [true, false]; 
+  List<bool> _faqTagBar = [true, false];
 
-  bool get getHomeState => templateState[0];
-  bool get getHelpDeskState => templateState[1];
-  bool get getRoomState => templateState[2];
-  bool get getTeacherContactState => templateState[3];
-  bool get getFaqState => templateState[4];
-  bool get getProfileState => templateState[5];
+  bool getNavBarState(int index) => _navBarState[index];
+  bool getHomeState(int index) => _homeTagBar[index];
+  bool getFaqState(int index) => _faqTagBar[index];
+  bool getHelpDeskAdminState(int index) => _helpDeskTagBarAdmin[index];
 
-  void changeState(int menu) {
-    int trueStateIndex = templateState.indexOf(true);
-    if (trueStateIndex != menu && trueStateIndex != -1) {
-      templateState[trueStateIndex] = false;
-      templateState[menu] = true;
+  List<bool> _selectState(int type) {
+    switch (type) {
+      case 1:
+        return _navBarState;
+      case 2:
+        return _homeTagBar;
+      case 3: 
+        return _faqTagBar;
+      case 4: 
+        return _helpDeskTagBarAdmin;
+      default:  
+        return [];
+    }
+  }
+  
+  void _copyValue(List<bool> list, int type) {
+    switch (type) {
+      case 1:
+        _navBarState = list;
+        break;
+      case 2:
+        _homeTagBar = list;
+        break;
+      case 3: 
+        _faqTagBar = list;
+        break;
+      case 4: 
+        _helpDeskTagBarAdmin = list;
+        break;
+      default:  
+        break;
+    }
+  }
+
+  void changeState(int index, int type) {
+    List<bool> menuTemplate = _selectState(type);
+    int trueStateIndex = menuTemplate.indexOf(true);
+    if (trueStateIndex != index && trueStateIndex != -1) {
+      menuTemplate[trueStateIndex] = false;
+      menuTemplate[index] = true;
+      _copyValue(menuTemplate, type);
       notifyListeners();
     }
   }

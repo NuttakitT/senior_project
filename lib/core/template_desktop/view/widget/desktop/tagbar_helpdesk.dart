@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 
 class TagBarHelpDesk extends StatefulWidget {
-  final String name; //ชื่อเมนู
+  final String name;
+  final bool state;
+  final int index;
   const TagBarHelpDesk({
     super.key,
     required this.name,
+    required this.index,
+    required this.state,
   });
 
   @override
@@ -13,7 +19,6 @@ class TagBarHelpDesk extends StatefulWidget {
 }
 
 class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
-  bool select = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,9 +26,8 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
       child: InkWell(
         child: Container(
           decoration: BoxDecoration(
-              //TODO set state -> change color when select
               color:
-                  select == true ? ColorConstant.orange20 : ColorConstant.blue0,
+                  widget.state == true ? ColorConstant.orange20 : ColorConstant.blue0,
               borderRadius: BorderRadius.circular(8)),
           height: 40,
           width: 280,
@@ -43,7 +47,7 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: select == true
+                      color: widget.state == true
                           ? ColorConstant.white
                           : ColorConstant.blue5),
                   height: 24,
@@ -62,9 +66,8 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
           ),
         ),
         onTap: () {
-          setState(() {
-            select = true;
-          });
+          context.read<TemplateDesktopViewModel>().changeState(widget.index, 4);
+          // TODO tag bar logic
         },
       ),
     );

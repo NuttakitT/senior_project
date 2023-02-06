@@ -32,12 +32,12 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
-    bool isHomeSelected = context.watch<TemplateDesktopViewModel>().getHomeState;
-    bool isHelpDeskSelected = context.watch<TemplateDesktopViewModel>().getHelpDeskState;
-    bool isRoomSelected = context.watch<TemplateDesktopViewModel>().getRoomState;
-    bool isTeacherContactSelected = context.watch<TemplateDesktopViewModel>().getTeacherContactState;
-    bool isFaqSelected = context.watch<TemplateDesktopViewModel>().getFaqState;
-    bool isProfileSelected = context.watch<TemplateDesktopViewModel>().getProfileState;
+    bool isHomeSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(0);
+    bool isHelpDeskSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(1);
+    bool isRoomSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(2);
+    bool isTeacherContactSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(3);
+    bool isFaqSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(4);
+    bool isProfileSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(5);
     bool isLogin = context.watch<AppViewModel>().hasUser;
 
     return Column(
@@ -71,7 +71,7 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(0);
+                    context.read<TemplateDesktopViewModel>().changeState(0, 1);
                     // TODO link to home page
                   },
                 ),
@@ -102,7 +102,7 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(1);
+                    context.read<TemplateDesktopViewModel>().changeState(1, 1);
                     // TODO link to help desk page
                   },
                 ),
@@ -132,7 +132,7 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(2);
+                    context.read<TemplateDesktopViewModel>().changeState(2, 1);
                     // TODO link to room reservation page
                   },
                 ),
@@ -162,7 +162,7 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(3);
+                    context.read<TemplateDesktopViewModel>().changeState(3, 1);
                     // TODO link to teacher contact page
                   },
                 ),
@@ -192,7 +192,7 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(4);
+                    context.read<TemplateDesktopViewModel>().changeState(4, 1);
                     // TODO link to FAQ page
                   },
                 ),
@@ -226,7 +226,7 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(5);
+                    context.read<TemplateDesktopViewModel>().changeState(5, 1);
                     // TODO link to profile page (profile)
                   },
                 ),

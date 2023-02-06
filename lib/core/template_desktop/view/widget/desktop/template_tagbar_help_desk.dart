@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar_helpdesk.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 
 //call function from tabtag_help.dart
 class TemplateTagBarHelpDesk extends StatefulWidget {
@@ -12,6 +14,11 @@ class TemplateTagBarHelpDesk extends StatefulWidget {
 class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
   @override
   Widget build(BuildContext context) {
+    bool all = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(0);
+    bool notStart = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(1);
+    bool pending = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(2);
+    bool closed = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(3);
+
     return Container(
       padding: const EdgeInsets.only(left: 72),
       decoration: const BoxDecoration(color: ColorConstant.blue0),
@@ -52,22 +59,22 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "All status"),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: TagBarHelpDesk(name: "All status", state: all, index: 0),
             ),
             const Divider(),
-            const Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Not Start"),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: TagBarHelpDesk(name: "Not Start", state: notStart, index: 1),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "In Progress"),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: TagBarHelpDesk(name: "In Progress", state: pending, index: 2),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Closed"),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: TagBarHelpDesk(name: "Closed", state: closed, index: 3),
             )
           ],
         ),
