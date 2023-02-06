@@ -52,13 +52,6 @@ class AuthenticationViewModel extends ChangeNotifier {
     return true;
   }
 
-  bool checkIsUserLogin() {
-    if (FirebaseAuth.instance.currentUser != null) {
-      return true;
-    }  
-    return false;
-  }
-
   Map<String, dynamic> storeAppUser(DocumentSnapshot snapshot) {
     Map<String, dynamic> result = {};
     String data = snapshot.data().toString();
