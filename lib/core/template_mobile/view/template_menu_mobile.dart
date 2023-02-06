@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/core/template_mobile/view/view_model/template_mobile_view_model.dart';
+import 'package:senior_project/core/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class TemplateMenuMobile extends StatefulWidget {
