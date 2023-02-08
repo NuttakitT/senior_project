@@ -9,12 +9,10 @@ import 'package:senior_project/user_authentication/role_selection_page/view_mode
 class CardSelection extends StatefulWidget {
   final bool isStudentCard;
   final bool isMobileSite;
-  final bool isTextBreakpoint;
   const CardSelection({
     super.key, 
     required this.isStudentCard,
     required this.isMobileSite,
-    required this.isTextBreakpoint
   });
 
   @override
@@ -26,7 +24,7 @@ class _CardSelectionState extends State<CardSelection> {
   @override
   Widget build(BuildContext context) {
     bool isStudentCardSelected = context.watch<RoleSelectionViewModel>().getStudentCardSelected;
-    final double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return InkWell(
       onTap: () {
@@ -92,27 +90,71 @@ class _CardSelectionState extends State<CardSelection> {
                     Builder(
                       builder: (context) {
                         if (widget.isStudentCard) {
-                          if (widget.isTextBreakpoint) {
-                            return StudentTextAlignment.rowAlignmentText(screenWidth);
+                          if (widget.isMobileSite) {
+                            return StudentTextAlignment.mobileAlignment(screenWidth);
                           }
-                          return StudentTextAlignment.desktopWidget(screenWidth);
+                          return StudentTextAlignment.desktopAlignment();
                         }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: Text(
-                                TextConstant.teacherFeatureText[0],
-                                style: CardTextStyle.subStyle(screenWidth)
-                              ),
+                            Builder(
+                              builder: (context) {
+                                if (!widget.isMobileSite) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: Text(
+                                      TextConstant.teacherFeatureText[0],
+                                      style: CardTextStyle.subStyle(widget.isMobileSite)
+                                    ),
+                                  );
+                                }
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: SizedBox(
+                                    width: screenWidth - 130,
+                                    child: RichText(
+                                      maxLines: null,
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: TextConstant.teacherFeatureText[0],
+                                            style: CardTextStyle.subStyle(widget.isMobileSite)
+                                          )
+                                        ]
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),                           
+                            Builder(
+                              builder: (context) {
+                                if (!widget.isMobileSite) {
+                                  return  Text(
+                                    TextConstant.teacherFeatureText[1],
+                                    style: CardTextStyle.subStyle(widget.isMobileSite)
+                                  );
+                                }
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: SizedBox(
+                                    width: screenWidth - 130,
+                                    child: RichText(
+                                      maxLines: null,
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: TextConstant.teacherFeatureText[1],
+                                            style: CardTextStyle.subStyle(widget.isMobileSite)
+                                          )
+                                        ]
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            Text(
-                              widget.isMobileSite || (screenWidth <= 505 && screenWidth > 430)
-                                ? TextConstant.teacherFeatureText[2]
-                                : TextConstant.teacherFeatureText[1],
-                              style: CardTextStyle.subStyle(screenWidth)
-                            )
                           ],
                         );
                       },

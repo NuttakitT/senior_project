@@ -18,15 +18,7 @@ class AuthenticationPage extends StatefulWidget {
 
 class _AuthenticationPage extends State<AuthenticationPage> {
 
-  double _indicatorWidth(double pixelWidth) {
-    if (pixelWidth <= 350 && pixelWidth > 250) {
-      return -50;
-    } 
-    if (pixelWidth <= 250) {
-      return -70;
-    }
-    return 0;
-  }
+  
 
   Widget loginSite(bool isMobileSite) {
     if (isMobileSite) {
@@ -61,7 +53,6 @@ class _AuthenticationPage extends State<AuthenticationPage> {
           child: Column(
             children: [
               PageIndicator(
-                width: isMobileSite ? 178 + _indicatorWidth(pixelWidth) : 200, 
                 isMobileSize: isMobileSite,
                 indicatorsState: const [true, false],
               ),
@@ -80,7 +71,6 @@ class _AuthenticationPage extends State<AuthenticationPage> {
       content: Column(
         children: [
           PageIndicator(
-            width: isMobileSite ? 178 : 200, 
             isMobileSize: isMobileSite, 
             indicatorsState: const [true, false],
           ),

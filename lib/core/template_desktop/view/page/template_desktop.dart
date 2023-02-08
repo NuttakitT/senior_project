@@ -31,11 +31,12 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
   ScrollController horizontal = ScrollController();
   ScrollController vertical = ScrollController();
   ScrollController childController = ScrollController();
-  double maxWidth = 1800;
 
   @override
   Widget build(BuildContext context) {
     bool hasMenu = widget.faqmenu || widget.faqmenuadmin || widget.helpdesk || widget.helpdeskadmin || widget.home;
+    double contentSize = 1300;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +59,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
         toolbarHeight: 90,
       ),
       body: SizedBox(
-        width: maxWidth,
+        width: double.infinity,
         height: double.infinity,
         child: Scrollbar(
           controller: horizontal,
@@ -101,8 +102,11 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     controller: childController,
-                    child: SizedBox(
-                      width: maxWidth - (!hasMenu ? 72 : 400),
+                    child: Container(
+                      alignment: AlignmentDirectional.center,
+                      width: screenWidth > contentSize 
+                      ? screenWidth - (hasMenu ? 400 : 72)
+                      : contentSize - (hasMenu ? 400 : 72),
                       child: widget.content
                     ),
                   ),

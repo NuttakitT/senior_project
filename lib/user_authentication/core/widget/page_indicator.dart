@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 
 class PageIndicator extends StatefulWidget {
-  final double width;
   final List<bool> indicatorsState;
   final bool isMobileSize;
   const PageIndicator({
     super.key, 
-    required this.width, 
     required this.indicatorsState,
     required this.isMobileSize
   });
@@ -39,6 +37,16 @@ class _PageIndicatorState extends State<PageIndicator> {
         Colors.white
       ];
     }
+  }
+
+  double _indicatorWidth(double pixelWidth) {
+    if (pixelWidth <= 350 && pixelWidth > 250) {
+      return -50;
+    } 
+    if (pixelWidth <= 250) {
+      return -70;
+    }
+    return 0;
   }
 
   static Widget _indicatorIcon(
@@ -106,7 +114,7 @@ class _PageIndicatorState extends State<PageIndicator> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Container(
-            width: widget.width,
+            width: widget.isMobileSize ? 178 + _indicatorWidth(MediaQuery.of(context).size.width) : 200,
             height: 2,
             color: widget.indicatorsState[1] 
               ? _getColor(widget.isMobileSize)[4] 
