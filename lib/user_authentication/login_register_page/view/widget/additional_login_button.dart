@@ -35,6 +35,9 @@ class AdditionalLoginButton {
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8)
             )
+          ),
+          side: MaterialStateProperty.all(
+            isFacebookLogin ? null : const BorderSide(color: ColorConstant.whiteBlack40)
           )
         ),
         child: Row(

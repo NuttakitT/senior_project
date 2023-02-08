@@ -30,9 +30,13 @@ class TemplateDesktop extends StatefulWidget {
 class _TemplateDesktopState extends State<TemplateDesktop> {
   ScrollController horizontal = ScrollController();
   ScrollController vertical = ScrollController();
+  ScrollController childController = ScrollController();
+  double maxWidth = 1800;
 
   @override
   Widget build(BuildContext context) {
+    bool hasMenu = widget.faqmenu || widget.faqmenuadmin || widget.helpdesk || widget.helpdeskadmin || widget.home;
+
     return Scaffold(
       appBar: AppBar(
         title: RichText(
@@ -54,7 +58,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
         toolbarHeight: 90,
       ),
       body: SizedBox(
-        width: double.infinity,
+        width: maxWidth,
         height: double.infinity,
         child: Scrollbar(
           controller: horizontal,
@@ -65,7 +69,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
             child: Row(
               children: [
                 SizedBox(
-                  width: 400,
+                  width: !hasMenu ? 72 : 400,
                   child: Stack(
                     alignment: AlignmentDirectional.topStart,
                     children: [
@@ -91,13 +95,24 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                     ],
                   ),
                 ),
-                Container(child: widget.content)
+                Scrollbar(
+                  thumbVisibility: true,
+                  controller: childController,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    controller: childController,
+                    child: SizedBox(
+                      width: maxWidth - (!hasMenu ? 72 : 400),
+                      child: widget.content
+                    ),
+                  ),
+                )
               ],
             ),
           ),
         ),
       ),
-      backgroundColor: ColorConstant.blue10,
+      backgroundColor: ColorConstant.blue5,
     );
   }
 }

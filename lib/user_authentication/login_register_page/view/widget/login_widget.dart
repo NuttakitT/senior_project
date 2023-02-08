@@ -19,13 +19,16 @@ class LoginWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          "Log in",
-          style: TextStyle(
-            color: isMobileSite ? ColorConstant.whiteBlack80 : ColorConstant.orange90,
-            fontFamily: ColorConstant.font,
-            fontWeight: FontWeight.w600,
-            fontSize: isMobileSite ? 28 : 40
+        Padding(
+          padding: EdgeInsets.only(top: isMobileSite ? 40: 0),
+          child: Text(
+            "Log in",
+            style: TextStyle(
+              color: isMobileSite ? ColorConstant.orange70 : ColorConstant.orange90,
+              fontFamily: ColorConstant.font,
+              fontWeight: FontWeight.w600,
+              fontSize: isMobileSite ? 28 : 40
+            ),
           ),
         ),
         Builder(
