@@ -15,10 +15,10 @@ class AuthenticationViewModel extends ChangeNotifier {
   bool _isEmptyPassword = false;
   bool _isEmptyUsername = false;
   bool _visibilityText = true;
-  bool _isShowLoinPage = true;
+  bool _isShowLoginPage = true;
 
   bool get getVisibilityState => _visibilityText;
-  bool get getIsShowLoginPage => _isShowLoinPage;
+  bool get getIsShowLoginPage => _isShowLoginPage;
   bool get getIsEmptyEmail => _isEmptyEmail;
   bool get getIsEmptyPassword => _isEmptyPassword;
   bool get getIsEmptyUsername => _isEmptyUsername;
@@ -49,7 +49,7 @@ class AuthenticationViewModel extends ChangeNotifier {
     }
 
   void changeShowPageState() {
-    _isShowLoinPage = !_isShowLoinPage;
+    _isShowLoginPage = !_isShowLoginPage;
   }
 
   void clearModel() {
@@ -159,7 +159,7 @@ class AuthenticationViewModel extends ChangeNotifier {
       notifyListeners();
       return true;
     } on FirebaseAuthException catch (e) {
-      _errorText = e.code;
+      _errorText = "An error occurred, ${e.code.replaceAll("-", " ")}";
       notifyListeners();
       return false;
     } catch (e) {
