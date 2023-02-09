@@ -4,9 +4,9 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
 
 class ConfirmButton {
-  static Widget button(BuildContext context, bool isConfirmButton, bool isMobileSite) {
+  static Widget button(BuildContext context, bool isConfirmButton, bool isMobileSite, double size) {
     return SizedBox(
-      width: isMobileSite ? 140 : 180,
+      width: size,
       height: 40,
       child: TextButton(
         onPressed: () async {

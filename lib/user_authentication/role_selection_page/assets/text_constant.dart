@@ -12,6 +12,5 @@ class TextConstant {
   static List<String> teacherFeatureText = [
     "$leadingCharacter All Features like a role “Student”.",
     "$leadingCharacter Can link your profile with “Contact Card” for update card.",
-    "$leadingCharacter Can link your profile with\n  “Contact Card” for update card."
   ];
 }
