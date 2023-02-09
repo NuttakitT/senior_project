@@ -55,19 +55,19 @@ class LoginWidget extends StatelessWidget {
           padding: EdgeInsets.only(top: isMobileSite ? 40 : 56),
           child: const TextFieldAuthentication(
             hintMode: 1, 
-            isPasswordField: false
+            isPasswordField: false,
           ),
         ),
         const Padding(
           padding: EdgeInsets.only(top: 16),
           child: TextFieldAuthentication(
             hintMode: 2, 
-            isPasswordField: true
+            isPasswordField: true,
           ),
         ),
         Padding(
           padding: EdgeInsets.only(top: isMobileSite ? 80 : 64),
-          child: PrimaryButtonAuthentication.widget(context, true, isMobileSite)
+          child: PrimaryButtonAuthentication(isLoginPage: true, isMobileSite: isMobileSite)
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16),
@@ -153,7 +153,12 @@ class LoginWidget extends StatelessWidget {
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      context.read<AuthenticationViewModel>().changeViewState();
+                      context.read<AuthenticationViewModel>().clearModel();
+                      context.read<AuthenticationViewModel>().clearErrorText();
+                      context.read<AuthenticationViewModel>().clearIsEmptyUsername();
+                      context.read<AuthenticationViewModel>().clearIsEmptyEmail();
+                      context.read<AuthenticationViewModel>().clearIsEmptyPassword(); 
+                      context.read<AuthenticationViewModel>().changeShowPageState();
                     }
                 )
               ]

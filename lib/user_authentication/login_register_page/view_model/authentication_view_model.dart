@@ -10,17 +10,50 @@ import 'package:senior_project/user_authentication/login_register_page/model/reg
 
 class AuthenticationViewModel extends ChangeNotifier {
   RegisterModel registerModel = RegisterModel();
+  String _errorText = "";
+  bool _isEmptyEmail = false;
+  bool _isEmptyPassword = false;
+  bool _isEmptyUsername = false;
+  bool _visibilityText = true;
+  bool _isShowLoinPage = true;
 
-  bool get getPageState => registerModel.getIsShowLoginPage;
-  bool get getVisibilityState => registerModel.getVisibilityState;
-
-  void changeViewState() {
-    registerModel.changeShowPageState();
+  bool get getVisibilityState => _visibilityText;
+  bool get getIsShowLoginPage => _isShowLoinPage;
+  bool get getIsEmptyEmail => _isEmptyEmail;
+  bool get getIsEmptyPassword => _isEmptyPassword;
+  bool get getIsEmptyUsername => _isEmptyUsername;
+  String get getErrorText => _errorText;
+  
+  void clearErrorText() {
+    _errorText = "";
     notifyListeners();
   }
 
-  void changeVisibilityTextState() {
-    registerModel.changeVisibilityState();
+  void clearIsEmptyEmail() {
+    _isEmptyEmail = false;
+    notifyListeners();
+  }
+
+  void clearIsEmptyPassword() {
+    _isEmptyPassword = false;
+    notifyListeners();
+  }
+
+  void clearIsEmptyUsername() {
+    _isEmptyUsername = false;
+    notifyListeners();
+  }
+
+  void changeVisibilityState() {
+      _visibilityText = !_visibilityText;
+    }
+
+  void changeShowPageState() {
+    _isShowLoinPage = !_isShowLoinPage;
+  }
+
+  void clearModel() {
+    registerModel = RegisterModel();
     notifyListeners();
   }
 
@@ -33,6 +66,8 @@ class AuthenticationViewModel extends ChangeNotifier {
         .hasMatch(input);
       if (emailValid) {
         registerModel.setEmail = input;
+      } else {
+        registerModel.setEmail = "";
       }
     } else if (inputType == 2) {
       registerModel.setPassword = input;
@@ -40,15 +75,32 @@ class AuthenticationViewModel extends ChangeNotifier {
   }
 
   bool checkkUserInput(bool isRegister) {
-    if(registerModel.getPassword == null) {
-      return false;
-    } 
-    if(registerModel.getEmail == null) {
-      return false;
-    } 
-    if(isRegister && registerModel.getUsername == null) {
+    if(registerModel.getPassword!.isEmpty && 
+    registerModel.getEmail.isEmpty && 
+    ((isRegister && registerModel.getUsername.isEmpty) || !isRegister)) {
+      _isEmptyPassword = true;
+      _isEmptyEmail = true;
+      _isEmptyUsername = true;
+      notifyListeners();
       return false;
     }
+    if(registerModel.getPassword!.isEmpty) {
+      _isEmptyPassword = true;
+      notifyListeners();
+      return false;
+    } 
+    if(registerModel.getEmail.isEmpty) {
+      _isEmptyEmail = true;
+      notifyListeners();
+      return false;
+    } 
+    if(isRegister && registerModel.getUsername.isEmpty) {
+      _isEmptyUsername = true;
+      notifyListeners();
+      return false;
+    }
+    _errorText = "";
+    notifyListeners();
     return true;
   }
 
@@ -64,44 +116,56 @@ class AuthenticationViewModel extends ChangeNotifier {
     return result;
   }
 
-  Future<Map<String, dynamic>> loginUser(BuildContext context) async {
+  Future<bool> loginUser(BuildContext context) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: registerModel.getEmail as String, 
+        email: registerModel.getEmail, 
         password: registerModel.getPassword as String
       );
       final snapshot = await FirebaseServices("user").getDocumentById(credential.user!.uid);
       Map<String, dynamic> detail = storeAppUser(snapshot);
       context.read<AppViewModel>().setLoggedInUser(detail);
-      return {"success": true};
+      _errorText = "";
+      notifyListeners();
+      return true;
     } on FirebaseAuthException catch (e) {
-      return {"success": false, "comment": e.code};
+      _errorText = "An error occurred, ${e.code.replaceAll("-", " ")}";
+      notifyListeners();
+      return false;
     } catch (e) {
-      return {"success": false, "comment": e.toString()};
+      _errorText = "An error occurred, Please try again";
+      notifyListeners();
+      return false;
     }
   }
 
-  Future<Map<String, dynamic>> createUser(BuildContext context) async {
+  Future<bool> createUser(BuildContext context) async {
     try {
       final creadential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: registerModel.getEmail as String, 
+        email: registerModel.getEmail, 
         password: registerModel.getPassword as String
       );
       Map<String, dynamic> detail = {
         "id": creadential.user!.uid,
         "email": creadential.user!.email as String,
-        "username": registerModel.getUsername as String,
+        "username": registerModel.getUsername,
       };
       FirebaseServices("user").setDocument(
         creadential.user!.uid,
         detail
       );
       context.read<AppViewModel>().setLoggedInUser(detail);
-      return {"success": true};
+      _errorText = "";
+      notifyListeners();
+      return true;
     } on FirebaseAuthException catch (e) {
-      return {"success": false, "comment": e.code};
+      _errorText = e.code;
+      notifyListeners();
+      return false;
     } catch (e) {
-      return {"success": false, "comment": e.toString()};
+      _errorText = "An error occurred, Please try again";
+      notifyListeners();
+      return false;
     }
   }
   
@@ -109,18 +173,21 @@ class AuthenticationViewModel extends ChangeNotifier {
     try {
       GoogleAuthProvider provider = GoogleAuthProvider();
       provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
-      final creadential = await FirebaseAuth.instance.signInWithPopup(provider);
+      final credential = await FirebaseAuth.instance.signInWithPopup(provider);
+      final snapshot = await FirebaseServices("user").getDocumentById(credential.user!.uid);
       Map<String, dynamic> detail = {
-        "id": creadential.user!.uid,
-        "email": creadential.user!.email as String,
+        "id": credential.user!.uid,
+        "email": credential.user!.email as String,
       };
-      FirebaseServices("user").setDocument(
-        creadential.user!.uid,
-        {
-          "id": creadential.user!.uid,
-          "email": creadential.user!.email as String,
-        }
-      );
+      if (!snapshot.exists) {
+        FirebaseServices("user").setDocument(
+          credential.user!.uid,
+          {
+            "id": credential.user!.uid,
+            "email": credential.user!.email as String,
+          }
+        );
+      }
       context.read<AppViewModel>().setLoggedInUser(detail);
       return true;
     } catch (e) {
@@ -132,22 +199,29 @@ class AuthenticationViewModel extends ChangeNotifier {
     try {
       FacebookAuthProvider  provider = FacebookAuthProvider ();
       provider.addScope("email");
-      final creadential = await FirebaseAuth.instance.signInWithPopup(provider);
+      final credential = await FirebaseAuth.instance.signInWithPopup(provider);
       Map<String, dynamic> detail = {
-        "id": creadential.user!.uid,
-        "email": creadential.user!.email as String,
+        "id": credential.user!.uid,
+        "email": credential.user!.email as String,
       };
-      FirebaseServices("user").setDocument(
-        creadential.user!.uid,
-        {
-          "id": creadential.user!.uid,
-          "email": creadential.user!.email as String,
-        }
-      );
+      final snapshot = await FirebaseServices("user").getDocumentById(credential.user!.uid);
+      if (!snapshot.exists) {
+        FirebaseServices("user").setDocument(
+          credential.user!.uid,
+          {
+            "id": credential.user!.uid,
+            "email": credential.user!.email as String,
+          }
+        );
+      }
       context.read<AppViewModel>().setLoggedInUser(detail);
       return true;
     } catch (e) {
       return false;
     }
+  }
+
+  Future<void> resetPassword(String email) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 }
