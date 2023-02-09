@@ -6,27 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/user/app_user.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/user_authentication/role_selection_page/model/role_selection_model.dart';
 
 class RoleSelectionViewModel extends ChangeNotifier{
-  RoleSelectionModel model = RoleSelectionModel();
+  bool _isStudentCardSelected = true;
 
-  bool get getTextBreakpoint => model.getIsTextbreakpoint as bool;
-  bool get getStudentCardSelected => model.getIsStudentCardSelected;
-
-  void calculateTextBreakpoint(double pixelWidth) {
-    model.calculateTextBreakpoint(pixelWidth);
-  }
+  bool get getStudentCardSelected => _isStudentCardSelected;
 
   void changeCardSelectedState(bool isSelected) {
-    model.changeStudentCardSelectedState();
+    _isStudentCardSelected = !_isStudentCardSelected;
     notifyListeners();
   }
 
   Future<bool> confirmButtonLogic(BuildContext context) async {
     try {
+      final user = FirebaseAuth.instance.currentUser;
       FirebaseServices service = FirebaseServices("user");
-      String uid = FirebaseAuth.instance.currentUser!.uid;
+      String uid = user!.uid;
       await service.editDocument(uid, {"role": getStudentCardSelected ? 1 : 2});
       context.read<AppViewModel>().app.getUser.setRole = getStudentCardSelected ? 1 : 2;
       return true;
