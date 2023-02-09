@@ -9,7 +9,7 @@ class TextFieldAuthentication extends StatefulWidget {
   const TextFieldAuthentication({
     super.key,
     required this.hintMode,
-    required this.isPasswordField
+    required this.isPasswordField,
   });
 
   @override
@@ -19,6 +19,19 @@ class TextFieldAuthentication extends StatefulWidget {
 class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
   final List<String> _hintText = ["Username", "E-mail", "Password"];
   final controller = TextEditingController();
+
+  bool? getState(int hintMode) {
+    switch (hintMode) {
+      case 0:
+        return context.watch<AuthenticationViewModel>().getIsEmptyUsername;
+      case 1:
+        return context.watch<AuthenticationViewModel>().getIsEmptyEmail;
+      case 2:
+        return context.watch<AuthenticationViewModel>().getIsEmptyPassword;
+      default:
+        return null;
+    }
+  }
 
   @override
   void initState() {
@@ -36,13 +49,17 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
 
   @override
   Widget build(BuildContext context) {
+    bool state = getState(widget.hintMode) as bool;
+
     return Container(
       alignment: Alignment.centerLeft,
       width: double.infinity,
       height: 40,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: ColorConstant.whiteBlack50),
+        border: Border.all(
+          color: state ?  ColorConstant.red50 : ColorConstant.whiteBlack50,
+        ),
         borderRadius: const BorderRadius.all(Radius.circular(8))
       ),
       child:  Row(
@@ -64,6 +81,21 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
                     fontSize: 14
                   )
                 ),
+                onTap: () {
+                  switch (widget.hintMode) {
+                    case 0:
+                      context.read<AuthenticationViewModel>().clearIsEmptyUsername();
+                      break;
+                    case 1:
+                      context.read<AuthenticationViewModel>().clearIsEmptyEmail();
+                      break;
+                    case 2:
+                      context.read<AuthenticationViewModel>().clearIsEmptyPassword();
+                      break;
+                    default:
+                      break;
+                  }
+                },
               ),
             ),
           ),
@@ -76,7 +108,7 @@ class _TextFieldAuthenticationState extends State<TextFieldAuthentication> {
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     onPressed: () {
-                      context.read<AuthenticationViewModel>().changeVisibilityTextState();
+                      context.read<AuthenticationViewModel>().changeVisibilityState();
                     }, 
                     icon: Builder(
                       builder: (context) {
