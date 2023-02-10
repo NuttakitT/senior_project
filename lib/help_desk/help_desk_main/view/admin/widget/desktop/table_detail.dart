@@ -100,25 +100,29 @@ class TableDetail{
           padding: const EdgeInsets.only(right: 20),
           child: Container(
             height: 24,
+            width: 80,
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
             decoration: BoxDecoration(
               border: Border.all(color: ColorConstant.whiteBlack15),
               borderRadius: BorderRadius.circular(8),
               color: ColorConstant.whiteBlack5
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Icon(
-                  PriorityIcon.getIcon(detail["priority"]),
-                  color: ColorConstant.whiteBlack80,
-                  size: 12,
-                ),
-                Text(
-                  priority,
-                  style: _detailTextStyle(9.5, ColorConstant.whiteBlack80),
-                )
-              ],
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Icon(
+                    PriorityIcon.getIcon(detail["priority"]),
+                    color: ColorConstant.whiteBlack80,
+                    size: 12,
+                  ),
+                  Text(
+                    priority,
+                    style: _detailTextStyle(10.5, ColorConstant.whiteBlack80),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -129,6 +133,7 @@ class TableDetail{
           padding: const EdgeInsets.only(right: 20),
           child: Container(
             height: 24,
+            width: 80,
             padding: const EdgeInsets.symmetric(horizontal: 9.5, vertical: 4),
             decoration: BoxDecoration(
               border: Border.all(color: statusColor[1]),

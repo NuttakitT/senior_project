@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/create_task.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/setting_pop_up.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/task_card.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_main_view_model.dart';
 
 class MobileWidget extends StatefulWidget {
   const MobileWidget({super.key});
@@ -57,31 +59,26 @@ class _MobileWidgetState extends State<MobileWidget> {
   final ScrollController _menuController = ScrollController();
 
   Widget menu(String name, bool state) {
-    return InkWell(
-      onTap: () {
-        // TODO menu button logic
-      },
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16,5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: state 
-          ? const Border(
-            bottom: BorderSide(
-              color: ColorConstant.orange50,
-              width: 2
-            )
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16,5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: state 
+        ? const Border(
+          bottom: BorderSide(
+            color: ColorConstant.orange50,
+            width: 2
           )
-          : null
-        ),
-        child: Text(
-          name,
-          style: TextStyle(
-            fontFamily: ColorConstant.font,
-            fontWeight: FontWeight.w400,
-            fontSize: 16,
-            color: state ? ColorConstant.orange50 : ColorConstant.whiteBlack60,
-          ),
+        )
+        : null
+      ),
+      child: Text(
+        name,
+        style: TextStyle(
+          fontFamily: ColorConstant.font,
+          fontWeight: FontWeight.w400,
+          fontSize: 16,
+          color: state ? ColorConstant.orange50 : ColorConstant.whiteBlack60,
         ),
       ),
     );
@@ -100,7 +97,6 @@ class _MobileWidgetState extends State<MobileWidget> {
   @override
   Widget build(BuildContext context) {
     double pixelWidth = MediaQuery.of(context).size.width;
-    // TODO edit templete w/ scrollable
     return Stack(
       alignment: AlignmentDirectional.bottomEnd,
       children: [
@@ -184,20 +180,55 @@ class _MobileWidgetState extends State<MobileWidget> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // TODO listen to provider state
                             Padding(
                               padding: const EdgeInsets.only(right: 8),
-                              child: menu("All", true),
+                              child: InkWell(
+                                onTap: () {
+                                  context.read<HelpDeskMainViewModel>().changeMobileMenuState(0);
+                                  // TODO back-end logic
+                                },
+                                child: menu(
+                                  "All", 
+                                  context.watch<HelpDeskMainViewModel>().getMobileMenuState(0) as bool
+                                ),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(right: 8),
-                              child: menu("Not start", false),
+                              child: InkWell(
+                                onTap: () {
+                                  context.read<HelpDeskMainViewModel>().changeMobileMenuState(1);
+                                  // TODO back-end logic
+                                },
+                                child: menu(
+                                  "Not start", 
+                                  context.watch<HelpDeskMainViewModel>().getMobileMenuState(1) as bool
+                                ),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(right: 8),
-                              child: menu("In progress", false),
+                              child: InkWell(
+                                onTap: () {
+                                  context.read<HelpDeskMainViewModel>().changeMobileMenuState(2);
+                                  // TODO back-end logic
+                                },
+                                child: menu(
+                                  "In progress", 
+                                  context.watch<HelpDeskMainViewModel>().getMobileMenuState(2) as bool
+                                ),
+                              ),
                             ),
-                            menu("Closed", false),
+                            InkWell(
+                              onTap: () {
+                                  context.read<HelpDeskMainViewModel>().changeMobileMenuState(3);
+                                  // TODO back-end logic
+                                },
+                              child: menu(
+                                "Closed", 
+                                context.watch<HelpDeskMainViewModel>().getMobileMenuState(3) as bool
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -206,11 +237,34 @@ class _MobileWidgetState extends State<MobileWidget> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // TODO listen to provider state
-                      menu("All", true),
-                      menu("Not start", false),
-                      menu("In progress", false),
-                      menu("Closed", false),
+                      InkWell(
+                        onTap: () {
+                          context.read<HelpDeskMainViewModel>().changeMobileMenuState(0);
+                          // TODO back-end logic
+                        },
+                        child: menu("All", context.watch<HelpDeskMainViewModel>().getMobileMenuState(0) as bool)
+                      ),
+                      InkWell(
+                        onTap: () {
+                          context.read<HelpDeskMainViewModel>().changeMobileMenuState(1);
+                          // TODO back-end logic
+                        },
+                        child: menu("Not start", context.watch<HelpDeskMainViewModel>().getMobileMenuState(1) as bool)
+                      ),
+                      InkWell(
+                        onTap: () {
+                          context.read<HelpDeskMainViewModel>().changeMobileMenuState(2);
+                          // TODO back-end logic
+                        },
+                        child: menu("In progress", context.watch<HelpDeskMainViewModel>().getMobileMenuState(2) as bool)
+                      ),
+                      InkWell(
+                        onTap: () {
+                          context.read<HelpDeskMainViewModel>().changeMobileMenuState(3);
+                          // TODO back-end logic
+                        },
+                        child: menu("Closed", context.watch<HelpDeskMainViewModel>().getMobileMenuState(3) as bool)
+                      ),
                     ],
                   );
                 }

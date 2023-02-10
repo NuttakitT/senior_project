@@ -89,21 +89,23 @@ class RoleSelectionPage extends StatelessWidget {
       builder: (context) {
         if (isMobileSite) {
           return TemplateMenuMobile(
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 40),
-                  child: PageIndicator(
-                    isMobileSize: isMobileSite,
-                    indicatorsState: const [true, true],
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: PageIndicator(
+                      isMobileSize: isMobileSite,
+                      indicatorsState: const [true, true],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: pageDetail(context, isMobileSite, screenWidth),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: pageDetail(context, isMobileSite, screenWidth),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -113,6 +115,7 @@ class RoleSelectionPage extends StatelessWidget {
           helpdesk: false, 
           helpdeskadmin: false, 
           home: false, 
+          useTemplatescroll: true,
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

@@ -13,6 +13,7 @@ class TemplateDesktop extends StatefulWidget {
   final bool helpdeskadmin;
   final bool helpdesk;
   final bool home;
+  final bool useTemplatescroll;
   final Widget content;
   const TemplateDesktop(
       {super.key,
@@ -21,6 +22,7 @@ class TemplateDesktop extends StatefulWidget {
       required this.helpdesk,
       required this.helpdeskadmin,
       required this.home,
+      required this.useTemplatescroll,
       required this.content});
 
   @override
@@ -96,21 +98,32 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                     ],
                   ),
                 ),
-                Scrollbar(
-                  thumbVisibility: true,
-                  controller: childController,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    controller: childController,
-                    child: Container(
-                      alignment: AlignmentDirectional.center,
+                Builder(
+                  builder: (context) {
+                    if (widget.useTemplatescroll) {
+                      return Scrollbar(
+                        thumbVisibility: true,
+                        controller: childController,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          controller: childController,
+                          child: SizedBox(
+                            width: screenWidth > contentSize 
+                            ? screenWidth - (hasMenu ? 400 : 72)
+                            : contentSize - (hasMenu ? 400 : 72),
+                            child: widget.content
+                          ),
+                        ),
+                      );
+                    } 
+                    return SizedBox(
                       width: screenWidth > contentSize 
                       ? screenWidth - (hasMenu ? 400 : 72)
                       : contentSize - (hasMenu ? 400 : 72),
                       child: widget.content
-                    ),
-                  ),
-                )
+                    );
+                  },
+                ),
               ],
             ),
           ),
