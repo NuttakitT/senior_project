@@ -55,20 +55,18 @@ class HelpDeskCardWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
+          Container(
             width: 5,
             height: double.infinity,
             child: DecoratedBox(
               decoration: BoxDecoration(color: Colors.red),
             ),
           ),
-          SizedBox(
-            width: screenWidth,
-            height: double.infinity,
+          Expanded(
             child: Container(
               decoration: BoxDecoration(color: Color(0xFFF3F3F3)),
               child: Table(
-                border: TableBorder.all(),
+                // border: TableBorder.all(),
                 columnWidths: const <int, TableColumnWidth>{
                   0: FixedColumnWidth(120),
                   1: FlexColumnWidth(),
@@ -93,7 +91,7 @@ class HelpDeskCardWidget {
                               child: Center(
                                 child: DefaultTextStyle(
                                     style: priorityTextStyle(),
-                                    child: const Text("Urgent")),
+                                    child: Text(card.priority ?? "")),
                               ),
                             ),
                           ),
@@ -104,7 +102,7 @@ class HelpDeskCardWidget {
                           padding: const EdgeInsets.only(top: 24.0, left: 8.0),
                           child: DefaultTextStyle(
                               style: titleDetailTextStyle(),
-                              child: const Text("Title #001")),
+                              child: Text(card.title ?? "")),
                         )),
                     TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
@@ -130,7 +128,7 @@ class HelpDeskCardWidget {
                           top: 8.0, bottom: 8.0, left: 24.0),
                       child: DefaultTextStyle(
                           style: categoryTextStyle(),
-                          child: const Text("Cat detail")),
+                          child: Text(card.category ?? "")),
                     )),
                     TableCell(child: Container()),
                   ]),
@@ -146,7 +144,7 @@ class HelpDeskCardWidget {
                     TableCell(
                       child: Padding(
                         padding: const EdgeInsets.only(
-                            top: 8.0, left: 14.0, right: 8.0),
+                            top: 8.0, left: 14.0, right: 8.0, bottom: 8.0),
                         child: Container(
                           decoration: BoxDecoration(
                               border: Border.all(
@@ -157,8 +155,7 @@ class HelpDeskCardWidget {
                             padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                             child: DefaultTextStyle(
                                 style: detailTextStyle(),
-                                child: const Text(
-                                    "Detail bvovbobjobvborfbgobfjdsobobdbob ")),
+                                child: Text(card.detail ?? "")),
                           ),
                         ),
                       ),
@@ -166,7 +163,8 @@ class HelpDeskCardWidget {
                     TableCell(
                       verticalAlignment: TableCellVerticalAlignment.bottom,
                       child: Container(
-                        padding: EdgeInsets.only(left: 16),
+                        padding: const EdgeInsets.only(
+                            left: 16, bottom: 8.0, right: 8.0),
                         height: 40.0,
                         child: TextButton(
                           onPressed: () {

@@ -7,33 +7,21 @@ class HelpDeskModel extends AppUser {
 
 class HelpDeskCard {
   final String? title;
+  final int? cardNumber;
   final String? category;
   final String? detail;
   final String? priority;
+  final Status? status;
+  final String? userName;
 
-  HelpDeskCard({this.title, this.category, this.detail, this.priority});
+  HelpDeskCard(
+      {this.title,
+      this.cardNumber,
+      this.category,
+      this.detail,
+      this.priority,
+      this.status,
+      this.userName});
 }
 
-// const data = [
-//   {
-//     "title": "title01",
-//     "category": "Room jeng",
-//     "detail":
-//         "Lorem ipsum grhbnujibnrogbibveifgwyvbiewvgviowevyueovfuyfsvuyfvwvu",
-//     "priority": "high"
-//   },
-//   {
-//     "title": "title02",
-//     "category": "Roommmmmm jeng",
-//     "detail":
-//         "Lorem ipsum grhbnujibnrogbibveifgwyvbiewvgviowevyueovfuyfsvuyfvwvu",
-//     "priority": "high"
-//   },
-//   {
-//     "title": "title03",
-//     "category": "GGGGGGGGGJGJGJGJGJGJGJGJG",
-//     "detail":
-//         "Lorem ipsum grhbnujibnrogbibveifgwyvbiewvgviowevyueovfuyfsvuyfvwvu",
-//     "priority": "high"
-//   },
-// ];
+enum Status { notStart, inProgress, done }

@@ -28,10 +28,16 @@ class HelpDeskMobileHeader {
             SizedBox(
               width: double.infinity,
               height: 105,
-              child: DefaultTextStyle(
-                style: titleTextStyle(),
-                child: const Text("Help-desk List"),
+              child: Center(
+                child: DefaultTextStyle(
+                  style: titleTextStyle(),
+                  child: const Text("Help-desk List"),
+                ),
               ),
+            ),
+            Container(
+              height: 1.0,
+              color: Colors.black,
             )
           ],
         ));

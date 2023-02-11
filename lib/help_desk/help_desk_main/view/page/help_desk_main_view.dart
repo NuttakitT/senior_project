@@ -6,6 +6,7 @@ import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_mai
 
 import '../../../../core/view_model/app_view_model.dart';
 import '../widget/help_desk_main_desktop_widget.dart';
+import '../widget/help_desk_main_mobile_widget.dart';
 
 class HelpDeskMainView extends StatefulWidget {
   const HelpDeskMainView({super.key});
@@ -17,10 +18,23 @@ class HelpDeskMainView extends StatefulWidget {
 class _HelpDeskMainViewState extends State<HelpDeskMainView> {
   List<HelpDeskCard> cards = [
     HelpDeskCard(
-        title: "ewwe",
-        category: "eee",
-        detail: "gerberbergberw",
-        priority: "High")
+        title: "Flutter TextButton Widget",
+        cardNumber: 100,
+        category: "Flutter krub",
+        detail:
+            "TextButton is a built-in widget in Flutter which derives its design from Google Material Design Library. It is a simple Button without any border that listens for onPressed and onLongPress gestures. It has a style property that accepts ButtonStyle as value, using this style property developers can customize the TextButton however they want.",
+        priority: "High",
+        status: Status.notStart,
+        userName: "Runn SSSS"),
+    HelpDeskCard(
+        title: "Flut Widget",
+        cardNumber: 101,
+        category: "Flutter krub",
+        detail:
+            "TextButton is a built-in widget in Flutter which derives its design from Google Material Design Library. It is a simple Button without any border that listens for onPressed and onLongPress gestures. It has a style property that accepts ButtonStyle as value, using this style property developers can customize the TextButton however they want.",
+        priority: "High",
+        status: Status.done,
+        userName: "Mamamamama")
   ];
 
   Widget helpDeskMainDesktopView(List<HelpDeskCard> cards) {
@@ -30,14 +44,15 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
   }
 
   Widget helpDeskMainMobileView(List<HelpDeskCard> cards) {
-    // return HelpDeskMainMobileWidget();
-    return Container();
+    return HelpDeskMainMobileWidget(
+      cards: cards,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     // bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
-    bool isMobileSite = false;
+    bool isMobileSite = true;
 
     return Builder(
       builder: (BuildContext context) {
