@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 
 class TagBar extends StatefulWidget {
   final String name;
-  const TagBar({super.key, required this.name});
+  final bool state;
+  final int index;
+  final int type;
+  const TagBar({
+    super.key, 
+    required this.name, 
+    required this.state, 
+    required this.index,
+    required this.type  
+  });
 
   @override
   State<TagBar> createState() => _TagBarState();
 }
 
 class _TagBarState extends State<TagBar> {
-  bool select = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,9 +28,8 @@ class _TagBarState extends State<TagBar> {
       child: InkWell(
         child: Container(
           decoration: BoxDecoration(
-              //TODO set state -> change color when select
               color:
-                  select == true ? ColorConstant.orange20 : ColorConstant.blue0,
+                  widget.state == true ? ColorConstant.orange20 : ColorConstant.blue0,
               borderRadius: BorderRadius.circular(8)),
           height: 40,
           width: 280,
@@ -43,9 +52,8 @@ class _TagBarState extends State<TagBar> {
           ),
         ),
         onTap: () {
-          setState(() {
-            select = true;
-          });
+          context.read<TemplateDesktopViewModel>().changeState(widget.index, widget.type);
+          // TODO tag bar logic
         },
       ),
     );

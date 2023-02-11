@@ -30,9 +30,14 @@ class TemplateDesktop extends StatefulWidget {
 class _TemplateDesktopState extends State<TemplateDesktop> {
   ScrollController horizontal = ScrollController();
   ScrollController vertical = ScrollController();
+  ScrollController childController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
+    bool hasMenu = widget.faqmenu || widget.faqmenuadmin || widget.helpdesk || widget.helpdeskadmin || widget.home;
+    double contentSize = 1300;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: RichText(
@@ -65,7 +70,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
             child: Row(
               children: [
                 SizedBox(
-                  width: 400,
+                  width: !hasMenu ? 72 : 400,
                   child: Stack(
                     alignment: AlignmentDirectional.topStart,
                     children: [
@@ -91,13 +96,27 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                     ],
                   ),
                 ),
-                Container(child: widget.content)
+                Scrollbar(
+                  thumbVisibility: true,
+                  controller: childController,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    controller: childController,
+                    child: Container(
+                      alignment: AlignmentDirectional.center,
+                      width: screenWidth > contentSize 
+                      ? screenWidth - (hasMenu ? 400 : 72)
+                      : contentSize - (hasMenu ? 400 : 72),
+                      child: widget.content
+                    ),
+                  ),
+                )
               ],
             ),
           ),
         ),
       ),
-      backgroundColor: ColorConstant.blue10,
+      backgroundColor: ColorConstant.blue5,
     );
   }
 }
