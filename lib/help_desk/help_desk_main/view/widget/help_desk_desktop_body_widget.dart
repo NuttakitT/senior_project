@@ -21,12 +21,12 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
     var bodyPadding = const EdgeInsets.fromLTRB(77, 40, 20, 0);
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: screenWidth, minWidth: 200),
+      constraints: BoxConstraints(
+          maxWidth: screenWidth, minWidth: 200, maxHeight: screenHeight),
       child: Padding(
           padding: bodyPadding,
           child: widget.cards.isNotEmpty
               ? SizedBox(
-                  height: screenHeight,
                   width: double.infinity,
                   child: ListView.builder(
                       itemCount: widget.cards.length,

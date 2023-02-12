@@ -76,7 +76,14 @@ class HelpDeskCardMobile {
                     child: Text(cardNumberText),
                   ),
                   const Spacer(),
-                  // Icon(icon)
+                  IconButton(
+                      onPressed: () {
+                        // tap for more information
+                      },
+                      icon: const Icon(
+                        Icons.more_vert,
+                        color: Color(0xFFEF6C00),
+                      ))
                 ],
               ),
               const SizedBox(height: 4.0),

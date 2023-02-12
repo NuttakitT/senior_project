@@ -46,25 +46,18 @@ class HelpDeskCardWidget {
       fontSize: 14.0);
 
   static Widget widget(BuildContext context, {required HelpDeskCard card}) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-          maxWidth: double.infinity, maxHeight: 300, minHeight: 152),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 5,
-            height: double.infinity,
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: Colors.red),
-            ),
-          ),
           Expanded(
             child: Container(
-              decoration: BoxDecoration(color: Color(0xFFF3F3F3)),
+              decoration: const BoxDecoration(
+                  color: Color(0xFFF3F3F3),
+                  border:
+                      Border(left: BorderSide(color: Colors.red, width: 5.0))),
               child: Table(
                 // border: TableBorder.all(),
                 columnWidths: const <int, TableColumnWidth>{
@@ -77,15 +70,15 @@ class HelpDeskCardWidget {
                     TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
                         child: Padding(
-                          padding:
-                              const EdgeInsets.only(top: 24.0, bottom: 8.0),
+                          padding: const EdgeInsets.only(
+                              top: 24.0, bottom: 8.0, left: 16),
                           child: Container(
                             alignment: Alignment.centerRight,
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: const Color(0xFFDADBDC), width: 2.0),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
+                                border: Border.all(
+                                    color: const Color(0xFFDADBDC), width: 2.0),
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: Colors.white),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
                               child: Center(
@@ -144,7 +137,7 @@ class HelpDeskCardWidget {
                     TableCell(
                       child: Padding(
                         padding: const EdgeInsets.only(
-                            top: 8.0, left: 14.0, right: 8.0, bottom: 8.0),
+                            top: 8.0, left: 14.0, right: 8.0, bottom: 24.0),
                         child: Container(
                           decoration: BoxDecoration(
                               border: Border.all(
@@ -164,11 +157,11 @@ class HelpDeskCardWidget {
                       verticalAlignment: TableCellVerticalAlignment.bottom,
                       child: Container(
                         padding: const EdgeInsets.only(
-                            left: 16, bottom: 8.0, right: 8.0),
-                        height: 40.0,
+                            left: 16, bottom: 24.0, right: 16.0),
+                        height: 56.0,
                         child: TextButton(
                           onPressed: () {
-                            // perform pop-up create Task
+                            // TODO: - reply channel
                           },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
