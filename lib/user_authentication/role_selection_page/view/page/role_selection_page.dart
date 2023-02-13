@@ -8,7 +8,6 @@ import 'package:senior_project/user_authentication/core/widget/desktop/back_plat
 import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/widget/card_selection.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view/widget/confirm_button.dart';
-import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
 
 class RoleSelectionPage extends StatelessWidget {
   const RoleSelectionPage({super.key});
