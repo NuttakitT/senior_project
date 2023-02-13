@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class HelpDeskCardWidget {
-  final HelpDeskCard card;
-  const HelpDeskCardWidget({required this.card});
+  final Map<String, dynamic> card;
+  final BuildContext context;
+  const HelpDeskCardWidget({required this.card, required this.context});
   static TextStyle titleTextStyle() => const TextStyle(
       fontFamily: ColorConstant.font,
       fontWeight: FontWeight.w200,
@@ -41,7 +43,9 @@ class HelpDeskCardWidget {
       color: Color(0xFFFFFFFF),
       fontSize: 14.0);
 
-  static Widget widget(BuildContext context, {required HelpDeskCard card}) {
+  Widget widget() {
+    String priority = context.watch<HelpDeskViewModel>().convertToString(false, card["priority"]);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: Row(
@@ -52,6 +56,7 @@ class HelpDeskCardWidget {
             child: Container(
               decoration: const BoxDecoration(
                   color: Color(0xFFF3F3F3),
+                  // TODO edit color
                   border:
                       Border(left: BorderSide(color: Colors.red, width: 5.0))),
               child: Table(
@@ -79,7 +84,7 @@ class HelpDeskCardWidget {
                               child: Center(
                                 child: DefaultTextStyle(
                                     style: priorityTextStyle(),
-                                    child: Text(card.priority ?? "")),
+                                    child: Text(priority)),
                               ),
                             ),
                           ),
@@ -87,14 +92,14 @@ class HelpDeskCardWidget {
                     TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 24.0, left: 8.0),
+                          padding: const EdgeInsets.only(top: 24.0, left: 16.0),
                           child: RichText(
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: card.title ?? "",
+                                    text: card["taskHeader"],
                                     style: titleDetailTextStyle(),
                                   )
                                 ]
@@ -122,10 +127,10 @@ class HelpDeskCardWidget {
                     TableCell(
                         child: Padding(
                       padding: const EdgeInsets.only(
-                          top: 8.0, bottom: 8.0, left: 24.0),
+                          top: 8.0, bottom: 8.0, left: 16.0),
                       child: DefaultTextStyle(
                           style: categoryTextStyle(),
-                          child: Text(card.category ?? "")),
+                          child: Text(card["category"])),
                     )),
                     TableCell(child: Container()),
                   ]),
@@ -156,7 +161,7 @@ class HelpDeskCardWidget {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: card.detail ?? "",
+                                    text: card["taskDetail"],
                                     style: detailTextStyle()
                                   )
                                 ]

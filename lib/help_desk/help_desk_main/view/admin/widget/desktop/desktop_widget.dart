@@ -4,7 +4,8 @@ import 'package:senior_project/help_desk/help_desk_main/core/widget/create_task_
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/task_table.dart';
 
 class DesktopWidget extends StatelessWidget {
-  const DesktopWidget({super.key});
+  final List<Map<String, dynamic>> data;
+  const DesktopWidget({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +73,9 @@ class DesktopWidget extends StatelessWidget {
               ),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 33),
-            child: TaskTable(),
+          Padding(
+            padding: const EdgeInsets.only(top: 33),
+            child: TaskTable(data: data,),
           ),
         ],
       ),
