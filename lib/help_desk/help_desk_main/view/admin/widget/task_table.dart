@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/header_table.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/table_detail.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/header_table.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/table_detail.dart';
 
 class TaskTable extends StatefulWidget {
   final List<Map<String, dynamic>> data;

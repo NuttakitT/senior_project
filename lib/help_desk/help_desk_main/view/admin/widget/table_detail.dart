@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/action_button.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/action_button.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 

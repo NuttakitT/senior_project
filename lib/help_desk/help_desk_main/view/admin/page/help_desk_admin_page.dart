@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/desktop_widget.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop_widget.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/mobile_widget.dart';
 
 class HelpDeskAdminPage extends StatefulWidget {
