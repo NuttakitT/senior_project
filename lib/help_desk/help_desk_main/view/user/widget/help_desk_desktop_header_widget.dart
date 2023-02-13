@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/create_task_pop_up.dart';
 
 class HelpDeskDesktopHeader {
   static TextStyle createTaskButtonStyle() => const TextStyle(
@@ -35,7 +36,12 @@ class HelpDeskDesktopHeader {
               height: 40,
               child: TextButton(
                 onPressed: () {
-                  // perform pop-up create Task
+                  showDialog(
+                    context: context, 
+                    builder: (context) {
+                      return const CreateTaskPopup();
+                    }
+                  );
                 },
                 style: ButtonStyle(
                     backgroundColor:
