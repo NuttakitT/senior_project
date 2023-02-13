@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
+import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_card_widget.dart';
 
 class HelpDeskDesktopBody extends StatefulWidget {
-  final List<HelpDeskCard> cards;
+  final List<Map<String, dynamic>> cards;
   const HelpDeskDesktopBody({super.key, required this.cards});
 
   @override
@@ -11,30 +11,37 @@ class HelpDeskDesktopBody extends StatefulWidget {
 }
 
 class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
+  List<Widget> generateContent() {
+    List<Widget> content = [];
+    for (int i = 0; i < widget.cards.length; i++) {
+      content.add(HelpDeskCardWidget(card: widget.cards[i],context: context).widget());
+    }
+    return content;
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     var bodyPadding = const EdgeInsets.fromLTRB(77, 40, 20, 0);
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-          maxWidth: screenWidth, minWidth: 200, maxHeight: screenHeight),
-      child: Padding(
-          padding: bodyPadding,
-          child: widget.cards.isNotEmpty
-              ? SizedBox(
-                  width: double.infinity,
-                  child: ListView.builder(
-                      itemCount: widget.cards.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return HelpDeskCardWidget.widget(context,
-                            card: widget.cards[index]);
-                      }),
+    return Padding(
+        padding: bodyPadding,
+        child: widget.cards.isNotEmpty
+            ? SizedBox(
+                width: double.infinity,
+                child: Column(
+                  children: generateContent(),
                 )
-              : const Center(
-                  child: Text("No Task jaa"),
-                )),
-    );
+              )
+            : const Center(
+                child: Text(
+                  "All problems solved!",
+                  style: TextStyle(
+                    fontFamily: ColorConstant.font,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: ColorConstant.whiteBlack60
+                  ),
+                ),
+              ));
   }
 }
