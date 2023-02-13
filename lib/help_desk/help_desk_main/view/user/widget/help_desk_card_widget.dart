@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class HelpDeskCardWidget {
@@ -45,6 +46,7 @@ class HelpDeskCardWidget {
 
   Widget widget() {
     String priority = context.watch<HelpDeskViewModel>().convertToString(false, card["priority"]);
+    List<Color> statusColor = StatusColor.getColor(false, card["status"]);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -54,11 +56,10 @@ class HelpDeskCardWidget {
         children: [
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
-                  color: Color(0xFFF3F3F3),
-                  // TODO edit color
+              decoration: BoxDecoration(
+                  color: const Color(0xFFF3F3F3),
                   border:
-                      Border(left: BorderSide(color: Colors.red, width: 5.0))),
+                      Border(left: BorderSide(color: statusColor[2], width: 5.0))),
               child: Table(
                 columnWidths: const <int, TableColumnWidth>{
                   0: FixedColumnWidth(120),
