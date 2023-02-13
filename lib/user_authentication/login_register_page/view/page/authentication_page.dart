@@ -23,7 +23,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
       return TemplateMenuMobile(
         content: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: LoginWidget(isMobileSite: isMobileSite,),
+          child: SingleChildScrollView(child: LoginWidget(isMobileSite: isMobileSite,)),
         )
       );
     }
@@ -33,6 +33,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
       helpdesk: false, 
       helpdeskadmin: false, 
       home: false, 
+      useTemplatescroll: true,
       content: Center(
         child: BackPlateWidgetDesktop.widget(
           context, 
@@ -48,14 +49,16 @@ class _AuthenticationPage extends State<AuthenticationPage> {
       return TemplateMenuMobile(
         content: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              PageIndicator(
-                isMobileSize: isMobileSite,
-                indicatorsState: const [true, false],
-              ),
-              RegistrationWidget(isMobileSite: isMobileSite,)
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                PageIndicator(
+                  isMobileSize: isMobileSite,
+                  indicatorsState: const [true, false],
+                ),
+                RegistrationWidget(isMobileSite: isMobileSite,)
+              ],
+            ),
           ),
         )
       );
@@ -66,6 +69,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
       helpdesk: false, 
       helpdeskadmin: false, 
       home: false, 
+      useTemplatescroll: true,
       content: Column(
         children: [
           PageIndicator(

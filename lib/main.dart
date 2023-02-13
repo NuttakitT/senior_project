@@ -6,6 +6,7 @@ import 'package:senior_project/core/template_desktop/view/page/template_desktop.
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/admin/page/help_desk_admin_page.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/user_authentication/login_register_page/view/page/authentication_page.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
@@ -13,6 +14,7 @@ import 'package:senior_project/user_authentication/role_selection_page/view/page
 import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
 import 'core/template_mobile/view_model/template_mobile_view_model.dart';
 import 'firebase_options.dart';
+import 'help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 void main() async {
   await Firebase.initializeApp(
@@ -24,6 +26,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => AuthenticationViewModel()),
         ChangeNotifierProvider(create: (context) => AppViewModel()),
         ChangeNotifierProvider(create: (context) => RoleSelectionViewModel()),
+        ChangeNotifierProvider(create: (context) => HelpDeskViewModel()),
         ChangeNotifierProvider(create: (context) => TemplateDesktopViewModel()),
         ChangeNotifierProvider(create: (context) => TemplateMobileViewModel()),
       ],
@@ -48,7 +51,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const AuthenticationPage(),
+      home: HelpDeskMainView(isAdmin: false,),
     );
   }
 }

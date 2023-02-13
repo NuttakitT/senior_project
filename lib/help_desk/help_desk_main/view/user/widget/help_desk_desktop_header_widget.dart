@@ -1,6 +1,4 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 
 class HelpDeskDesktopHeader {

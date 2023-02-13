@@ -1,8 +1,4 @@
-import 'dart:html';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
 
@@ -59,7 +55,6 @@ class HelpDeskCardWidget {
                   border:
                       Border(left: BorderSide(color: Colors.red, width: 5.0))),
               child: Table(
-                // border: TableBorder.all(),
                 columnWidths: const <int, TableColumnWidth>{
                   0: FixedColumnWidth(120),
                   1: FlexColumnWidth(),
@@ -93,9 +88,18 @@ class HelpDeskCardWidget {
                         verticalAlignment: TableCellVerticalAlignment.middle,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 24.0, left: 8.0),
-                          child: DefaultTextStyle(
-                              style: titleDetailTextStyle(),
-                              child: Text(card.title ?? "")),
+                          child: RichText(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: card.title ?? "",
+                                    style: titleDetailTextStyle(),
+                                  )
+                                ]
+                              ),
+                            ),
                         )),
                     TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
@@ -146,9 +150,18 @@ class HelpDeskCardWidget {
                               color: Colors.white),
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-                            child: DefaultTextStyle(
-                                style: detailTextStyle(),
-                                child: Text(card.detail ?? "")),
+                            child: RichText(
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: card.detail ?? "",
+                                    style: detailTextStyle()
+                                  )
+                                ]
+                              ),
+                            ),
                           ),
                         ),
                       ),

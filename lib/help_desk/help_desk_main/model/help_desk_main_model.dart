@@ -1,5 +1,5 @@
 import 'package:senior_project/core/model/user/app_user.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/help_desk_desktop_body_widget.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_desktop_body_widget.dart';
 
 class HelpDeskModel extends AppUser {
   HelpDeskCard? card;
