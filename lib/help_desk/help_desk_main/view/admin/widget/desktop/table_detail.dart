@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/action_button.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_main_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TableDetail{
   static TextStyle _detailTextStyle(double size, Color color) {
@@ -18,8 +18,8 @@ class TableDetail{
 
   static List<Widget> widget(BuildContext context, Map<String, dynamic> detail) {
     List<Color> statusColor = StatusColor.getColor(false, detail["status"]);
-    String priority = context.watch<HelpDeskMainViewModel>().convertToString(false, detail["priority"]);
-    String status = context.watch<HelpDeskMainViewModel>().convertToString(true, detail["status"]);
+    String priority = context.watch<HelpDeskViewModel>().convertToString(false, detail["priority"]);
+    String status = context.watch<HelpDeskViewModel>().convertToString(true, detail["status"]);
 
     return [
       Flexible(

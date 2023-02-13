@@ -4,7 +4,7 @@ import 'package:senior_project/core/template_desktop/view/page/template_desktop.
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/desktop_widget.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/mobile_widget.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/mobile_widget.dart';
 
 class HelpDeskAdminPage extends StatefulWidget {
   const HelpDeskAdminPage({super.key});
@@ -20,7 +20,7 @@ class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
 
     if (isMobileSite) {
-      return const TemplateMenuMobile(content: MobileWidget());
+      return const TemplateMenuMobile(content: MobileWidget(isAdmin: true,));
     }
     return const TemplateDesktop(
       faqmenu: false, 

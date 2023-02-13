@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_main_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/admin/page/help_desk_admin_page.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/user/page/help_desk_main_desktop_widget.dart';
 
-import '../../../../core/view_model/app_view_model.dart';
-import '../widget/help_desk_main_desktop_widget.dart';
-import '../widget/help_desk_main_mobile_widget.dart';
+class HelpDeskMainView extends StatelessWidget {
+  final bool isAdmin;
+  HelpDeskMainView({super.key, required this.isAdmin});
 
-class HelpDeskMainView extends StatefulWidget {
-  const HelpDeskMainView({super.key});
-
-  @override
-  State<HelpDeskMainView> createState() => _HelpDeskMainViewState();
-}
-
-class _HelpDeskMainViewState extends State<HelpDeskMainView> {
-  List<HelpDeskCard> cards = [
+  final List<HelpDeskCard> cards = [
     HelpDeskCard(
         title: "Flutter TextButton Widget",
         cardNumber: 100,
@@ -37,30 +28,12 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
         userName: "Mamamamama")
   ];
 
-  Widget helpDeskMainDesktopView(List<HelpDeskCard> cards) {
-    return HelpDeskMainDesktopWidget(
-      cards: cards,
-    );
-  }
-
-  Widget helpDeskMainMobileView(List<HelpDeskCard> cards) {
-    return HelpDeskMainMobileWidget(
-      cards: cards,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
-    bool isMobileSite = true;
-
-    return Builder(
-      builder: (BuildContext context) {
-        if (isMobileSite) {
-          return helpDeskMainMobileView(cards);
-        }
-        return helpDeskMainDesktopView(cards);
-      },
-    );
+    if (isAdmin) {
+      return const HelpDeskAdminPage();
+    } else {
+      return HelpDeskMainDesktopWidget(cards: cards);
+    }
   }
 }

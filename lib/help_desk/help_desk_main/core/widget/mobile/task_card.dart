@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_main_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TaskCard extends StatefulWidget {
   final Map<String, dynamic> detail;
@@ -25,8 +25,8 @@ class _TaskCardState extends State<TaskCard> {
 
   @override
   Widget build(BuildContext context) {
-    String status = context.watch<HelpDeskMainViewModel>().convertToString(true, widget.detail["status"]);
-    String priority = context.watch<HelpDeskMainViewModel>().convertToString(false, widget.detail["priority"]);
+    String status = context.watch<HelpDeskViewModel>().convertToString(true, widget.detail["status"]);
+    String priority = context.watch<HelpDeskViewModel>().convertToString(false, widget.detail["priority"]);
     List<Color> statusColor = StatusColor.getColor(true, widget.detail["status"]);
     IconData priorityIcon = PriorityIcon.getIcon(widget.detail["priority"]);
     double cardWidth = 396;

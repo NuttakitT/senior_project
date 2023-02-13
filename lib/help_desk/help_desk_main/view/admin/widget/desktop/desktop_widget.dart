@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/create_task_pop_up.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/create_task_pop_up.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/desktop/task_table.dart';
 
 class DesktopWidget extends StatelessWidget {
@@ -9,9 +9,6 @@ class DesktopWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(
-        maxWidth: 1500
-      ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       child: Column(
         children: [

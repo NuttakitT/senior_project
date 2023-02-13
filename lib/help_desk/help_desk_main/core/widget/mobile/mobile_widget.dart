@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/create_task.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/setting_pop_up.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/task_card.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_main_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/create_task.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/setting_pop_up.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/task_card.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class MobileWidget extends StatefulWidget {
-  const MobileWidget({super.key});
+  final bool isAdmin;
+  const MobileWidget({super.key, required this.isAdmin});
 
   @override
   State<MobileWidget> createState() => _MobileWidgetState();
@@ -51,9 +52,6 @@ class _MobileWidgetState extends State<MobileWidget> {
       "time": DateFormat('hh:mm a').format(DateTime.now())
     },
   ];
-
-  // TODO listen to user provider
-  bool isAdmin = true;
   
   final ScrollController _vContraoller = ScrollController();
   final ScrollController _menuController = ScrollController();
@@ -129,7 +127,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                   ),
                   Builder(
                     builder: (context) {
-                      if (isAdmin) {
+                      if (widget.isAdmin) {
                         return Align(
                           alignment: AlignmentDirectional.centerEnd,
                           child: IconButton(
@@ -184,12 +182,12 @@ class _MobileWidgetState extends State<MobileWidget> {
                               padding: const EdgeInsets.only(right: 8),
                               child: InkWell(
                                 onTap: () {
-                                  context.read<HelpDeskMainViewModel>().changeMobileMenuState(0);
+                                  context.read<HelpDeskViewModel>().changeMobileMenuState(0);
                                   // TODO back-end logic
                                 },
                                 child: menu(
                                   "All", 
-                                  context.watch<HelpDeskMainViewModel>().getMobileMenuState(0) as bool
+                                  context.watch<HelpDeskViewModel>().getMobileMenuState(0) as bool
                                 ),
                               ),
                             ),
@@ -197,12 +195,12 @@ class _MobileWidgetState extends State<MobileWidget> {
                               padding: const EdgeInsets.only(right: 8),
                               child: InkWell(
                                 onTap: () {
-                                  context.read<HelpDeskMainViewModel>().changeMobileMenuState(1);
+                                  context.read<HelpDeskViewModel>().changeMobileMenuState(1);
                                   // TODO back-end logic
                                 },
                                 child: menu(
                                   "Not start", 
-                                  context.watch<HelpDeskMainViewModel>().getMobileMenuState(1) as bool
+                                  context.watch<HelpDeskViewModel>().getMobileMenuState(1) as bool
                                 ),
                               ),
                             ),
@@ -210,23 +208,23 @@ class _MobileWidgetState extends State<MobileWidget> {
                               padding: const EdgeInsets.only(right: 8),
                               child: InkWell(
                                 onTap: () {
-                                  context.read<HelpDeskMainViewModel>().changeMobileMenuState(2);
+                                  context.read<HelpDeskViewModel>().changeMobileMenuState(2);
                                   // TODO back-end logic
                                 },
                                 child: menu(
                                   "In progress", 
-                                  context.watch<HelpDeskMainViewModel>().getMobileMenuState(2) as bool
+                                  context.watch<HelpDeskViewModel>().getMobileMenuState(2) as bool
                                 ),
                               ),
                             ),
                             InkWell(
                               onTap: () {
-                                  context.read<HelpDeskMainViewModel>().changeMobileMenuState(3);
+                                  context.read<HelpDeskViewModel>().changeMobileMenuState(3);
                                   // TODO back-end logic
                                 },
                               child: menu(
                                 "Closed", 
-                                context.watch<HelpDeskMainViewModel>().getMobileMenuState(3) as bool
+                                context.watch<HelpDeskViewModel>().getMobileMenuState(3) as bool
                               ),
                             ),
                           ],
@@ -239,31 +237,31 @@ class _MobileWidgetState extends State<MobileWidget> {
                     children: [
                       InkWell(
                         onTap: () {
-                          context.read<HelpDeskMainViewModel>().changeMobileMenuState(0);
+                          context.read<HelpDeskViewModel>().changeMobileMenuState(0);
                           // TODO back-end logic
                         },
-                        child: menu("All", context.watch<HelpDeskMainViewModel>().getMobileMenuState(0) as bool)
+                        child: menu("All", context.watch<HelpDeskViewModel>().getMobileMenuState(0) as bool)
                       ),
                       InkWell(
                         onTap: () {
-                          context.read<HelpDeskMainViewModel>().changeMobileMenuState(1);
+                          context.read<HelpDeskViewModel>().changeMobileMenuState(1);
                           // TODO back-end logic
                         },
-                        child: menu("Not start", context.watch<HelpDeskMainViewModel>().getMobileMenuState(1) as bool)
+                        child: menu("Not start", context.watch<HelpDeskViewModel>().getMobileMenuState(1) as bool)
                       ),
                       InkWell(
                         onTap: () {
-                          context.read<HelpDeskMainViewModel>().changeMobileMenuState(2);
+                          context.read<HelpDeskViewModel>().changeMobileMenuState(2);
                           // TODO back-end logic
                         },
-                        child: menu("In progress", context.watch<HelpDeskMainViewModel>().getMobileMenuState(2) as bool)
+                        child: menu("In progress", context.watch<HelpDeskViewModel>().getMobileMenuState(2) as bool)
                       ),
                       InkWell(
                         onTap: () {
-                          context.read<HelpDeskMainViewModel>().changeMobileMenuState(3);
+                          context.read<HelpDeskViewModel>().changeMobileMenuState(3);
                           // TODO back-end logic
                         },
-                        child: menu("Closed", context.watch<HelpDeskMainViewModel>().getMobileMenuState(3) as bool)
+                        child: menu("Closed", context.watch<HelpDeskViewModel>().getMobileMenuState(3) as bool)
                       ),
                     ],
                   );
@@ -302,7 +300,7 @@ class _MobileWidgetState extends State<MobileWidget> {
               Navigator.push(
                 context, 
                 MaterialPageRoute(builder: (context) {
-                    return CreateTask(isAdmin: isAdmin);
+                    return CreateTask(isAdmin: widget.isAdmin);
                   }
                 )
               );
