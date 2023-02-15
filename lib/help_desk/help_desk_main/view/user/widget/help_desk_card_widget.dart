@@ -22,7 +22,7 @@ class HelpDeskCardWidget {
       fontSize: 20.0);
   static TextStyle titleDetailTextStyle() => const TextStyle(
       fontFamily: ColorConstant.font,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w500,
       color: Color(0xFF393E42),
       fontSize: 24.0);
   static TextStyle timeTextStyle() => const TextStyle(
@@ -49,7 +49,7 @@ class HelpDeskCardWidget {
   Widget widget() {
     String priority = context.watch<HelpDeskViewModel>().convertToString(false, card["priority"]);
     List<Color> statusColor = StatusColor.getColor(false, card["status"]);
-    String time = DateFormat('d/MM/yyyy hh:mm').format(card["time"]);
+    String time = DateFormat('d/MM/yyyy H:mm').format(card["time"]);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -109,8 +109,17 @@ class HelpDeskCardWidget {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: card["taskHeader"],
+                                    text: "${card["taskHeader"]} ",
                                     style: titleDetailTextStyle(),
+                                  ),
+                                  TextSpan(
+                                    text: "#${card["id"][1]}${card["id"][2]}${card["id"][card["id"].length-1]}",
+                                    style: const TextStyle(
+                                      fontFamily: ColorConstant.font,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorConstant.whiteBlack60,
+                                      fontSize: 20
+                                    )
                                   )
                                 ]
                               ),

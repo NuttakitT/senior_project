@@ -1,5 +1,6 @@
 import 'package:senior_project/core/model/content.dart';
 import 'package:senior_project/core/model/help_desk/reply_channel.dart';
+import 'package:uuid/uuid.dart';
 
 class Task {
   late String _id;
@@ -23,7 +24,7 @@ class Task {
     if (id != null) {
       _id = id;
     } else {  
-      _id = DateTime.now().microsecondsSinceEpoch.toString();
+      _id = const Uuid().v1();
     } 
     if (dateCreate != null) {
       _dateCreate = dateCreate;

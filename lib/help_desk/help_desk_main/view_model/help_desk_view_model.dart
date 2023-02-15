@@ -82,7 +82,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       category
     );
     _helpDeskModel.addTask(task);
-    await _service.setDocument(task.getTaskId, {
+    await _service.setDocument(task.getDateCreate.millisecondsSinceEpoch.toString(), {
       "id": task.getTaskId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
