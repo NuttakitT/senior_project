@@ -8,8 +8,7 @@ import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_de
 import '../widget/help_desk_desktop_body_widget.dart';
 
 class HelpDeskMainDesktopWidget extends StatelessWidget {
-  final List<Map<String, dynamic>> cards;
-  const HelpDeskMainDesktopWidget({super.key, required this.cards});
+  const HelpDeskMainDesktopWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,7 @@ class HelpDeskMainDesktopWidget extends StatelessWidget {
         child: ListView(
           children: [
             HelpDeskDesktopHeader.widget(context),
-            HelpDeskDesktopBody(cards: cards)
+            const HelpDeskDesktopBody()
           ],
         ),
       )

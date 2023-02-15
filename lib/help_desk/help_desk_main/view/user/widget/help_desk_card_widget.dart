@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class HelpDeskCardWidget {
@@ -32,7 +34,7 @@ class HelpDeskCardWidget {
       fontFamily: ColorConstant.font,
       fontWeight: FontWeight.w500,
       color: Color(0xFF6B6E71),
-      fontSize: 16.0);
+      fontSize: 14.0);
   static TextStyle detailTextStyle() => const TextStyle(
       fontFamily: ColorConstant.font,
       fontWeight: FontWeight.w400,
@@ -47,6 +49,7 @@ class HelpDeskCardWidget {
   Widget widget() {
     String priority = context.watch<HelpDeskViewModel>().convertToString(false, card["priority"]);
     List<Color> statusColor = StatusColor.getColor(false, card["status"]);
+    String time = DateFormat('d/MM/yyyy hh:mm').format(card["time"]);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -64,7 +67,7 @@ class HelpDeskCardWidget {
                 columnWidths: const <int, TableColumnWidth>{
                   0: FixedColumnWidth(120),
                   1: FlexColumnWidth(),
-                  2: FixedColumnWidth(260)
+                  2: FixedColumnWidth(250)
                 },
                 children: <TableRow>[
                   TableRow(children: <Widget>[
@@ -85,7 +88,13 @@ class HelpDeskCardWidget {
                               child: Center(
                                 child: DefaultTextStyle(
                                     style: priorityTextStyle(),
-                                    child: Text(priority)),
+                                    child: Row(
+                                      children: [
+                                        Icon(PriorityIcon.getIcon(card["priority"]), size: 16,),
+                                        const Spacer(),
+                                        Text(priority),
+                                      ],
+                                    )),
                               ),
                             ),
                           ),
@@ -109,11 +118,12 @@ class HelpDeskCardWidget {
                         )),
                     TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 24.0, left: 16.0),
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(top: 24.0, right: 16.0),
                           child: DefaultTextStyle(
                               style: timeTextStyle(),
-                              child: Text("Time ${card["time"]}")),
+                              child: Text("Time $time")),
                         )),
                   ]),
                   TableRow(children: <Widget>[

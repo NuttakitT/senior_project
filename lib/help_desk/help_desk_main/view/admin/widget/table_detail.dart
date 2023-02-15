@@ -21,7 +21,6 @@ class TableDetail{
     List<Color> statusColor = StatusColor.getColor(false, detail["status"]);
     String priority = context.watch<HelpDeskViewModel>().convertToString(false, detail["priority"]);
     String status = context.watch<HelpDeskViewModel>().convertToString(true, detail["status"]);
-    String time;
     String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
     String taskTime = "${detail["time"].day}/${detail["time"].month}/${detail["time"].year}";
     
