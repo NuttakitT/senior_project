@@ -9,7 +9,7 @@ class CommonDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Divider(
       color: Color(
-        0xFF393E42,
+        0xFF9C9FA1,
       ),
       height: 1,
       thickness: 1,
@@ -28,7 +28,7 @@ class CommonVerticalDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return const VerticalDivider(
       color: Color(
-        0xFF393E42,
+        0xFF9C9FA1,
       ),
       width: 1,
       thickness: 1,
