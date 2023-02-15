@@ -19,29 +19,30 @@ class HelpDeskMainDesktopWidget extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     if (isMobileSite) {
-      return const TemplateMenuMobile(content: MobileWidget(isAdmin: false,));
+      return const TemplateMenuMobile(
+          content: MobileWidget(
+        isAdmin: false,
+      ));
     }
     return TemplateDesktop(
-      faqmenu: false, 
-      faqmenuadmin: false, 
-      helpdesk: true, 
-      helpdeskadmin: false, 
-      home: false, 
-      useTemplatescroll: true, 
-      content: Container(
-        constraints: BoxConstraints(
-          maxWidth: screenWidth, 
-          minWidth: 200, 
-          maxHeight: screenHeight - 155
-        ),
-        alignment: AlignmentDirectional.topCenter,
-        child: ListView(
-          children: [
-            HelpDeskDesktopHeader.widget(context),
-            HelpDeskDesktopBody(cards: cards)
-          ],
-        ),
-      )
-    );
+        faqmenu: false,
+        faqmenuadmin: false,
+        helpdesk: true,
+        helpdeskadmin: false,
+        home: false,
+        useTemplatescroll: true,
+        content: Container(
+          constraints: BoxConstraints(
+              maxWidth: screenWidth,
+              minWidth: 200,
+              maxHeight: screenHeight - 155),
+          alignment: AlignmentDirectional.topCenter,
+          child: ListView(
+            children: [
+              HelpDeskDesktopHeader.widget(context),
+              HelpDeskDesktopBody(cards: cards)
+            ],
+          ),
+        ));
   }
 }
