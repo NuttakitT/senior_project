@@ -2,8 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 
-import 'common_divider.dart';
-
 class UserProfileCard {
   static TextStyle nameTextStyle() => const TextStyle(
       fontFamily: ColorConstant.font,
@@ -51,7 +49,11 @@ class UserProfileCard {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
+                Container(
+                  decoration: const BoxDecoration(
+                      border: Border(
+                          right: BorderSide(
+                              color: Color(0xFF9C9FA1), width: 1.0))),
                   width: 300,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -79,20 +81,17 @@ class UserProfileCard {
                                 color: const Color(0xFFDADBDC), width: 1),
                             borderRadius: BorderRadius.circular(16.0),
                             color: const Color(0xFFF3F3F3)),
-                        child: Center(
-                          child: DefaultTextStyle(
-                              style: roleTextStyle(),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 6, horizontal: 33),
-                                child: Text("User"),
-                              )),
-                        ),
+                        child: DefaultTextStyle(
+                            style: roleTextStyle(),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 33),
+                              child: Text("User"),
+                            )),
                       )
                     ],
                   ),
                 ),
-                const CommonVerticalDivider(),
                 SizedBox(
                   width: screenWidth - 611,
                   child: Padding(
@@ -101,7 +100,11 @@ class UserProfileCard {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // [1] About me
-                        Padding(
+                        Container(
+                          decoration: const BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: Color(0xFF9C9FA1), width: 1.0))),
                           padding: informationPadding,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,9 +128,12 @@ class UserProfileCard {
                             ],
                           ),
                         ),
-                        const CommonDivider(),
                         // [2] User profile
-                        Padding(
+                        Container(
+                          decoration: const BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: Color(0xFF9C9FA1), width: 1.0))),
                           padding: informationPadding,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +181,6 @@ class UserProfileCard {
                             ],
                           ),
                         ),
-                        const CommonDivider(),
                         // [3]
                         Padding(
                           padding: informationPadding,
