@@ -1,5 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class CreateTaskPopup extends StatefulWidget {
   const CreateTaskPopup({super.key});
@@ -9,14 +13,22 @@ class CreateTaskPopup extends StatefulWidget {
 }
 
 class _CreateTaskPopupState extends State<CreateTaskPopup> {
-  // TODO set provider state
   static List<String> priority = ["Low", "Medium", "High", "Urgent"];
-  static List<String> category = ["Test", "Cat_A", "Cat_B", "Cat_X"];
+  late List<String> category;
   String priorityValue = priority.first;
-  String categoryValue = category.first;
+  late String categoryValue;
+  String title = "";
+  String detail = "";
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    category = context.read<HelpDeskViewModel>().getCategory;
+    categoryValue = category.first;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) { 
     return AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -94,7 +106,7 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                           )
                         ),
                         onChanged: (value) {
-                          // TODO set title
+                          title = value;
                         },
                       ),
                     ),
@@ -132,7 +144,7 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
-                          value: priorityValue, // TODO listen to priority state
+                          value: priorityValue,
                           style: const TextStyle(
                             fontFamily: ColorConstant.font,
                             fontWeight: FontWeight.w400,
@@ -146,7 +158,6 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                             );
                           }).toList(), 
                           onChanged: (value) {
-                            // TODO set priority state
                             setState(() {
                               priorityValue = value!;
                             });
@@ -189,7 +200,7 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
-                          value: categoryValue, // TODO listen to category state
+                          value: categoryValue, 
                           style: const TextStyle(
                             fontFamily: ColorConstant.font,
                             fontWeight: FontWeight.w400,
@@ -203,7 +214,6 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                             );
                           }).toList(), 
                           onChanged: (value) {
-                            // TODO set priority state
                             setState(() {
                               categoryValue = value!;
                             });
@@ -258,7 +268,7 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                           )
                         ),
                         onChanged: (value) {
-                          // TODO set detail
+                          detail = value;
                         },
                       ),
                     ),
@@ -305,8 +315,10 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                   child: SizedBox(
                     height: 40,
                     child: TextButton(
-                      onPressed: () {
-                        // TODO create task logic
+                      onPressed: () async {
+                        int priorityIndex = priority.indexOf(priorityValue);
+                        await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
+                        Navigator.pop(context);
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(ColorConstant.orange40),

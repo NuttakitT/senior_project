@@ -64,7 +64,7 @@ class HelpDeskCardWidget {
                 columnWidths: const <int, TableColumnWidth>{
                   0: FixedColumnWidth(120),
                   1: FlexColumnWidth(),
-                  2: FixedColumnWidth(240)
+                  2: FixedColumnWidth(260)
                 },
                 children: <TableRow>[
                   TableRow(children: <Widget>[
@@ -113,7 +113,7 @@ class HelpDeskCardWidget {
                           padding: const EdgeInsets.only(top: 24.0, left: 16.0),
                           child: DefaultTextStyle(
                               style: timeTextStyle(),
-                              child: const Text("Time")),
+                              child: Text("Time ${card["time"]}")),
                         )),
                   ]),
                   TableRow(children: <Widget>[
