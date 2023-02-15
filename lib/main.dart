@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HelpDeskMainView(isAdmin: true,),
+      home: HelpDeskMainView(isAdmin: false,),
     );
   }
 }

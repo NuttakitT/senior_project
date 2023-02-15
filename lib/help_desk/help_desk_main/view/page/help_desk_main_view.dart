@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/page/help_desk_admin_page.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/page/help_desk_main_desktop_widget.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
-class HelpDeskMainView extends StatefulWidget {
+class HelpDeskMainView extends StatelessWidget {
   final bool isAdmin;
-  const HelpDeskMainView({super.key, required this.isAdmin});
+  HelpDeskMainView({super.key, required this.isAdmin});
 
-  @override
-  State<HelpDeskMainView> createState() => _HelpDeskMainViewState();
-}
-
-class _HelpDeskMainViewState extends State<HelpDeskMainView> {
   // TODO edit to provider
   final List<Map<String, dynamic>> data = [
     {
@@ -50,16 +47,16 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (widget.isAdmin) {
-      return HelpDeskAdminPage(data: data,);
-    } else {
-      return HelpDeskMainDesktopWidget(cards: data);
-    }
+    return FutureBuilder(
+      future: context.read<HelpDeskViewModel>().initHelpDesk("test"),
+      builder:  (context, snapshot) {
+        if (isAdmin) {
+          return const HelpDeskAdminPage();
+        } else {
+          return HelpDeskMainDesktopWidget(cards: data);
+        }
+      }
+    );
   }
 }

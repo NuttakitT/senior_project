@@ -1,11 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/header_table.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/table_detail.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TaskTable extends StatefulWidget {
-  final List<Map<String, dynamic>> data;
-  const TaskTable({super.key, required this.data});
+  const TaskTable({super.key});
 
   @override
   State<TaskTable> createState() => _TaskTableState();
@@ -44,12 +47,14 @@ class _TaskTableState extends State<TaskTable> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+
     return Column(
       children: [
         HeaderTable.widget(),
         Builder(
           builder: (context) {
-            if (widget.data.isEmpty) {
+            if (data.isEmpty) {
               return const Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -71,7 +76,7 @@ class _TaskTableState extends State<TaskTable> {
                 child: SingleChildScrollView(
                   controller: _vController,
                   child: Column(
-                    children: generateContent(widget.data)
+                    children: generateContent(data)
                   ),
                 ),
               )

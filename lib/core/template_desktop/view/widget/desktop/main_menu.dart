@@ -107,7 +107,7 @@ class _MainMenuState extends State<MainMenu> {
                     // TODO listen to user role
                     Navigator.push(
                       context, 
-                      MaterialPageRoute(builder: (context) => const HelpDeskMainView(isAdmin: false))
+                      MaterialPageRoute(builder: (context) => HelpDeskMainView(isAdmin: false))
                     );
                   },
                 ),

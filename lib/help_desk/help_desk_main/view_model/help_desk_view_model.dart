@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
@@ -7,31 +8,62 @@ import 'package:senior_project/core/model/help_desk/task.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
 
 class HelpDeskViewModel extends ChangeNotifier {
-  HelpDeskMainModel helpDeskModel = HelpDeskMainModel();
-  FirebaseServices service = FirebaseServices("task");
-  List<bool> mobileMenuState = [true, false, false, false];
-  List<Map<String, dynamic>> task = [];
-  List<String> category = ["Test", "Cat_A", "Cat_B", "Cat_X"]; // TODO add category String
+  final HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
+  final FirebaseServices _service = FirebaseServices("task");
+  final List<bool> _mobileMenuState = [true, false, false, false];
+  final List<Map<String, dynamic>> _task = [];
+  final List<String> _category = ["Test", "Cat_A", "Cat_B", "Cat_X"]; // TODO add category String
 
-  get getCategory => category;
-  get getTask => task;
+  get getCategory => _category;
+  get getTask => _task;
 
   bool? getMobileMenuState(int index) {
     if (index >= 0 && index < 4) {
-      return mobileMenuState[index];
+      return _mobileMenuState[index];
     }
     return null;
   }
 
   void changeMobileMenuState(int index) {
     if (index >= 0 && index < 4) {
-      int currentIndex = mobileMenuState.indexOf(true);
+      int currentIndex = _mobileMenuState.indexOf(true);
       if (currentIndex != index) {
-        mobileMenuState[currentIndex] = false;
-        mobileMenuState[index] = true;
+        _mobileMenuState[currentIndex] = false;
+        _mobileMenuState[index] = true;
         notifyListeners();
       }
     }
+  }
+
+  void formatTaskDetail(int index) {
+    Map<String, dynamic> data = _helpDeskModel.getTaskDetail(index);
+    data.addEntries({
+        "username": "Runn",
+        "email": "runn@gmail.com",
+      }.entries);
+    _task.add(
+      data
+    );
+  }
+
+  Future<void> initHelpDesk(String id) async {
+    final query = await _service.getDocumnetByKeyValuePair("ownerId", id);
+    int j = 0;
+    for (int i = query.docs.length-1; i >= 0; i--) {
+      _helpDeskModel.addTask(
+        Task(
+          query.docs[i].get("ownerId"),
+          query.docs[i].get("title"), 
+          Content(query.docs[i].get("detail")),
+          query.docs[i].get("priority"), 
+          query.docs[i].get("category"),
+          id: query.docs[i].get("id"),
+          dateCreate: query.docs[i].get("dateCreate").toDate()
+        )
+      );
+      formatTaskDetail(j++);
+    }
+    
   }
 
   Future<void> createTask(String title, String detail, int priority, String category) async {
@@ -43,8 +75,8 @@ class HelpDeskViewModel extends ChangeNotifier {
       priority,
       category
     );
-    helpDeskModel.addTask(task);
-    await service.setDocument(task.getTaskId, {
+    _helpDeskModel.addTask(task);
+    await _service.setDocument(task.getTaskId, {
       "id": task.getTaskId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
@@ -54,36 +86,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "title": task.getTitle,
       "detail": detail
     });
-  }
-
-  Future<void> queryTask(String id) async {
-    final query = await service.getDocumnetByKeyValuePair("ownerId", id);
-    for (int i = 0; i < query.docs.length; i++) {
-      helpDeskModel.addTask(
-        Task(
-          query.docs[i].get("ownerId"),
-          query.docs[i].get("title"), 
-          Content(query.docs[i].get("detail")),
-          query.docs[i].get("priority"), 
-          query.docs[i].get("category"),
-          query.docs[i].get("id")
-        )
-      );
-    }
-  }
-
-  void formatTaskDetail() {
-    for (int i = 0; i < helpDeskModel.getTask.length; i++) {
-      Map<String, dynamic> data = helpDeskModel.getTaskDetail(i);
-      data.addEntries({
-          "username": "Runn",
-          "email": "runn@gmail.com",
-        }.entries);
-      task.add(
-        data
-      );
-    }
-    notifyListeners();
+    formatTaskDetail(_helpDeskModel.getTask.length-1);
   }
 
   String convertToString(bool isStatus, int taskState) {

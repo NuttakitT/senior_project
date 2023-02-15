@@ -16,9 +16,8 @@ class HeaderTable {
       height: 69,
       child: Row(
         children: [
-          const Flexible(
-            flex: 2,
-            fit: FlexFit.tight,
+          const SizedBox(
+            width: 180,
             child: Text(
               "Requester",
               style: _headerTextStyle,
@@ -32,40 +31,49 @@ class HeaderTable {
               style: _headerTextStyle,
             ),
           ),
-          const Flexible(
-            fit: FlexFit.tight,
-            child: Text(
-              "Priority",
-              style: _headerTextStyle,
-            ),
-          ),
-          const Flexible(
-            fit: FlexFit.tight,
-            child: Text(
-              "Status",
-              style: _headerTextStyle,
-            ),
-          ),
-          const Flexible(
-            flex: 2,
-            fit: FlexFit.tight,
-            child: Text(
-              "Category",
-              style: _headerTextStyle,
-            ),
-          ),
-          Flexible(
-            fit: FlexFit.tight,
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
             child: Container(
-              alignment: Alignment.center,
+              alignment: Alignment.centerLeft,
+              width: 100,
               child: const Text(
-                "Time",
+                "Priority",
                 style: _headerTextStyle,
               ),
             ),
           ),
-          Flexible(
-            fit: FlexFit.tight,
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Container(
+              alignment: Alignment.centerLeft,
+              width: 100,
+              child: const Text(
+                "Status",
+                style: _headerTextStyle,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Container(
+              alignment: Alignment.centerLeft,
+              width: 120,
+              child: const Text(
+                "Category",
+                style: _headerTextStyle,
+              ),
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            width: 70,
+            child: const Text(
+              "Time",
+              style: _headerTextStyle,
+            ),
+          ),
+          SizedBox(
+            width: 105,
             child: Container(
               alignment: Alignment.center,
               child: const Text(

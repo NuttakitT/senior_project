@@ -18,14 +18,18 @@ class Task {
     Content content,
     int priority,
     String category,
-    [String? id]
+    {String? id, DateTime? dateCreate}
   ) {
     if (id != null) {
       _id = id;
     } else {  
       _id = DateTime.now().microsecondsSinceEpoch.toString();
+    } 
+    if (dateCreate != null) {
+      _dateCreate = dateCreate;
+    } else {
+      _dateCreate = DateTime.now();
     }
-    _dateCreate = DateTime.now();
     _ownerId = ownerId;
     _title = title;
     _content = content;
