@@ -47,7 +47,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> initHelpDesk(String id) async {
-    late final query;
+    late final QuerySnapshot query;
     if (id.isEmpty) {
       // admin query
       query = await _service.getAllDocument();
