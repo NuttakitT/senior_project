@@ -12,7 +12,7 @@ class HelpDeskMainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: context.read<HelpDeskViewModel>().initHelpDesk("test"),
+      future: context.read<HelpDeskViewModel>().initHelpDesk(isAdmin ? "" : "test"),
       builder:  (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Scaffold(

@@ -37,6 +37,10 @@ class FirebaseServices {
     return await _collection.where(key, isEqualTo: value).get();
   }
 
+  Future<QuerySnapshot> getAllDocument() async {
+    return await _collection.get();
+  }
+
   Future<bool> deleteDocument(String docId) async {
     try {
       await _collection.doc(docId).delete();

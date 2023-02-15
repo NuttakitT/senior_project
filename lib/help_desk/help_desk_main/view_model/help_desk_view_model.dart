@@ -47,7 +47,14 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> initHelpDesk(String id) async {
-    final query = await _service.getDocumnetByKeyValuePair("ownerId", id);
+    late final query;
+    if (id.isEmpty) {
+      // admin query
+      query = await _service.getAllDocument();
+    } else {
+      // user query
+      query = await _service.getDocumnetByKeyValuePair("ownerId", id);
+    }
     int j = 0;
     for (int i = query.docs.length-1; i >= 0; i--) {
       _helpDeskModel.addTask(
@@ -63,12 +70,11 @@ class HelpDeskViewModel extends ChangeNotifier {
       );
       formatTaskDetail(j++);
     }
-    
   }
 
   Future<void> createTask(String title, String detail, int priority, String category) async {
     Task task = Task(
-      "test",
+      "test23",
       // FirebaseAuth.instance.currentUser!.uid,
       title,
       Content(detail),
