@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 
+import 'common_divider.dart';
+
 class UserProfileCard {
   static TextStyle nameTextStyle() => const TextStyle(
       fontFamily: ColorConstant.font,
@@ -32,17 +34,20 @@ class UserProfileCard {
       const EdgeInsets.fromLTRB(20, 16, 20, 16);
 
   static Widget widget(BuildContext context, Map<String, dynamic> profileData) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 102, top: 44, right: 102),
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFFF9800), width: 1),
-            borderRadius: BorderRadius.circular(16.0),
-            color: Colors.white),
-        child: Padding(
-          padding:
-              const EdgeInsets.only(left: 16, top: 24, right: 16, bottom: 24),
-          child: Container(
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: screenWidth),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 102, top: 44, right: 102),
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFFF9800), width: 1),
+              borderRadius: BorderRadius.circular(16.0),
+              color: Colors.white),
+          child: Padding(
+            padding:
+                const EdgeInsets.only(left: 16, top: 24, right: 16, bottom: 24),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -87,7 +92,9 @@ class UserProfileCard {
                     ],
                   ),
                 ),
+                const CommonVerticalDivider(),
                 SizedBox(
+                  width: screenWidth - 611,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 24),
                     child: Column(
@@ -118,6 +125,7 @@ class UserProfileCard {
                             ],
                           ),
                         ),
+                        const CommonDivider(),
                         // [2] User profile
                         Padding(
                           padding: informationPadding,
@@ -132,23 +140,42 @@ class UserProfileCard {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 8.0, horizontal: 16.0),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [],
+                                  children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          "Gender",
+                                          style: informationTitleTextStyle(),
+                                          textAlign: TextAlign.left,
+                                        )),
+                                    Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          profileData["gender"],
+                                          style: informationDetailTextStyle(),
+                                          textAlign: TextAlign.center,
+                                        )),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          "Date of Birth",
+                                          style: informationTitleTextStyle(),
+                                          textAlign: TextAlign.left,
+                                        )),
+                                    Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          "412342342342",
+                                          style: informationDetailTextStyle(),
+                                          textAlign: TextAlign.center,
+                                        ))
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const Divider(
-                          color: Color(
-                            0xFF393E42,
-                          ),
-                          height: 1,
-                          thickness: 1,
-                          indent: 0,
-                          endIndent: 0,
-                        ),
+                        const CommonDivider(),
                         // [3]
                         Padding(
                           padding: informationPadding,
@@ -163,9 +190,36 @@ class UserProfileCard {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 8.0, horizontal: 16.0),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [],
+                                  children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          "Email",
+                                          style: informationTitleTextStyle(),
+                                          textAlign: TextAlign.left,
+                                        )),
+                                    Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          profileData["email"],
+                                          style: informationDetailTextStyle(),
+                                          textAlign: TextAlign.center,
+                                        )),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          "Phone",
+                                          style: informationTitleTextStyle(),
+                                          textAlign: TextAlign.left,
+                                        )),
+                                    Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          profileData["phone"],
+                                          style: informationDetailTextStyle(),
+                                          textAlign: TextAlign.center,
+                                        ))
+                                  ],
                                 ),
                               ),
                             ],

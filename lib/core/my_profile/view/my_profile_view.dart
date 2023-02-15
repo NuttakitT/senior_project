@@ -10,8 +10,8 @@ class MyProfileView extends StatelessWidget {
     "name": "RunnZazazazazaza",
     "surname": "Siriphuwanich",
     "aboutMe":
-        "lkjhgofdsgreewzxcxvvbnm,ertyulkijhgfd ,mnbvctxyhjkygf nbvgcyhxuji g7hb fudjcis hrfuejidwx 8rfheijcnksx fheidcnk ihackzjb m9eqioadhkbczm9iyqdahbcz iwhfscbjkmx ",
-    "email": "runn@gmail.com",
+        "lkjhgofdsgreewzxcxvvbnm,ertyulkij bowrbvfgiru bofgbrgbvoru botgbrewuofgberwou gboewrgberowuber bougterbugoe boregb eorugbeorugerg b eorgbeouj bo beroj gber ojgber ogjer hgfd ,mnbvctxyhjkygf nbvgcyhxuji g7hb fudjcis hrfuejidwx 8rfheijcnksx fheidcnk ihackzjb m9eqioadhkbczm9iyqdahbcz iwhfscbjkmx ",
+    "email": "runnsiriphuwanich@gmail.com",
     "phone": "0909111111",
     "gender": "Male"
   };
