@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 
 class TagBarHelpDesk extends StatefulWidget {
@@ -26,8 +27,9 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
       child: InkWell(
         child: Container(
           decoration: BoxDecoration(
-              color:
-                  widget.state == true ? ColorConstant.orange20 : ColorConstant.blue0,
+              color: widget.state == true
+                  ? ColorConstant.orange20
+                  : ColorConstant.blue0,
               borderRadius: BorderRadius.circular(8)),
           height: 40,
           width: 280,
@@ -38,10 +40,7 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
               children: [
                 Text(
                   widget.name,
-                  style: const TextStyle(
-                      fontSize: 20,
-                      color: ColorConstant.whiteBlack80,
-                      fontWeight: FontWeight.normal),
+                  style: AppFontStyle.wb80R20,
                   textAlign: TextAlign.left,
                 ),
                 Container(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 
@@ -21,11 +22,9 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
 
   BoxDecoration selectedStyle() {
     return const BoxDecoration(
-      color: ColorConstant.orange5,
-      border: Border(
-        left: BorderSide(width: 3, color: ColorConstant.orange60)
-      )
-    );
+        color: ColorConstant.orange5,
+        border:
+            Border(left: BorderSide(width: 3, color: ColorConstant.orange60)));
   }
 
   @override
@@ -33,27 +32,19 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
     final double screenWidth = MediaQuery.of(context).size.width;
     bool isLogin = context.watch<AppViewModel>().hasUser;
     bool homeState = context.watch<TemplateMobileViewModel>().getMenuState(0);
-    bool helpDeskState = context.watch<TemplateMobileViewModel>().getMenuState(1);
+    bool helpDeskState =
+        context.watch<TemplateMobileViewModel>().getMenuState(1);
     bool roomState = context.watch<TemplateMobileViewModel>().getMenuState(2);
-    bool profileState = context.watch<TemplateMobileViewModel>().getMenuState(3);
+    bool profileState =
+        context.watch<TemplateMobileViewModel>().getMenuState(3);
 
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: ColorConstant.whiteBlack80),
         title: RichText(
             text: const TextSpan(children: [
-          TextSpan(
-              text: "Help ",
-              style: TextStyle(
-                  color: ColorConstant.blue90,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold)),
-          TextSpan(
-              text: "Desk",
-              style: TextStyle(
-                  color: ColorConstant.orange90,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold))
+          TextSpan(text: "Help ", style: AppFontStyle.blue90B28),
+          TextSpan(text: "Desk", style: AppFontStyle.orange90B28)
         ])),
         backgroundColor: ColorConstant.white,
         toolbarHeight: 90,
@@ -95,20 +86,26 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                                   top: 16, bottom: 16, left: 16, right: 8),
                               child: Icon(
                                 Icons.home_rounded,
-                                color: homeState ? ColorConstant.orange60 : ColorConstant.whiteBlack80,
+                                color: homeState
+                                    ? ColorConstant.orange60
+                                    : ColorConstant.whiteBlack80,
                               ),
                             ),
                             Text(
                               'Home',
                               style: TextStyle(
                                   fontSize: 24,
-                                  color: homeState ? ColorConstant.orange60 : ColorConstant.whiteBlack80),
+                                  color: homeState
+                                      ? ColorConstant.orange60
+                                      : ColorConstant.whiteBlack80),
                             )
                           ],
                         ),
                       ),
                       onTap: () {
-                        context.read<TemplateMobileViewModel>().changeMenuState(0);
+                        context
+                            .read<TemplateMobileViewModel>()
+                            .changeMenuState(0);
                         //TODO when click link to home page
                       },
                     ),
@@ -125,20 +122,27 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                                   top: 16, bottom: 16, left: 16, right: 8),
                               child: Icon(
                                 Icons.table_restaurant_rounded,
-                                color: helpDeskState ? ColorConstant.orange60 : ColorConstant.whiteBlack80,
+                                color: helpDeskState
+                                    ? ColorConstant.orange60
+                                    : ColorConstant.whiteBlack80,
                               ),
                             ),
                             Text(
                               'HelpDesk',
                               style: TextStyle(
-                                  fontSize: 24,
-                                  color: helpDeskState ? ColorConstant.orange60 : ColorConstant.whiteBlack80,),
+                                fontSize: 24,
+                                color: helpDeskState
+                                    ? ColorConstant.orange60
+                                    : ColorConstant.whiteBlack80,
+                              ),
                             )
                           ],
                         ),
                       ),
                       onTap: () {
-                        context.read<TemplateMobileViewModel>().changeMenuState(1);
+                        context
+                            .read<TemplateMobileViewModel>()
+                            .changeMenuState(1);
                         //TODO when click link to helpdesk page
                       },
                     ),
@@ -155,7 +159,9 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                                   top: 16, bottom: 16, left: 16, right: 8),
                               child: Icon(
                                 Icons.meeting_room_rounded,
-                                color: roomState ? ColorConstant.orange60 : ColorConstant.whiteBlack80,
+                                color: roomState
+                                    ? ColorConstant.orange60
+                                    : ColorConstant.whiteBlack80,
                               ),
                             ),
                             Text(
@@ -163,14 +169,19 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                                   ? 'Room \nReservation'
                                   : 'Room Reservation',
                               style: TextStyle(
-                                  fontSize: 24,
-                                  color: roomState ? ColorConstant.orange60 : ColorConstant.whiteBlack80,),
+                                fontSize: 24,
+                                color: roomState
+                                    ? ColorConstant.orange60
+                                    : ColorConstant.whiteBlack80,
+                              ),
                             )
                           ],
                         ),
                       ),
                       onTap: () {
-                        context.read<TemplateMobileViewModel>().changeMenuState(2);
+                        context
+                            .read<TemplateMobileViewModel>()
+                            .changeMenuState(2);
                         //TODO when click link to room reservation page
                       },
                     ),
@@ -187,20 +198,27 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                                   top: 16, bottom: 16, left: 16, right: 8),
                               child: Icon(
                                 Icons.account_circle_rounded,
-                                color: profileState ? ColorConstant.orange60 : ColorConstant.whiteBlack80,
+                                color: profileState
+                                    ? ColorConstant.orange60
+                                    : ColorConstant.whiteBlack80,
                               ),
                             ),
                             Text(
                               'My Profile',
                               style: TextStyle(
-                                  fontSize: 24,
-                                  color: profileState ? ColorConstant.orange60 : ColorConstant.whiteBlack80,),
+                                fontSize: 24,
+                                color: profileState
+                                    ? ColorConstant.orange60
+                                    : ColorConstant.whiteBlack80,
+                              ),
                             )
                           ],
                         ),
                       ),
                       onTap: () {
-                        context.read<TemplateMobileViewModel>().changeMenuState(3);
+                        context
+                            .read<TemplateMobileViewModel>()
+                            .changeMenuState(3);
                         //TODO when click link to My profile page
                       },
                     ),

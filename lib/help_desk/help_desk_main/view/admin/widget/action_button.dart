@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 
 class PopupSubMenuItem<T> extends PopupMenuEntry<T> {
-  const PopupSubMenuItem({super.key, 
+  const PopupSubMenuItem({
+    super.key,
     required this.title,
     required this.items,
     required this.onSelected,
@@ -12,13 +14,12 @@ class PopupSubMenuItem<T> extends PopupMenuEntry<T> {
   final List<T> items;
   final Function(T) onSelected;
 
-
   @override
   State createState() => _PopupSubMenuState<T>();
-  
+
   @override
   double get height => kMinInteractiveDimension;
-  
+
   @override
   bool represents(T? value) => false;
 }
@@ -39,36 +40,28 @@ class _PopupSubMenuState<T> extends State<PopupSubMenuItem<T>> {
         }
         widget.onSelected.call(value);
       },
-      offset: const Offset(110, -7), 
+      offset: const Offset(110, -7),
       itemBuilder: (BuildContext context) {
-        return widget.items.map(
+        return widget.items
+            .map(
               (item) => PopupMenuItem<T>(
-            value: item,
-            child: Text(
-              item.toString(),
-              style: const TextStyle(
-                fontFamily: ColorConstant.font,
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-                color: ColorConstant.whiteBlack80
+                value: item,
+                child: Text(
+                  item.toString(),
+                  style: AppFontStyle.wb80R14,
+                ),
               ),
-            ),
-          ),
-        ).toList();
+            )
+            .toList();
       },
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 11.5, 0 ,11.5),
+        padding: const EdgeInsets.fromLTRB(14, 11.5, 0, 11.5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               "Change ${widget.title}",
-              style: const TextStyle(
-                fontFamily: ColorConstant.font,
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-                color: ColorConstant.whiteBlack80
-              ),
+              style: AppFontStyle.wb80R14,
             ),
             const Icon(Icons.keyboard_arrow_right)
           ],
@@ -89,42 +82,33 @@ class _ActionButtonState extends State<ActionButton> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(
-        splashColor: ColorConstant.orange10
-      ),
+      data: Theme.of(context).copyWith(splashColor: ColorConstant.orange10),
       child: PopupMenuButton(
         icon: const RotatedBox(
           quarterTurns: 1,
           child: Icon(
-              Icons.keyboard_control, 
-            ),
+            Icons.keyboard_control,
+          ),
         ),
         itemBuilder: (context) {
           return <PopupMenuEntry>[
             PopupSubMenuItem(
-              title: "Status", 
-              items: const ["Not start", "In progress", "Done"],
-              onSelected: (value) {
-                // TODO change status logic
-              }
-            ),
+                title: "Status",
+                items: const ["Not start", "In progress", "Done"],
+                onSelected: (value) {
+                  // TODO change status logic
+                }),
             PopupSubMenuItem(
-              title: "Priority", 
-              items: const ["Urgent", "High", "Medium", "Low"],
-              onSelected: (value) {
-                // TODO change priority logic
-              }
-            ),
+                title: "Priority",
+                items: const ["Urgent", "High", "Medium", "Low"],
+                onSelected: (value) {
+                  // TODO change priority logic
+                }),
             PopupMenuItem(
               value: 3,
               child: const Text(
                 "Message",
-                style: TextStyle(
-                  fontFamily: ColorConstant.font,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  color: ColorConstant.whiteBlack80
-                ),
+                style: AppFontStyle.wb80R14,
               ),
               onTap: () {
                 // TODO change to reply channel page
