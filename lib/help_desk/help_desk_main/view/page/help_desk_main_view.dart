@@ -14,7 +14,8 @@ class HelpDeskMainView extends StatelessWidget {
       "username": "Runn",
       "email": "runn@gmail.com",
       "taskHeader": "Lorem ipsum",
-      "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
+      "taskDetail":
+          "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
       "priority": 3, // 0-3 (low, medium, high, urgent)
       "status": 2, // 0-2 (not start, pending, complete)
       "category": "Register, Modcom, Camp",
@@ -25,7 +26,8 @@ class HelpDeskMainView extends StatelessWidget {
       "username": "Runn",
       "email": "runn@gmail.com",
       "taskHeader": "Lorem ipsum",
-      "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
+      "taskDetail":
+          "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
       "priority": 1, // 0-3 (low, medium, high, urgent)
       "status": 1, // 0-2 (not start, pending, complete)
       "category": "Register, Modcom, Camp",
@@ -36,7 +38,8 @@ class HelpDeskMainView extends StatelessWidget {
       "username": "Runn",
       "email": "runn@gmail.com",
       "taskHeader": "Lorem ipsum",
-      "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
+      "taskDetail":
+          "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
       "priority": 0, // 0-3 (low, medium, high, urgent)
       "status": 0, // 0-2 (not start, pending, complete)
       "category": "Register, Modcom, Camp",
@@ -47,7 +50,9 @@ class HelpDeskMainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isAdmin) {
-      return HelpDeskAdminPage(data: data,);
+      return HelpDeskAdminPage(
+        data: data,
+      );
     } else {
       return HelpDeskMainDesktopWidget(cards: data);
     }

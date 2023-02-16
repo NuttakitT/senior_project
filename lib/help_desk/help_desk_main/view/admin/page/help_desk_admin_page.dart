@@ -21,19 +21,22 @@ class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
 
     if (isMobileSite) {
-      return const TemplateMenuMobile(content: MobileWidget(isAdmin: true,));
+      return const TemplateMenuMobile(
+          content: MobileWidget(
+        isAdmin: true,
+      ));
     }
     return TemplateDesktop(
-      faqmenu: false, 
-      faqmenuadmin: false, 
-      helpdesk: false, 
-      helpdeskadmin: true, 
-      home: false, 
-      useTemplatescroll: false,
-      content: Align(
-        alignment: AlignmentDirectional.topCenter,
-        child: DesktopWidget(data: widget.data,)
-      )
-    );
+        faqmenu: false,
+        faqmenuadmin: false,
+        helpdesk: false,
+        helpdeskadmin: true,
+        home: false,
+        useTemplatescroll: false,
+        content: Align(
+            alignment: AlignmentDirectional.topCenter,
+            child: DesktopWidget(
+              data: widget.data,
+            )));
   }
 }
