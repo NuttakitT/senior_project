@@ -108,7 +108,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.added) {
-        // TODO FIX THIS SH*T!
+        // TODO FIX THIS!
         if (_task.length != snapshot.docChanges.length) {
           _addData(doc);
         } 
