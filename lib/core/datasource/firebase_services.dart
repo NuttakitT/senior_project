@@ -41,6 +41,14 @@ class FirebaseServices {
     return await _collection.get();
   }
 
+  Stream<QuerySnapshot> listenToDocumentByKeyValuePair(String key, String value)  {
+    return _collection.where(key, isEqualTo: value).snapshots();
+  }
+
+  Stream<QuerySnapshot> listenToDocument() {
+    return _collection.snapshots();
+  }
+
   Future<bool> deleteDocument(String docId) async {
     try {
       await _collection.doc(docId).delete();

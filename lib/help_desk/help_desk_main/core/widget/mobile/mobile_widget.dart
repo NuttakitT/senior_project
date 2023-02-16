@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -16,43 +17,6 @@ class MobileWidget extends StatefulWidget {
 }
 
 class _MobileWidgetState extends State<MobileWidget> {
-  // TODO edit to provider
-  final data = [
-    {
-      "id": "#123",
-      "username": "Runnnnnnnnnnnnasdasdnnnnnnnnnnnn",
-      "email": "runn@gmail.com",
-      "taskHeader": "Lorem ipsu n n nnnnnasdnnnnnnnnnnnnnnnnnnnasdnnnnnnm",
-      "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqscasaaa sadasdsa s ad asd sa sad sa as asd asasdasd asas asdas aaaaaaaaaaaaaaaaaaaaaaaaa.",
-      "priority": 0, // 0-3 (low, medium, high, urgent)
-      "status": 2, // 0-2 (not start, pending, complete)
-      "category": "Register, Modcom, Camp, aaaaa, maaaaaaaa,aaaaaaaaa,aaaaaaaaa",
-      "time": DateFormat('hh:mm a').format(DateTime.now())
-    },
-    {
-      "id": "#456",
-      "username": "Runn",
-      "email": "runn@gmail.com",
-      "taskHeader": "Lorem ipsum",
-      "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
-      "priority": 1, // 0-3 (low, medium, high, urgent)
-      "status": 1, // 0-2 (not start, pending, complete)
-      "category": "Register, Modcom, Camp",
-      "time": DateFormat('hh:mm a').format(DateTime.now())
-    },
-    {
-      "id": "#456",
-      "username": "Runn",
-      "email": "runn@gmail.com",
-      "taskHeader": "Lorem ipsum",
-      "taskDetail": "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
-      "priority": 1, // 0-3 (low, medium, high, urgent)
-      "status": 0, // 0-2 (not start, pending, complete)
-      "category": "Register, Modcom, Camp",
-      "time": DateFormat('hh:mm a').format(DateTime.now())
-    },
-  ];
-  
   final ScrollController _vContraoller = ScrollController();
   final ScrollController _menuController = ScrollController();
 
@@ -90,6 +54,14 @@ class _MobileWidgetState extends State<MobileWidget> {
       return -6;
     }
     return 0;
+  }
+
+  List<Widget> generateContent(List<Map<String, dynamic>> content) {
+    List<Widget> list = [];
+    for (int i = 0; i < content.length; i++) {
+      list.add(TaskCard(detail: content[i]));
+    }
+    return list;
   }
 
   @override
@@ -276,17 +248,60 @@ class _MobileWidgetState extends State<MobileWidget> {
                   thumbVisibility: true,
                   child: SingleChildScrollView(
                     controller: _vContraoller,
-                    child: Column(
-                      children: [
-                        TaskCard(detail: data[0]),
-                        TaskCard(detail: data[1]),
-                        TaskCard(detail: data[2]),
-                        TaskCard(detail: data[2]),
-                        TaskCard(detail: data[2]),
-                        TaskCard(detail: data[2]),
-                        TaskCard(detail: data[2]),
-                      ],
-                    ),
+                    child: StreamBuilder(
+                      stream: context.watch<HelpDeskViewModel>().listenToTask(widget.isAdmin ? "" : "test23"),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              "Error occurred",
+                              style: TextStyle(
+                                fontFamily: ColorConstant.font,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 20,
+                                color: ColorConstant.whiteBlack60
+                              ),
+                            ),
+                          );
+                        } 
+                        if (snapshot.connectionState == ConnectionState.active) {
+                          if (snapshot.data!.docs.isNotEmpty) {
+                            context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot);
+                            List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
+                            return Column(
+                              children: generateContent(content)
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                widget.isAdmin ? "Task Complete" : "All problems solved!",
+                                style: const TextStyle(
+                                  fontFamily: ColorConstant.font,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 20,
+                                  color: ColorConstant.whiteBlack60
+                                ),
+                              ),
+                            );
+                          }      
+                        } else {
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              "Loading...",
+                              style: TextStyle(
+                                fontFamily: ColorConstant.font,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 20,
+                                color: ColorConstant.whiteBlack60
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    )
                   ),
                 ),
               ),

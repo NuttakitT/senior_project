@@ -1,5 +1,4 @@
-import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
@@ -47,18 +46,63 @@ class _TaskTableState extends State<TaskTable> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
 
     return Column(
       children: [
         HeaderTable.widget(),
-        Builder(
-          builder: (context) {
-            if (data.isEmpty) {
+        StreamBuilder(
+          stream: context.watch<HelpDeskViewModel>().listenToTask(""),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
               return const Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
-                  "Task Complete",
+                  "Error occurred",
+                  style: TextStyle(
+                    fontFamily: ColorConstant.font,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: ColorConstant.whiteBlack60
+                  ),
+                ),
+              );
+            } 
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.data!.docs.isNotEmpty) {
+                context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot);
+                List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+                return SizedBox(
+                  height: 680 + (screenHeight - 960),
+                  child: Scrollbar(
+                    controller: _vController,
+                    thumbVisibility: true,
+                    child: SingleChildScrollView(
+                      controller: _vController,
+                      child: Column(
+                        children: generateContent(data)
+                      ),
+                    ),
+                  )
+                );
+              } else {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    "Task Complete",
+                    style: TextStyle(
+                      fontFamily: ColorConstant.font,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 20,
+                      color: ColorConstant.whiteBlack60
+                    ),
+                  ),
+                );
+              }      
+            } else {
+              return const Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Text(
+                  "Loading...",
                   style: TextStyle(
                     fontFamily: ColorConstant.font,
                     fontWeight: FontWeight.w400,
@@ -68,21 +112,8 @@ class _TaskTableState extends State<TaskTable> {
                 ),
               );
             }
-            return SizedBox(
-              height: 680 + (screenHeight - 960),
-              child: Scrollbar(
-                controller: _vController,
-                thumbVisibility: true,
-                child: SingleChildScrollView(
-                  controller: _vController,
-                  child: Column(
-                    children: generateContent(data)
-                  ),
-                ),
-              )
-            );
-          }
-        ),
+          },
+        )
       ],
     );
   }

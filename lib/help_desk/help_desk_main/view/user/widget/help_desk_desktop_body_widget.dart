@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
@@ -23,27 +24,60 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
   @override
   Widget build(BuildContext context) {
     var bodyPadding = const EdgeInsets.fromLTRB(77, 40, 20, 0);
-    List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
 
     return Padding(
         padding: bodyPadding,
-        child: data.isNotEmpty
-            ? SizedBox(
-                width: double.infinity,
-                child: Column(
-                  children: generateContent(data),
-                )
-              )
-            : const Center(
-                child: Text(
-                  "All problems solved!",
-                  style: TextStyle(
-                    fontFamily: ColorConstant.font,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: ColorConstant.whiteBlack60
-                  ),
-                ),
-              ));
+        child: StreamBuilder(
+              stream: context.watch<HelpDeskViewModel>().listenToTask("test23"),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text(
+                    "Error occurred",
+                    style: TextStyle(
+                      fontFamily: ColorConstant.font,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 20,
+                      color: ColorConstant.whiteBlack60
+                    ),
+                  );
+                } 
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.data!.docs.isNotEmpty) {
+                    context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot);
+                    List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+                    return SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        children: generateContent(data),
+                      )
+                    );
+                  } else {
+                    return  const Center(
+                      child: Text(
+                        "All problems solved!",
+                        style: TextStyle(
+                          fontFamily: ColorConstant.font,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                          color: ColorConstant.whiteBlack60
+                        ),
+                      ),
+                    );
+                  }      
+                } else {
+                  return const Center(
+                    child: Text(
+                      "Loading...",
+                      style: TextStyle(
+                        fontFamily: ColorConstant.font,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20,
+                        color: ColorConstant.whiteBlack60
+                      ),
+                    ),
+                  );
+                }
+              },
+            ));
   }
 }

@@ -22,7 +22,7 @@ class HelpDeskMainModel {
 
   Map<String, dynamic> getTaskDetail(int index) {
     return {
-      "id": "#${_tasks[index].getTaskId}",
+      "id": "#${_tasks[index].getId}",
       "taskHeader": _tasks[index].getTitle,
       "taskDetail": _tasks[index].getContent.getText,
       "priority": _tasks[index].getPriority, 

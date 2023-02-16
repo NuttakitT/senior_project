@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
@@ -29,6 +30,7 @@ class _TaskCardState extends State<TaskCard> {
     String priority = context.watch<HelpDeskViewModel>().convertToString(false, widget.detail["priority"]);
     List<Color> statusColor = StatusColor.getColor(true, widget.detail["status"]);
     IconData priorityIcon = PriorityIcon.getIcon(widget.detail["priority"]);
+    String time = DateFormat('hh:mm a').format(widget.detail["time"]);
     double cardWidth = 396;
     TextStyle labelStyle = const TextStyle(
       fontFamily: ColorConstant.font,
@@ -90,7 +92,7 @@ class _TaskCardState extends State<TaskCard> {
                           ),
                         ),
                         Text(
-                          widget.detail["id"],
+                          "#${widget.detail["id"][1]}${widget.detail["id"][2]}${widget.detail["id"][widget.detail["id"].length-1]}",
                           style: const TextStyle(
                             fontFamily: ColorConstant.font,
                             fontWeight: FontWeight.w400,
@@ -221,7 +223,7 @@ class _TaskCardState extends State<TaskCard> {
                         flex: 2,
                         fit: FlexFit.tight,
                         child: Text(
-                          widget.detail["time"],
+                          time,
                           style: detailStyle(ColorConstant.whiteBlack80),
                         ),
                       ),
@@ -270,6 +272,7 @@ class _TaskCardState extends State<TaskCard> {
                   padding: const EdgeInsets.only(top: 4),
                   child: Container(
                     height: 64,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: ColorConstant.whiteBlack15),

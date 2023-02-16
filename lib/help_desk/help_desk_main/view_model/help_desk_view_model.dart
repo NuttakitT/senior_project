@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/content.dart';
 import 'package:senior_project/core/model/help_desk/task.dart';
@@ -15,7 +14,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   final List<String> _category = ["Test", "Cat_A", "Cat_B", "Cat_X"]; // TODO add category String
 
   get getCategory => _category;
-  get getTask => _task;
+  get getTask => _task.reversed.toList();
 
   bool? getMobileMenuState(int index) {
     if (index >= 0 && index < 4) {
@@ -35,41 +34,12 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  void formatTaskDetail(int index) {
-    Map<String, dynamic> data = _helpDeskModel.getTaskDetail(index);
+  Map<String, dynamic> formatTaskDetail(Map<String, dynamic> data) {
     data.addEntries({
-        "username": "Runn",
-        "email": "runn@gmail.com",
-      }.entries);
-    _task.add(
-      data
-    );
-  }
-
-  Future<void> initHelpDesk(String id) async {
-    late final QuerySnapshot query;
-    if (id.isEmpty) {
-      // admin query
-      query = await _service.getAllDocument();
-    } else {
-      // user query
-      query = await _service.getDocumnetByKeyValuePair("ownerId", id);
-    }
-    int j = 0;
-    for (int i = query.docs.length-1; i >= 0; i--) {
-      _helpDeskModel.addTask(
-        Task(
-          query.docs[i].get("ownerId"),
-          query.docs[i].get("title"), 
-          Content(query.docs[i].get("detail")),
-          query.docs[i].get("priority"), 
-          query.docs[i].get("category"),
-          id: query.docs[i].get("id"),
-          dateCreate: query.docs[i].get("dateCreate").toDate()
-        )
-      );
-      formatTaskDetail(j++);
-    }
+      "username": "Runn",
+      "email": "runn@gmail.com",
+    }.entries);
+    return data;
   }
 
   Future<void> createTask(String title, String detail, int priority, String category) async {
@@ -83,7 +53,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     );
     _helpDeskModel.addTask(task);
     await _service.setDocument(task.getDateCreate.millisecondsSinceEpoch.toString(), {
-      "id": task.getTaskId,
+      "id": task.getId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
       "category": task.getCategory,
@@ -92,7 +62,65 @@ class HelpDeskViewModel extends ChangeNotifier {
       "title": task.getTitle,
       "detail": detail
     });
-    formatTaskDetail(_helpDeskModel.getTask.length-1);
+  }
+
+  Stream<QuerySnapshot> listenToTask(String id) {
+    if (id.isEmpty) {
+      // Admin query
+      return _service.listenToDocument();
+    } else {
+      // User query
+      return _service.listenToDocumentByKeyValuePair("ownerId", id);
+    }
+  }
+
+  void _addData(DocumentSnapshot snapshot) {
+    Task task = Task(
+      snapshot.get("ownerId"),
+      snapshot.get("title"),
+      Content(snapshot.get("detail")),
+      snapshot.get("priority"),
+      snapshot.get("category"),
+      id: snapshot.get("id"),
+      dateCreate: snapshot.get("dateCreate").toDate(),
+      status: snapshot.get("status")
+    );
+    _helpDeskModel.addTask(task);
+    _task.add(formatTaskDetail(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1)));
+  }
+
+  void _modifyData(DocumentSnapshot snapshot, int index) {
+    Task targetTask = _helpDeskModel.getTask.firstWhere((element) {
+      return snapshot.get("id") == element.getId;
+    });
+    targetTask.changeStatus(snapshot.get("status"));
+    targetTask.changeStatus(snapshot.get("priority"));
+    _task[index]["status"] = snapshot.get("status");
+    _task[index]["priority"] = snapshot.get("priority");
+  }
+  
+  void _removeData(int index) {
+    _helpDeskModel.getTask.removeAt(index);
+    _task.removeAt(index);
+  }
+
+  void reconstructQueryData(QuerySnapshot snapshot) {
+    for (int i = 0; i < snapshot.docChanges.length; i++) {
+      DocumentSnapshot doc = snapshot.docChanges[i].doc;
+      if (snapshot.docChanges[i].type == DocumentChangeType.added) {
+        if (_task.length != snapshot.docChanges.length) {
+          _addData(doc);
+        } 
+      }
+      if (snapshot.docChanges[i].type == DocumentChangeType.modified) {
+        int index = snapshot.docChanges[i].newIndex;
+        _modifyData(doc, index);
+      }
+      if (snapshot.docChanges[i].type == DocumentChangeType.removed) {
+        int index = snapshot.docChanges[i].oldIndex;
+        _removeData(index);
+      }
+    }
   }
 
   String convertToString(bool isStatus, int taskState) {

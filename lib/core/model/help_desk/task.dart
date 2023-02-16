@@ -19,7 +19,7 @@ class Task {
     Content content,
     int priority,
     String category,
-    {String? id, DateTime? dateCreate}
+    {String? id, DateTime? dateCreate, int? status}
   ) {
     if (id != null) {
       _id = id;
@@ -30,16 +30,20 @@ class Task {
       _dateCreate = dateCreate;
     } else {
       _dateCreate = DateTime.now();
-    }
+    } 
+    if (status != null) {
+      _status = status;
+    } else {
+      _status = 0;
+    } 
     _ownerId = ownerId;
     _title = title;
     _content = content;
     _priority = priority;
     _category = category;
-    _status = 0;
   }
 
-  String get getTaskId => _id;
+  String get getId => _id;
   String get getOwnerId => _ownerId;
   DateTime get getDateCreate => _dateCreate;
   String get getCategory => _category;
