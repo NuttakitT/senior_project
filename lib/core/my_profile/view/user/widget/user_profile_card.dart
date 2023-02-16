@@ -89,8 +89,7 @@ class UserProfileCard {
                   ],
                 ),
               ),
-              Container(
-                color: Colors.green,
+              SizedBox(
                 width: screenWidth > 1300 ? screenWidth - 612 : 688,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 24),
