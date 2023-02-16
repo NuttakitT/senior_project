@@ -19,6 +19,8 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
   late String categoryValue;
   String title = "";
   String detail = "";
+  bool isTitleEmpty = false;
+  bool isDetailEmpty = false;
 
   @override
   void initState() {
@@ -92,7 +94,9 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       height: 40,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: ColorConstant.whiteBlack40)
+                        border: Border.all(color: isTitleEmpty 
+                        ? ColorConstant.red50 
+                        : ColorConstant.whiteBlack40)
                       ),
                       padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
                       child: TextField(
@@ -107,6 +111,11 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                         ),
                         onChanged: (value) {
                           title = value;
+                        },
+                        onTap: () {
+                          setState(() {
+                            isTitleEmpty = false;
+                          });
                         },
                       ),
                     ),
@@ -252,7 +261,9 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       height: 100,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: ColorConstant.whiteBlack40)
+                        border: Border.all(color: isDetailEmpty 
+                        ? ColorConstant.red50 
+                        : ColorConstant.whiteBlack40)
                       ),
                       padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
                       child: TextField(
@@ -269,6 +280,11 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                         ),
                         onChanged: (value) {
                           detail = value;
+                        },
+                        onTap: () {
+                          setState(() {
+                            isDetailEmpty = false;
+                          });
                         },
                       ),
                     ),
@@ -316,9 +332,21 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                     height: 40,
                     child: TextButton(
                       onPressed: () async {
-                        int priorityIndex = priority.indexOf(priorityValue);
-                        await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
-                        Navigator.pop(context);
+                        if (title.isEmpty) {
+                          setState(() {
+                            isTitleEmpty = true;
+                          });
+                        } 
+                        if (detail.isEmpty) {
+                          setState(() {
+                            isDetailEmpty = true;
+                          });
+                        }
+                        if (title.isNotEmpty && detail.isNotEmpty) {
+                          int priorityIndex = priority.indexOf(priorityValue);
+                          await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
+                          Navigator.pop(context);
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(ColorConstant.orange40),

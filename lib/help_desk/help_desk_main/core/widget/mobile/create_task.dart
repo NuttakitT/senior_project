@@ -27,6 +27,8 @@ class _CreateTaskState extends State<CreateTask> {
   late String categoryValue;
   String title = "";
   String detail = "";
+  bool isTitleEmpty = false;
+  bool isDetailEmpty = false;
 
   @override
   void initState() {
@@ -82,7 +84,9 @@ class _CreateTaskState extends State<CreateTask> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: ColorConstant.whiteBlack20),
+                    border: Border.all(color: isTitleEmpty 
+                        ? ColorConstant.red50 
+                        : ColorConstant.whiteBlack20),
                     borderRadius: BorderRadius.circular(4)
                   ),
                   alignment: AlignmentDirectional.centerStart,
@@ -99,6 +103,11 @@ class _CreateTaskState extends State<CreateTask> {
                     ),
                     onChanged: (value) {
                       title = value;
+                    },
+                    onTap: () {
+                      setState(() {
+                        isTitleEmpty = false;
+                      });
                     },
                   ),
                 ),
@@ -212,7 +221,9 @@ class _CreateTaskState extends State<CreateTask> {
                 child: Container(
                   height: 100,
                   decoration: BoxDecoration(
-                    border: Border.all(color: ColorConstant.whiteBlack20),
+                    border: Border.all(color: isTitleEmpty 
+                        ? ColorConstant.red50 
+                        : ColorConstant.whiteBlack20),
                     borderRadius: BorderRadius.circular(4)
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -231,6 +242,11 @@ class _CreateTaskState extends State<CreateTask> {
                     onChanged: (value) {
                       detail = value;
                     },
+                    onTap: () {
+                      setState(() {
+                        isDetailEmpty = false;
+                      });
+                    },
                   ),
                 ),
               ),
@@ -242,9 +258,21 @@ class _CreateTaskState extends State<CreateTask> {
                   height: 40,
                   child: TextButton(
                     onPressed: () async {
-                      int priorityIndex = priority.indexOf(priorityValue);
-                      await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
-                      Navigator.pop(context);
+                      if (title.isEmpty) {
+                          setState(() {
+                            isTitleEmpty = true;
+                          });
+                      } 
+                      if (detail.isEmpty) {
+                        setState(() {
+                          isDetailEmpty = true;
+                        });
+                      }
+                      if (title.isNotEmpty && detail.isNotEmpty) {
+                        int priorityIndex = priority.indexOf(priorityValue);
+                        await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
+                        Navigator.pop(context);
+                      }
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
