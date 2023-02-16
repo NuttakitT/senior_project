@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/header_table.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/table_detail.dart';
 
@@ -18,14 +19,9 @@ class _TaskTableState extends State<TaskTable> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(
-            width: 2,
-            color: ColorConstant.whiteBlack5
-          )
-        )
-      ),
+          color: Colors.white,
+          border: Border(
+              bottom: BorderSide(width: 2, color: ColorConstant.whiteBlack5))),
       height: 80,
       child: Row(
         children: TableDetail.widget(context, detail),
@@ -47,37 +43,27 @@ class _TaskTableState extends State<TaskTable> {
     return Column(
       children: [
         HeaderTable.widget(),
-        Builder(
-          builder: (context) {
-            if (widget.data.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  "Task Complete",
-                  style: TextStyle(
-                    fontFamily: ColorConstant.font,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: ColorConstant.whiteBlack60
-                  ),
-                ),
-              );
-            }
-            return SizedBox(
+        Builder(builder: (context) {
+          if (widget.data.isEmpty) {
+            return const Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Text(
+                "Task Complete",
+                style: AppFontStyle.wb60R20,
+              ),
+            );
+          }
+          return SizedBox(
               height: 680 + (screenHeight - 960),
               child: Scrollbar(
                 controller: _vController,
                 thumbVisibility: true,
                 child: SingleChildScrollView(
                   controller: _vController,
-                  child: Column(
-                    children: generateContent(widget.data)
-                  ),
+                  child: Column(children: generateContent(widget.data)),
                 ),
-              )
-            );
-          }
-        ),
+              ));
+        }),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/create_task_pop_up.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/task_table.dart';
 
@@ -17,12 +18,7 @@ class DesktopWidget extends StatelessWidget {
             children: [
               const Text(
                 "HelpDesk",
-                style: TextStyle(
-                  fontFamily: ColorConstant.font,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 32,
-                  color: ColorConstant.whiteBlack80
-                ),
+                style: AppFontStyle.wb80Md32,
               ),
               Expanded(
                 child: Padding(
@@ -36,46 +32,42 @@ class DesktopWidget extends StatelessWidget {
               SizedBox(
                 height: 40,
                 child: TextButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context, 
-                      builder: (context) {
-                        return const CreateTaskPopup();
-                      }
-                    );
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(ColorConstant.orange40),
-                    side: MaterialStateProperty.all(
-                      const BorderSide(color: ColorConstant.orange40)
-                    ),
-                    shape: MaterialStateProperty.all(
-                      const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8))
-                      )
-                    )
-                  ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.add, color: Colors.white,),
-                      Text(
-                        "Create task",
-                        style: TextStyle(
-                          fontFamily: ColorConstant.font,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Colors.white
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const CreateTaskPopup();
+                          });
+                    },
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(ColorConstant.orange40),
+                        side: MaterialStateProperty.all(
+                            const BorderSide(color: ColorConstant.orange40)),
+                        shape: MaterialStateProperty.all(
+                            const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))))),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
                         ),
-                      )
-                    ],
-                  )
-                ),
+                        Text(
+                          "Create task",
+                          style: AppFontStyle.whiteB16,
+                        )
+                      ],
+                    )),
               ),
             ],
           ),
           Padding(
             padding: const EdgeInsets.only(top: 33),
-            child: TaskTable(data: data,),
+            child: TaskTable(
+              data: data,
+            ),
           ),
         ],
       ),

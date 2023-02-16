@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
@@ -67,10 +68,7 @@ class _TemplateTagBarFaqAdminState extends State<TemplateTagBarFaqAdmin> {
                     padding: EdgeInsets.only(right: 8),
                     child: Text(
                       "Category",
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: ColorConstant.whiteBlack80,
-                          fontWeight: FontWeight.bold),
+                      style: AppFontStyle.wb80B20,
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -97,11 +95,21 @@ class _TemplateTagBarFaqAdminState extends State<TemplateTagBarFaqAdmin> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBar(name: "All category", state: menu1, index: 0, type: 3,),
+              child: TagBar(
+                name: "All category",
+                state: menu1,
+                index: 0,
+                type: 3,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBar(name: "Test tag", state: menu2, index: 1, type: 3,),
+              child: TagBar(
+                name: "Test tag",
+                state: menu2,
+                index: 1,
+                type: 3,
+              ),
             ),
           ],
         ),

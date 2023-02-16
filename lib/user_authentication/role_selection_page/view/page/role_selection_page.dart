@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -13,7 +14,8 @@ class RoleSelectionPage extends StatelessWidget {
   const RoleSelectionPage({super.key});
   final double widgetWidth = 580;
 
-  Widget pageDetail(BuildContext context, bool isMobileSite, double screenWidth) {
+  Widget pageDetail(
+      BuildContext context, bool isMobileSite, double screenWidth) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -22,23 +24,14 @@ class RoleSelectionPage extends StatelessWidget {
           child: Text(
             "Selec Your Role",
             textAlign: isMobileSite ? TextAlign.center : TextAlign.start,
-            style: TextStyle(
-              fontFamily: ColorConstant.font,
-              fontWeight: FontWeight.w700,
-              fontSize: isMobileSite ? 28 : 32,
-              color: isMobileSite ? ColorConstant.whiteBlack80 : ColorConstant.orange70
-            ),
+            style:
+                isMobileSite ? AppFontStyle.wb80B28 : AppFontStyle.orange70B32,
           ),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(
-            0, 
-            40, 
-            0, 
-            isMobileSite ? 8 : 16
-          ),
+          padding: EdgeInsets.fromLTRB(0, 40, 0, isMobileSite ? 8 : 16),
           child: CardSelection(
-            isStudentCard: true, 
+            isStudentCard: true,
             isMobileSite: isMobileSite,
           ),
         ),
@@ -46,34 +39,41 @@ class RoleSelectionPage extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 24),
           child: CardSelection(
             isStudentCard: false,
-            isMobileSite: isMobileSite,  
+            isMobileSite: isMobileSite,
           ),
         ),
         Builder(
           builder: (context) {
-            if (screenWidth <= 320 ) {
+            if (screenWidth <= 320) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: ConfirmButton.button(context, false, isMobileSite, double.infinity),
+                    child: ConfirmButton.button(
+                        context, false, isMobileSite, double.infinity),
                   ),
-                  ConfirmButton.button(context, true, isMobileSite, double.infinity),
+                  ConfirmButton.button(
+                      context, true, isMobileSite, double.infinity),
                 ],
               );
-            } 
+            }
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ConfirmButton.button(context, false, isMobileSite, isMobileSite ? 140 : 180),
+                ConfirmButton.button(
+                    context, false, isMobileSite, isMobileSite ? 140 : 180),
                 const Spacer(),
-                ConfirmButton.button(context, true, isMobileSite, isMobileSite ? 140 : 180,),
+                ConfirmButton.button(
+                  context,
+                  true,
+                  isMobileSite,
+                  isMobileSite ? 140 : 180,
+                ),
               ],
             );
           },
         ),
-       
       ],
     );
   }
@@ -109,11 +109,11 @@ class RoleSelectionPage extends StatelessWidget {
           );
         }
         return TemplateDesktop(
-          faqmenu: false, 
-          faqmenuadmin: false, 
-          helpdesk: false, 
-          helpdeskadmin: false, 
-          home: false, 
+          faqmenu: false,
+          faqmenuadmin: false,
+          helpdesk: false,
+          helpdeskadmin: false,
+          home: false,
           useTemplatescroll: true,
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,13 +126,9 @@ class RoleSelectionPage extends StatelessWidget {
                 ),
               ),
               BackPlateWidgetDesktop.widget(
-                context,
-                {
-                  "width": 630, 
-                  "height": 600
-                },
-                pageDetail(context, isMobileSite, screenWidth)
-              )
+                  context,
+                  {"width": 630, "height": 600},
+                  pageDetail(context, isMobileSite, screenWidth))
             ],
           ),
         );

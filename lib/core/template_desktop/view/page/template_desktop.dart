@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_navbar.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_faq.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_faq_admin.dart';
@@ -36,7 +37,11 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasMenu = widget.faqmenu || widget.faqmenuadmin || widget.helpdesk || widget.helpdeskadmin || widget.home;
+    bool hasMenu = widget.faqmenu ||
+        widget.faqmenuadmin ||
+        widget.helpdesk ||
+        widget.helpdeskadmin ||
+        widget.home;
     double contentSize = 1300;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -44,18 +49,8 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
       appBar: AppBar(
         title: RichText(
             text: const TextSpan(children: [
-          TextSpan(
-              text: "Help ",
-              style: TextStyle(
-                  color: ColorConstant.blue90,
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold)),
-          TextSpan(
-              text: "Desk",
-              style: TextStyle(
-                  color: ColorConstant.orange90,
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold))
+          TextSpan(text: "Help ", style: AppFontStyle.blue90B36),
+          TextSpan(text: "Desk", style: AppFontStyle.orange90B36)
         ])),
         backgroundColor: ColorConstant.white,
         toolbarHeight: 90,
@@ -108,20 +103,18 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                           scrollDirection: Axis.vertical,
                           controller: childController,
                           child: SizedBox(
-                            width: screenWidth > contentSize 
-                            ? screenWidth - (hasMenu ? 400 : 72)
-                            : contentSize - (hasMenu ? 400 : 72),
-                            child: widget.content
-                          ),
+                              width: screenWidth > contentSize
+                                  ? screenWidth - (hasMenu ? 400 : 72)
+                                  : contentSize - (hasMenu ? 400 : 72),
+                              child: widget.content),
                         ),
                       );
-                    } 
+                    }
                     return SizedBox(
-                      width: screenWidth > contentSize 
-                      ? screenWidth - (hasMenu ? 400 : 72)
-                      : contentSize - (hasMenu ? 400 : 72),
-                      child: widget.content
-                    );
+                        width: screenWidth > contentSize
+                            ? screenWidth - (hasMenu ? 400 : 72)
+                            : contentSize - (hasMenu ? 400 : 72),
+                        child: widget.content);
                   },
                 ),
               ],
