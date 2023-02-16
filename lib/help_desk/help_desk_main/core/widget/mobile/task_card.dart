@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -17,27 +18,26 @@ class TaskCard extends StatefulWidget {
 class _TaskCardState extends State<TaskCard> {
   TextStyle detailStyle(Color color) {
     return TextStyle(
-      fontFamily: ColorConstant.font,
-      fontWeight: FontWeight.w400,
-      fontSize: 14,
-      color: color
-    );
-  }  
+        fontFamily: AppFontStyle.font,
+        fontWeight: AppFontWeight.regular,
+        fontSize: 14,
+        color: color);
+  }
 
   @override
   Widget build(BuildContext context) {
-    String status = context.watch<HelpDeskViewModel>().convertToString(true, widget.detail["status"]);
-    String priority = context.watch<HelpDeskViewModel>().convertToString(false, widget.detail["priority"]);
-    List<Color> statusColor = StatusColor.getColor(true, widget.detail["status"]);
+    String status = context
+        .watch<HelpDeskViewModel>()
+        .convertToString(true, widget.detail["status"]);
+    String priority = context
+        .watch<HelpDeskViewModel>()
+        .convertToString(false, widget.detail["priority"]);
+    List<Color> statusColor =
+        StatusColor.getColor(true, widget.detail["status"]);
     IconData priorityIcon = PriorityIcon.getIcon(widget.detail["priority"]);
     String time = DateFormat('hh:mm a').format(widget.detail["time"]);
     double cardWidth = 396;
-    TextStyle labelStyle = const TextStyle(
-      fontFamily: ColorConstant.font,
-      fontWeight: FontWeight.w300,
-      fontSize: 14,
-      color: ColorConstant.whiteBlack80
-    );
+    TextStyle labelStyle = AppFontStyle.wb80L14;
 
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
@@ -50,10 +50,9 @@ class _TaskCardState extends State<TaskCard> {
           child: Container(
             width: cardWidth,
             decoration: BoxDecoration(
-              border: Border.all(color: ColorConstant.orange50),
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.white
-            ),
+                border: Border.all(color: ColorConstant.orange50),
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.white),
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,34 +66,26 @@ class _TaskCardState extends State<TaskCard> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: 220
-                          ),
+                          constraints: const BoxConstraints(maxWidth: 220),
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 16),
-                            child: RichText(
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: widget.detail["taskHeader"],
-                                    style: const TextStyle(
-                                      fontFamily: ColorConstant.font,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20,
-                                      color: ColorConstant.whiteBlack80
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ),
+                              padding: const EdgeInsets.only(right: 16),
+                              child: RichText(
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: widget.detail["taskHeader"],
+                                      style: AppFontStyle.wb80SemiB20,
+                                    )
+                                  ],
+                                ),
+                              )),
                         ),
                         Text(
                           "#${widget.detail["id"][1]}${widget.detail["id"][2]}${widget.detail["id"][widget.detail["id"].length-1]}",
                           style: const TextStyle(
-                            fontFamily: ColorConstant.font,
+                            fontFamily: AppFontStyle.font,
                             fontWeight: FontWeight.w400,
                             fontSize: 16,
                             color: ColorConstant.whiteBlack60
@@ -103,7 +94,7 @@ class _TaskCardState extends State<TaskCard> {
                       ],
                     ),
                     const Icon(
-                      Icons.turn_right_rounded, 
+                      Icons.turn_right_rounded,
                       size: 20,
                     ),
                   ],
@@ -137,11 +128,10 @@ class _TaskCardState extends State<TaskCard> {
                               Text(
                                 status,
                                 style: TextStyle(
-                                  fontFamily: ColorConstant.font,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: statusColor[1]
-                                ),
+                                    fontFamily: AppFontStyle.font,
+                                    fontWeight: AppFontWeight.regular,
+                                    fontSize: 12,
+                                    color: statusColor[1]),
                               )
                             ],
                           ),
@@ -158,21 +148,15 @@ class _TaskCardState extends State<TaskCard> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(right: 5.2),
-                              child: Icon(
-                                priorityIcon,
-                                size: 14,
-                                color: ColorConstant.whiteBlack70,
-                              )
-                            ),
+                                padding: const EdgeInsets.only(right: 5.2),
+                                child: Icon(
+                                  priorityIcon,
+                                  size: 14,
+                                  color: ColorConstant.whiteBlack70,
+                                )),
                             Text(
                               priority,
-                              style: const TextStyle(
-                                fontFamily: ColorConstant.font,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12,
-                                color: ColorConstant.whiteBlack50
-                              ),
+                              style: AppFontStyle.wb50R12,
                             )
                           ],
                         ),
@@ -194,24 +178,24 @@ class _TaskCardState extends State<TaskCard> {
                         ),
                       ),
                       Flexible(
-                        flex: 2,
-                        fit: FlexFit.tight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: RichText(
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: widget.detail["username"],
-                                  style: detailStyle(ColorConstant.whiteBlack80),
-                                )
-                              ],
+                          flex: 2,
+                          fit: FlexFit.tight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: RichText(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: widget.detail["username"],
+                                    style:
+                                        detailStyle(ColorConstant.whiteBlack80),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        )
-                      ),
+                          )),
                       Flexible(
                         fit: FlexFit.tight,
                         child: Text(
@@ -274,11 +258,11 @@ class _TaskCardState extends State<TaskCard> {
                     height: 64,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: ColorConstant.whiteBlack15),
-                      borderRadius: BorderRadius.circular(4)
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        color: Colors.white,
+                        border: Border.all(color: ColorConstant.whiteBlack15),
+                        borderRadius: BorderRadius.circular(4)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: RichText(
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,

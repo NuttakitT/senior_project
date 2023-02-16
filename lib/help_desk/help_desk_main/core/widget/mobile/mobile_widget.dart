@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/create_task.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/setting_pop_up.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/task_card.dart';
@@ -22,26 +23,16 @@ class _MobileWidgetState extends State<MobileWidget> {
 
   Widget menu(String name, bool state) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16,5),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 5),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: state 
-        ? const Border(
-          bottom: BorderSide(
-            color: ColorConstant.orange50,
-            width: 2
-          )
-        )
-        : null
-      ),
+          color: Colors.white,
+          border: state
+              ? const Border(
+                  bottom: BorderSide(color: ColorConstant.orange50, width: 2))
+              : null),
       child: Text(
         name,
-        style: TextStyle(
-          fontFamily: ColorConstant.font,
-          fontWeight: FontWeight.w400,
-          fontSize: 16,
-          color: state ? ColorConstant.orange50 : ColorConstant.whiteBlack60,
-        ),
+        style: state ? AppFontStyle.orange50R16 : AppFontStyle.wb60R16,
       ),
     );
   }
@@ -67,69 +58,63 @@ class _MobileWidgetState extends State<MobileWidget> {
   @override
   Widget build(BuildContext context) {
     double pixelWidth = MediaQuery.of(context).size.width;
-    return Stack(
-      alignment: AlignmentDirectional.bottomEnd,
-      children: [
-        Column(
-          children: [
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.only(top: 24 + _scaleText(pixelWidth), bottom: 30 + _scaleText(pixelWidth)),
-              alignment: Alignment.center,
-              width: double.infinity,
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(pixelWidth < 260  ? 10 :0),
-                    child: Align(
-                      alignment: pixelWidth < 260 
-                        ? AlignmentDirectional.centerStart 
+    return Stack(alignment: AlignmentDirectional.bottomEnd, children: [
+      Column(
+        children: [
+          Container(
+            color: Colors.white,
+            padding: EdgeInsets.only(
+                top: 24 + _scaleText(pixelWidth),
+                bottom: 30 + _scaleText(pixelWidth)),
+            alignment: Alignment.center,
+            width: double.infinity,
+            child: Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(pixelWidth < 260 ? 10 : 0),
+                  child: Align(
+                    alignment: pixelWidth < 260
+                        ? AlignmentDirectional.centerStart
                         : AlignmentDirectional.center,
-                      child: Text(
-                        "Help-desk List",
-                        style: TextStyle(
-                          fontFamily: ColorConstant.font,
+                    child: Text(
+                      "Help-desk List",
+                      style: TextStyle(
+                          fontFamily: AppFontStyle.font,
                           fontWeight: FontWeight.w500,
                           fontSize: 28 + _scaleText(pixelWidth),
-                          color: ColorConstant.whiteBlack80
-                        ),
-                      ),
+                          color: ColorConstant.whiteBlack80),
                     ),
                   ),
-                  Builder(
-                    builder: (context) {
-                      if (widget.isAdmin) {
-                        return Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context, 
+                ),
+                Builder(builder: (context) {
+                  if (widget.isAdmin) {
+                    return Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
                                 builder: (context) {
                                   return const SettingPopUp();
-                                }
-                              );
-                            }, 
-                            padding: EdgeInsets.only(right: 18.25 + _scaleText(pixelWidth)),
-                            iconSize: 28 + _scaleText(pixelWidth),
-                            // alignment: Alignment.centerRight,
-                            color: ColorConstant.whiteBlack80,
-                            icon: const Icon(
-                              Icons.settings_outlined
-                            )
-                          ),
-                        );
-                      }
-                      return Container();
-                    }
-                  )
-                ],
-              ),
+                                });
+                          },
+                          padding: EdgeInsets.only(
+                              right: 18.25 + _scaleText(pixelWidth)),
+                          iconSize: 28 + _scaleText(pixelWidth),
+                          // alignment: Alignment.centerRight,
+                          color: ColorConstant.whiteBlack80,
+                          icon: const Icon(Icons.settings_outlined)),
+                    );
+                  }
+                  return Container();
+                })
+              ],
             ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
+          ),
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                   bottom: BorderSide(
@@ -257,7 +242,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                             child: Text(
                               "Error occurred",
                               style: TextStyle(
-                                fontFamily: ColorConstant.font,
+                                fontFamily: AppFontStyle.font,
                                 fontWeight: FontWeight.w400,
                                 fontSize: 20,
                                 color: ColorConstant.whiteBlack60
@@ -278,7 +263,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                               child: Text(
                                 widget.isAdmin ? "Task Complete" : "All problems solved!",
                                 style: const TextStyle(
-                                  fontFamily: ColorConstant.font,
+                                  fontFamily: AppFontStyle.font,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 20,
                                   color: ColorConstant.whiteBlack60
@@ -292,7 +277,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                             child: Text(
                               "Loading...",
                               style: TextStyle(
-                                fontFamily: ColorConstant.font,
+                                fontFamily: AppFontStyle.font,
                                 fontWeight: FontWeight.w400,
                                 fontSize: 20,
                                 color: ColorConstant.whiteBlack60

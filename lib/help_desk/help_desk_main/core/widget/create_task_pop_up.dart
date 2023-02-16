@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/assets/font_style.dart';
 
 class CreateTaskPopup extends StatefulWidget {
   const CreateTaskPopup({super.key});
@@ -33,9 +34,7 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
   Widget build(BuildContext context) { 
     return AlertDialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       content: SizedBox(
         width: 1000,
         child: Column(
@@ -45,28 +44,14 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
             Padding(
               padding: const EdgeInsets.only(bottom: 24),
               child: RichText(
-                text: const TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Create a task\n",
-                      style: TextStyle(
-                        fontFamily: ColorConstant.font,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 28,
-                        color: ColorConstant.whiteBlack80
-                      )
-                    ),
-                    TextSpan(
-                      text: "Fill in more information for create task in Help-Desk System.",
-                      style: TextStyle(
-                        fontFamily: ColorConstant.font,
-                        fontWeight: FontWeight.w300,
-                        fontSize: 18,
-                        color: ColorConstant.whiteBlack60
-                      )
-                    )
-                  ]
-                ),
+                text: const TextSpan(children: [
+                  TextSpan(
+                      text: "Create a task\n", style: AppFontStyle.wb80Md28),
+                  TextSpan(
+                      text:
+                          "Fill in more information for create task in Help-Desk System.",
+                      style: AppFontStyle.wb60L18)
+                ]),
               ),
             ),
             Padding(
@@ -79,12 +64,7 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       width: 100,
                       child: Text(
                         "Title",
-                        style: TextStyle(
-                          fontFamily: ColorConstant.font,
-                          fontWeight: FontWeight.w300,
-                          fontSize: 24,
-                          color: ColorConstant.whiteBlack80
-                        ),
+                        style: AppFontStyle.wb80L24,
                       ),
                     ),
                   ),
@@ -101,14 +81,8 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
                       child: TextField(
                         decoration: const InputDecoration.collapsed(
-                          hintText: "Ex. caption",
-                          hintStyle: TextStyle(
-                            fontFamily: ColorConstant.font,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: ColorConstant.whiteBlack30,
-                          )
-                        ),
+                            hintText: "Ex. caption",
+                            hintStyle: AppFontStyle.wb30R14),
                         onChanged: (value) {
                           title = value;
                         },
@@ -133,12 +107,7 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       width: 100,
                       child: Text(
                         "Priority",
-                        style: TextStyle(
-                          fontFamily: ColorConstant.font,
-                          fontWeight: FontWeight.w300,
-                          fontSize: 24,
-                          color: ColorConstant.whiteBlack80
-                        ),
+                        style: AppFontStyle.wb80L24,
                       ),
                     ),
                   ),
@@ -147,25 +116,19 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                     child: Container(
                       height: 45,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: ColorConstant.whiteBlack40)
-                      ),
+                          borderRadius: BorderRadius.circular(4),
+                          border:
+                              Border.all(color: ColorConstant.whiteBlack40)),
                       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                           value: priorityValue,
-                          style: const TextStyle(
-                            fontFamily: ColorConstant.font,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: ColorConstant.whiteBlack60
-                          ),
-                          items: priority.map<DropdownMenuItem<String>>((value) {
+                          style: AppFontStyle.wb60R16,
+                          items:
+                              priority.map<DropdownMenuItem<String>>((value) {
                             return DropdownMenuItem(
-                              value: value,
-                              child: Text(value)
-                            );
-                          }).toList(), 
+                                value: value, child: Text(value));
+                          }).toList(),
                           onChanged: (value) {
                             setState(() {
                               priorityValue = value!;
@@ -189,12 +152,7 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       width: 100,
                       child: Text(
                         "Category",
-                        style: TextStyle(
-                          fontFamily: ColorConstant.font,
-                          fontWeight: FontWeight.w300,
-                          fontSize: 24,
-                          color: ColorConstant.whiteBlack80
-                        ),
+                        style: AppFontStyle.wb80L24,
                       ),
                     ),
                   ),
@@ -203,25 +161,19 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                     child: Container(
                       height: 45,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: ColorConstant.whiteBlack40)
-                      ),
+                          borderRadius: BorderRadius.circular(4),
+                          border:
+                              Border.all(color: ColorConstant.whiteBlack40)),
                       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                           value: categoryValue, 
-                          style: const TextStyle(
-                            fontFamily: ColorConstant.font,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: ColorConstant.whiteBlack60
-                          ),
-                          items: category.map<DropdownMenuItem<String>>((value) {
+                          style: AppFontStyle.wb60R16,
+                          items:
+                              category.map<DropdownMenuItem<String>>((value) {
                             return DropdownMenuItem(
-                              value: value,
-                              child: Text(value)
-                            );
-                          }).toList(), 
+                                value: value, child: Text(value));
+                          }).toList(),
                           onChanged: (value) {
                             setState(() {
                               categoryValue = value!;
@@ -246,12 +198,7 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       width: 100,
                       child: Text(
                         "Detail",
-                        style: TextStyle(
-                          fontFamily: ColorConstant.font,
-                          fontWeight: FontWeight.w300,
-                          fontSize: 24,
-                          color: ColorConstant.whiteBlack80
-                        ),
+                        style: AppFontStyle.wb80L24,
                       ),
                     ),
                   ),
@@ -267,17 +214,11 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                       ),
                       padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
                       child: TextField(
-                        keyboardType:  TextInputType.multiline,
+                        keyboardType: TextInputType.multiline,
                         maxLines: null,
                         decoration: const InputDecoration.collapsed(
-                          hintText: "Fill your information...",
-                          hintStyle: TextStyle(
-                            fontFamily: ColorConstant.font,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: ColorConstant.whiteBlack30,
-                          )
-                        ),
+                            hintText: "Fill your information...",
+                            hintStyle: AppFontStyle.wb30R14),
                         onChanged: (value) {
                           detail = value;
                         },
@@ -304,24 +245,16 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                           Navigator.pop(context);
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.white),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              side: const BorderSide(
-                                color: ColorConstant.orange40
-                              )
-                            )
-                          )
-                        ),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.white),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    side: const BorderSide(
+                                        color: ColorConstant.orange40)))),
                         child: const Text(
                           "Cancle",
-                          style: TextStyle(
-                            fontFamily: ColorConstant.font,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: ColorConstant.orange40
-                          ),
+                          style: AppFontStyle.orange40B16,
                         ),
                       ),
                     ),
@@ -349,24 +282,16 @@ class _CreateTaskPopupState extends State<CreateTaskPopup> {
                         }
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(ColorConstant.orange40),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(
-                              color: ColorConstant.orange40
-                            )
-                          )
-                        )
-                      ),
+                          backgroundColor:
+                              MaterialStateProperty.all(ColorConstant.orange40),
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  side: const BorderSide(
+                                      color: ColorConstant.orange40)))),
                       child: const Text(
                         "Confirm",
-                        style: TextStyle(
-                          fontFamily: ColorConstant.font,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Colors.white
-                        ),
+                        style: AppFontStyle.whiteB16,
                       ),
                     ),
                   ),

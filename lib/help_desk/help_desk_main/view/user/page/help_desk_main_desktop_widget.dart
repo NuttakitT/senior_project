@@ -18,7 +18,10 @@ class HelpDeskMainDesktopWidget extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     if (isMobileSite) {
-      return const TemplateMenuMobile(content: MobileWidget(isAdmin: false,));
+      return const TemplateMenuMobile(
+          content: MobileWidget(
+        isAdmin: false,
+      ));
     }
     return TemplateDesktop(
       faqmenu: false, 

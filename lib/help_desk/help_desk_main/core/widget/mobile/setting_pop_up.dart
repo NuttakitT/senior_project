@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 
 class SettingPopUp extends StatefulWidget {
   const SettingPopUp({super.key});
@@ -13,39 +14,54 @@ class _SettingPopUpState extends State<SettingPopUp> {
   // TODO add provider state
   bool isSendEmail = false;
   final TextStyle _labelStyle = const TextStyle(
-    fontFamily: ColorConstant.interFont,
-    fontWeight: FontWeight.w400,
-    fontSize: 16,
-    color: ColorConstant.whiteBlack80
-  );
+      fontFamily: AppFontStyle.interFont,
+      fontWeight: AppFontWeight.regular,
+      fontSize: 16,
+      color: ColorConstant.whiteBlack80);
   final TextStyle _descriptionStyle = const TextStyle(
-    fontFamily: ColorConstant.interFont,
-    fontWeight: FontWeight.w300,
-    fontSize: 10,
-    color: ColorConstant.whiteBlack60
-  );
+      fontFamily: AppFontStyle.interFont,
+      fontWeight: AppFontWeight.light,
+      fontSize: 10,
+      color: ColorConstant.whiteBlack60);
   final TextStyle _timeStyle = const TextStyle(
-    fontFamily: ColorConstant.interFont,
-    fontWeight: FontWeight.w400,
-    fontSize: 12,
-    color: ColorConstant.whiteBlack80
-  );
+      fontFamily: AppFontStyle.interFont,
+      fontWeight: AppFontWeight.regular,
+      fontSize: 12,
+      color: ColorConstant.whiteBlack80);
   List<String> hour = [
-    "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
-    "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-    "21", "22", "23", "00"
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "00"
   ];
-  List<String> minute = [
-    "00", "15", "30", "45"
-  ];
+  List<String> minute = ["00", "15", "30", "45"];
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-        side: const BorderSide(color: ColorConstant.orange40)
-      ),
+          borderRadius: BorderRadius.circular(24),
+          side: const BorderSide(color: ColorConstant.orange40)),
       content: FittedBox(
         fit: BoxFit.scaleDown,
         child: SizedBox(
@@ -57,11 +73,10 @@ class _SettingPopUpState extends State<SettingPopUp> {
               const Text(
                 "Notification",
                 style: TextStyle(
-                  fontFamily: ColorConstant.interFont,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: ColorConstant.whiteBlack80
-                ),
+                    fontFamily: AppFontStyle.interFont,
+                    fontWeight: AppFontWeight.semiBold,
+                    fontSize: 20,
+                    color: ColorConstant.whiteBlack80),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 4, bottom: 24),
@@ -92,7 +107,7 @@ class _SettingPopUpState extends State<SettingPopUp> {
                   ),
                   // TODO add provider state
                   FlutterSwitch(
-                    value: isSendEmail, 
+                    value: isSendEmail,
                     onToggle: (value) {
                       setState(() {
                         isSendEmail = !isSendEmail;
@@ -107,19 +122,17 @@ class _SettingPopUpState extends State<SettingPopUp> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 2),
-                child: Text(
-                  "Time",
-                  style: _labelStyle,
-                )
-              ),
+                  padding: const EdgeInsets.only(top: 16, bottom: 2),
+                  child: Text(
+                    "Time",
+                    style: _labelStyle,
+                  )),
               Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Text(
-                  "Set start-time and end-time for notification.",
-                  style: _descriptionStyle,
-                )
-              ),
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Text(
+                    "Set start-time and end-time for notification.",
+                    style: _descriptionStyle,
+                  )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -127,10 +140,11 @@ class _SettingPopUpState extends State<SettingPopUp> {
                     width: 66,
                     height: 28,
                     decoration: BoxDecoration(
-                      border: Border.all(color: ColorConstant.whiteBlack50, width: 0.5),
-                      borderRadius: BorderRadius.circular(8)
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        border: Border.all(
+                            color: ColorConstant.whiteBlack50, width: 0.5),
+                        borderRadius: BorderRadius.circular(8)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -179,21 +193,21 @@ class _SettingPopUpState extends State<SettingPopUp> {
                     child: Text(
                       "To",
                       style: TextStyle(
-                        fontFamily: ColorConstant.interFont,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: ColorConstant.whiteBlack40
-                      ),
+                          fontFamily: AppFontStyle.interFont,
+                          fontWeight: AppFontWeight.regular,
+                          fontSize: 12,
+                          color: ColorConstant.whiteBlack40),
                     ),
                   ),
                   Container(
                     width: 66,
                     height: 28,
                     decoration: BoxDecoration(
-                      border: Border.all(color: ColorConstant.whiteBlack50, width: 0.5),
-                      borderRadius: BorderRadius.circular(8)
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        border: Border.all(
+                            color: ColorConstant.whiteBlack50, width: 0.5),
+                        borderRadius: BorderRadius.circular(8)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

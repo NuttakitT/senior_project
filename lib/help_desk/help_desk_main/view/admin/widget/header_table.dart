@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 
 class HeaderTable {
-  static const _headerTextStyle = TextStyle(
-      fontFamily: ColorConstant.font,
-      fontSize: 18,
-      fontWeight: FontWeight.w700,
-      color: Colors.white
-  );
+  static const _headerTextStyle = AppFontStyle.whiteB18;
 
   static Widget widget() {
     return Container(

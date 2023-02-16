@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/action_button.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
-class TableDetail{
+class TableDetail {
   static TextStyle _detailTextStyle(double size, Color color) {
     return TextStyle(
-      fontFamily: ColorConstant.font,
-      fontWeight: FontWeight.w400,
-      color: color,
-      fontSize: size
-    );
+        fontFamily: AppFontStyle.font,
+        fontWeight: FontWeight.w400,
+        color: color,
+        fontSize: size);
   }
 
-  static List<Widget> widget(BuildContext context, Map<String, dynamic> detail) {
+  static List<Widget> widget(
+      BuildContext context, Map<String, dynamic> detail) {
     List<Color> statusColor = StatusColor.getColor(false, detail["status"]);
     String priority = context.watch<HelpDeskViewModel>().convertToString(false, detail["priority"]);
     String status = context.watch<HelpDeskViewModel>().convertToString(true, detail["status"]);
@@ -32,15 +33,12 @@ class TableDetail{
             Padding(
               padding: const EdgeInsets.only(right: 10),
               child: Container(
-                width: 40,
-                height: 40,
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0x6629B6F6)
-                ),
-                child: const Icon(Icons.person)
-              ),
+                  width: 40,
+                  height: 40,
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: Color(0x6629B6F6)),
+                  child: const Icon(Icons.person)),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -71,26 +69,22 @@ class TableDetail{
               RichText(
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: detail["taskHeader"],
-                      style: _detailTextStyle(16, ColorConstant.whiteBlack80),
-                    )
-                  ]
-                ),
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: detail["taskHeader"],
+                    style: _detailTextStyle(16, ColorConstant.whiteBlack80),
+                  )
+                ]),
               ),
               RichText(
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: detail["taskDetail"],
-                      style: _detailTextStyle(12, ColorConstant.whiteBlack60), 
-                    )
-                  ]
-                ),
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: detail["taskDetail"],
+                    style: _detailTextStyle(12, ColorConstant.whiteBlack60),
+                  )
+                ]),
               ),
             ],
           ),
@@ -182,5 +176,4 @@ class TableDetail{
       )
     ];
   }
-
 }

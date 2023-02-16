@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/header_table.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/table_detail.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -20,14 +21,9 @@ class _TaskTableState extends State<TaskTable> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(
-            width: 2,
-            color: ColorConstant.whiteBlack5
-          )
-        )
-      ),
+          color: Colors.white,
+          border: Border(
+              bottom: BorderSide(width: 2, color: ColorConstant.whiteBlack5))),
       height: 80,
       child: Row(
         children: TableDetail.widget(context, detail),
@@ -59,7 +55,7 @@ class _TaskTableState extends State<TaskTable> {
                 child: Text(
                   "Error occurred",
                   style: TextStyle(
-                    fontFamily: ColorConstant.font,
+                    fontFamily: AppFontStyle.font,
                     fontWeight: FontWeight.w400,
                     fontSize: 20,
                     color: ColorConstant.whiteBlack60
@@ -90,7 +86,7 @@ class _TaskTableState extends State<TaskTable> {
                   child: Text(
                     "Task Complete",
                     style: TextStyle(
-                      fontFamily: ColorConstant.font,
+                      fontFamily: AppFontStyle.font,
                       fontWeight: FontWeight.w400,
                       fontSize: 20,
                       color: ColorConstant.whiteBlack60
@@ -104,7 +100,7 @@ class _TaskTableState extends State<TaskTable> {
                 child: Text(
                   "Loading...",
                   style: TextStyle(
-                    fontFamily: ColorConstant.font,
+                    fontFamily: AppFontStyle.font,
                     fontWeight: FontWeight.w400,
                     fontSize: 20,
                     color: ColorConstant.whiteBlack60

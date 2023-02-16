@@ -20,7 +20,10 @@ class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
 
     if (isMobileSite) {
-      return const TemplateMenuMobile(content: MobileWidget(isAdmin: true,));
+      return const TemplateMenuMobile(
+          content: MobileWidget(
+        isAdmin: true,
+      ));
     }
     return const TemplateDesktop(
       faqmenu: false, 
