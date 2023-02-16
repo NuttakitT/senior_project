@@ -16,8 +16,6 @@ class UserProfileHeader {
   static EdgeInsets headerPadding() => const EdgeInsets.fromLTRB(40, 24, 20, 0);
 
   static Widget widget(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Padding(
       padding: headerPadding(),
       child: Row(
