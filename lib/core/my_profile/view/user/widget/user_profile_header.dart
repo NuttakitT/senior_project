@@ -18,51 +18,48 @@ class UserProfileHeader {
   static Widget widget(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: screenWidth, maxHeight: 80),
-      child: Padding(
-        padding: headerPadding(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            DefaultTextStyle(
-              style: titleTextStyle(),
-              child: const Text("My Profile"),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: 178,
-              height: 40,
-              child: TextButton(
-                onPressed: () {
-                  // TODO edit profile lofic
-                },
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(ColorConstant.orange40),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      "Edit profile",
-                      style: createTaskButtonStyle(),
-                    ),
-                  ],
-                ),
+    return Padding(
+      padding: headerPadding(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          DefaultTextStyle(
+            style: titleTextStyle(),
+            child: const Text("My Profile"),
+          ),
+          const Spacer(),
+          SizedBox(
+            width: 178,
+            height: 40,
+            child: TextButton(
+              onPressed: () {
+                // TODO edit profile lofic
+              },
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(ColorConstant.orange40),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    "Edit profile",
+                    style: createTaskButtonStyle(),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
