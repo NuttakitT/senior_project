@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 
 class CardTextStyle {

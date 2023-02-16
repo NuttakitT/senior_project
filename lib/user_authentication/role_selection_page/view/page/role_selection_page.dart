@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
