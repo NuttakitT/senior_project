@@ -101,16 +101,16 @@ class _ActionButtonState extends State<ActionButton> {
             PopupSubMenuItem(
                 title: "Status",
                 items: status,
-                onSelected: (value) {
+                onSelected: (value) async {
                   int newStatus = status.indexOf(value);
-                  context.read<HelpDeskViewModel>().editTask(widget.id, true, newStatus);
+                  await context.read<HelpDeskViewModel>().editTask(widget.id, true, newStatus);
                 }),
             PopupSubMenuItem(
                 title: "Priority",
                 items: priority,
-                onSelected: (value) {
+                onSelected: (value) async {
                   int newPriority = priority.indexOf(value);
-                  context.read<HelpDeskViewModel>().editTask(widget.id, false, newPriority);
+                  await context.read<HelpDeskViewModel>().editTask(widget.id, false, newPriority);
                 }),
             PopupMenuItem(
               value: 3,
