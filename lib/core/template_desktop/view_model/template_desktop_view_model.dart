@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:senior_project/core/datasource/firebase_services.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
   List<bool> _navBarState = [true, false, false, false, false, false];
