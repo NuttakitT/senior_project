@@ -7,10 +7,10 @@ import 'package:senior_project/core/model/help_desk/task.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
 
 class HelpDeskViewModel extends ChangeNotifier {
-  final HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
+  HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
   final FirebaseServices _service = FirebaseServices("task");
   final List<bool> _mobileMenuState = [true, false, false, false];
-  final List<Map<String, dynamic>> _task = [];
+  List<Map<String, dynamic>> _task = [];
   final List<String> _category = ["Test", "Cat_A", "Cat_B", "Cat_X"]; // TODO add category String
 
   String convertToString(bool isStatus, int taskState) {
@@ -61,7 +61,12 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
+  int getSelectedMobileMenu() {
+    return _mobileMenuState.indexOf(true);
+  }
+
   Map<String, dynamic> formatTaskDetail(Map<String, dynamic> data) {
+    // TODO query username email form db
     data.addEntries({
       "username": "Runn",
       "email": "runn@gmail.com",
@@ -71,6 +76,7 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   Future<void> createTask(String title, String detail, int priority, String category) async {
     Task task = Task(
+      // TODO listen to current user
       "test23",
       // FirebaseAuth.instance.currentUser!.uid,
       title,
@@ -91,16 +97,11 @@ class HelpDeskViewModel extends ChangeNotifier {
     });
   }
 
-  Stream<QuerySnapshot> listenToTask(String id) {
-    if (id.isEmpty) {
-      // Admin query
-      return _service.listenToDocument();
-    } else {
-      // User query
-      return _service.listenToDocumentByKeyValuePair("ownerId", id);
-    }
+  void cleanModel() {
+    _helpDeskModel = HelpDeskMainModel();
+    _task = [];
   }
-
+  
   void _addQueryData(DocumentSnapshot snapshot) {
     Task task = Task(
       snapshot.get("ownerId"),
@@ -113,7 +114,11 @@ class HelpDeskViewModel extends ChangeNotifier {
       status: snapshot.get("status")
     );
     _helpDeskModel.addTask(task);
-    _task.add(formatTaskDetail(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1)));
+    _task.add(
+      formatTaskDetail(
+        _helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1)
+      )
+    );
   }
 
   void _modifyQueryData(DocumentSnapshot snapshot, int index) {
@@ -134,11 +139,9 @@ class HelpDeskViewModel extends ChangeNotifier {
   void reconstructQueryData(QuerySnapshot snapshot) {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
-      if (snapshot.docChanges[i].type == DocumentChangeType.added) {
-        // TODO this is gonna reload every time when rebuild
-        if (_task.length != snapshot.docChanges.length) {
-          _addQueryData(doc);
-        } 
+      if (snapshot.docChanges[i].type == DocumentChangeType.added 
+        && snapshot.docChanges[i].doc.id != "dummy") {
+        _addQueryData(doc);
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.modified) {
         int index = snapshot.docChanges[i].newIndex;
@@ -152,7 +155,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
-    QuerySnapshot query = await _service.getDocumnetByKeyValuePair("id", id);
+    QuerySnapshot query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
     if (query.docs.isNotEmpty) {
       String docId = query.docs.first.id;
       Map<String, dynamic> editedDetail = isStatus

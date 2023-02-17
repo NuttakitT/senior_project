@@ -3,10 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/create_task.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/setting_pop_up.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/task_card.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+
+Stream? query(String id, int type) {
+  final FirebaseServices service = FirebaseServices("task");
+ if (id.isEmpty) {
+    switch (type) {
+      case 0:
+        return service.listenToDocument();
+      case 1:
+        return service.listenToDocumentByKeyValuePair(["status"], [0]);
+      case 2: 
+        return service.listenToDocumentByKeyValuePair(["status"], [1]);
+      case 3:
+        return service.listenToDocumentByKeyValuePair(["status"], [2]);
+      default:
+        return null;
+    }
+  } else {
+    switch (type) {
+      case 0:
+        return service.listenToDocumentByKeyValuePair(["ownerId"], [id]);
+      case 1:
+        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 0]);
+      case 2:
+        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 1]);
+      case 3:
+        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 2]);
+      default:
+        return null;
+    }
+  }
+}
 
 class MobileWidget extends StatefulWidget {
   final bool isAdmin;
@@ -19,6 +51,8 @@ class MobileWidget extends StatefulWidget {
 class _MobileWidgetState extends State<MobileWidget> {
   final ScrollController _vContraoller = ScrollController();
   final ScrollController _menuController = ScrollController();
+  int menuSelected = 0;
+  Stream? _stream;
 
   Widget menu(String name, bool state) {
     return Container(
@@ -55,8 +89,18 @@ class _MobileWidgetState extends State<MobileWidget> {
   }
 
   @override
+  void didChangeDependencies() {
+    int tagBarSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
+    context.read<HelpDeskViewModel>().cleanModel();
+    // TODO listen to user id
+    _stream = query(widget.isAdmin ? "" : "test23", tagBarSelected);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double pixelWidth = MediaQuery.of(context).size.width;
+
     return Stack(alignment: AlignmentDirectional.bottomEnd, children: [
       Column(
         children: [
@@ -139,7 +183,6 @@ class _MobileWidgetState extends State<MobileWidget> {
                               child: InkWell(
                                 onTap: () {
                                   context.read<HelpDeskViewModel>().changeMobileMenuState(0);
-                                  // TODO back-end logic
                                 },
                                 child: menu(
                                   "All", 
@@ -152,7 +195,6 @@ class _MobileWidgetState extends State<MobileWidget> {
                               child: InkWell(
                                 onTap: () {
                                   context.read<HelpDeskViewModel>().changeMobileMenuState(1);
-                                  // TODO back-end logic
                                 },
                                 child: menu(
                                   "Not start", 
@@ -165,7 +207,6 @@ class _MobileWidgetState extends State<MobileWidget> {
                               child: InkWell(
                                 onTap: () {
                                   context.read<HelpDeskViewModel>().changeMobileMenuState(2);
-                                  // TODO back-end logic
                                 },
                                 child: menu(
                                   "In progress", 
@@ -176,7 +217,6 @@ class _MobileWidgetState extends State<MobileWidget> {
                             InkWell(
                               onTap: () {
                                   context.read<HelpDeskViewModel>().changeMobileMenuState(3);
-                                  // TODO back-end logic
                                 },
                               child: menu(
                                 "Closed", 
@@ -194,28 +234,24 @@ class _MobileWidgetState extends State<MobileWidget> {
                       InkWell(
                         onTap: () {
                           context.read<HelpDeskViewModel>().changeMobileMenuState(0);
-                          // TODO back-end logic
                         },
                         child: menu("All", context.watch<HelpDeskViewModel>().getMobileMenuState(0) as bool)
                       ),
                       InkWell(
                         onTap: () {
                           context.read<HelpDeskViewModel>().changeMobileMenuState(1);
-                          // TODO back-end logic
                         },
                         child: menu("Not start", context.watch<HelpDeskViewModel>().getMobileMenuState(1) as bool)
                       ),
                       InkWell(
                         onTap: () {
                           context.read<HelpDeskViewModel>().changeMobileMenuState(2);
-                          // TODO back-end logic
                         },
                         child: menu("In progress", context.watch<HelpDeskViewModel>().getMobileMenuState(2) as bool)
                       ),
                       InkWell(
                         onTap: () {
                           context.read<HelpDeskViewModel>().changeMobileMenuState(3);
-                          // TODO back-end logic
                         },
                         child: menu("Closed", context.watch<HelpDeskViewModel>().getMobileMenuState(3) as bool)
                       ),
@@ -233,7 +269,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                   child: SingleChildScrollView(
                     controller: _vContraoller,
                     child: StreamBuilder(
-                      stream: context.watch<HelpDeskViewModel>().listenToTask(widget.isAdmin ? "" : "test23"),
+                      stream: _stream,
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return const Padding(
@@ -257,11 +293,12 @@ class _MobileWidgetState extends State<MobileWidget> {
                               children: generateContent(content)
                             );
                           } else {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
+                            context.read<HelpDeskViewModel>().cleanModel();
+                            return const Padding(
+                              padding: EdgeInsets.only(top: 8.0),
                               child: Text(
-                                widget.isAdmin ? "Task Complete" : "All problems solved!",
-                                style: const TextStyle(
+                                "No task in this scction",
+                                style: TextStyle(
                                   fontFamily: AppFontStyle.font,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 20,

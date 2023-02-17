@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
   List<bool> _navBarState = [true, false, false, false, false, false];
-  List<bool> _helpDeskTagBarAdmin = [true, false, false, false, false, false, false, false]; 
+  List<bool> _helpDeskTagBar = [true, false, false, false, false, false, false, false]; 
   // TODO query amount from db
   List<bool> _homeTagBar = [true, false]; 
   List<bool> _faqTagBar = [true, false];
@@ -10,7 +11,7 @@ class TemplateDesktopViewModel extends ChangeNotifier {
   bool getNavBarState(int index) => _navBarState[index];
   bool getHomeState(int index) => _homeTagBar[index];
   bool getFaqState(int index) => _faqTagBar[index];
-  bool getHelpDeskAdminState(int index) => _helpDeskTagBarAdmin[index];
+  bool getHelpDeskAdminState(int index) => _helpDeskTagBar[index];
 
   List<bool> _selectState(int type) {
     switch (type) {
@@ -21,7 +22,7 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       case 3: 
         return _faqTagBar;
       case 4: 
-        return _helpDeskTagBarAdmin;
+        return _helpDeskTagBar;
       default:  
         return [];
     }
@@ -39,11 +40,26 @@ class TemplateDesktopViewModel extends ChangeNotifier {
         _faqTagBar = list;
         break;
       case 4: 
-        _helpDeskTagBarAdmin = list;
+        _helpDeskTagBar = list;
         break;
       default:  
         break;
     }
+  }
+
+  int selectedTagBar(int type) {
+    switch (type) {
+      case 1:
+        return _navBarState.indexOf(true);
+      case 2:
+        return _homeTagBar.indexOf(true);
+      case 3: 
+        return _faqTagBar.indexOf(true);
+      case 4: 
+        return _helpDeskTagBar.indexOf(true);
+      default:
+        return -1;
+    } 
   }
 
   void changeState(int index, int type) {

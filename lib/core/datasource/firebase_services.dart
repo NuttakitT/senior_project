@@ -33,16 +33,28 @@ class FirebaseServices {
     return await _collection.doc(id).get();
   }
 
-  Future<QuerySnapshot> getDocumnetByKeyValuePair(String key, String value) async {
-    return await _collection.where(key, isEqualTo: value).get();
+  Future<QuerySnapshot> getDocumnetByKeyValuePair(List<String> key, List<String> value) async {
+    late Query query;
+    if ((key.length == value.length) && key.isNotEmpty) {
+      for (int i = 0; i < key.length; i++) {
+        query = _collection.where(key[i], isEqualTo: value[i]);
+      }
+    }
+    return await query.get();
   }
 
   Future<QuerySnapshot> getAllDocument() async {
     return await _collection.get();
   }
 
-  Stream<QuerySnapshot> listenToDocumentByKeyValuePair(String key, String value)  {
-    return _collection.where(key, isEqualTo: value).snapshots();
+  Stream<QuerySnapshot> listenToDocumentByKeyValuePair(List<String> key, List<dynamic> value)  {
+    late Query query;
+    if ((key.length == value.length) && key.isNotEmpty) {
+      for (int i = 0; i < key.length; i++) {
+        query = _collection.where(key[i], isEqualTo: value[i]);
+      }
+    }
+    return query.snapshots();
   }
 
   Stream<QuerySnapshot> listenToDocument() {

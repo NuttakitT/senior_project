@@ -3,8 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
+import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_card_widget.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+
+Stream? query(String id, int type) {
+  final FirebaseServices service = FirebaseServices("task");
+  switch (type) {
+      case 0:
+        return service.listenToDocumentByKeyValuePair(["ownerId"], [id]);
+      case 1:
+        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 0]);
+      case 2:
+        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 1]);
+      case 3:
+        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 2]);
+      default:
+        return null;
+    }
+}
 
 class HelpDeskDesktopBody extends StatefulWidget {
   const HelpDeskDesktopBody({super.key});
@@ -14,6 +32,8 @@ class HelpDeskDesktopBody extends StatefulWidget {
 }
 
 class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
+  Stream? _stream;
+
   List<Widget> generateContent(List<Map<String, dynamic>> data) {
     List<Widget> content = [];
     for (int i = 0; i < data.length; i++) {
@@ -23,13 +43,22 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
   }
 
   @override
+  void didChangeDependencies() {
+    int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+    context.read<HelpDeskViewModel>().cleanModel();
+    // TODO listen to user id
+    _stream = query("test23", tagBarSelected);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var bodyPadding = const EdgeInsets.fromLTRB(77, 40, 20, 0);
 
     return Padding(
         padding: bodyPadding,
         child: StreamBuilder(
-              stream: context.watch<HelpDeskViewModel>().listenToTask("test23"),
+              stream: _stream,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text(
@@ -53,9 +82,10 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
                       )
                     );
                   } else {
+                    context.read<HelpDeskViewModel>().cleanModel();
                     return  const Center(
                       child: Text(
-                        "All problems solved!",
+                        "No task in this section",
                         style: TextStyle(
                           fontFamily: AppFontStyle.font,
                           fontWeight: FontWeight.w400,

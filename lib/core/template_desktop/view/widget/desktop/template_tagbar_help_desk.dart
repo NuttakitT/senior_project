@@ -18,6 +18,7 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
     bool notStart = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(1);
     bool pending = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(2);
     bool closed = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(3);
+    String id = "test23"; // TODO listen to current user
 
     return Container(
       padding: const EdgeInsets.only(left: 72),
@@ -61,20 +62,20 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "All status", state: all, index: 0),
+              child: TagBarHelpDesk(name: "All status", state: all, index: 0, id: id,),
             ),
             const Divider(),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Not Start", state: notStart, index: 1),
+              child: TagBarHelpDesk(name: "Not Start", state: notStart, index: 1, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "In Progress", state: pending, index: 2),
+              child: TagBarHelpDesk(name: "In Progress", state: pending, index: 2, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Closed", state: closed, index: 3),
+              child: TagBarHelpDesk(name: "Closed", state: closed, index: 3, id: id,),
             )
           ],
         ),

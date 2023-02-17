@@ -67,37 +67,37 @@ class _TemplateTagBarHelpDeskAdminState
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "All Ticket", state: all, index: 0),
+              child: TagBarHelpDesk(name: "All Ticket", state: all, index: 0, id: "",),
             ),
             const Divider(),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Not Start", state: notStart, index: 1),
+              child: TagBarHelpDesk(name: "Not Start", state: notStart, index: 1, id: "",),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "In Progress", state: pending, index: 2),
+              child: TagBarHelpDesk(name: "In Progress", state: pending, index: 2, id: "",),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Closed", state: closed, index: 3),
+              child: TagBarHelpDesk(name: "Closed", state: closed, index: 3, id: "",),
             ),
             const Divider(),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Urgent", state: urgent, index: 4),
+              child: TagBarHelpDesk(name: "Urgent", state: urgent, index: 4, id: "",),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "High", state: high, index: 5),
+              child: TagBarHelpDesk(name: "High", state: high, index: 5, id: "",),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Medium", state: med, index: 6),
+              child: TagBarHelpDesk(name: "Medium", state: med, index: 6, id: "",),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Low", state: low, index: 7),
+              child: TagBarHelpDesk(name: "Low", state: low, index: 7, id: "",),
             ),
           ],
         ),
