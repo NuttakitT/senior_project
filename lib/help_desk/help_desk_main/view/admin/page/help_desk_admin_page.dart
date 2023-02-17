@@ -7,8 +7,7 @@ import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/deskto
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/mobile_widget.dart';
 
 class HelpDeskAdminPage extends StatefulWidget {
-  final List<Map<String, dynamic>> data;
-  const HelpDeskAdminPage({super.key, required this.data});
+  const HelpDeskAdminPage({super.key});
 
   @override
   State<HelpDeskAdminPage> createState() => _HelpDeskAdminPageState();
@@ -26,17 +25,17 @@ class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
         isAdmin: true,
       ));
     }
-    return TemplateDesktop(
-        faqmenu: false,
-        faqmenuadmin: false,
-        helpdesk: false,
-        helpdeskadmin: true,
-        home: false,
-        useTemplatescroll: false,
-        content: Align(
-            alignment: AlignmentDirectional.topCenter,
-            child: DesktopWidget(
-              data: widget.data,
-            )));
+    return const TemplateDesktop(
+      faqmenu: false, 
+      faqmenuadmin: false, 
+      helpdesk: false, 
+      helpdeskadmin: true, 
+      home: false, 
+      useTemplatescroll: false,
+      content: Align(
+        alignment: AlignmentDirectional.topCenter,
+        child: DesktopWidget()
+      )
+    );
   }
 }

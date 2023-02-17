@@ -1,60 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/page/help_desk_admin_page.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/page/help_desk_main_desktop_widget.dart';
 
 class HelpDeskMainView extends StatelessWidget {
   final bool isAdmin;
-  HelpDeskMainView({super.key, required this.isAdmin});
-
-  // TODO edit to provider
-  final List<Map<String, dynamic>> data = [
-    {
-      "id": "#123",
-      "username": "Runn",
-      "email": "runn@gmail.com",
-      "taskHeader": "Lorem ipsum",
-      "taskDetail":
-          "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
-      "priority": 3, // 0-3 (low, medium, high, urgent)
-      "status": 2, // 0-2 (not start, pending, complete)
-      "category": "Register, Modcom, Camp",
-      "time": DateFormat('hh:mm a').format(DateTime.now())
-    },
-    {
-      "id": "#456",
-      "username": "Runn",
-      "email": "runn@gmail.com",
-      "taskHeader": "Lorem ipsum",
-      "taskDetail":
-          "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
-      "priority": 1, // 0-3 (low, medium, high, urgent)
-      "status": 1, // 0-2 (not start, pending, complete)
-      "category": "Register, Modcom, Camp",
-      "time": DateFormat('hh:mm a').format(DateTime.now())
-    },
-    {
-      "id": "#456",
-      "username": "Runn",
-      "email": "runn@gmail.com",
-      "taskHeader": "Lorem ipsum",
-      "taskDetail":
-          "Lorem ipsum dolor sit amet, consectetur adiwfefef cwcececqsc.",
-      "priority": 0, // 0-3 (low, medium, high, urgent)
-      "status": 0, // 0-2 (not start, pending, complete)
-      "category": "Register, Modcom, Camp",
-      "time": DateFormat('hh:mm a').format(DateTime.now())
-    },
-  ];
+  const HelpDeskMainView({super.key, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
     if (isAdmin) {
-      return HelpDeskAdminPage(
-        data: data,
-      );
+      return const HelpDeskAdminPage();
     } else {
-      return HelpDeskMainDesktopWidget(cards: data);
+      return const HelpDeskMainDesktopWidget();
     }
   }
 }

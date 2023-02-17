@@ -1,27 +1,34 @@
-// import 'package:senior_project/core/model/user/app_user.dart';
-// import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_desktop_body_widget.dart';
+import 'package:senior_project/core/model/help_desk/task.dart';
 
-// class HelpDeskModel extends AppUser {
-//   HelpDeskCard? card;
-// }
+class HelpDeskMainModel {
+  List<Task> _tasks = [];
 
-// class HelpDeskCard {
-//   final String? title;
-//   final int? cardNumber;
-//   final String? category;
-//   final String? detail;
-//   final String? priority;
-//   final Status? status;
-//   final String? userName;
+  HelpDeskMainModel();
 
-//   HelpDeskCard(
-//       {this.title,
-//       this.cardNumber,
-//       this.category,
-//       this.detail,
-//       this.priority,
-//       this.status,
-//       this.userName});
-// }
+  HelpDeskMainModel.overloaddedConstructor(List<Task> tasks) {
+    _tasks = tasks;
+  }
 
-// enum Status { notStart, inProgress, done }
+  List<Task> get getTask => _tasks;
+  Task getTaskIndex(int index) => _tasks[index];
+
+  void addTask(Task task) {
+    _tasks.add(task);
+  }
+
+  void addTaskList(List<Task> tasks) {
+    _tasks.addAll(tasks);
+  }
+
+  Map<String, dynamic> getTaskDetail(int index) {
+    return {
+      "id": _tasks[index].getId,
+      "taskHeader": _tasks[index].getTitle,
+      "taskDetail": _tasks[index].getContent.getText,
+      "priority": _tasks[index].getPriority, 
+      "status": _tasks[index].getStatus, 
+      "category": _tasks[index].getCategory,
+      "time": _tasks[index].getDateCreate
+    };
+  }
+}

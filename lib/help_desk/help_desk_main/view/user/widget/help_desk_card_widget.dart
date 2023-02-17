@@ -1,8 +1,12 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class HelpDeskCardWidget {
@@ -15,6 +19,7 @@ class HelpDeskCardWidget {
         .watch<HelpDeskViewModel>()
         .convertToString(false, card["priority"]);
     List<Color> statusColor = StatusColor.getColor(false, card["status"]);
+    String time = DateFormat('d/MM/yyyy H:mm').format(card["time"]);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -32,7 +37,7 @@ class HelpDeskCardWidget {
                 columnWidths: const <int, TableColumnWidth>{
                   0: FixedColumnWidth(120),
                   1: FlexColumnWidth(),
-                  2: FixedColumnWidth(240)
+                  2: FixedColumnWidth(250)
                 },
                 children: <TableRow>[
                   TableRow(children: <Widget>[
@@ -52,8 +57,18 @@ class HelpDeskCardWidget {
                               padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
                               child: Center(
                                 child: DefaultTextStyle(
-                                    style: AppFontStyle.wb60Md16,
-                                    child: Text(priority)),
+                                    style: const TextStyle(
+                                      fontFamily: AppFontStyle.font,
+                                      fontWeight: AppFontWeight.medium,
+                                      fontSize: 14,
+                                      color: ColorConstant.whiteBlack60),
+                                    child: Row(
+                                      children: [
+                                        Icon(PriorityIcon.getIcon(card["priority"]), size: 16,),
+                                        const Spacer(),
+                                        Text(priority),
+                                      ],
+                                    )),
                               ),
                             ),
                           ),
@@ -69,16 +84,26 @@ class HelpDeskCardWidget {
                               TextSpan(
                                 text: card["taskHeader"],
                                 style: AppFontStyle.wb80R24,
-                              )
+                              ),
+                              TextSpan(
+                                    text: "#${card["id"][0]}${card["id"][1]}${card["id"][card["id"].length-1]}",
+                                    style: const TextStyle(
+                                      fontFamily: AppFontStyle.font,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorConstant.whiteBlack60,
+                                      fontSize: 20
+                                    )
+                                  )
                             ]),
                           ),
                         )),
-                    const TableCell(
+                    TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 24.0, left: 16.0),
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(top: 24.0, right: 16.0),
                           child: DefaultTextStyle(
-                              style: AppFontStyle.wb80R18, child: Text("Time")),
+                              style: AppFontStyle.wb80R18, child: Text("Time $time")),
                         )),
                   ]),
                   TableRow(children: <Widget>[

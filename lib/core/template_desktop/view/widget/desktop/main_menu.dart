@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -103,7 +104,11 @@ class _MainMenuState extends State<MainMenu> {
                   ),
                   onTap: () {
                     context.read<TemplateDesktopViewModel>().changeState(1, 1);
-                    // TODO link to help desk page
+                    // TODO listen to user role
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => HelpDeskMainView(isAdmin: false))
+                    );
                   },
                 ),
               ),

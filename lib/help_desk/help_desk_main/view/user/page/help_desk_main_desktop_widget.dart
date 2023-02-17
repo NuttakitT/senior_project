@@ -8,8 +8,7 @@ import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_de
 import '../widget/help_desk_desktop_body_widget.dart';
 
 class HelpDeskMainDesktopWidget extends StatelessWidget {
-  final List<Map<String, dynamic>> cards;
-  const HelpDeskMainDesktopWidget({super.key, required this.cards});
+  const HelpDeskMainDesktopWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +24,26 @@ class HelpDeskMainDesktopWidget extends StatelessWidget {
       ));
     }
     return TemplateDesktop(
-        faqmenu: false,
-        faqmenuadmin: false,
-        helpdesk: true,
-        helpdeskadmin: false,
-        home: false,
-        useTemplatescroll: true,
-        content: Container(
-          constraints: BoxConstraints(
-              maxWidth: screenWidth,
-              minWidth: 200,
-              maxHeight: screenHeight - 155),
-          alignment: AlignmentDirectional.topCenter,
-          child: ListView(
-            children: [
-              HelpDeskDesktopHeader.widget(context),
-              HelpDeskDesktopBody(cards: cards)
-            ],
-          ),
-        ));
+      faqmenu: false, 
+      faqmenuadmin: false, 
+      helpdesk: true, 
+      helpdeskadmin: false, 
+      home: false, 
+      useTemplatescroll: true, 
+      content: Container(
+        constraints: BoxConstraints(
+          maxWidth: screenWidth, 
+          minWidth: 200, 
+          maxHeight: screenHeight - 155
+        ),
+        alignment: AlignmentDirectional.topCenter,
+        child: ListView(
+          children: [
+            HelpDeskDesktopHeader.widget(context),
+            const HelpDeskDesktopBody()
+          ],
+        ),
+      )
+    );
   }
 }

@@ -1,5 +1,8 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
@@ -19,17 +22,14 @@ class TableDetail {
   static List<Widget> widget(
       BuildContext context, Map<String, dynamic> detail) {
     List<Color> statusColor = StatusColor.getColor(false, detail["status"]);
-    String priority = context
-        .watch<HelpDeskViewModel>()
-        .convertToString(false, detail["priority"]);
-    String status = context
-        .watch<HelpDeskViewModel>()
-        .convertToString(true, detail["status"]);
-
+    String priority = context.watch<HelpDeskViewModel>().convertToString(false, detail["priority"]);
+    String status = context.watch<HelpDeskViewModel>().convertToString(true, detail["status"]);
+    String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
+    String taskTime = "${detail["time"].day}/${detail["time"].month}/${detail["time"].year}";
+    
     return [
-      Flexible(
-        flex: 2,
-        fit: FlexFit.tight,
+      SizedBox(
+        width: 180,
         child: Row(
           children: [
             Padding(
@@ -92,91 +92,90 @@ class TableDetail {
           ),
         ),
       ),
-      Flexible(
-        fit: FlexFit.tight,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: Container(
-            height: 24,
-            width: 80,
-            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
-            decoration: BoxDecoration(
-                border: Border.all(color: ColorConstant.whiteBlack15),
-                borderRadius: BorderRadius.circular(8),
-                color: ColorConstant.whiteBlack5),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Icon(
-                    PriorityIcon.getIcon(detail["priority"]),
-                    color: ColorConstant.whiteBlack80,
-                    size: 12,
-                  ),
-                  Text(
-                    priority,
-                    style: _detailTextStyle(10.5, ColorConstant.whiteBlack80),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-      Flexible(
-        fit: FlexFit.tight,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: Container(
-            height: 24,
-            width: 80,
-            padding: const EdgeInsets.symmetric(horizontal: 9.5, vertical: 4),
-            decoration: BoxDecoration(
-                border: Border.all(color: statusColor[1]),
-                borderRadius: BorderRadius.circular(8),
-                color: statusColor[0]),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                status,
-                textAlign: TextAlign.center,
-                style: _detailTextStyle(10.5, statusColor[2]),
-              ),
-            ),
-          ),
-        ),
-      ),
-      Flexible(
-        flex: 2,
-        fit: FlexFit.tight,
-        child: RichText(
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          text: TextSpan(children: [
-            TextSpan(
-              text: detail["category"],
-              style: _detailTextStyle(14, ColorConstant.whiteBlack70),
-            )
-          ]),
-        ),
-      ),
-      Flexible(
-        fit: FlexFit.tight,
+      Padding(
+        padding: const EdgeInsets.only(right: 20),
         child: Container(
-          alignment: Alignment.center,
+          height: 24,
+          width: 100,
+          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+          decoration: BoxDecoration(
+            border: Border.all(color: ColorConstant.whiteBlack15),
+            borderRadius: BorderRadius.circular(8),
+            color: ColorConstant.whiteBlack5
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Icon(
+                  PriorityIcon.getIcon(detail["priority"]),
+                  color: ColorConstant.whiteBlack80,
+                  size: 12,
+                ),
+                Text(
+                  priority,
+                  style: _detailTextStyle(10.5, ColorConstant.whiteBlack80),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(right: 20),
+        child: Container(
+          height: 24,
+          width: 100,
+          padding: const EdgeInsets.symmetric(horizontal: 9.5, vertical: 4),
+          decoration: BoxDecoration(
+            border: Border.all(color: statusColor[1]),
+            borderRadius: BorderRadius.circular(8),
+            color: statusColor[0]
+          ),
           child: Text(
-            detail["time"],
+            status,
+            textAlign: TextAlign.center,
+            style: _detailTextStyle(10.5, statusColor[2]),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(right: 20),
+        child: SizedBox(
+          width: 120,
+          child: RichText(
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: detail["category"],
+                  style: _detailTextStyle(14, ColorConstant.whiteBlack70), 
+                )
+              ]
+            ),
+          ),
+        ),
+      ),
+      Container(
+        width: 70,
+        alignment: Alignment.centerLeft,
+        child: Text(
+            localTime == taskTime 
+              ? DateFormat('hh:mm a').format(detail["time"]) 
+              : DateFormat('dd MMM').format(detail["time"]),
             style: _detailTextStyle(14, ColorConstant.whiteBlack60),
           ),
-        ),
       ),
-      const Flexible(
-          fit: FlexFit.tight,
-          child: Align(
-            alignment: Alignment.center,
-            child: ActionButton(),
-          ))
+      SizedBox(
+        width: 105,
+        child: 
+        Align(
+          alignment: Alignment.center,
+          child: ActionButton(id: detail["id"],),
+        )
+      )
     ];
   }
 }

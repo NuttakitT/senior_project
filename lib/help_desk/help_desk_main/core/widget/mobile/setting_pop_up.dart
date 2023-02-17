@@ -11,7 +11,6 @@ class SettingPopUp extends StatefulWidget {
 }
 
 class _SettingPopUpState extends State<SettingPopUp> {
-  // TODO add provider state
   bool isSendEmail = false;
   final TextStyle _labelStyle = const TextStyle(
       fontFamily: AppFontStyle.interFont,
@@ -105,7 +104,6 @@ class _SettingPopUpState extends State<SettingPopUp> {
                       ),
                     ],
                   ),
-                  // TODO add provider state
                   FlutterSwitch(
                     value: isSendEmail,
                     onToggle: (value) {

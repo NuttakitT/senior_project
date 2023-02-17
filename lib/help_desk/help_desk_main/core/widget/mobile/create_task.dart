@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class CreateTask extends StatefulWidget {
   final bool isAdmin;
@@ -13,11 +17,21 @@ class CreateTask extends StatefulWidget {
 
 class _CreateTaskState extends State<CreateTask> {
   final TextStyle _titleStyle = AppFontStyle.wb80Md24;
-  // TODO set provider state
   static List<String> priority = ["Low", "Medium", "High", "Urgent"];
-  static List<String> category = ["Test", "Cat_A", "Cat_B", "Cat_X"];
+  late List<String> category;
   String priorityValue = priority.first;
-  String categoryValue = category.first;
+  late String categoryValue;
+  String title = "";
+  String detail = "";
+  bool isTitleEmpty = false;
+  bool isDetailEmpty = false;
+
+  @override
+  void initState() {
+    category = context.read<HelpDeskViewModel>().getCategory;
+    categoryValue = category.first;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +70,11 @@ class _CreateTaskState extends State<CreateTask> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                      border: Border.all(color: ColorConstant.whiteBlack20),
-                      borderRadius: BorderRadius.circular(4)),
+                    border: Border.all(color: isTitleEmpty 
+                        ? ColorConstant.red50 
+                        : ColorConstant.whiteBlack20),
+                    borderRadius: BorderRadius.circular(4)
+                  ),
                   alignment: AlignmentDirectional.centerStart,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -66,7 +83,12 @@ class _CreateTaskState extends State<CreateTask> {
                         hintText: "Ex. caption",
                         hintStyle: AppFontStyle.wb30R14),
                     onChanged: (value) {
-                      // TODO get title
+                      title = value;
+                    },
+                    onTap: () {
+                      setState(() {
+                        isTitleEmpty = false;
+                      });
                     },
                   ),
                 ),
@@ -93,7 +115,6 @@ class _CreateTaskState extends State<CreateTask> {
                       Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: Icon(
-                            // TODO listen to state
                             PriorityIcon.getIcon(
                                 priority.indexOf(priorityValue)),
                             size: 20,
@@ -101,14 +122,13 @@ class _CreateTaskState extends State<CreateTask> {
                       Expanded(
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton(
-                            value: priorityValue, // TODO listen to state
+                            value: priorityValue, 
                             style: AppFontStyle.wb80R16,
                             items: priority.map<DropdownMenuItem>((value) {
                               return DropdownMenuItem(
                                   value: value, child: Text(value));
                             }).toList(),
                             onChanged: (value) {
-                              // TODO set state
                               setState(() {
                                 priorityValue = value!;
                               });
@@ -140,14 +160,13 @@ class _CreateTaskState extends State<CreateTask> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
-                      value: categoryValue, // TODO listen to state
+                      value: categoryValue,
                       style: AppFontStyle.wb80R16,
                       items: category.map<DropdownMenuItem>((value) {
                         return DropdownMenuItem(
                             value: value, child: Text(value));
                       }).toList(),
                       onChanged: (value) {
-                        // TODO set state
                         setState(() {
                           categoryValue = value!;
                         });
@@ -169,10 +188,12 @@ class _CreateTaskState extends State<CreateTask> {
                 child: Container(
                   height: 100,
                   decoration: BoxDecoration(
-                      border: Border.all(color: ColorConstant.whiteBlack20),
-                      borderRadius: BorderRadius.circular(4)),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    border: Border.all(color: isTitleEmpty 
+                        ? ColorConstant.red50 
+                        : ColorConstant.whiteBlack20),
+                    borderRadius: BorderRadius.circular(4)
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: TextField(
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -180,7 +201,12 @@ class _CreateTaskState extends State<CreateTask> {
                         hintText: "Ex. caption",
                         hintStyle: AppFontStyle.wb30R14),
                     onChanged: (value) {
-                      // TODO get title
+                      detail = value;
+                    },
+                    onTap: () {
+                      setState(() {
+                        isDetailEmpty = false;
+                      });
                     },
                   ),
                 ),
@@ -192,8 +218,22 @@ class _CreateTaskState extends State<CreateTask> {
                   width: double.infinity,
                   height: 40,
                   child: TextButton(
-                    onPressed: () {
-                      // TODO confirm logic
+                    onPressed: () async {
+                      if (title.isEmpty) {
+                          setState(() {
+                            isTitleEmpty = true;
+                          });
+                      } 
+                      if (detail.isEmpty) {
+                        setState(() {
+                          isDetailEmpty = true;
+                        });
+                      }
+                      if (title.isNotEmpty && detail.isNotEmpty) {
+                        int priorityIndex = priority.indexOf(priorityValue);
+                        await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
+                        Navigator.pop(context);
+                      }
                     },
                     style: ButtonStyle(
                         backgroundColor:

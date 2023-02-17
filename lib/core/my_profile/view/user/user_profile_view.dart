@@ -26,18 +26,11 @@ class UserProfileView extends StatelessWidget {
           helpdeskadmin: false,
           home: false,
           useTemplatescroll: false,
-          content: Container(
-            constraints: BoxConstraints(
-                maxWidth: screenWidth,
-                minWidth: 200,
-                maxHeight: screenHeight - 155),
-            alignment: AlignmentDirectional.topCenter,
-            child: ListView(
-              children: [
-                UserProfileHeader.widget(context),
-                UserProfileCard.widget(context, data)
-              ],
-            ),
+          content: Column(
+            children: [
+              UserProfileHeader.widget(context),
+              UserProfileCard.widget(context, data)
+            ],
           ));
     }
   }

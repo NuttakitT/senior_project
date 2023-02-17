@@ -1,4 +1,7 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
@@ -34,6 +37,7 @@ class _TaskCardState extends State<TaskCard> {
     List<Color> statusColor =
         StatusColor.getColor(true, widget.detail["status"]);
     IconData priorityIcon = PriorityIcon.getIcon(widget.detail["priority"]);
+    String time = DateFormat('hh:mm a').format(widget.detail["time"]);
     double cardWidth = 396;
     TextStyle labelStyle = AppFontStyle.wb80L14;
 
@@ -81,8 +85,13 @@ class _TaskCardState extends State<TaskCard> {
                               )),
                         ),
                         Text(
-                          widget.detail["id"],
-                          style: AppFontStyle.wb60R16,
+                          "#${widget.detail["id"][0]}${widget.detail["id"][1]}${widget.detail["id"][widget.detail["id"].length-1]}",
+                          style: const TextStyle(
+                            fontFamily: AppFontStyle.font,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: ColorConstant.whiteBlack60
+                          ),
                         ),
                       ],
                     ),
@@ -200,7 +209,7 @@ class _TaskCardState extends State<TaskCard> {
                         flex: 2,
                         fit: FlexFit.tight,
                         child: Text(
-                          widget.detail["time"],
+                          time,
                           style: detailStyle(ColorConstant.whiteBlack80),
                         ),
                       ),
@@ -249,6 +258,7 @@ class _TaskCardState extends State<TaskCard> {
                   padding: const EdgeInsets.only(top: 4),
                   child: Container(
                     height: 64,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(color: ColorConstant.whiteBlack15),
