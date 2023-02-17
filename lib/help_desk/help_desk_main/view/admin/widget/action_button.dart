@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class PopupSubMenuItem<T> extends PopupMenuEntry<T> {
   const PopupSubMenuItem({
@@ -72,13 +74,17 @@ class _PopupSubMenuState<T> extends State<PopupSubMenuItem<T>> {
 }
 
 class ActionButton extends StatefulWidget {
-  const ActionButton({super.key});
+  final String id;
+  const ActionButton({super.key, required this.id});
 
   @override
   State<ActionButton> createState() => _ActionButtonState();
 }
 
 class _ActionButtonState extends State<ActionButton> {
+  List<String> status = const ["Not start", "In progress", "Done"];
+  List<String> priority = const ["Low", "Medium", "High", "Urgent"];
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -94,15 +100,17 @@ class _ActionButtonState extends State<ActionButton> {
           return <PopupMenuEntry>[
             PopupSubMenuItem(
                 title: "Status",
-                items: const ["Not start", "In progress", "Done"],
+                items: status,
                 onSelected: (value) {
-                  // TODO change status logic
+                  int newStatus = status.indexOf(value);
+                  context.read<HelpDeskViewModel>().editTask(widget.id, true, newStatus);
                 }),
             PopupSubMenuItem(
                 title: "Priority",
-                items: const ["Urgent", "High", "Medium", "Low"],
+                items: priority,
                 onSelected: (value) {
-                  // TODO change priority logic
+                  int newPriority = priority.indexOf(value);
+                  context.read<HelpDeskViewModel>().editTask(widget.id, false, newPriority);
                 }),
             PopupMenuItem(
               value: 3,

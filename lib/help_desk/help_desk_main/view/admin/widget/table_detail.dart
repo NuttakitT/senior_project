@@ -166,12 +166,12 @@ class TableDetail {
             style: _detailTextStyle(14, ColorConstant.whiteBlack60),
           ),
       ),
-      const SizedBox(
+      SizedBox(
         width: 105,
         child: 
         Align(
           alignment: Alignment.center,
-          child: ActionButton(),
+          child: ActionButton(id: detail["id"],),
         )
       )
     ];

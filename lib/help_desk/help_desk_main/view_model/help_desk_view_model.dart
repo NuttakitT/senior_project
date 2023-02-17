@@ -13,6 +13,33 @@ class HelpDeskViewModel extends ChangeNotifier {
   final List<Map<String, dynamic>> _task = [];
   final List<String> _category = ["Test", "Cat_A", "Cat_B", "Cat_X"]; // TODO add category String
 
+  String convertToString(bool isStatus, int taskState) {
+    if (isStatus) {
+      switch (taskState) {
+        case 0:
+          return "Not start";
+        case 1:
+          return "Pending";
+        case 2:
+          return "Complete";
+        default:
+          return "Error";
+      }
+    }
+    switch (taskState) {
+      case 0:
+        return "Low";
+      case 1:
+        return "Medium";
+      case 2:
+        return "Hight";
+      case 3:
+        return "Urgent";
+      default:
+        return "Error";
+    }
+  }
+
   get getCategory => _category;
   get getTask => _task.reversed.toList();
 
@@ -74,7 +101,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  void _addData(DocumentSnapshot snapshot) {
+  void _addQueryData(DocumentSnapshot snapshot) {
     Task task = Task(
       snapshot.get("ownerId"),
       snapshot.get("title"),
@@ -89,7 +116,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task.add(formatTaskDetail(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1)));
   }
 
-  void _modifyData(DocumentSnapshot snapshot, int index) {
+  void _modifyQueryData(DocumentSnapshot snapshot, int index) {
     Task targetTask = _helpDeskModel.getTask.firstWhere((element) {
       return snapshot.get("id") == element.getId;
     });
@@ -99,7 +126,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task[index]["priority"] = snapshot.get("priority");
   }
   
-  void _removeData(int index) {
+  void _removeQueryData(int index) {
     _helpDeskModel.getTask.removeAt(index);
     _task.removeAt(index);
   }
@@ -108,46 +135,30 @@ class HelpDeskViewModel extends ChangeNotifier {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.added) {
-        // TODO FIX THIS!
+        // TODO this is gonna reload every time when rebuild
         if (_task.length != snapshot.docChanges.length) {
-          _addData(doc);
+          _addQueryData(doc);
         } 
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.modified) {
         int index = snapshot.docChanges[i].newIndex;
-        _modifyData(doc, index);
+        _modifyQueryData(doc, index);
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.removed) {
         int index = snapshot.docChanges[i].oldIndex;
-        _removeData(index);
+        _removeQueryData(index);
       }
     }
   }
 
-  String convertToString(bool isStatus, int taskState) {
-    if (isStatus) {
-      switch (taskState) {
-        case 0:
-          return "Not start";
-        case 1:
-          return "Pending";
-        case 2:
-          return "Complete";
-        default:
-          return "Error";
-      }
-    }
-    switch (taskState) {
-      case 0:
-        return "Low";
-      case 1:
-        return "Medium";
-      case 2:
-        return "Hight";
-      case 3:
-        return "Urgent";
-      default:
-        return "Error";
+  Future<void> editTask(String id, bool isStatus, int value) async {
+    QuerySnapshot query = await _service.getDocumnetByKeyValuePair("id", id);
+    if (query.docs.isNotEmpty) {
+      String docId = query.docs.first.id;
+      Map<String, dynamic> editedDetail = isStatus
+        ? {"status": value}
+        : {"priority": value};
+      await _service.editDocument(docId, editedDetail);
     }
   }
 }

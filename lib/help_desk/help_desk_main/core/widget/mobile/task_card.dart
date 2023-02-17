@@ -83,7 +83,7 @@ class _TaskCardState extends State<TaskCard> {
                               )),
                         ),
                         Text(
-                          "#${widget.detail["id"][1]}${widget.detail["id"][2]}${widget.detail["id"][widget.detail["id"].length-1]}",
+                          "#${widget.detail["id"][0]}${widget.detail["id"][1]}${widget.detail["id"][widget.detail["id"].length-1]}",
                           style: const TextStyle(
                             fontFamily: AppFontStyle.font,
                             fontWeight: FontWeight.w400,
