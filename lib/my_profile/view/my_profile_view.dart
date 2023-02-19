@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/core/my_profile/view/user/user_profile_view.dart';
+import 'package:senior_project/my_profile/view/user/user_profile_view.dart';
 
 class MyProfileView extends StatelessWidget {
   final bool isAdmin;
