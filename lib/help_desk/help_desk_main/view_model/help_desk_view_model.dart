@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/content.dart';
 import 'package:senior_project/core/model/help_desk/task.dart';
@@ -9,6 +10,7 @@ import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_mod
 class HelpDeskViewModel extends ChangeNotifier {
   HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
   final FirebaseServices _service = FirebaseServices("task");
+  final AlgoliaServices _algolia = AlgoliaServices("task");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
   final List<String> _category = ["Test", "Cat_A", "Cat_B", "Cat_X"]; // TODO add category String
@@ -85,7 +87,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       category
     );
     _helpDeskModel.addTask(task);
-    await _service.setDocument(task.getDateCreate.millisecondsSinceEpoch.toString(), {
+    Map<String, dynamic> taskDetail = {
       "id": task.getId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
@@ -94,7 +96,11 @@ class HelpDeskViewModel extends ChangeNotifier {
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail
-    });
+    };
+    String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
+    String? objectId = await _algolia.addObject(docId, taskDetail);
+    taskDetail.addAll({"objectID": objectId!});
+    await _service.setDocument(docId, taskDetail);
   }
 
   void cleanModel() {
@@ -158,10 +164,35 @@ class HelpDeskViewModel extends ChangeNotifier {
     QuerySnapshot? query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
     if (query!.docs.isNotEmpty) {
       String docId = query.docs.first.id;
+      String objectId = query.docs.first.get("objectID");
       Map<String, dynamic> editedDetail = isStatus
         ? {"status": value}
         : {"priority": value};
       await _service.editDocument(docId, editedDetail);
+      await _algolia.updateObject(objectId, editedDetail);
     }
+  }
+
+  Future<List<Map<String, dynamic>>> searchText(String text) async {
+    List<Map<String, dynamic>> list = await _algolia.queryObject(text);
+    for(int i = 0; i < list.length; i++) {
+      // Task task = Task(
+      //   list[i]["ownerId"],
+      //   list[i]["title"],
+      //   Content(list[i]["detail"]),
+      //   list[i]["priority"],
+      //   list[i]["category"],
+      //   id: list[i]["id"],
+      //   dateCreate: list[i]["dateCreate"].toDate(),
+      //   status: list[i]["status"],
+      // );
+      // _helpDeskModel.addTask(task);
+      // _task.add(
+      //   formatTaskDetail(
+      //     _helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1)
+      //   )
+      // );
+    }
+    return list;
   }
 }
