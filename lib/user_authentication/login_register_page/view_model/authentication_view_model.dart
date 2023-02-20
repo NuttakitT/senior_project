@@ -123,7 +123,7 @@ class AuthenticationViewModel extends ChangeNotifier {
         password: registerModel.getPassword as String
       );
       final snapshot = await FirebaseServices("user").getDocumentById(credential.user!.uid);
-      Map<String, dynamic> detail = storeAppUser(snapshot);
+      Map<String, dynamic> detail = storeAppUser(snapshot!);
       context.read<AppViewModel>().setLoggedInUser(detail);
       _errorText = "";
       notifyListeners();
@@ -179,7 +179,7 @@ class AuthenticationViewModel extends ChangeNotifier {
         "id": credential.user!.uid,
         "email": credential.user!.email as String,
       };
-      if (!snapshot.exists) {
+      if (!snapshot!.exists) {
         FirebaseServices("user").setDocument(
           credential.user!.uid,
           {
@@ -205,7 +205,7 @@ class AuthenticationViewModel extends ChangeNotifier {
         "email": credential.user!.email as String,
       };
       final snapshot = await FirebaseServices("user").getDocumentById(credential.user!.uid);
-      if (!snapshot.exists) {
+      if (!snapshot!.exists) {
         FirebaseServices("user").setDocument(
           credential.user!.uid,
           {

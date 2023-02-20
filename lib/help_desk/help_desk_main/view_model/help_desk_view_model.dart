@@ -155,8 +155,8 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
-    QuerySnapshot query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
-    if (query.docs.isNotEmpty) {
+    QuerySnapshot? query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
+    if (query!.docs.isNotEmpty) {
       String docId = query.docs.first.id;
       Map<String, dynamic> editedDetail = isStatus
         ? {"status": value}

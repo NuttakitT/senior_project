@@ -56,59 +56,61 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
     var bodyPadding = const EdgeInsets.fromLTRB(77, 40, 20, 0);
 
     return Padding(
-        padding: bodyPadding,
-        child: StreamBuilder(
-              stream: _stream,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text(
-                    "Error occurred",
-                    style: TextStyle(
-                      fontFamily: AppFontStyle.font,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 20,
-                      color: ColorConstant.whiteBlack60
-                    ),
-                  );
-                } 
-                if (snapshot.connectionState == ConnectionState.active) {
-                  if (snapshot.data!.docs.isNotEmpty) {
-                    context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot);
-                    List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                    return SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        children: generateContent(data),
-                      )
-                    );
-                  } else {
-                    context.read<HelpDeskViewModel>().cleanModel();
-                    return  const Center(
-                      child: Text(
-                        "No task in this section",
-                        style: TextStyle(
-                          fontFamily: AppFontStyle.font,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20,
-                          color: ColorConstant.whiteBlack60
-                        ),
-                      ),
-                    );
-                  }      
-                } else {
-                  return const Center(
-                    child: Text(
-                      "Loading...",
-                      style: TextStyle(
-                        fontFamily: AppFontStyle.font,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                        color: ColorConstant.whiteBlack60
-                      ),
-                    ),
-                  );
-                }
-              },
-            ));
+      padding: bodyPadding,
+      child: 
+      StreamBuilder(
+        stream: _stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text(
+              "Error occurred",
+              style: TextStyle(
+                fontFamily: AppFontStyle.font,
+                fontWeight: FontWeight.w400,
+                fontSize: 20,
+                color: ColorConstant.whiteBlack60
+              ),
+            );
+          } 
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.data!.docs.isNotEmpty) {
+              context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot);
+              List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+              return SizedBox(
+                width: double.infinity,
+                child: Column(
+                  children: generateContent(data),
+                )
+              );
+            } else {
+              context.read<HelpDeskViewModel>().cleanModel();
+              return  const Center(
+                child: Text(
+                  "No task in this section",
+                  style: TextStyle(
+                    fontFamily: AppFontStyle.font,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: ColorConstant.whiteBlack60
+                  ),
+                ),
+              );
+            }      
+          } else {
+            return const Center(
+              child: Text(
+                "Loading...",
+                style: TextStyle(
+                  fontFamily: AppFontStyle.font,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20,
+                  color: ColorConstant.whiteBlack60
+                ),
+              ),
+            );
+          }
+        },
+      )
+    );
   }
 }
