@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
 import 'package:senior_project/user_authentication/core/widget/desktop/back_plate_desktop.dart';
@@ -18,47 +20,69 @@ class _AuthenticationPage extends State<AuthenticationPage> {
 
   Widget loginSite(bool isMobileSite) {
     if (isMobileSite) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: LoginWidget(isMobileSite: isMobileSite,),
+      return TemplateMenuMobile(
+        content: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SingleChildScrollView(child: LoginWidget(isMobileSite: isMobileSite,)),
+        )
       );
     }
-    return BackPlateWidgetDesktop.widget(
-      context, 
-      {"width": 502, "height": MediaQuery.of(context).size.height * 0.8,},
-      LoginWidget(isMobileSite: isMobileSite,)
+    return TemplateDesktop(
+      faqmenu: false, 
+      faqmenuadmin: false, 
+      helpdesk: false, 
+      helpdeskadmin: false, 
+      home: false, 
+      useTemplatescroll: true,
+      content: Center(
+        child: BackPlateWidgetDesktop.widget(
+          context, 
+          {"width": 502, "height": 770,},
+          LoginWidget(isMobileSite: isMobileSite,)
+        ),
+      )
     );
   }
 
-  Widget registerSite(bool isMobileSite) {
+  Widget registerSite(bool isMobileSite, double pixelWidth) {
     if (isMobileSite) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            PageIndicator(
-              width: isMobileSite ? 178 : 200, 
-              isMobileSize: isMobileSite,
-              indicatorsState: const [true, false],
+      return TemplateMenuMobile(
+        content: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                PageIndicator(
+                  isMobileSize: isMobileSite,
+                  indicatorsState: const [true, false],
+                ),
+                RegistrationWidget(isMobileSite: isMobileSite,)
+              ],
             ),
-            RegistrationWidget(isMobileSite: isMobileSite,)
-          ],
-        ),
+          ),
+        )
       );
     }
-    return Column(
-      children: [
-        PageIndicator(
-          width: isMobileSite ? 178 : 200, 
-          isMobileSize: isMobileSite, 
-          indicatorsState: const [true, false],
-        ),
-        BackPlateWidgetDesktop.widget(
-          context, 
-          {"width": 502, "height": MediaQuery.of(context).size.height * 0.8,},
-          RegistrationWidget(isMobileSite: isMobileSite,)
-        ),
-      ],
+    return TemplateDesktop(
+      faqmenu: false, 
+      faqmenuadmin: false, 
+      helpdesk: false, 
+      helpdeskadmin: false, 
+      home: false, 
+      useTemplatescroll: true,
+      content: Column(
+        children: [
+          PageIndicator(
+            isMobileSize: isMobileSite, 
+            indicatorsState: const [true, false],
+          ),
+          BackPlateWidgetDesktop.widget(
+            context, 
+            {"width": 502, "height": 750},
+            RegistrationWidget(isMobileSite: isMobileSite,)
+          ),
+        ],
+      )
     );
   }
 
@@ -66,15 +90,14 @@ class _AuthenticationPage extends State<AuthenticationPage> {
   Widget build(BuildContext context) {
     context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
-    bool isLoginPage = context.watch<AuthenticationViewModel>().getPageState;
-    
-    // TODO templete
+    bool isLoginPage = context.watch<AuthenticationViewModel>().getIsShowLoginPage;
+        
     return Builder(
       builder: (BuildContext context) {
         if (isLoginPage) {
           return loginSite(isMobileSite);
         }
-        return registerSite(isMobileSite);
+        return registerSite(isMobileSite, MediaQuery.of(context).size.width);
       },
     );
   }

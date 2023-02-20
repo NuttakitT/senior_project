@@ -1,34 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ColorConstant {
-  static const font = "Roboto";
-
-  // white
-  final white14B = const TextStyle(
-      fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF), fontSize: 14.0);
-
-  // black
-  final blackL20 = const TextStyle(
-      fontWeight: FontWeight.w300, color: Color(0xFF000000), fontSize: 20.0);
-  final blackMd18 = const TextStyle(
-      fontWeight: FontWeight.w300, color: Color(0xFF000000), fontSize: 18.0);
-  final blackMd20 = const TextStyle(
-      fontWeight: FontWeight.w300, color: Color(0xFF000000), fontSize: 20.0);
-  final blackMd24 = const TextStyle(
-      fontWeight: FontWeight.w300, color: Color(0xFF000000), fontSize: 24.0);
-  final blackMd38 = const TextStyle(
-      fontWeight: FontWeight.normal, color: Color(0xFF000000), fontSize: 38.0);
-
-  // grey
-  final grey50Md16 = const TextStyle(
-      fontWeight: FontWeight.normal, color: Color(0xFF838689), fontSize: 16.0);
-
-  // orange
-  final orange400B16 = const TextStyle(
-      fontWeight: FontWeight.bold, color: Color(0xFFFFA726), fontSize: 16.0);
-  final orange500B16 = const TextStyle(
-      fontWeight: FontWeight.bold, color: Color(0xFFFF9800), fontSize: 16.0);
-
   // * Color section
   static const facebookColor = Color(0xFF4267B2);
 
@@ -57,11 +29,17 @@ class ColorConstant {
   static const blue90 = Color(0xFF061E70);
 
   //Success State
+  static const green5 = Color(0xFFE5F8F2);
+  static const green10 = Color(0xFFCCF1E5);
+  static const green30 = Color(0xFF66D6B1);
   static const green40 = Color(0xFF33C997);
   static const green50 = Color(0xFF00BB7D);
   static const green60 = Color(0xFF009664);
 
   //In Progress/Error
+  static const yellow5 = Color(0xFFFFF8E5);
+  static const yellow10 = Color(0xFFFFF1CC);
+  static const yellow30 = Color(0xFFFFD666);
   static const yellow40 = Color(0xFFFFC933);
   static const yellow50 = Color(0xFFFFBB00);
   static const yellow60 = Color(0xFFCC9600);
