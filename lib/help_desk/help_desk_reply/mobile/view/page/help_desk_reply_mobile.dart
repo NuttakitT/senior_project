@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/body_reply_mobile.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/description_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/body_reply_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/description_mobile.dart';
 
 class HelpDeskReplyMobile extends StatefulWidget {
   const HelpDeskReplyMobile({super.key});
@@ -38,7 +38,14 @@ class _HelpDeskReplyMobileState extends State<HelpDeskReplyMobile> {
               color: ColorConstant.whiteBlack40,
             ),
             onTap: () {
-              //TODO Popup DescriptionMobile.dart
+              showDialog(
+                  context: context,
+                  builder: ((context) {
+                    return const AlertDialog(
+                      alignment: Alignment.topLeft,
+                      content: DescriptionMobile(),
+                    );
+                  }));
             },
           )
         ]),

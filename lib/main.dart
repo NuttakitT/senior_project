@@ -2,6 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/description_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/desktop/view/page/help_desk_reply_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/mobile/view/page/help_desk_reply_mobile.dart';
 import 'package:senior_project/my_profile/view/my_profile_view.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -36,13 +40,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (FirebaseAuth.instance.currentUser != null) {
+      context.read<AppViewModel>().initializeLoginState(true);
+    } else {
+      context.read<AppViewModel>().initializeLoginState(false);
+    }
+
     return MaterialApp(
         title: 'Test',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const TemplateMenuMobile(
-          content: Text("data"),
-        ));
+        home: const HelpDeskReplyDesktop());
   }
 }

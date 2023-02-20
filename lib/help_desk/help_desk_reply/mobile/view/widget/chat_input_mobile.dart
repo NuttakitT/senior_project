@@ -45,7 +45,7 @@ class ChatInputMobile extends StatelessWidget {
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: const TextField(
-                decoration: InputDecoration(
+                decoration: InputDecoration.collapsed(
                     hintText: "Type message...", border: InputBorder.none),
                 style:
                     TextStyle(color: ColorConstant.whiteBlack50, fontSize: 14),

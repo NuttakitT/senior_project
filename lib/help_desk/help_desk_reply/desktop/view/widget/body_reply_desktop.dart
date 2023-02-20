@@ -1,67 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_reply_demo.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/chat_input_desktop.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/description_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/desktop/view/widget/chat_input_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/desktop/view/widget/description_desktop.dart';
 
 class BodyReplyDesktop extends StatelessWidget {
   const BodyReplyDesktop({super.key});
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Padding(
-      padding: const EdgeInsets.only(top: 24, right: 20, left: 20, bottom: 24),
+      padding: const EdgeInsets.only(right: 20),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
+          Flexible(
+            flex: 2,
+            fit: FlexFit.tight,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(16)),
-              height: double.infinity,
-              width: double.infinity,
               child: Column(
                 children: [
                   Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: ColorConstant.white,
-                          boxShadow: [
-                            BoxShadow(
-                                offset: const Offset(1, -2),
-                                color: ColorConstant.black.withOpacity(0.05),
-                                blurRadius: 4)
-                          ],
-                          //TODO set border
-
-                          // border: Border(
-                          //     bottom: BorderSide(
-                          //         width: 1,
-                          //         color: ColorConstant.whiteBlack15,
-                          //         strokeAlign: StrokeAlign.inside)),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16))),
-                      height: 80,
-                      //TODO name of task / Pull from back-end
-                      child: const Text(
-                        "Lorem Ipsum",
-                        style: TextStyle(
-                            color: ColorConstant.whiteBlack80,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold),
-                      )),
-                  Expanded(
+                    decoration: const BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color: ColorConstant.whiteBlack15,
+                                width: 1,
+                                strokeAlign: StrokeAlign.inside))),
                     child: Container(
-                      decoration:
-                          const BoxDecoration(color: ColorConstant.white),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ListView.builder(
-                          itemCount: demoMessage.length,
-                          itemBuilder: (context, index) => Message(
-                            message: demoMessage[index],
-                          ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: ColorConstant.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: const Offset(1, -2),
+                                  color: ColorConstant.black.withOpacity(0.05),
+                                  blurRadius: 4)
+                            ],
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16))),
+                        height: 80,
+                        //TODO name of task / Pull from back-end
+                        child: const Text(
+                          "Lorem Ipsum",
+                          style: TextStyle(
+                              color: ColorConstant.whiteBlack80,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold),
+                        )),
+                  ),
+                  Container(
+                    constraints: const BoxConstraints(minHeight: 300),
+                    height: 680 + (screenHeight - 960),
+                    decoration: const BoxDecoration(color: ColorConstant.white),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ListView.builder(
+                        itemCount: demoMessage.length,
+                        itemBuilder: (context, index) => Message(
+                          message: demoMessage[index],
                         ),
                       ),
                     ),
@@ -71,7 +73,12 @@ class BodyReplyDesktop extends StatelessWidget {
               ),
             ),
           ),
-          const DescriptionDesktop()
+          //TODO listen to user role
+          const Flexible(
+              fit: FlexFit.tight,
+              child: DescriptionDesktop(
+                isAdmin: true,
+              ))
         ],
       ),
     );
