@@ -82,7 +82,7 @@ class HelpDeskCardWidget {
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(children: [
                               TextSpan(
-                                text: card["taskHeader"],
+                                text: card["title"],
                                 style: AppFontStyle.wb80R24,
                               ),
                               TextSpan(
@@ -149,7 +149,7 @@ class HelpDeskCardWidget {
                               overflow: TextOverflow.ellipsis,
                               text: TextSpan(children: [
                                 TextSpan(
-                                    text: card["taskDetail"],
+                                    text: card["detail"],
                                     style: AppFontStyle.wb50R16)
                               ]),
                             ),

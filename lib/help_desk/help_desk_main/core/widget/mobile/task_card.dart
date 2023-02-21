@@ -77,7 +77,7 @@ class _TaskCardState extends State<TaskCard> {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: widget.detail["taskHeader"],
+                                      text: widget.detail["title"],
                                       style: AppFontStyle.wb80SemiB20,
                                     )
                                   ],
@@ -271,7 +271,7 @@ class _TaskCardState extends State<TaskCard> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: widget.detail["taskDetail"],
+                            text: widget.detail["detail"],
                             style: detailStyle(ColorConstant.whiteBlack60),
                           )
                         ],
