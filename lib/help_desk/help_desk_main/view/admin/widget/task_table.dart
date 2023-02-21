@@ -127,6 +127,7 @@ class _TaskTableState extends State<TaskTable> {
                 },
               );
             }
+            print(searchText);
             context.read<HelpDeskViewModel>().getHitsSearcher.query(searchText);
             return StreamBuilder(
               stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
@@ -137,11 +138,30 @@ class _TaskTableState extends State<TaskTable> {
                 if (snapshot.connectionState == ConnectionState.active) {
                   List hits = snapshot.data!.hits.toList();
                   if (hits.isNotEmpty) {
-                    context.read<HelpDeskViewModel>().cleanModel();
-                    List<String> data = [];
+                    List<String> docs = [];
                     for (var item in hits) {
-                      data.add(item["docId"]);
+                      docs.add(item["docId"]);
                     }
+                    context.read<HelpDeskViewModel>().cleanModel();
+                    return FutureBuilder(
+                      future: context.watch<HelpDeskViewModel>().reconstructSearchResult(docs),
+                      builder: ((context, snapshot) {
+                        List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+                        return SizedBox(
+                          height: 680 + (screenHeight - 960),
+                          child: Scrollbar(
+                            controller: _vController,
+                            thumbVisibility: true,
+                            child: SingleChildScrollView(
+                              controller: _vController,
+                              child: Column(
+                                children: generateContent(data)
+                              ),
+                            ),
+                          )
+                        );
+                      }),
+                    );
                   }
                   return const LoaderStatus(text: "No result");
                 }

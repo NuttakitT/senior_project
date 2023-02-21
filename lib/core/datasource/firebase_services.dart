@@ -79,10 +79,6 @@ class FirebaseServices {
     }
     return query.snapshots();
   }
-  
-  Stream<DocumentSnapshot?> listenToDocumentId(String docId) {
-    return _collection.doc(docId).snapshots();
-  }
 
   Stream<QuerySnapshot> listenToDocument() {
     return _collection.snapshots();

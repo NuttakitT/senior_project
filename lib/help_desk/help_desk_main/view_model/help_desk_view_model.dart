@@ -63,14 +63,19 @@ class HelpDeskViewModel extends ChangeNotifier {
   get getCategory => _category;
   get getTask => _task.reversed.toList();
   HitsSearcher get getHitsSearcher => _hitSearch;
-  void setSearchText(String text, String filter) {
+  void setSearchText(String text, String? filter) {
     if (text.isNotEmpty) {
-      _searchText = "$filter $text";
+      _searchText = "${filter == null ? "" : "$filter "}$text";
     } else {
       _searchText = "";
     }
     notifyListeners();
   } 
+
+  void clearSearchText() {
+    _searchText = "";
+    notifyListeners();
+  }
 
   bool? getMobileMenuState(int index) {
     if (index >= 0 && index < 4) {
@@ -149,19 +154,32 @@ class HelpDeskViewModel extends ChangeNotifier {
     QuerySnapshot? query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
     if (query!.docs.isNotEmpty) {
       String docId = query.docs.first.id;
+      String taskId = query.docs.first.get("id");
       String objectId = query.docs.first.get("objectID");
-      await _service.editDocument(docId, isStatus
-        ? {"status": value}
-        : {"priority": value}
-      );
-      await _algolia.updateObject(objectId, isStatus
-        ? {"status": convertToString(isStatus, value)}
-        : {"priority": convertToString(isStatus, value)}
-      );
+      if (isStatus) {
+        _task.firstWhere((element) {
+        return element.containsValue(taskId);
+        })["status"] = value;
+        _helpDeskModel.getTask.firstWhere((element) {
+          return element.getId == taskId;
+        }).changeStatus(value);
+        await _service.editDocument(docId, {"status": value});
+        await _algolia.updateObject(objectId, {"status": convertToString(isStatus, value)});
+      } else {
+        _task.firstWhere((element) {
+        return element.containsValue(taskId);
+        })["priority"] = value;
+        _helpDeskModel.getTask.firstWhere((element) {
+          return element.getId == taskId;
+        }).changePriority(value);
+        await _service.editDocument(docId, {"priority": value});
+        await _algolia.updateObject(objectId, {"priority": convertToString(isStatus, value)});
+      }
+      notifyListeners();
     }
   }
 
-  // Listen to database and update data in application
+  // ------------- Listen to database and update data in application ---------------
   void _addQueryData(DocumentSnapshot snapshot) {
     Task task = Task(
       snapshot.get("ownerId"),
@@ -199,8 +217,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   Future<void> reconstructQueryData(QuerySnapshot snapshot) async {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
-      if (snapshot.docChanges[i].type == DocumentChangeType.added 
-        && snapshot.docChanges[i].doc.id != "dummy") {
+      if (snapshot.docChanges[i].type == DocumentChangeType.added) {
         _addQueryData(doc);
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.modified) {
@@ -212,6 +229,15 @@ class HelpDeskViewModel extends ChangeNotifier {
         String docId = snapshot.docChanges[i].doc.get("objectID");
         await _algolia.deleteObject(docId);
         _removeQueryData(index);
+      }
+    }
+  }
+
+  Future<void> reconstructSearchResult(List<String> docIds) async {
+    for (int i = 0; i < docIds.length; i++) {
+      DocumentSnapshot? doc = await _service.getDocumentById(docIds[i]);
+      if (doc != null) {
+        _addQueryData(doc);
       }
     }
   }

@@ -15,6 +15,15 @@ class TemplateTagBarHelpDeskAdmin extends StatefulWidget {
 
 class _TemplateTagBarHelpDeskAdminState
     extends State<TemplateTagBarHelpDeskAdmin> {
+  
+  @override
+  void didChangeDependencies() {
+    // String? typeValue = context.watch<TemplateDesktopViewModel>().getFilterType(context);
+    // String text = context.watch<TemplateDesktopViewModel>().getSearchText;
+    // context.read<HelpDeskViewModel>().setSearchText(text, typeValue);
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<bool> menuSelected = [
@@ -27,6 +36,7 @@ class _TemplateTagBarHelpDeskAdminState
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(6),
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(7),
     ];
+    
 
     return Container(
       padding: const EdgeInsets.only(left: 72),
@@ -72,9 +82,8 @@ class _TemplateTagBarHelpDeskAdminState
                             gapPadding: 0
                           )
                         ),
-                        onChanged: (value) {
-                          String typeValue = context.read<TemplateDesktopViewModel>().getFilterType(context);
-                          context.read<HelpDeskViewModel>().setSearchText(value, typeValue);
+                        onChanged: (value) { 
+
                         },
                       ),
                     ),
