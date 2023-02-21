@@ -46,14 +46,4 @@ class AlgoliaServices {
       return false;
     }
   } 
-
-  Future<List<Map<String, dynamic>>> queryObject(String text) async {
-    List<Map<String, dynamic>> result = [];
-    var query = await _algolia.query(text).getObjects();
-    for (int i = 0; i < query.nbHits; i++) {
-      print(query.hits[0].data["title"]);
-      result.add(query.hits[0].data);
-    }
-    return result;
-  }
 }

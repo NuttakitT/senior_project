@@ -5,6 +5,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_card_widget.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
@@ -47,7 +48,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
     context.read<HelpDeskViewModel>().cleanModel();
     // TODO listen to user id
-    _stream = query("test23", tagBarSelected);
+    _stream = query("user", tagBarSelected);
     super.didChangeDependencies();
   }
 
@@ -62,15 +63,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
         stream: _stream,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Text(
-              "Error occurred",
-              style: TextStyle(
-                fontFamily: AppFontStyle.font,
-                fontWeight: FontWeight.w400,
-                fontSize: 20,
-                color: ColorConstant.whiteBlack60
-              ),
-            );
+            return const LoaderStatus(text: "Error occurred");
           } 
           if (snapshot.connectionState == ConnectionState.active) {
             if (snapshot.data!.docs.isNotEmpty) {
@@ -85,28 +78,12 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
             } else {
               context.read<HelpDeskViewModel>().cleanModel();
               return  const Center(
-                child: Text(
-                  "No task in this section",
-                  style: TextStyle(
-                    fontFamily: AppFontStyle.font,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: ColorConstant.whiteBlack60
-                  ),
-                ),
+                child: LoaderStatus(text: "No task in this section")
               );
             }      
           } else {
             return const Center(
-              child: Text(
-                "Loading...",
-                style: TextStyle(
-                  fontFamily: AppFontStyle.font,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                  color: ColorConstant.whiteBlack60
-                ),
-              ),
+              child: LoaderStatus(text: "Loading...")
             );
           }
         },

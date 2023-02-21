@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar_helpdesk.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 //call function from tabtag_help.dart
 class TemplateTagBarHelpDesk extends StatefulWidget {
@@ -14,11 +15,13 @@ class TemplateTagBarHelpDesk extends StatefulWidget {
 class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
   @override
   Widget build(BuildContext context) {
-    bool all = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(0);
-    bool notStart = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(1);
-    bool pending = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(2);
-    bool closed = context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(3);
-    String id = "test23"; // TODO listen to current user
+    List<bool> menuSelected = [
+      context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(0),
+      context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(1),
+      context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(2),
+      context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(3),
+    ];
+    String id = "user"; // TODO listen to current user
 
     return Container(
       padding: const EdgeInsets.only(left: 72),
@@ -36,7 +39,7 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
                 decoration: BoxDecoration(
                     color: ColorConstant.white,
                     borderRadius: BorderRadius.circular(16)),
-                height: 40,
+                height: 50,
                 width: 280,
                 child: Row(
                   children: [
@@ -47,13 +50,26 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
                         color: ColorConstant.whiteBlack30,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: TextField(
-                        decoration: InputDecoration.collapsed(
-                            hintText: "search...",
-                            hintStyle: TextStyle(
-                                color: ColorConstant.whiteBlack30,
-                                fontSize: 16)),
+                        maxLength: 512,
+                        decoration: const InputDecoration(
+                          hintText: "search...",
+                          hintStyle: TextStyle(
+                              color: ColorConstant.whiteBlack30,
+                              fontSize: 16
+                          ),
+                          counterText: "",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.zero,
+                            borderSide: BorderSide.none,
+                            gapPadding: 0
+                          )
+                        ),
+                        onChanged: (value) async {
+                          String typeValue = context.read<TemplateDesktopViewModel>().getFilterType(context);
+                          context.read<HelpDeskViewModel>().setSearchText(value, typeValue);
+                        }, 
                       ),
                     ),
                   ],
@@ -62,20 +78,20 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "All status", state: all, index: 0, id: id,),
+              child: TagBarHelpDesk(name: "All status", state: menuSelected[0], index: 0, id: id,),
             ),
             const Divider(),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Not Start", state: notStart, index: 1, id: id,),
+              child: TagBarHelpDesk(name: "Not Start", state: menuSelected[1], index: 1, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "In Progress", state: pending, index: 2, id: id,),
+              child: TagBarHelpDesk(name: "In Progress", state: menuSelected[2], index: 2, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Closed", state: closed, index: 3, id: id,),
+              child: TagBarHelpDesk(name: "Closed", state: menuSelected[3], index: 3, id: id,),
             )
           ],
         ),

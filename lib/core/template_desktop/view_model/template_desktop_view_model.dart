@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
   List<bool> _navBarState = [true, false, false, false, false, false];
@@ -70,5 +73,16 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       _copyValue(menuTemplate, type);
       notifyListeners();
     }
+  }
+
+  String getFilterType(BuildContext context) {
+    int menu = _helpDeskTagBar.indexOf(true);
+    String typeValue= "";
+    if (menu > 0 && menu < 4) {
+      typeValue =  context.read<HelpDeskViewModel>().convertToString(true, menu-1);
+    } else if (menu > 3 && menu < 8) {
+      typeValue =  context.read<HelpDeskViewModel>().convertToString(false, (menu-7).abs());
+    }
+    return typeValue;
   }
 }
