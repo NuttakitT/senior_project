@@ -277,10 +277,17 @@ class _MobileWidgetState extends State<MobileWidget> {
                         } 
                         if (snapshot.connectionState == ConnectionState.active) {
                           if (snapshot.data!.docs.isNotEmpty) {
-                            context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot);
-                            List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-                            return Column(
-                              children: generateContent(content)
+                            return FutureBuilder(
+                              future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
+                              builder: (context, futureSnapshot) {
+                                if (futureSnapshot.connectionState == ConnectionState.done) {
+                                  List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
+                                  return Column(
+                                  children: generateContent(content)
+                                );
+                                }
+                                return Container();
+                              },
                             );
                           } else {
                             context.read<HelpDeskViewModel>().cleanModel();

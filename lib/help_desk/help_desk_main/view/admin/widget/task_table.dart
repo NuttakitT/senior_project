@@ -95,20 +95,27 @@ class _TaskTableState extends State<TaskTable> {
                   } 
                   if (snapshot.connectionState == ConnectionState.active) {   
                     if (snapshot.data!.docs.isNotEmpty) {
-                      context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot);
-                      List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                      return SizedBox(
-                        height: 680 + (screenHeight - 960),
-                        child: Scrollbar(
-                          controller: _vController,
-                          thumbVisibility: true,
-                          child: SingleChildScrollView(
-                            controller: _vController,
-                            child: Column(
-                              children: generateContent(data)
-                            ),
-                          ),
-                        )
+                      return FutureBuilder(
+                        future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
+                        builder: (context, futureSnapshot) {
+                          if (futureSnapshot.connectionState == ConnectionState.done) {
+                            List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+                            return SizedBox(
+                              height: 680 + (screenHeight - 960),
+                              child: Scrollbar(
+                                controller: _vController,
+                                thumbVisibility: true,
+                                child: SingleChildScrollView(
+                                  controller: _vController,
+                                  child: Column(
+                                    children: generateContent(data)
+                                  ),
+                                ),
+                              )
+                            );
+                          }
+                          return Container();
+                        },
                       );
                     } else {
                       context.read<HelpDeskViewModel>().cleanModel();
@@ -131,7 +138,7 @@ class _TaskTableState extends State<TaskTable> {
                   List hits = snapshot.data!.hits.toList();
                   if (hits.isNotEmpty) {
                     context.read<HelpDeskViewModel>().cleanModel();
-                    List data = [];
+                    List<String> data = [];
                     for (var item in hits) {
                       data.add(item["docId"]);
                     }

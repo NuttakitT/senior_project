@@ -144,7 +144,24 @@ class HelpDeskViewModel extends ChangeNotifier {
     _helpDeskModel = HelpDeskMainModel();
     _task = [];
   }
-  
+
+  Future<void> editTask(String id, bool isStatus, int value) async {
+    QuerySnapshot? query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
+    if (query!.docs.isNotEmpty) {
+      String docId = query.docs.first.id;
+      String objectId = query.docs.first.get("objectID");
+      await _service.editDocument(docId, isStatus
+        ? {"status": value}
+        : {"priority": value}
+      );
+      await _algolia.updateObject(objectId, isStatus
+        ? {"status": convertToString(isStatus, value)}
+        : {"priority": convertToString(isStatus, value)}
+      );
+    }
+  }
+
+  // Listen to database and update data in application
   void _addQueryData(DocumentSnapshot snapshot) {
     Task task = Task(
       snapshot.get("ownerId"),
@@ -179,7 +196,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task.removeAt(index);
   }
 
-  void reconstructQueryData(QuerySnapshot snapshot) {
+  Future<void> reconstructQueryData(QuerySnapshot snapshot) async {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.added 
@@ -192,24 +209,10 @@ class HelpDeskViewModel extends ChangeNotifier {
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.removed) {
         int index = snapshot.docChanges[i].oldIndex;
+        String docId = snapshot.docChanges[i].doc.get("objectID");
+        await _algolia.deleteObject(docId);
         _removeQueryData(index);
       }
-    }
-  }
-
-  Future<void> editTask(String id, bool isStatus, int value) async {
-    QuerySnapshot? query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
-    if (query!.docs.isNotEmpty) {
-      String docId = query.docs.first.id;
-      String objectId = query.docs.first.get("objectID");
-      await _service.editDocument(docId, isStatus
-        ? {"status": value}
-        : {"priority": value}
-      );
-      await _algolia.updateObject(objectId, isStatus
-        ? {"status": convertToString(isStatus, value)}
-        : {"priority": convertToString(isStatus, value)}
-      );
     }
   }
 }
