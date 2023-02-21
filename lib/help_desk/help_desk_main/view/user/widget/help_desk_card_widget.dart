@@ -86,7 +86,7 @@ class HelpDeskCardWidget {
                                 style: AppFontStyle.wb80R24,
                               ),
                               TextSpan(
-                                    text: "#${card["id"][0]}${card["id"][1]}${card["id"][card["id"].length-1]}",
+                                    text: "#${card["id"][0]}${card["id"][1]}${card["id"][2]}",
                                     style: const TextStyle(
                                       fontFamily: AppFontStyle.font,
                                       fontWeight: FontWeight.w400,
