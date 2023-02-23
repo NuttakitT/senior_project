@@ -13,8 +13,6 @@ class UserProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     if (isMobileSite) {
       return Container();

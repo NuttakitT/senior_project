@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
   List<bool> _navBarState = [true, false, false, false, false, false];

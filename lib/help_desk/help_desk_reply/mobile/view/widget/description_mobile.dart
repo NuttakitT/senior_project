@@ -48,6 +48,5 @@ class DescriptionMobile extends StatelessWidget {
         )
       ],
     );
-    ;
   }
 }

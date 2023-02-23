@@ -21,7 +21,7 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(2),
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(3),
     ];
-    String id = "user"; // TODO listen to current user
+    String id = "user"; // TODO listen to current user id
 
     return Container(
       padding: const EdgeInsets.only(left: 72),

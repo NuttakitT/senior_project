@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/description_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_reply/desktop/view/page/help_desk_reply_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_reply/mobile/view/page/help_desk_reply_mobile.dart';

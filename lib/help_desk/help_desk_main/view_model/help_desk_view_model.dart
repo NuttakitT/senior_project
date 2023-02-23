@@ -17,7 +17,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   final AlgoliaServices _algolia = AlgoliaServices("task");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
-  final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category String
+  final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
   HitsSearcher _hitSearch = HitsSearcher(
     applicationID: "LEPUBBA9NX", 
     apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
