@@ -41,7 +41,7 @@ class UserProfileDetailListView extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 16.0,
+            height: 24.0,
           ),
         ],
       ),
