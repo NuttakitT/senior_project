@@ -59,41 +59,85 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
     return Padding(
       padding: bodyPadding,
       child: 
-      StreamBuilder(
-        stream: _stream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const LoaderStatus(text: "Error occurred");
-          } 
-          if (snapshot.connectionState == ConnectionState.active) {
-            if (snapshot.data!.docs.isNotEmpty) {
-              return FutureBuilder(
-                future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
-                builder: (context, futureSnapshot) {
-                  if (futureSnapshot.connectionState == ConnectionState.done) {
-                    List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                    return SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        children: generateContent(data),
-                      )
+      Builder(
+        builder: (context) {
+          String searchText = context.watch<HelpDeskViewModel>().getSearchText;
+          if (searchText.isEmpty) {
+            return StreamBuilder(
+              stream: _stream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const LoaderStatus(text: "Error occurred");
+                } 
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.data!.docs.isNotEmpty) {
+                    return FutureBuilder(
+                      future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
+                      builder: (context, futureSnapshot) {
+                        if (futureSnapshot.connectionState == ConnectionState.done) {
+                          List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+                          return SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              children: generateContent(data),
+                            )
+                          );
+                        }
+                        return Container();
+                      },
                     );
-                  }
-                  return Container();
-                },
-              );
-            } else {
-              context.read<HelpDeskViewModel>().cleanModel();
-              return  const Center(
-                child: LoaderStatus(text: "No task in this section")
-              );
-            }      
-          } else {
-            return const Center(
-              child: LoaderStatus(text: "Loading...")
+                  } else {
+                    context.read<HelpDeskViewModel>().cleanModel();
+                    return  const Center(
+                      child: LoaderStatus(text: "No task in this section")
+                    );
+                  }      
+                } else {
+                  return const Center(
+                    child: LoaderStatus(text: "Loading...")
+                  );
+                }
+              },
             );
           }
-        },
+          // TODO listen to username
+          context.read<HelpDeskViewModel>().getHitsSearcher.query("user $searchText");
+          return StreamBuilder(
+            stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const LoaderStatus(text: "Error occurred");
+              }
+              if (snapshot.connectionState == ConnectionState.active) {
+                List hits = snapshot.data!.hits.toList();
+                if (hits.isNotEmpty) {
+                  List<String> docs = [];
+                  for (var item in hits) {
+                    docs.add(item["docId"]);
+                  }
+                  context.read<HelpDeskViewModel>().cleanModel();
+                  return FutureBuilder(
+                    future: context.watch<HelpDeskViewModel>().reconstructSearchResult(docs),
+                    builder: ((context, futureSnapshot) {
+                      if (futureSnapshot.connectionState == ConnectionState.done) {
+                          List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+                          return SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              children: generateContent(data),
+                            )
+                          );
+                        }
+                        return Container();
+                    }),
+                  );
+                }
+                return const LoaderStatus(text: "No result");
+              }
+              return const LoaderStatus(text: "Loading...");
+            },
+          );
+        }
       )
     );
   }

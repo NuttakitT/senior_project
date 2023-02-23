@@ -63,9 +63,9 @@ class HelpDeskViewModel extends ChangeNotifier {
   get getCategory => _category;
   get getTask => _task.reversed.toList();
   HitsSearcher get getHitsSearcher => _hitSearch;
-  void setSearchText(String text, String? filter) {
+  void setSearchText(String text) {
     if (text.isNotEmpty) {
-      _searchText = "${filter == null ? "" : "$filter "}$text";
+      _searchText = text;
     } else {
       _searchText = "";
     }

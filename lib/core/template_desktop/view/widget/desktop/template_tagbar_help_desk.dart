@@ -21,7 +21,6 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(2),
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(3),
     ];
-    String? typeValue = context.watch<TemplateDesktopViewModel>().getFilterType(context);
     String id = "user"; // TODO listen to current user
 
     return Container(
@@ -68,7 +67,7 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
                           )
                         ),
                         onChanged: (value) async {
-                          context.read<HelpDeskViewModel>().setSearchText(value, typeValue);
+                          context.read<HelpDeskViewModel>().setSearchText(value);
                         }, 
                       ),
                     ),

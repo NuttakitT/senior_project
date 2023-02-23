@@ -79,13 +79,13 @@ class _TaskTableState extends State<TaskTable> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    String searchText = context.watch<HelpDeskViewModel>().getSearchText;
 
     return Column(
       children: [
         HeaderTable.widget(),
         Builder(
           builder: (context) {
+            String searchText = context.watch<HelpDeskViewModel>().getSearchText;
             if (searchText.isEmpty) {
               return StreamBuilder(
                 stream: _stream,
@@ -127,7 +127,6 @@ class _TaskTableState extends State<TaskTable> {
                 },
               );
             }
-            print(searchText);
             context.read<HelpDeskViewModel>().getHitsSearcher.query(searchText);
             return StreamBuilder(
               stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
@@ -170,7 +169,6 @@ class _TaskTableState extends State<TaskTable> {
             );
           },
         )
-        
       ],
     );
   }

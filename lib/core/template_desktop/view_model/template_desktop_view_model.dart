@@ -74,15 +74,4 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  String? getFilterType(BuildContext context) {
-    int menu = _helpDeskTagBar.indexOf(true);
-    String? typeValue;
-    if (menu > 0 && menu < 4) {
-      typeValue =  context.read<HelpDeskViewModel>().convertToString(true, menu-1);
-    } else if (menu > 3 && menu < 8) {
-      typeValue =  context.read<HelpDeskViewModel>().convertToString(false, (menu-7).abs());
-    }
-    return typeValue;
-  }
 }

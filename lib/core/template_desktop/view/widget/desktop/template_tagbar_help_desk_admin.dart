@@ -15,14 +15,6 @@ class TemplateTagBarHelpDeskAdmin extends StatefulWidget {
 
 class _TemplateTagBarHelpDeskAdminState
     extends State<TemplateTagBarHelpDeskAdmin> {
-  
-  @override
-  void didChangeDependencies() {
-    // String? typeValue = context.watch<TemplateDesktopViewModel>().getFilterType(context);
-    // String text = context.watch<TemplateDesktopViewModel>().getSearchText;
-    // context.read<HelpDeskViewModel>().setSearchText(text, typeValue);
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +75,7 @@ class _TemplateTagBarHelpDeskAdminState
                           )
                         ),
                         onChanged: (value) { 
-
+                          context.read<HelpDeskViewModel>().setSearchText(value);
                         },
                       ),
                     ),
