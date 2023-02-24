@@ -49,8 +49,8 @@ class UserProfileCard {
               Container(
                 decoration: const BoxDecoration(
                     border: Border(
-                        right: BorderSide(
-                            color: Color(0xFF9C9FA1), width: 1.0))),
+                        right:
+                            BorderSide(color: Color(0xFF9C9FA1), width: 1.0))),
                 width: 300,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -80,10 +80,10 @@ class UserProfileCard {
                           color: const Color(0xFFF3F3F3)),
                       child: DefaultTextStyle(
                           style: roleTextStyle(),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 6, horizontal: 33),
-                            child: Text("User"),
+                            child: Text(profileData["role"]),
                           )),
                     )
                   ],

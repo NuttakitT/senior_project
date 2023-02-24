@@ -151,6 +151,11 @@ extension AppFontStyle on FontStyle {
       fontWeight: AppFontWeight.medium,
       fontSize: 16,
       color: ColorConstant.whiteBlack60);
+  static const wb70R20 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.regular,
+      fontSize: 20,
+      color: ColorConstant.whiteBlack70);
   static const wb80L14 = TextStyle(
       fontFamily: font,
       fontWeight: AppFontWeight.light,
