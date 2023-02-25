@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/my_profile/view/user/widget/user_profile_about_me.dart';
+import 'package:senior_project/my_profile/view/user/widget/user_profile_detail_cell.dart';
 
 class UserProfileCard {
   static TextStyle informationHeaderTextStyle = AppFontStyle.wb80Md20;
@@ -10,7 +12,8 @@ class UserProfileCard {
   static EdgeInsets informationPadding =
       const EdgeInsets.fromLTRB(20, 16, 20, 16);
 
-  static Widget widget(BuildContext context, Map<String, dynamic> profileData) {
+  static Widget widget(BuildContext context, Map<String, dynamic> profileData,
+      bool isCurrentlyEditProfile) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(
@@ -76,137 +79,23 @@ class UserProfileCard {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // [1] About me
-                      Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: Color(0xFF9C9FA1), width: 1.0))),
-                        padding: informationPadding,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            DefaultTextStyle(
-                                style: informationHeaderTextStyle,
-                                child: const Text("About me")),
-                            const SizedBox(height: 8),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 16.0),
-                              child: DefaultTextStyle(
-                                style: informationDetailTextStyle,
-                                child: Text(
-                                  profileData["aboutMe"],
-                                  maxLines: 5,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      UserProfileAboutMe(aboutMeDetail: profileData['aboutMe']),
+                      UserProfileDetailCell(
+                        cellTitle: "User Profile",
+                        leftCellTitle: "Gender",
+                        leftCellDetail: profileData["gender"],
+                        rightCellTitle: "Date of Birth",
+                        rightCellDetail: "null",
+                        isBorderNeeded: true,
                       ),
-                      // [2] User profile
-                      Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: Color(0xFF9C9FA1), width: 1.0))),
-                        padding: informationPadding,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            DefaultTextStyle(
-                                style: informationHeaderTextStyle,
-                                child: const Text("User profile")),
-                            const SizedBox(height: 8),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 16.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "Gender",
-                                        style: informationTitleTextStyle,
-                                        textAlign: TextAlign.left,
-                                      )),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        profileData["gender"],
-                                        style: informationDetailTextStyle,
-                                        textAlign: TextAlign.center,
-                                      )),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "Date of Birth",
-                                        style: informationTitleTextStyle,
-                                        textAlign: TextAlign.left,
-                                      )),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        "412342342342",
-                                        style: informationDetailTextStyle,
-                                        textAlign: TextAlign.center,
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                      UserProfileDetailCell(
+                        cellTitle: "Contact",
+                        leftCellTitle: "E-mail",
+                        leftCellDetail: profileData["email"],
+                        rightCellTitle: "Phone",
+                        rightCellDetail: profileData["phone"],
+                        isBorderNeeded: false,
                       ),
-                      // [3]
-                      Padding(
-                        padding: informationPadding,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            DefaultTextStyle(
-                                style: informationHeaderTextStyle,
-                                child: const Text("Contact")),
-                            const SizedBox(height: 8),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 16.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "Email",
-                                        style: informationTitleTextStyle,
-                                        textAlign: TextAlign.left,
-                                      )),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        profileData["email"],
-                                        style: informationDetailTextStyle,
-                                        textAlign: TextAlign.center,
-                                      )),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "Phone",
-                                        style: informationTitleTextStyle,
-                                        textAlign: TextAlign.left,
-                                      )),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        profileData["phone"],
-                                        style: informationDetailTextStyle,
-                                        textAlign: TextAlign.center,
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
                     ],
                   ),
                 ),
