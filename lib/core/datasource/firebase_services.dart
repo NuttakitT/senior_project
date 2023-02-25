@@ -25,29 +25,52 @@ class FirebaseServices {
     }
   }
 
-  Future<void> editDocument(String docId, Map<String, dynamic> detail) async {
-    await _collection.doc(docId).update(detail);
-  }
-
-  Future<DocumentSnapshot> getDocumentById(String id) async {
-    return await _collection.doc(id).get();
-  }
-
-  Future<QuerySnapshot> getDocumnetByKeyValuePair(List<String> key, List<String> value) async {
-    late Query query;
-    if ((key.length == value.length) && key.isNotEmpty) {
-      for (int i = 0; i < key.length; i++) {
-        query = _collection.where(key[i], isEqualTo: value[i]);
-      }
+  Future<bool> editDocument(String docId, Map<String, dynamic> detail) async {
+    try {
+      await _collection.doc(docId).update(detail);
+      return true;
+    } catch (e) {
+      return false;
     }
-    return await query.get();
   }
 
-  Future<QuerySnapshot> getAllDocument() async {
-    return await _collection.get();
+  Future<DocumentSnapshot?> getDocumentById(String id) async {
+    try {
+      return await _collection.doc(id).get();
+    } catch (e) {
+      return null;
+    }   
   }
 
-  Stream<QuerySnapshot> listenToDocumentByKeyValuePair(List<String> key, List<dynamic> value)  {
+  Future<QuerySnapshot?> getDocumnetByKeyValuePair(
+    List<String> key, 
+    List<String> value, 
+  ) async {
+    try {
+      late Query query;
+      if ((key.length == value.length) && key.isNotEmpty) {
+        for (int i = 0; i < key.length; i++) {
+          query = _collection.where(key[i], isEqualTo: value[i]);
+        }
+      }
+      return await query.get();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<QuerySnapshot?> getAllDocument() async {
+    try {
+      return await _collection.get();
+    } catch (e) {
+      return null;
+    } 
+  }
+
+  Stream<QuerySnapshot?> listenToDocumentByKeyValuePair(
+    List<String> key, 
+    List<dynamic> value
+  )  {
     late Query query;
     if ((key.length == value.length) && key.isNotEmpty) {
       for (int i = 0; i < key.length; i++) {

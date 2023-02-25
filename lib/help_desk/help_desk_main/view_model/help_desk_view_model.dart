@@ -1,6 +1,11 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
+import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/content.dart';
 import 'package:senior_project/core/model/help_desk/task.dart';
@@ -9,9 +14,15 @@ import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_mod
 class HelpDeskViewModel extends ChangeNotifier {
   HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
   final FirebaseServices _service = FirebaseServices("task");
+  final AlgoliaServices _algolia = AlgoliaServices("task");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
-  final List<String> _category = ["Test", "Cat_A", "Cat_B", "Cat_X"]; // TODO add category String
+  final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
+  HitsSearcher _hitSearch = HitsSearcher(
+    applicationID: "LEPUBBA9NX", 
+    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
+    indexName: "task");
+  String _searchText = "";
 
   String convertToString(bool isStatus, int taskState) {
     if (isStatus) {
@@ -32,7 +43,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       case 1:
         return "Medium";
       case 2:
-        return "Hight";
+        return "High";
       case 3:
         return "Urgent";
       default:
@@ -40,8 +51,31 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
+  void initHitSearcher() {
+    _hitSearch = HitsSearcher(
+    applicationID: "LEPUBBA9NX", 
+    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
+    indexName: "task");
+    notifyListeners();
+  }
+
+  get getSearchText => _searchText;
   get getCategory => _category;
   get getTask => _task.reversed.toList();
+  HitsSearcher get getHitsSearcher => _hitSearch;
+  void setSearchText(String text) {
+    if (text.isNotEmpty) {
+      _searchText = text;
+    } else {
+      _searchText = "";
+    }
+    notifyListeners();
+  } 
+
+  void clearSearchText() {
+    _searchText = "";
+    notifyListeners();
+  }
 
   bool? getMobileMenuState(int index) {
     if (index >= 0 && index < 4) {
@@ -68,7 +102,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   Map<String, dynamic> formatTaskDetail(Map<String, dynamic> data) {
     // TODO query username email form db
     data.addEntries({
-      "username": "Runn",
+      "username": "test",
       "email": "runn@gmail.com",
     }.entries);
     return data;
@@ -77,7 +111,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   Future<void> createTask(String title, String detail, int priority, String category) async {
     Task task = Task(
       // TODO listen to current user
-      "test23",
+      "user",
       // FirebaseAuth.instance.currentUser!.uid,
       title,
       Content(detail),
@@ -85,7 +119,19 @@ class HelpDeskViewModel extends ChangeNotifier {
       category
     );
     _helpDeskModel.addTask(task);
-    await _service.setDocument(task.getDateCreate.millisecondsSinceEpoch.toString(), {
+    String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
+    String? objectId = await _algolia.addObject(docId, {
+      // TODO listen to current user
+      "username": "Runn",
+      "email": "runn@gmail.com",
+      "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
+      "category": task.getCategory,
+      "priority": convertToString(false, task.getPriority),
+      "status": convertToString(true, task.getStatus),
+      "title": task.getTitle,
+      "detail": detail
+    });
+    Map<String, dynamic> taskDetail = {
       "id": task.getId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
@@ -94,14 +140,46 @@ class HelpDeskViewModel extends ChangeNotifier {
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail
-    });
+    };
+    taskDetail.addAll({"objectID": objectId!});
+    await _service.setDocument(docId, taskDetail);
   }
 
   void cleanModel() {
     _helpDeskModel = HelpDeskMainModel();
     _task = [];
   }
-  
+
+  Future<void> editTask(String id, bool isStatus, int value) async {
+    QuerySnapshot? query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
+    if (query!.docs.isNotEmpty) {
+      String docId = query.docs.first.id;
+      String taskId = query.docs.first.get("id");
+      String objectId = query.docs.first.get("objectID");
+      if (isStatus) {
+        _task.firstWhere((element) {
+        return element.containsValue(taskId);
+        })["status"] = value;
+        _helpDeskModel.getTask.firstWhere((element) {
+          return element.getId == taskId;
+        }).changeStatus(value);
+        await _service.editDocument(docId, {"status": value});
+        await _algolia.updateObject(objectId, {"status": convertToString(isStatus, value)});
+      } else {
+        _task.firstWhere((element) {
+        return element.containsValue(taskId);
+        })["priority"] = value;
+        _helpDeskModel.getTask.firstWhere((element) {
+          return element.getId == taskId;
+        }).changePriority(value);
+        await _service.editDocument(docId, {"priority": value});
+        await _algolia.updateObject(objectId, {"priority": convertToString(isStatus, value)});
+      }
+      notifyListeners();
+    }
+  }
+
+  // ------------- Listen to database and update data in application ---------------
   void _addQueryData(DocumentSnapshot snapshot) {
     Task task = Task(
       snapshot.get("ownerId"),
@@ -136,11 +214,10 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task.removeAt(index);
   }
 
-  void reconstructQueryData(QuerySnapshot snapshot) {
+  Future<void> reconstructQueryData(QuerySnapshot snapshot) async {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
-      if (snapshot.docChanges[i].type == DocumentChangeType.added 
-        && snapshot.docChanges[i].doc.id != "dummy") {
+      if (snapshot.docChanges[i].type == DocumentChangeType.added) {
         _addQueryData(doc);
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.modified) {
@@ -149,19 +226,19 @@ class HelpDeskViewModel extends ChangeNotifier {
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.removed) {
         int index = snapshot.docChanges[i].oldIndex;
+        String docId = snapshot.docChanges[i].doc.get("objectID");
+        await _algolia.deleteObject(docId);
         _removeQueryData(index);
       }
     }
   }
 
-  Future<void> editTask(String id, bool isStatus, int value) async {
-    QuerySnapshot query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
-    if (query.docs.isNotEmpty) {
-      String docId = query.docs.first.id;
-      Map<String, dynamic> editedDetail = isStatus
-        ? {"status": value}
-        : {"priority": value};
-      await _service.editDocument(docId, editedDetail);
+  Future<void> reconstructSearchResult(List<String> docIds) async {
+    for (int i = 0; i < docIds.length; i++) {
+      DocumentSnapshot? doc = await _service.getDocumentById(docIds[i]);
+      if (doc != null) {
+        _addQueryData(doc);
+      }
     }
   }
 }

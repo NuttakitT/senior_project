@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
+import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/create_task.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/setting_pop_up.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/task_card.dart';
@@ -93,7 +94,7 @@ class _MobileWidgetState extends State<MobileWidget> {
     int tagBarSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
     context.read<HelpDeskViewModel>().cleanModel();
     // TODO listen to user id
-    _stream = query(widget.isAdmin ? "" : "test23", tagBarSelected);
+    _stream = query(widget.isAdmin ? "" : "user", tagBarSelected);
     super.didChangeDependencies();
   }
 
@@ -272,54 +273,28 @@ class _MobileWidgetState extends State<MobileWidget> {
                       stream: _stream,
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
-                          return const Padding(
-                            padding: EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              "Error occurred",
-                              style: TextStyle(
-                                fontFamily: AppFontStyle.font,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 20,
-                                color: ColorConstant.whiteBlack60
-                              ),
-                            ),
-                          );
+                          return const LoaderStatus(text: "Error occurred");
                         } 
                         if (snapshot.connectionState == ConnectionState.active) {
                           if (snapshot.data!.docs.isNotEmpty) {
-                            context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot);
-                            List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-                            return Column(
-                              children: generateContent(content)
+                            return FutureBuilder(
+                              future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
+                              builder: (context, futureSnapshot) {
+                                if (futureSnapshot.connectionState == ConnectionState.done) {
+                                  List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
+                                  return Column(
+                                  children: generateContent(content)
+                                );
+                                }
+                                return Container();
+                              },
                             );
                           } else {
                             context.read<HelpDeskViewModel>().cleanModel();
-                            return const Padding(
-                              padding: EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                "No task in this scction",
-                                style: TextStyle(
-                                  fontFamily: AppFontStyle.font,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20,
-                                  color: ColorConstant.whiteBlack60
-                                ),
-                              ),
-                            );
+                            return const LoaderStatus(text: "No task in this section");
                           }      
                         } else {
-                          return const Padding(
-                            padding: EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              "Loading...",
-                              style: TextStyle(
-                                fontFamily: AppFontStyle.font,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 20,
-                                color: ColorConstant.whiteBlack60
-                              ),
-                            ),
-                          );
+                          return const LoaderStatus(text: "Loading...");
                         }
                       },
                     )

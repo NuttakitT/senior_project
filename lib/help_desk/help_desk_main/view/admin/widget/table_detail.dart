@@ -73,7 +73,7 @@ class TableDetail {
                 overflow: TextOverflow.ellipsis,
                 text: TextSpan(children: [
                   TextSpan(
-                    text: detail["taskHeader"],
+                    text: detail["title"],
                     style: _detailTextStyle(16, ColorConstant.whiteBlack80),
                   )
                 ]),
@@ -83,7 +83,7 @@ class TableDetail {
                 overflow: TextOverflow.ellipsis,
                 text: TextSpan(children: [
                   TextSpan(
-                    text: detail["taskDetail"],
+                    text: detail["detail"],
                     style: _detailTextStyle(12, ColorConstant.whiteBlack60),
                   )
                 ]),
