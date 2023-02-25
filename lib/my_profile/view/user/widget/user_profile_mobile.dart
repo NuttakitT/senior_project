@@ -5,19 +5,36 @@ import 'package:senior_project/my_profile/view/user/widget/user_profile_detail_l
 
 class UserProfileMobile extends StatefulWidget {
   final Map<String, dynamic> profileData;
-  const UserProfileMobile({super.key, required this.profileData});
+  final bool isCurrentlyEditData;
+  const UserProfileMobile(
+      {super.key,
+      required this.profileData,
+      required this.isCurrentlyEditData});
 
   @override
   State<UserProfileMobile> createState() => _UserProfileMobileState();
 }
 
 class _UserProfileMobileState extends State<UserProfileMobile> {
+  bool _isEditting = false;
+
+  void toggleEditProfileButton() {
+    // Move to somewhere else
+    _isEditting = !_isEditting;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isEditting = widget.isCurrentlyEditData;
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Container(
+    return SizedBox(
       width: screenWidth,
       height: screenHeight,
       child: SingleChildScrollView(
@@ -69,7 +86,10 @@ class _UserProfileMobileState extends State<UserProfileMobile> {
                     child: Text("Edit Profile"),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  toggleEditProfileButton();
+                  print(_isEditting);
+                },
               ),
             ),
             const SizedBox(
