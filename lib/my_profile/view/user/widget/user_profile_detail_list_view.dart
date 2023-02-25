@@ -3,13 +3,17 @@ import '../../../../assets/font_style.dart';
 
 class UserProfileDetailListView extends StatelessWidget {
   final String title;
-  final String detail;
+  final String? detail;
   const UserProfileDetailListView(
       {Key? key, required this.title, required this.detail})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (detail == null) {
+      return Container();
+    }
+    String listCelldetail = detail!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -35,7 +39,7 @@ class UserProfileDetailListView extends StatelessWidget {
             child: DefaultTextStyle(
               style: AppFontStyle.wb70R20,
               child: Text(
-                detail,
+                listCelldetail,
                 textAlign: TextAlign.left,
               ),
             ),
