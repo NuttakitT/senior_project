@@ -30,6 +30,11 @@ class UserProfileDetailCell extends StatelessWidget {
     if (leftCellDetail == null && rightCellDetail == null) {
       return Container();
     }
+    TextEditingController leftFieldTextController =
+        TextEditingController(text: leftCellDetail);
+    TextEditingController rightFieldTextController =
+        TextEditingController(text: rightCellDetail);
+
     return Container(
       decoration: isBorderNeeded
           ? const BoxDecoration(
@@ -59,10 +64,13 @@ class UserProfileDetailCell extends StatelessWidget {
                 if (leftCellDetail != null)
                   Expanded(
                       flex: 3,
-                      child: Text(
-                        leftCellDetail!,
+                      child: TextField(
+                        enabled: true,
+                        controller: leftFieldTextController,
                         style: informationDetailTextStyle,
-                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
                       )),
                 if (rightCellDetail != null)
                   Expanded(
@@ -75,10 +83,13 @@ class UserProfileDetailCell extends StatelessWidget {
                 if (rightCellDetail != null)
                   Expanded(
                       flex: 3,
-                      child: Text(
-                        rightCellDetail!,
+                      child: TextField(
+                        enabled: true,
+                        controller: rightFieldTextController,
                         style: informationDetailTextStyle,
-                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
                       )),
                 if (rightCellDetail == null)
                   Expanded(flex: 4, child: Container())
