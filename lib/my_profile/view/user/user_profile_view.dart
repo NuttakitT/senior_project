@@ -37,7 +37,10 @@ class UserProfileView extends StatelessWidget {
             children: [
               UserProfileHeader.widget(context),
               UserProfileCard.widget(context, data, isCurrentlyEditData),
-              const UserProfileEditButtonBar()
+              UserProfileEditButtonBar(
+                didTapCancel: (p0) {},
+                didTapSaveChange: (p0) {},
+              )
             ],
           ));
     }

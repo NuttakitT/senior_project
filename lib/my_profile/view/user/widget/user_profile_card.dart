@@ -79,7 +79,10 @@ class UserProfileCard {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      UserProfileAboutMe(aboutMeDetail: profileData['aboutMe']),
+                      UserProfileAboutMe(
+                        aboutMeHeader: "About me",
+                        aboutMeDetail: profileData['aboutMe'],
+                      ),
                       UserProfileDetailCell(
                         cellTitle: "User Profile",
                         leftCellTitle: "Gender",
@@ -89,6 +92,14 @@ class UserProfileCard {
                         isBorderNeeded: true,
                       ),
                       UserProfileDetailCell(
+                        cellTitle: "Office Hours",
+                        leftCellTitle: "Time",
+                        leftCellDetail: profileData["officeHours"],
+                        rightCellTitle: "Null",
+                        rightCellDetail: null,
+                        isBorderNeeded: false,
+                      ),
+                      UserProfileDetailCell(
                         cellTitle: "Contact",
                         leftCellTitle: "E-mail",
                         leftCellDetail: profileData["email"],
@@ -96,6 +107,18 @@ class UserProfileCard {
                         rightCellDetail: profileData["phone"],
                         isBorderNeeded: false,
                       ),
+                      UserProfileDetailCell(
+                        cellTitle: "Link",
+                        leftCellTitle: "Facebook",
+                        leftCellDetail: profileData["facebook"],
+                        rightCellTitle: "Null",
+                        rightCellDetail: null,
+                        isBorderNeeded: false,
+                      ),
+                      UserProfileAboutMe(
+                        aboutMeHeader: "Subject",
+                        aboutMeDetail: profileData["subject"],
+                      )
                     ],
                   ),
                 ),

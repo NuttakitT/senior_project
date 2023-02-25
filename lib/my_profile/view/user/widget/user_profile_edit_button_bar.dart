@@ -5,7 +5,12 @@ import '../../../../assets/font_style.dart';
 class UserProfileEditButtonBar extends StatelessWidget {
   const UserProfileEditButtonBar({
     Key? key,
+    required this.didTapCancel,
+    required this.didTapSaveChange,
   }) : super(key: key);
+
+  final Function(void) didTapCancel;
+  final Function(void) didTapSaveChange;
 
   @override
   Widget build(BuildContext context) {

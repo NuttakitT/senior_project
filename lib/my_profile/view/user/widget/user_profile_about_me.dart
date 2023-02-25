@@ -8,13 +8,18 @@ class UserProfileAboutMe extends StatelessWidget {
 
   const UserProfileAboutMe({
     Key? key,
+    required this.aboutMeHeader,
     required this.aboutMeDetail,
   }) : super(key: key);
 
-  final String aboutMeDetail;
+  final String? aboutMeHeader;
+  final String? aboutMeDetail;
 
   @override
   Widget build(BuildContext context) {
+    if (aboutMeHeader == null || aboutMeDetail == null) {
+      return Container();
+    }
     return Container(
       decoration: const BoxDecoration(
           border:
@@ -24,7 +29,7 @@ class UserProfileAboutMe extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DefaultTextStyle(
-              style: informationHeaderTextStyle, child: const Text("About me")),
+              style: informationHeaderTextStyle, child: Text(aboutMeHeader!)),
           const SizedBox(height: 8),
           Padding(
             padding:
@@ -32,7 +37,7 @@ class UserProfileAboutMe extends StatelessWidget {
             child: DefaultTextStyle(
               style: informationDetailTextStyle,
               child: Text(
-                aboutMeDetail,
+                aboutMeDetail!,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
               ),

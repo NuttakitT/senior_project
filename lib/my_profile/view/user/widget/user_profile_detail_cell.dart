@@ -27,6 +27,9 @@ class UserProfileDetailCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (leftCellDetail == null && rightCellDetail == null) {
+      return Container();
+    }
     return Container(
       decoration: isBorderNeeded
           ? const BoxDecoration(
@@ -76,7 +79,9 @@ class UserProfileDetailCell extends StatelessWidget {
                         rightCellDetail!,
                         style: informationDetailTextStyle,
                         textAlign: TextAlign.center,
-                      ))
+                      )),
+                if (rightCellDetail == null)
+                  Expanded(flex: 4, child: Container())
               ],
             ),
           ),
