@@ -76,17 +76,18 @@ class _UserProfileMobileState extends State<UserProfileMobile> {
               height: 24,
             ),
             UserProfileDetailListView(
-              title: "About me",
-              detail: widget.profileData["aboutMe"],
-            ),
+                title: "About me", detail: widget.profileData["aboutMe"]),
             UserProfileDetailListView(
-              title: "E-mail",
-              detail: widget.profileData["email"],
-            ),
+                title: "E-mail", detail: widget.profileData["email"]),
             UserProfileDetailListView(
-              title: "Phone",
-              detail: widget.profileData["phone"],
-            ),
+                title: "Phone", detail: widget.profileData["phone"]),
+            UserProfileDetailListView(
+                title: "Office Hours",
+                detail: widget.profileData["officeHours"]),
+            UserProfileDetailListView(
+                title: "Facebook", detail: widget.profileData["facebook"]),
+            UserProfileDetailListView(
+                title: "Subject", detail: widget.profileData["subject"]),
             const UserProfileDetailListView(
               title: "Birth Day",
               detail: "?????",
