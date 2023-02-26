@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           context
               .read<AppViewModel>()
               .selectView(MediaQuery.of(context).size.width);
-          return const HelpDeskReplyDesktop();
+          return const HelpDeskMainView(isAdmin: false,);
         }));
   }
 }
