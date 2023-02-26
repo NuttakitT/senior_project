@@ -14,8 +14,7 @@ class AdminProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
-    bool isMobileSite = true; // have to remove
+    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
 
     if (isMobileSite) {
       return TemplateMenuMobile(
@@ -33,7 +32,7 @@ class AdminProfileView extends StatelessWidget {
           content: Column(
             children: [
               UserProfileHeader.widget(context),
-              // UserProfileCard.widget(context, data, )
+              UserProfileCard.widget(context, data, false)
             ],
           ));
     }

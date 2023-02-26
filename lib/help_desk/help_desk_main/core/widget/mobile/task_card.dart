@@ -77,7 +77,7 @@ class _TaskCardState extends State<TaskCard> {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: widget.detail["taskHeader"],
+                                      text: widget.detail["title"],
                                       style: AppFontStyle.wb80SemiB20,
                                     )
                                   ],
@@ -85,7 +85,7 @@ class _TaskCardState extends State<TaskCard> {
                               )),
                         ),
                         Text(
-                          "#${widget.detail["id"][0]}${widget.detail["id"][1]}${widget.detail["id"][widget.detail["id"].length-1]}",
+                          "#${widget.detail["id"][0]}${widget.detail["id"][1]}${widget.detail["id"][2]}",
                           style: const TextStyle(
                             fontFamily: AppFontStyle.font,
                             fontWeight: FontWeight.w400,
@@ -271,7 +271,7 @@ class _TaskCardState extends State<TaskCard> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: widget.detail["taskDetail"],
+                            text: widget.detail["detail"],
                             style: detailStyle(ColorConstant.whiteBlack60),
                           )
                         ],

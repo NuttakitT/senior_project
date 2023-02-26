@@ -14,8 +14,7 @@ class UserProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
-    bool isMobileSite = false; // have to remove
+    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
     bool isCurrentlyEditData = false;
 
     if (isMobileSite) {
