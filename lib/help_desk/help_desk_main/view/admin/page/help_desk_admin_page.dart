@@ -16,7 +16,6 @@ class HelpDeskAdminPage extends StatefulWidget {
 class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
   @override
   Widget build(BuildContext context) {
-    context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
 
     if (isMobileSite) {
@@ -26,16 +25,13 @@ class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
       ));
     }
     return const TemplateDesktop(
-      faqmenu: false, 
-      faqmenuadmin: false, 
-      helpdesk: false, 
-      helpdeskadmin: true, 
-      home: false, 
-      useTemplatescroll: false,
-      content: Align(
-        alignment: AlignmentDirectional.topCenter,
-        child: DesktopWidget()
-      )
-    );
+        faqmenu: false,
+        faqmenuadmin: false,
+        helpdesk: false,
+        helpdeskadmin: true,
+        home: false,
+        useTemplatescroll: false,
+        content: Align(
+            alignment: AlignmentDirectional.topCenter, child: DesktopWidget()));
   }
 }

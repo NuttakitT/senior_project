@@ -10,7 +10,6 @@ import 'package:senior_project/help_desk/help_desk_reply/mobile/view/page/help_d
 import 'package:senior_project/my_profile/view/my_profile_view.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/user_authentication/login_register_page/view/page/authentication_page.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
 import 'core/template_mobile/view_model/template_mobile_view_model.dart';
@@ -48,11 +47,15 @@ class MyApp extends StatelessWidget {
     }
 
     return MaterialApp(
-      title: 'Test',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyProfileView(isAdmin: true,)
-    );
+        title: 'Test',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: Builder(builder: (context) {
+          context
+              .read<AppViewModel>()
+              .selectView(MediaQuery.of(context).size.width);
+          return const HelpDeskReplyDesktop();
+        }));
   }
 }
