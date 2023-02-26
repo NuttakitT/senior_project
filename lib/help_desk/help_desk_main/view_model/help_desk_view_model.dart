@@ -18,11 +18,6 @@ class HelpDeskViewModel extends ChangeNotifier {
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
   final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
-  HitsSearcher _hitSearch = HitsSearcher(
-    applicationID: "LEPUBBA9NX", 
-    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "task");
-  String _searchText = "";
 
   String convertToString(bool isStatus, int taskState) {
     if (isStatus) {
@@ -51,31 +46,8 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  void initHitSearcher() {
-    _hitSearch = HitsSearcher(
-    applicationID: "LEPUBBA9NX", 
-    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "task");
-    notifyListeners();
-  }
-
-  get getSearchText => _searchText;
   get getCategory => _category;
   get getTask => _task.reversed.toList();
-  HitsSearcher get getHitsSearcher => _hitSearch;
-  void setSearchText(String text) {
-    if (text.isNotEmpty) {
-      _searchText = text;
-    } else {
-      _searchText = "";
-    }
-    notifyListeners();
-  } 
-
-  void clearSearchText() {
-    _searchText = "";
-    notifyListeners();
-  }
 
   bool? getMobileMenuState(int index) {
     if (index >= 0 && index < 4) {
@@ -150,6 +122,19 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task = [];
   }
 
+  Future<void> _changeTaskState(
+    String docId, 
+    String taskId, 
+    String objectId, 
+    int value,
+    bool isStatus) async {
+    _task.firstWhere((element) {
+    return element.containsValue(taskId);
+    })[isStatus ? "status" : "priority"] = value;
+    await _service.editDocument(docId, {isStatus ? "status" : "priority": value});
+    await _algolia.updateObject(objectId, {isStatus ? "status" : "priority": convertToString(isStatus, value)});
+  }
+
   Future<void> editTask(String id, bool isStatus, int value) async {
     QuerySnapshot? query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
     if (query!.docs.isNotEmpty) {
@@ -157,24 +142,15 @@ class HelpDeskViewModel extends ChangeNotifier {
       String taskId = query.docs.first.get("id");
       String objectId = query.docs.first.get("objectID");
       if (isStatus) {
-        _task.firstWhere((element) {
-        return element.containsValue(taskId);
-        })["status"] = value;
         _helpDeskModel.getTask.firstWhere((element) {
           return element.getId == taskId;
         }).changeStatus(value);
-        await _service.editDocument(docId, {"status": value});
-        await _algolia.updateObject(objectId, {"status": convertToString(isStatus, value)});
       } else {
-        _task.firstWhere((element) {
-        return element.containsValue(taskId);
-        })["priority"] = value;
         _helpDeskModel.getTask.firstWhere((element) {
           return element.getId == taskId;
         }).changePriority(value);
-        await _service.editDocument(docId, {"priority": value});
-        await _algolia.updateObject(objectId, {"priority": convertToString(isStatus, value)});
       }
+      _changeTaskState(docId, taskId, objectId, value, isStatus);
       notifyListeners();
     }
   }
@@ -240,5 +216,36 @@ class HelpDeskViewModel extends ChangeNotifier {
         _addQueryData(doc);
       }
     }
+  }
+
+  // ---------------------------------- Text Search ----------------------------
+  String _searchText = "";
+  HitsSearcher _hitSearch = HitsSearcher(
+    applicationID: "LEPUBBA9NX", 
+    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
+    indexName: "task");
+
+  void initHitSearcher() {
+    _hitSearch = HitsSearcher(
+    applicationID: "LEPUBBA9NX", 
+    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
+    indexName: "task");
+    notifyListeners();
+  }
+
+  get getSearchText => _searchText;
+HitsSearcher get getHitsSearcher => _hitSearch;
+  void setSearchText(String text) {
+    if (text.isNotEmpty) {
+      _searchText = text;
+    } else {
+      _searchText = "";
+    }
+    notifyListeners();
+  } 
+
+  void clearSearchText() {
+    _searchText = "";
+    notifyListeners();
   }
 }

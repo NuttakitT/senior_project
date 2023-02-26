@@ -44,7 +44,6 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
   @override
   void didChangeDependencies() {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
-    context.read<HelpDeskViewModel>().cleanModel();
     // TODO listen to user id
     _stream = query("user", tagBarSelected);
     super.didChangeDependencies();
@@ -69,6 +68,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
                 } 
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.data!.docs.isNotEmpty) {
+                    context.read<HelpDeskViewModel>().cleanModel();
                     return FutureBuilder(
                       future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
                       builder: (context, futureSnapshot) {

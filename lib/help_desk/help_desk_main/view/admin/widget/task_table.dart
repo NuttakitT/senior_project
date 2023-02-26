@@ -69,7 +69,6 @@ class _TaskTableState extends State<TaskTable> {
   @override
   void didChangeDependencies() {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
-    context.read<HelpDeskViewModel>().cleanModel();
     _stream = query(tagBarSelected);
     super.didChangeDependencies();
   }
@@ -93,6 +92,7 @@ class _TaskTableState extends State<TaskTable> {
                   } 
                   if (snapshot.connectionState == ConnectionState.active) {   
                     if (snapshot.data!.docs.isNotEmpty) {
+                      context.read<HelpDeskViewModel>().cleanModel();
                       return FutureBuilder(
                         future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
                         builder: (context, futureSnapshot) {

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 enum ChatMessageType { text, audio, image, video }
 
 // enum MessageStatus { notsent, notview, viewed }
