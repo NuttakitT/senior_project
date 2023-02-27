@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           context
               .read<AppViewModel>()
               .selectView(MediaQuery.of(context).size.width);
-          return const TeacherContactView(
+          return const HelpDeskMainView(
             isAdmin: false,
           );
         }));
