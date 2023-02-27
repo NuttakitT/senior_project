@@ -4,10 +4,10 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/user_authentication/core/widget/desktop/back_plate_desktop.dart';
-import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
-import 'package:senior_project/user_authentication/role_selection_page/view/widget/card_selection.dart';
-import 'package:senior_project/user_authentication/role_selection_page/view/widget/confirm_button.dart';
+import 'package:senior_project/user_profile/core/widget/desktop/back_plate_desktop.dart';
+import 'package:senior_project/user_profile/core/widget/page_indicator.dart';
+import 'package:senior_project/user_profile/role_selection_page/view/widget/card_selection.dart';
+import 'package:senior_project/user_profile/role_selection_page/view/widget/confirm_button.dart';
 
 class RoleSelectionPage extends StatelessWidget {
   const RoleSelectionPage({super.key});

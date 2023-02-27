@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/user_authentication/login_register_page/view/page/authentication_page.dart';
-import 'package:senior_project/user_authentication/my_profile/view/user/user_profile_view.dart';
-import 'package:senior_project/user_authentication/my_profile/view/user/widget/admin_profile_view.dart';
+import 'package:senior_project/user_profile/login_register_page/view/page/authentication_page.dart';
+import 'package:senior_project/user_profile/my_profile/view/user/user_profile_view.dart';
+import 'package:senior_project/user_profile/my_profile/view/user/widget/admin_profile_view.dart';
 
 class MyProfileView extends StatelessWidget {
   MyProfileView({super.key});

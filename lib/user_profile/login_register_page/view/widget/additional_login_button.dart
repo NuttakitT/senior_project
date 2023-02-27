@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
+import 'package:senior_project/user_profile/login_register_page/view_model/authentication_view_model.dart';
 
 class AdditionalLoginButton {
   static TextStyle _style(bool isFacebookLogin, bool isMobileSite) {

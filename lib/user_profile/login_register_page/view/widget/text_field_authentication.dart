@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
+import 'package:senior_project/user_profile/login_register_page/view_model/authentication_view_model.dart';
 
 class TextFieldAuthentication extends StatefulWidget {
   final int hintMode;

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/model/user/app_user.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
+import 'package:senior_project/user_profile/login_register_page/view_model/authentication_view_model.dart';
 
 class AppViewModel extends ChangeNotifier {
   App app = App();

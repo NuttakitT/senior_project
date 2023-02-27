@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/user_authentication/my_profile/view/user/widget/user_profile_detail_list_view.dart';
+import 'package:senior_project/user_profile/my_profile/view/user/widget/user_profile_detail_list_view.dart';
 import '../../../../../assets/color_constant.dart';
 import '../../../../../assets/font_style.dart';
 

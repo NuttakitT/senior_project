@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/user_authentication/my_profile/view/user/widget/user_profile_detail_list_view.dart';
+import 'package:senior_project/user_profile/my_profile/view/user/widget/user_profile_detail_list_view.dart';
 
 class UserProfileMobile extends StatefulWidget {
   final Map<String, dynamic> profileData;

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/user_authentication/login_register_page/model/register_model.dart';
+import 'package:senior_project/user_profile/login_register_page/model/register_model.dart';
 
 class AuthenticationViewModel extends ChangeNotifier {
   RegisterModel registerModel = RegisterModel();

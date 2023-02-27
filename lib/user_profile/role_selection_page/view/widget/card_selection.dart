@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/user_authentication/role_selection_page/assets/card_text_style.dart';
-import 'package:senior_project/user_authentication/role_selection_page/assets/text_constant.dart';
-import 'package:senior_project/user_authentication/role_selection_page/view/widget/student_text_alignment.dart';
-import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
+import 'package:senior_project/user_profile/role_selection_page/assets/card_text_style.dart';
+import 'package:senior_project/user_profile/role_selection_page/assets/text_constant.dart';
+import 'package:senior_project/user_profile/role_selection_page/view/widget/student_text_alignment.dart';
+import 'package:senior_project/user_profile/role_selection_page/view_model/role_selection_view_model.dart';
 
 class CardSelection extends StatefulWidget {
   final bool isStudentCard;

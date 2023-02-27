@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/user_authentication/core/widget/page_indicator.dart';
-import 'package:senior_project/user_authentication/core/widget/desktop/back_plate_desktop.dart';
-import 'package:senior_project/user_authentication/login_register_page/view/widget/login_widget.dart';
-import 'package:senior_project/user_authentication/login_register_page/view/widget/registration_widget.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
+import 'package:senior_project/user_profile/core/widget/page_indicator.dart';
+import 'package:senior_project/user_profile/core/widget/desktop/back_plate_desktop.dart';
+import 'package:senior_project/user_profile/login_register_page/view/widget/login_widget.dart';
+import 'package:senior_project/user_profile/login_register_page/view/widget/registration_widget.dart';
+import 'package:senior_project/user_profile/login_register_page/view_model/authentication_view_model.dart';
 
 class AuthenticationPage extends StatefulWidget {
   const AuthenticationPage({super.key});

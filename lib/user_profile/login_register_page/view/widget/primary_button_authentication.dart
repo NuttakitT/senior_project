@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
-import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
-import 'package:senior_project/user_authentication/role_selection_page/view/page/role_selection_page.dart';
+import 'package:senior_project/user_profile/login_register_page/view_model/authentication_view_model.dart';
+import 'package:senior_project/user_profile/role_selection_page/view/page/role_selection_page.dart';
 
 class PrimaryButtonAuthentication extends StatefulWidget {
   final bool isLoginPage;

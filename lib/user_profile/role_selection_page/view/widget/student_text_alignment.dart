@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/user_authentication/role_selection_page/assets/card_text_style.dart';
-import 'package:senior_project/user_authentication/role_selection_page/assets/text_constant.dart';
+import 'package:senior_project/user_profile/role_selection_page/assets/card_text_style.dart';
+import 'package:senior_project/user_profile/role_selection_page/assets/text_constant.dart';
 
 class StudentTextAlignment {
 
