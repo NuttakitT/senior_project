@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../assets/color_constant.dart';
 
@@ -8,64 +9,135 @@ class TeacherContactDesktopCard extends StatelessWidget {
   final Map<String, dynamic> cardDetail;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFFF9800), width: 1),
-            borderRadius: BorderRadius.circular(16.0),
-            color: Colors.white),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // left column
-            SizedBox(
-              width: 200,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(
-                      cardDetail['image'],
-                      width: 140.0,
-                      height: 140.0,
-                      fit: BoxFit.cover,
-                    ),
+    return Container(
+      // height: 247,
+      // width: 572,
+      decoration: BoxDecoration(
+          border: Border.all(color: ColorConstant.orange50, width: 1),
+          borderRadius: BorderRadius.circular(16.0),
+          color: Colors.white),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          // left column
+          SizedBox(
+            width: 200,
+            height: 247,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.network(
+                    cardDetail['imageUrl'],
+                    width: 140.0,
+                    height: 140.0,
+                    fit: BoxFit.cover,
                   ),
-                  const SizedBox(height: 4.0),
-                  DefaultTextStyle(
-                    style: AppFontStyle.wb80Md24,
-                    child: Text(
-                      cardDetail['name'] + " " + cardDetail['surname'],
-                      textAlign: TextAlign.center,
-                    ),
+                ),
+                const SizedBox(height: 4.0),
+                DefaultTextStyle(
+                  style: AppFontStyle.wb80Md24,
+                  child: Text(
+                    cardDetail['name'] + " " + cardDetail['surname'],
+                    textAlign: TextAlign.center,
                   ),
-                  DefaultTextStyle(
-                    style: AppFontStyle.wb80Md24,
-                    child: Text(
-                      cardDetail['thaiName'] + ' ' + cardDetail['thaiSurname'],
-                      textAlign: TextAlign.center,
-                    ),
+                ),
+                DefaultTextStyle(
+                  style: AppFontStyle.wb80Md24,
+                  child: Text(
+                    cardDetail['thaiName'] + ' ' + cardDetail['thaiSurname'],
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 4.0),
-                ],
-              ),
+                ),
+                const SizedBox(height: 4.0),
+              ],
             ),
-            // right column
-            SizedBox(
-              width: 450, // need adjust
-              child: Column(
-                children: [
-                  TeachContactDesktopDetailCell(
-                    title: "Mail",
-                    detail: cardDetail['email'],
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+          ),
+          // right column
+          Container(
+            width: 370,
+            height: 247,
+            padding: const EdgeInsets.only(top: 16),
+            child: Column(
+              children: [
+                TeachContactDesktopDetailCell(
+                  title: "Mail",
+                  detail: cardDetail['email'],
+                ),
+                TeachContactDesktopDetailCell(
+                  title: "Phone",
+                  detail: cardDetail['phone'],
+                ),
+                TeachContactDesktopDetailCell(
+                  title: "Office Hours",
+                  detail: cardDetail['officeHours'],
+                ),
+                TeachContactDesktopDetailCell(
+                  title: "Subject",
+                  detail: cardDetail['subject'],
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      child: CircleAvatar(
+                        backgroundColor: ColorConstant.facebookColor,
+                        child: IconButton(
+                          onPressed: () async {
+                            print("tapped");
+                            Uri uri = Uri.parse(cardDetail['facebookLink']);
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            } else {
+                              throw 'Link broken';
+                            }
+                          },
+                          icon: const Icon(Icons.facebook),
+                          color: ColorConstant.white,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: ColorConstant.black,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.mail),
+                          color: ColorConstant.black,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: ColorConstant.green40,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.phone),
+                          color: ColorConstant.green40,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -77,26 +149,29 @@ class TeachContactDesktopDetailCell extends StatelessWidget {
       : super(key: key);
 
   final String title;
-  final String? detail;
+  final dynamic detail;
 
   @override
   Widget build(BuildContext context) {
-    if (detail == null) {
+    final detailString = detail.toString();
+    if (detailString == "null") {
       return Container();
     }
-    return Row(
+    return Column(
       children: [
-        Expanded(
-            flex: 3,
-            child: DefaultTextStyle(
-                style: AppFontStyle.wb50R16, child: Text(title))),
-        Expanded(
-            flex: 7,
-            child: DefaultTextStyle(
-                style: AppFontStyle.wb80R16, child: Text(detail!))),
-        const SizedBox(
-          height: 8.0,
-        )
+        Row(
+          children: [
+            Expanded(
+                flex: 3,
+                child: DefaultTextStyle(
+                    style: AppFontStyle.wb50R16, child: Text(title))),
+            Expanded(
+                flex: 7,
+                child: DefaultTextStyle(
+                    style: AppFontStyle.wb80R16, child: Text(detailString))),
+          ],
+        ),
+        const SizedBox(height: 8.0)
       ],
     );
   }
@@ -119,7 +194,7 @@ class TeacherContactDesktopHeader extends StatelessWidget {
         children: [
           const DefaultTextStyle(
             style: AppFontStyle.wb80Md32,
-            child: Text("My Profile"),
+            child: Text("Teacher Contactss"),
           ),
           const Spacer(),
           if (isAdmin)
