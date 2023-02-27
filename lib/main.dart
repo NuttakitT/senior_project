@@ -10,6 +10,7 @@ import 'package:senior_project/help_desk/help_desk_reply/mobile/view/page/help_d
 import 'package:senior_project/user_authentication/my_profile/view/my_profile_view.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/teacher_contact/view/teacher_contact_view.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
 import 'core/template_mobile/view_model/template_mobile_view_model.dart';

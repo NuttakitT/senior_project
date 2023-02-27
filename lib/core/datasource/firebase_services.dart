@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// The FirebaseServices containts CRUD operations and 
+// database listener for using with real-time change.
+// To use: create an FirebaseServices object and
+// send collectionName as pareameter.
 class FirebaseServices {
   late CollectionReference _collection;
 
@@ -7,6 +11,11 @@ class FirebaseServices {
     _collection = FirebaseFirestore.instance.collection(collectionName);
   }
 
+  //------------------------ Create orperation ---------------------------------
+  // Create a document to the target collection, using docId as 
+  // a document's id. If has error, return false, otherwise true.
+  // docId: String to use as document's id.
+  // detail: data, in Map structre, to store in database. 
   Future<bool> setDocument(String docId, Map<String, dynamic> detail) async {
     try {
       await _collection.doc(docId).set(detail);
@@ -16,6 +25,10 @@ class FirebaseServices {
     }
   }
 
+  // Create a document to the target collection, using firebase
+  // auto-generated as a document's id. If has error, return false, 
+  // otherwise true.
+  // detail: data, in Map structre, to store in database. 
   Future<bool> addDocument(Map<String, dynamic> detail) async {
     try {
       await _collection.add(detail);
@@ -25,6 +38,11 @@ class FirebaseServices {
     }
   }
 
+  //---------------------------- Update operation ------------------------------
+  // Update data in the document that has a matching ID. If has error, 
+  // return false, otherwise true.
+  // docId: ID of the document to update data.
+  // detail: data, in Map structure, to update(send only updated filed).
   Future<bool> editDocument(String docId, Map<String, dynamic> detail) async {
     try {
       await _collection.doc(docId).update(detail);
@@ -34,6 +52,10 @@ class FirebaseServices {
     }
   }
 
+  //---------------------------- Read operation --------------------------------
+  // Get a document form the collection that has a matching ID.
+  // If there is no requested document in databse, return null.
+  // id: an id of the targte documnet.
   Future<DocumentSnapshot?> getDocumentById(String id) async {
     try {
       return await _collection.doc(id).get();
@@ -42,6 +64,12 @@ class FirebaseServices {
     }   
   }
 
+  // Query documnets in the collection, using key-value to query.
+  // If there are no any documents, return null.
+  // key: list of the filed to query
+  // value: list of the value to query
+  // key and value must have the same length and in th same index
+  // refers to one pair of the key-value.
   Future<QuerySnapshot?> getDocumnetByKeyValuePair(
     List<String> key, 
     List<String> value, 
@@ -59,6 +87,8 @@ class FirebaseServices {
     }
   }
 
+  // Get all documents in the collection, return null there are no
+  // document or collection in the database.
   Future<QuerySnapshot?> getAllDocument() async {
     try {
       return await _collection.get();
@@ -67,6 +97,12 @@ class FirebaseServices {
     } 
   }
 
+  //---------------------- Read operation(Real-time) ---------------------------
+  // A stream listener used as a listener for a document queried by key-value.
+  // key: list of the filed to query
+  // value: list of the value to query
+  // key and value must have the same length and in th same index
+  // refers to one pair of the key-value.
   Stream<QuerySnapshot?> listenToDocumentByKeyValuePair(
     List<String> key, 
     List<dynamic> value
@@ -80,10 +116,15 @@ class FirebaseServices {
     return query.snapshots();
   }
 
+  // Return a stream listener used as a listener in the collection
   Stream<QuerySnapshot> listenToDocument() {
     return _collection.snapshots();
   }
 
+  //---------------------------- Delete operation ------------------------------
+  // Delete the document that has a matching ID in the collection.
+  // If has error, return false, otherwise true.
+  // docId: ID of the target document.
   Future<bool> deleteDocument(String docId) async {
     try {
       await _collection.doc(docId).delete();
