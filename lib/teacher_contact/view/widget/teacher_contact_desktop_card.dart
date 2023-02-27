@@ -10,8 +10,7 @@ class TeacherContactDesktopCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: 247,
-      // width: 572,
+      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
       decoration: BoxDecoration(
           border: Border.all(color: ColorConstant.orange50, width: 1),
           borderRadius: BorderRadius.circular(16.0),
@@ -22,7 +21,6 @@ class TeacherContactDesktopCard extends StatelessWidget {
           // left column
           SizedBox(
             width: 200,
-            height: 247,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -44,7 +42,7 @@ class TeacherContactDesktopCard extends StatelessWidget {
                   ),
                 ),
                 DefaultTextStyle(
-                  style: AppFontStyle.wb80Md24,
+                  style: AppFontStyle.wb70R16,
                   child: Text(
                     cardDetail['thaiName'] + ' ' + cardDetail['thaiSurname'],
                     textAlign: TextAlign.center,
@@ -55,37 +53,39 @@ class TeacherContactDesktopCard extends StatelessWidget {
             ),
           ),
           // right column
-          Container(
-            width: 370,
-            height: 247,
-            padding: const EdgeInsets.only(top: 16),
-            child: Column(
-              children: [
-                TeachContactDesktopDetailCell(
-                  title: "Mail",
-                  detail: cardDetail['email'],
-                ),
-                TeachContactDesktopDetailCell(
-                  title: "Phone",
-                  detail: cardDetail['phone'],
-                ),
-                TeachContactDesktopDetailCell(
-                  title: "Office Hours",
-                  detail: cardDetail['officeHours'],
-                ),
-                TeachContactDesktopDetailCell(
-                  title: "Subject",
-                  detail: cardDetail['subject'],
-                ),
-                ButtonBar(
-                  alignment: MainAxisAlignment.start,
+          Expanded(
+            child: Stack(children: [
+              Column(
+                children: [
+                  TeachContactDesktopDetailCell(
+                    title: "Mail",
+                    detail: cardDetail['email'],
+                  ),
+                  TeachContactDesktopDetailCell(
+                    title: "Phone",
+                    detail: cardDetail['phone'],
+                  ),
+                  TeachContactDesktopDetailCell(
+                    title: "Office Hours",
+                    detail: cardDetail['officeHours'],
+                  ),
+                  TeachContactDesktopDetailCell(
+                    title: "Subject",
+                    detail: cardDetail['subject'],
+                  ),
+                ],
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.end,
                   children: [
                     Container(
                       child: CircleAvatar(
                         backgroundColor: ColorConstant.facebookColor,
                         child: IconButton(
                           onPressed: () async {
-                            print("tapped");
                             Uri uri = Uri.parse(cardDetail['facebookLink']);
                             if (await canLaunchUrl(uri)) {
                               await launchUrl(uri);
@@ -109,7 +109,19 @@ class TeacherContactDesktopCard extends StatelessWidget {
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final Uri params = Uri(
+                              scheme: 'mailto',
+                              path: cardDetail['email'],
+                              // query: 'subject=$subject&body=$body',
+                            );
+                            Uri uri = Uri.parse(params.toString());
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            } else {
+                              throw 'Could not launch $uri';
+                            }
+                          },
                           icon: const Icon(Icons.mail),
                           color: ColorConstant.black,
                         ),
@@ -126,16 +138,24 @@ class TeacherContactDesktopCard extends StatelessWidget {
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final phoneString = "tel:${cardDetail['phone']}";
+                            Uri uri = Uri.parse(phoneString);
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            } else {
+                              throw 'Phone number is invalid';
+                            }
+                          },
                           icon: const Icon(Icons.phone),
                           color: ColorConstant.green40,
                         ),
                       ),
                     ),
                   ],
-                )
-              ],
-            ),
+                ),
+              )
+            ]),
           )
         ],
       ),
@@ -194,7 +214,7 @@ class TeacherContactDesktopHeader extends StatelessWidget {
         children: [
           const DefaultTextStyle(
             style: AppFontStyle.wb80Md32,
-            child: Text("Teacher Contactss"),
+            child: Text("Teacher Contact"),
           ),
           const Spacer(),
           if (isAdmin)
