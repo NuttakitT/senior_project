@@ -165,6 +165,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   // ------------- Listen to database and update data in application ---------------
+  // TODO fiex async add data to collection, async has bug when load with rebuild the widget, the model collect redundant data
   Future<void> _addQueryData(DocumentSnapshot snapshot) async {
     Task task = Task(
       snapshot.get("ownerId"),
