@@ -29,7 +29,7 @@ class TableDetail {
     
     return [
       SizedBox(
-        width: 180,
+        width: 200,
         child: Row(
           children: [
             Padding(
@@ -42,19 +42,33 @@ class TableDetail {
                       shape: BoxShape.circle, color: Color(0x6629B6F6)),
                   child: const Icon(Icons.person)),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  detail["username"],
-                  style: _detailTextStyle(20, ColorConstant.whiteBlack80),
-                ),
-                Text(
-                  detail["email"],
-                  style: _detailTextStyle(12, ColorConstant.whiteBlack60),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(children: [
+                      TextSpan(
+                        text: detail["username"],
+                        style: _detailTextStyle(20, ColorConstant.whiteBlack80),
+                      )
+                    ]),
+                  ),
+                  RichText(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(children: [
+                      TextSpan(
+                        text: detail["email"],
+                        style: _detailTextStyle(12, ColorConstant.whiteBlack60),
+                      )
+                    ]),
+                  ),
+                ],
+              ),
             )
           ],
         ),

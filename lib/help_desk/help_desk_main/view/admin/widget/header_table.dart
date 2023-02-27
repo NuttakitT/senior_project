@@ -13,7 +13,7 @@ class HeaderTable {
       child: Row(
         children: [
           const SizedBox(
-            width: 180,
+            width: 200,
             child: Text(
               "Requester",
               style: _headerTextStyle,
