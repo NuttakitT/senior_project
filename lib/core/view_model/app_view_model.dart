@@ -1,6 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/model/user/app_user.dart';
+import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
 
 class AppViewModel extends ChangeNotifier {
   App app = App();
@@ -16,10 +22,6 @@ class AppViewModel extends ChangeNotifier {
     }
   }
 
-  void initializeLoginState(bool state) {
-    _isLogin = state;
-  }
-
   bool get getMobileSiteState => _isMobileSite;
 
   void setLoggedInUser(Map<String, dynamic> detail) {
@@ -27,6 +29,20 @@ class AppViewModel extends ChangeNotifier {
     app.setAppUser = user;
     _isLogin = true;
     notifyListeners();
+  }
+
+  Future<void> initializeLoginState(BuildContext context, bool state) async {
+    if (state) {
+      final snapshot = await FirebaseServices("user").getDocumentById(
+        FirebaseAuth.instance.currentUser!.uid
+      );
+      if (snapshot != null) {
+        Map<String, dynamic> detail = context.read<AuthenticationViewModel>().storeAppUser(snapshot);
+        setLoggedInUser(detail);
+      }
+    } else {
+      _isLogin = false;
+    }
   }
 
   void logout() {

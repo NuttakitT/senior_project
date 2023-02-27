@@ -53,7 +53,7 @@ class _TaskTableState extends State<TaskTable> {
               bottom: BorderSide(width: 2, color: ColorConstant.whiteBlack5))),
       height: 80,
       child: Row(
-        children: TableDetail.widget(context, detail),
+        children: TableDetail(context: context, detail: detail).widget(),
       ),
     );
   }
@@ -69,6 +69,7 @@ class _TaskTableState extends State<TaskTable> {
   @override
   void didChangeDependencies() {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+    context.read<HelpDeskViewModel>().cleanModel();
     _stream = query(tagBarSelected);
     super.didChangeDependencies();
   }
@@ -76,7 +77,7 @@ class _TaskTableState extends State<TaskTable> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-
+    
     return Column(
       children: [
         HeaderTable.widget(),
@@ -92,7 +93,6 @@ class _TaskTableState extends State<TaskTable> {
                   } 
                   if (snapshot.connectionState == ConnectionState.active) {   
                     if (snapshot.data!.docs.isNotEmpty) {
-                      context.read<HelpDeskViewModel>().cleanModel();
                       return FutureBuilder(
                         future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
                         builder: (context, futureSnapshot) {

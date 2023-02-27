@@ -40,22 +40,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (FirebaseAuth.instance.currentUser != null) {
-      context.read<AppViewModel>().initializeLoginState(true);
-    } else {
-      context.read<AppViewModel>().initializeLoginState(false);
-    }
-
     return MaterialApp(
-        title: 'Test',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+      title: 'Test',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: FutureBuilder(
+        future: context.read<AppViewModel>().initializeLoginState(
+          context,
+          FirebaseAuth.instance.currentUser == null 
+          ? false 
+          : true
         ),
-        home: Builder(builder: (context) {
-          context
-              .read<AppViewModel>()
-              .selectView(MediaQuery.of(context).size.width);
-          return MyProfileView();
-        }));
+        builder: (context, _) {
+          if (_.connectionState == ConnectionState.done) {
+            context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
+            return MyProfileView();
+          }
+          return Container();
+        }
+      )
+    );
   }
 }

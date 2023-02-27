@@ -11,6 +11,10 @@ import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_ico
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TableDetail {
+  final BuildContext context;
+  final Map<String, dynamic> detail;
+  const TableDetail({required this.detail, required this.context});
+
   static TextStyle _detailTextStyle(double size, Color color) {
     return TextStyle(
         fontFamily: AppFontStyle.font,
@@ -19,8 +23,7 @@ class TableDetail {
         fontSize: size);
   }
 
-  static List<Widget> widget(
-      BuildContext context, Map<String, dynamic> detail) {
+  List<Widget> widget() {
     List<Color> statusColor = StatusColor.getColor(false, detail["status"]);
     String priority = context.watch<HelpDeskViewModel>().convertToString(false, detail["priority"]);
     String status = context.watch<HelpDeskViewModel>().convertToString(true, detail["status"]);
