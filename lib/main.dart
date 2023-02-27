@@ -7,7 +7,7 @@ import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main
 import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/description_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_reply/desktop/view/page/help_desk_reply_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_reply/mobile/view/page/help_desk_reply_mobile.dart';
-import 'package:senior_project/my_profile/view/my_profile_view.dart';
+import 'package:senior_project/user_authentication/my_profile/view/my_profile_view.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/user_authentication/login_register_page/view_model/authentication_view_model.dart';
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           context
               .read<AppViewModel>()
               .selectView(MediaQuery.of(context).size.width);
-          return const HelpDeskMainView(isAdmin: false,);
+          return MyProfileView();
         }));
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
-import 'package:senior_project/my_profile/view/user/widget/admin_profile_mobile.dart';
-import 'package:senior_project/my_profile/view/user/widget/user_profile_card.dart';
-import 'package:senior_project/my_profile/view/user/widget/user_profile_header.dart';
+import 'package:senior_project/user_authentication/my_profile/view/user/widget/admin_profile_mobile.dart';
+import 'package:senior_project/user_authentication/my_profile/view/user/widget/user_profile_card.dart';
+import 'package:senior_project/user_authentication/my_profile/view/user/widget/user_profile_header.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 
-import '../../../../core/view_model/app_view_model.dart';
+import '../../../../../core/view_model/app_view_model.dart';
 
 class AdminProfileView extends StatelessWidget {
   final Map<String, dynamic> data;

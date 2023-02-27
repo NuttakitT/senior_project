@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import '../../../../assets/font_style.dart';
+import '../../../../../assets/font_style.dart';
 
 class UserProfileEditButtonBar extends StatelessWidget {
   const UserProfileEditButtonBar({

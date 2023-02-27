@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/user_authentication/role_selection_page/view_model/role_selection_view_model.dart';
 
 class ConfirmButton {
@@ -22,8 +25,14 @@ class ConfirmButton {
           if (isSuccess) {
             if (isConfirmButton) {
               // TODO add logic to main site
+              Navigator.pushAndRemoveUntil(
+                context, 
+                MaterialPageRoute(builder: (context) {
+                  return const HelpDeskMainView(isAdmin: false);
+                }), 
+                (route) => false
+              );
             } else {
-              // ignore: use_build_context_synchronously
               Navigator.pop(context);
             }
           }

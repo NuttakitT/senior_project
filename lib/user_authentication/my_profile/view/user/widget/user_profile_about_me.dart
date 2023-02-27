@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../assets/font_style.dart';
+import '../../../../../assets/font_style.dart';
 
 class UserProfileAboutMe extends StatelessWidget {
   static TextStyle informationHeaderTextStyle = AppFontStyle.wb80Md20;

@@ -17,11 +17,12 @@ class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
   @override
   Widget build(BuildContext context) {
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
+    int? role = context.watch<AppViewModel>().app.getUser.getRole;
 
     if (isMobileSite) {
-      return const TemplateMenuMobile(
+      return TemplateMenuMobile(
           content: MobileWidget(
-        isAdmin: true,
+        isAdmin: role == 0 ? true : false,
       ));
     }
     return const TemplateDesktop(

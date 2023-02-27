@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/my_profile/view/user/widget/user_profile_about_me.dart';
-import 'package:senior_project/my_profile/view/user/widget/user_profile_detail_cell.dart';
+import 'package:senior_project/user_authentication/my_profile/view/user/widget/user_profile_about_me.dart';
+import 'package:senior_project/user_authentication/my_profile/view/user/widget/user_profile_detail_cell.dart';
 
 class UserProfileCard {
   static TextStyle informationHeaderTextStyle = AppFontStyle.wb80Md20;

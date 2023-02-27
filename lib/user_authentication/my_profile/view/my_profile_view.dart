@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/my_profile/view/user/user_profile_view.dart';
-import 'package:senior_project/my_profile/view/user/widget/admin_profile_view.dart';
+import 'package:provider/provider.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/user_authentication/login_register_page/view/page/authentication_page.dart';
+import 'package:senior_project/user_authentication/my_profile/view/user/user_profile_view.dart';
+import 'package:senior_project/user_authentication/my_profile/view/user/widget/admin_profile_view.dart';
 
 class MyProfileView extends StatelessWidget {
-  final bool isAdmin;
-  MyProfileView({super.key, required this.isAdmin});
+  MyProfileView({super.key});
 
   final Map<String, dynamic> data = {
     "imageUrl": "https://picsum.photos/200/300",
@@ -32,7 +34,11 @@ class MyProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isAdmin) {
+    int? role = context.watch<AppViewModel>().app.getUser.getRole; 
+    if (!context.watch<AppViewModel>().hasUser) {
+      return const AuthenticationPage();
+    }
+    if (role == 0) {
       return AdminProfileView(data: adminData);
     } else {
       return UserProfileView(data: data);

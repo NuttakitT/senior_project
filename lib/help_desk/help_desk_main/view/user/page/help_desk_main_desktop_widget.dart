@@ -15,11 +15,12 @@ class HelpDeskMainDesktopWidget extends StatelessWidget {
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    int? role = context.watch<AppViewModel>().app.getUser.getRole;
 
     if (isMobileSite) {
-      return const TemplateMenuMobile(
+      return TemplateMenuMobile(
           content: MobileWidget(
-        isAdmin: false,
+        isAdmin: role == 0 ? true : false,
       ));
     }
     return TemplateDesktop(

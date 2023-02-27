@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_card_widget.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -44,8 +45,8 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
   @override
   void didChangeDependencies() {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
-    // TODO listen to user id
-    _stream = query("user", tagBarSelected);
+    String id = context.watch<AppViewModel>().app.getUser.getId;
+    _stream = query(id, tagBarSelected);
     super.didChangeDependencies();
   }
 
@@ -98,8 +99,8 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
               },
             );
           }
-          // TODO listen to username
-          context.read<HelpDeskViewModel>().getHitsSearcher.query("user $searchText");
+          String username = context.watch<AppViewModel>().app.getUser.getUsername; 
+          context.read<HelpDeskViewModel>().getHitsSearcher.query("$username $searchText");
           return StreamBuilder(
             stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
             builder: (context, snapshot) {
