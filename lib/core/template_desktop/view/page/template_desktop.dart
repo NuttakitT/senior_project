@@ -42,7 +42,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
         widget.helpdesk ||
         widget.helpdeskadmin ||
         widget.home;
-    double contentSize = 1300;
+    double contentSize = 1500;
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(

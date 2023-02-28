@@ -12,7 +12,6 @@ class HelpDeskMainDesktopWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -24,26 +23,24 @@ class HelpDeskMainDesktopWidget extends StatelessWidget {
       ));
     }
     return TemplateDesktop(
-      faqmenu: false, 
-      faqmenuadmin: false, 
-      helpdesk: true, 
-      helpdeskadmin: false, 
-      home: false, 
-      useTemplatescroll: true, 
-      content: Container(
-        constraints: BoxConstraints(
-          maxWidth: screenWidth, 
-          minWidth: 200, 
-          maxHeight: screenHeight - 155
-        ),
-        alignment: AlignmentDirectional.topCenter,
-        child: ListView(
-          children: [
-            HelpDeskDesktopHeader.widget(context),
-            const HelpDeskDesktopBody()
-          ],
-        ),
-      )
-    );
+        faqmenu: false,
+        faqmenuadmin: false,
+        helpdesk: true,
+        helpdeskadmin: false,
+        home: false,
+        useTemplatescroll: true,
+        content: Container(
+          constraints: BoxConstraints(
+              maxWidth: screenWidth,
+              minWidth: 200,
+              maxHeight: screenHeight - 155),
+          alignment: AlignmentDirectional.topCenter,
+          child: ListView(
+            children: [
+              HelpDeskDesktopHeader.widget(context),
+              const HelpDeskDesktopBody()
+            ],
+          ),
+        ));
   }
 }
