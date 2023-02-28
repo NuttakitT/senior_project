@@ -52,7 +52,7 @@ class _CommunityContentMobileState extends State<CommunityContentMobile> {
                     ],
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 InkWell(
                   child: const Icon(
                     Icons.edit_note_rounded,
@@ -110,7 +110,7 @@ class _CommunityContentMobileState extends State<CommunityContentMobile> {
             child: Text(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum auctor ante, sed volutpat metus porttitor non. Quisque pretium enim ac ex maximus molestie. Nunc non quam convallis, pulvinar sem in, consequat ante."),
           ),
-          //TODO image
+          //TODO image from back-end
           Container(
             padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
             constraints: const BoxConstraints(maxHeight: 400),

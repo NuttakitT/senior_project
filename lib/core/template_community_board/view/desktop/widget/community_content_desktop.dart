@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 
-class CommunityContentMobile extends StatefulWidget {
-  const CommunityContentMobile({super.key});
+class CommunityContentDesktop extends StatefulWidget {
+  const CommunityContentDesktop({super.key});
 
   @override
-  State<CommunityContentMobile> createState() => _CommunityContentMobileState();
+  State<CommunityContentDesktop> createState() =>
+      _CommunityContentMobileState();
 }
 
-class _CommunityContentMobileState extends State<CommunityContentMobile> {
+class _CommunityContentMobileState extends State<CommunityContentDesktop> {
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
+      height: 680 + (screenHeight - 957),
+      // width: 680 + (screenWidth - 957),
+      constraints: BoxConstraints(maxWidth: 700),
       alignment: Alignment.topCenter,
+      decoration: const BoxDecoration(color: ColorConstant.white),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: double.infinity,
+            // width: double.infinity,
             padding:
                 const EdgeInsets.only(top: 16, left: 24, right: 24, bottom: 4),
             decoration: const BoxDecoration(color: ColorConstant.white),
             child: Row(
+              // mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
@@ -52,14 +60,15 @@ class _CommunityContentMobileState extends State<CommunityContentMobile> {
                     ],
                   ),
                 ),
+                const Spacer(),
                 InkWell(
                   child: const Icon(
-                    Icons.close_rounded,
+                    Icons.edit_note_rounded,
                     color: ColorConstant.whiteBlack60,
                     size: 24,
                   ),
                   onTap: () {
-                    Navigator.pop(context);
+                    //TODO
                   },
                 )
               ],
@@ -113,11 +122,15 @@ class _CommunityContentMobileState extends State<CommunityContentMobile> {
           ),
           //TODO image
           Container(
-            padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
-            constraints: const BoxConstraints(maxHeight: 400),
+            decoration: BoxDecoration(color: ColorConstant.red40),
+            // padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
+            // constraints: const BoxConstraints(maxHeight: 350),
+            width: double.infinity,
             child: Image.asset(
               'lib/assets/image_demo/community_board_demo_image.jpg',
-              fit: BoxFit.fitWidth,
+              // fit: BoxFit.cover,
+              height: 200,
+              width: 200,
             ),
           ),
         ],
