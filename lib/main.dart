@@ -55,6 +55,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const TemplateCommunityBoardDesktop());
+        home: Builder(builder: (context) {
+          context
+              .read<AppViewModel>()
+              .selectView(MediaQuery.of(context).size.width);
+          return const TemplateCommunityBoardDesktop();
+        }));
   }
 }
