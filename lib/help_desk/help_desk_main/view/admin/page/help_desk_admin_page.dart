@@ -18,8 +18,7 @@ class HelpDeskAdminPage extends StatefulWidget {
 class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
   @override
   Widget build(BuildContext context) {
-    context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
-    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
+    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
     int? role = context.watch<AppViewModel>().app.getUser.getRole;
     bool isLogin = context.watch<AppViewModel>().isLogin;
 

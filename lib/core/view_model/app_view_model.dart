@@ -10,20 +10,17 @@ import 'package:senior_project/user_profile/login_register_page/view_model/authe
 
 class AppViewModel extends ChangeNotifier {
   App app = App();
-  late bool _isMobileSite;
   final double _mobileWidthBreakpoint = 430;
   late bool _isLogin;
 
-  void selectView(double pixelWidth) {
+  bool getMobileSiteState(double pixelWidth) {
     if(pixelWidth <= _mobileWidthBreakpoint) {
-      _isMobileSite = true;
+      return true;
     } else {
-      _isMobileSite = false;
+      return false;
     }
   }
-
-  bool get getMobileSiteState => _isMobileSite;
-
+  
   void setLoggedInUser(Map<String, dynamic> detail) {
     AppUser user = AppUser.overloaddedConstructor(detail);
     app.setAppUser = user;

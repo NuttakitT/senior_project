@@ -93,8 +93,7 @@ class _AuthenticationPage extends State<AuthenticationPage> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
-    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
+    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
     bool isLoginPage =
         context.watch<AuthenticationViewModel>().getIsShowLoginPage;
 
