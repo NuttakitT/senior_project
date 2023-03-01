@@ -124,6 +124,11 @@ class AuthenticationViewModel extends ChangeNotifier {
         email: registerModel.getEmail, 
         password: registerModel.getPassword as String
       );
+      if (!credential.user!.emailVerified) {
+        _errorText = "Please verify your email to login.";
+        notifyListeners();
+        return false;
+      }
       final snapshot = await FirebaseServices("user").getDocumentById(credential.user!.uid);
       Map<String, dynamic> detail = storeAppUser(snapshot!);
       context.read<AppViewModel>().setLoggedInUser(detail);
@@ -143,6 +148,12 @@ class AuthenticationViewModel extends ChangeNotifier {
 
   Future<bool> createUser(BuildContext context) async {
     try {
+      final doc = await FirebaseServices("user").getDocumnetByKeyValuePair(["username"], [registerModel.getUsername]);
+      if (doc != null && doc.size != 0) {
+        _errorText = "Username already in user.";
+        notifyListeners();
+        return false;
+      }
       final creadential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: registerModel.getEmail, 
         password: registerModel.getPassword as String
@@ -156,6 +167,7 @@ class AuthenticationViewModel extends ChangeNotifier {
         creadential.user!.uid,
         detail
       );
+      FirebaseAuth.instance.currentUser?.sendEmailVerification();
       context.read<AppViewModel>().setLoggedInUser(detail);
       _errorText = "";
       notifyListeners();

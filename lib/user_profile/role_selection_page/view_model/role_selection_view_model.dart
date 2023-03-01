@@ -23,7 +23,7 @@ class RoleSelectionViewModel extends ChangeNotifier{
       FirebaseServices service = FirebaseServices("user");
       String uid = user!.uid;
       await service.editDocument(uid, {"role": getStudentCardSelected ? 1 : 2});
-      context.read<AppViewModel>().app.getUser.setRole = getStudentCardSelected ? 1 : 2;
+      await context.read<AppViewModel>().logout();
       return true;
     } catch (e) {
       return false;
@@ -36,7 +36,7 @@ class RoleSelectionViewModel extends ChangeNotifier{
       String uid = FirebaseAuth.instance.currentUser!.uid;
       await service.deleteDocument(uid);
       await FirebaseAuth.instance.currentUser!.delete();
-      context.read<AppViewModel>().app.setAppUser = AppUser();
+      await context.read<AppViewModel>().logout();
       return true;
     } catch (e) {
       return false;

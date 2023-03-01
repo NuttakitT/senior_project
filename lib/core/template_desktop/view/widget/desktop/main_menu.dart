@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
@@ -267,9 +269,9 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                 ),
-                onTap: () {
+                onTap: () async {
                   if (isLogin) {
-                    context.read<AppViewModel>().logout();
+                    await context.read<AppViewModel>().logout();
                   } 
                   context.read<TemplateDesktopViewModel>().changeState(5, 1);
                   Navigator.pushAndRemoveUntil(

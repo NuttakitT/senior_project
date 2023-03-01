@@ -264,9 +264,9 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                       )
                     ],
                   ),
-                  onTap: () {
+                  onTap: () async {
                     if (isLogin) {
-                      context.read<AppViewModel>().logout();
+                      await context.read<AppViewModel>().logout();
                     } else {
                       Navigator.pushAndRemoveUntil(
                         context, 
