@@ -8,6 +8,7 @@ class TemplateCommunityBoardDesktop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return TemplateDesktop(
         faqmenu: false,
         faqmenuadmin: false,
@@ -15,8 +16,14 @@ class TemplateCommunityBoardDesktop extends StatelessWidget {
         helpdeskadmin: false,
         home: true,
         useTemplatescroll: true,
-        content: Align(
+        content: Container(
             alignment: AlignmentDirectional.topCenter,
-            child: CommunityContentDesktop()));
+            // height: screenHeight,
+            child: Column(
+              children: [
+                const CommunityContentDesktop(),
+                const CommunityContentDesktop(),
+              ],
+            )));
   }
 }
