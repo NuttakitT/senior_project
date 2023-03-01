@@ -103,7 +103,6 @@ class HelpDeskViewModel extends ChangeNotifier {
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
-      // TODO listen to current user
       "username": list![0],
       "email": list[1],
       "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
@@ -166,7 +165,6 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   // ------------- Listen to database and update data in application ---------------
-  // TODO fiex async add data to collection, async has bug when load with rebuild the widget, the model collect redundant data
   Future<void> _addQueryData(DocumentSnapshot snapshot) async {
     Task task = Task(
       snapshot.get("ownerId"),
