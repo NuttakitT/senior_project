@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../assets/color_constant.dart';
 
 class TeacherContactDesktopCard extends StatelessWidget {
-  const TeacherContactDesktopCard(
-      {super.key, required this.cardDetail, required this.isEditting});
+  const TeacherContactDesktopCard({super.key, required this.cardDetail});
   final Map<String, dynamic> cardDetail;
-  final bool isEditting;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,22 +62,18 @@ class TeacherContactDesktopCard extends StatelessWidget {
                   TeachContactDesktopDetailCell(
                     title: "Mail",
                     detail: cardDetail['email'],
-                    isEditting: isEditting,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Phone",
                     detail: cardDetail['phone'],
-                    isEditting: isEditting,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Office Hours",
                     detail: cardDetail['officeHours'],
-                    isEditting: isEditting,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Subject",
                     detail: cardDetail['subject'],
-                    isEditting: isEditting,
                   ),
                 ],
               ),
@@ -170,15 +166,11 @@ class TeacherContactDesktopCard extends StatelessWidget {
 
 class TeachContactDesktopDetailCell extends StatelessWidget {
   const TeachContactDesktopDetailCell(
-      {Key? key,
-      required this.title,
-      required this.detail,
-      required this.isEditting})
+      {Key? key, required this.title, required this.detail})
       : super(key: key);
 
   final String title;
   final dynamic detail;
-  final bool isEditting;
 
   @override
   Widget build(BuildContext context) {
@@ -189,29 +181,37 @@ class TeachContactDesktopDetailCell extends StatelessWidget {
     TextEditingController textController =
         TextEditingController(text: detailString);
 
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return ChangeNotifierProvider(
+      create: (_) => TeacherContactViewModel(),
+      child: Consumer<TeacherContactViewModel>(
+          builder: (context, viewModel, child) {
+        return Column(
           children: [
-            Expanded(
-                flex: 3,
-                child: DefaultTextStyle(
-                    style: AppFontStyle.wb50R16, child: Text(title))),
-            Expanded(
-                flex: 7,
-                child: TextField(
-                  enabled: isEditting,
-                  controller: textController,
-                  style: AppFontStyle.wb80R16,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                  ),
-                )),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: DefaultTextStyle(
+                        style: AppFontStyle.wb50R16, child: Text(title))),
+                Expanded(
+                    flex: 7,
+                    child: TextField(
+                      textAlign: TextAlign.start,
+                      enabled: viewModel.isEditing,
+                      controller: textController,
+                      style: AppFontStyle.wb80R16,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 0.0),
+                        border: InputBorder.none,
+                      ),
+                    )),
+              ],
+            ),
+            const SizedBox(height: 8.0)
           ],
-        ),
-        const SizedBox(height: 8.0)
-      ],
+        );
+      }),
     );
   }
 }
@@ -237,35 +237,42 @@ class TeacherContactDesktopHeader extends StatelessWidget {
           ),
           const Spacer(),
           if (isAdmin)
-            SizedBox(
-              width: 178,
-              height: 40,
-              child: TextButton(
-                onPressed: () {
-                  // TODO edit profile lofic
-                },
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(ColorConstant.orange40),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.add,
-                      color: Colors.white,
+            ChangeNotifierProvider(
+              create: (_) => TeacherContactViewModel(),
+              child: Consumer<TeacherContactViewModel>(
+                  builder: (context, viewModel, child) {
+                return SizedBox(
+                  width: 178,
+                  height: 40,
+                  child: TextButton(
+                    onPressed: () {
+                      viewModel.toggleEditButton();
+                      print(viewModel.isEditing);
+                    },
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(ColorConstant.orange40),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "Add Contact",
+                          style: AppFontStyle.whiteSemiB16,
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      "Add Contact",
-                      style: AppFontStyle.whiteSemiB16,
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }),
             )
         ],
       ),
