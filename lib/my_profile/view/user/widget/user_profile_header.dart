@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/my_profile/view_model/user_profile_view_model.dart';
 import '../../../../assets/color_constant.dart';
 
 class UserProfileHeader {
@@ -19,36 +21,44 @@ class UserProfileHeader {
             child: const Text("My Profile"),
           ),
           const Spacer(),
-          SizedBox(
-            width: 178,
-            height: 40,
-            child: TextButton(
-              onPressed: () {
-                // TODO edit profile lofic
-              },
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(ColorConstant.orange40),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)))),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.edit,
-                    color: Colors.white,
+          ChangeNotifierProvider(
+              create: (_) => UserProfileViewModel(),
+              child: Consumer<UserProfileViewModel>(
+                  builder: (context, viewModel, child) {
+                if (viewModel.isEditing) {
+                  return Container();
+                }
+                return SizedBox(
+                  width: 178,
+                  height: 40,
+                  child: TextButton(
+                    onPressed: () {
+                      viewModel.toggleEditButton();
+                    },
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(ColorConstant.orange40),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "Edit Profile",
+                          style: createTaskButtonStyle,
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    "Edit Profile",
-                    style: createTaskButtonStyle,
-                  ),
-                ],
-              ),
-            ),
-          )
+                );
+              }))
         ],
       ),
     );
