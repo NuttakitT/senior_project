@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
+import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -39,7 +42,7 @@ class _MainMenuState extends State<MainMenu> {
     bool isTeacherContactSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(3);
     bool isFaqSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(4);
     bool isProfileSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(5);
-    bool isLogin = context.watch<AppViewModel>().hasUser;
+    bool isLogin = context.watch<AppViewModel>().isLogin;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,10 +107,15 @@ class _MainMenuState extends State<MainMenu> {
                   ),
                   onTap: () {
                     context.read<TemplateDesktopViewModel>().changeState(1, 1);
-                    // TODO listen to user role
+                    int? role = context.read<AppViewModel>().app.getUser.getRole;
                     Navigator.push(
                       context, 
-                      MaterialPageRoute(builder: (context) => HelpDeskMainView(isAdmin: false))
+                      MaterialPageRoute(builder: (context) => 
+                        HelpDeskMainView(isAdmin: role == 0
+                          ? true 
+                          : false
+                        )
+                      )
                     );
                   },
                 ),
@@ -232,7 +240,13 @@ class _MainMenuState extends State<MainMenu> {
                   ),
                   onTap: () {
                     context.read<TemplateDesktopViewModel>().changeState(5, 1);
-                    // TODO link to profile page (profile)
+                    Navigator.pushAndRemoveUntil(
+                      context, 
+                      MaterialPageRoute(builder: (context) {
+                        return MyProfileView();
+                      }), 
+                      (route) => false
+                    );
                   },
                 ),
               ),
@@ -255,12 +269,18 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                   ),
                 ),
-                onTap: () {
+                onTap: () async {
                   if (isLogin) {
-                    context.read<AppViewModel>().logout();
-                  } else {
-                    // TODO link to profile page (login)
-                  }
+                    await context.read<AppViewModel>().logout();
+                  } 
+                  context.read<TemplateDesktopViewModel>().changeState(5, 1);
+                  Navigator.pushAndRemoveUntil(
+                    context, 
+                    MaterialPageRoute(builder: (context) {
+                      return MyProfileView();
+                    }), 
+                    (route) => false
+                  );
                 },
               ),
             ),

@@ -5,6 +5,8 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
+import 'package:senior_project/user_profile/login_register_page/view/page/authentication_page.dart';
+import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 
 class TemplateMenuMobile extends StatefulWidget {
   final Widget content;
@@ -31,7 +33,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    bool isLogin = context.watch<AppViewModel>().hasUser;
+    bool isLogin = context.watch<AppViewModel>().isLogin;
     bool homeState = context.watch<TemplateMobileViewModel>().getMenuState(0);
     bool helpDeskState =
         context.watch<TemplateMobileViewModel>().getMenuState(1);
@@ -144,10 +146,15 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(1);
-                        // TODO listen to user role
+                        int? role = context.read<AppViewModel>().app.getUser.getRole;
                         Navigator.push(
                           context, 
-                          MaterialPageRoute(builder: (context) => HelpDeskMainView(isAdmin: false))
+                          MaterialPageRoute(builder: (context) => 
+                            HelpDeskMainView(isAdmin: role == 0
+                              ? true 
+                              : false
+                            )
+                          )
                         );
                       },
                     ),
@@ -224,7 +231,13 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(3);
-                        //TODO when click link to My profile page
+                        Navigator.pushAndRemoveUntil(
+                          context, 
+                          MaterialPageRoute(builder: (context) {
+                            return MyProfileView();
+                          }), 
+                          (route) => false
+                        );
                       },
                     ),
                   ),
@@ -251,8 +264,18 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                       )
                     ],
                   ),
-                  onTap: () {
-                    //TODO when click link to login/logout page
+                  onTap: () async {
+                    if (isLogin) {
+                      await context.read<AppViewModel>().logout();
+                    } else {
+                      Navigator.pushAndRemoveUntil(
+                        context, 
+                        MaterialPageRoute(builder: (context) {
+                          return const AuthenticationPage();
+                        }), 
+                        (route) => false
+                      );
+                    }
                   },
                 ),
               ),

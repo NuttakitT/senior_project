@@ -1,4 +1,5 @@
 class AppUser {
+  String _id = "";
   int? _role;
   String _username = "";
   String _name = "";
@@ -13,6 +14,7 @@ class AppUser {
 
   // * map structure include the attribute of this class
   AppUser.overloaddedConstructor(Map<String, dynamic> detail) {
+    _id = detail.keys.contains("id") ? detail["id"] : "";
     _username = detail.keys.contains("username") ? detail["username"] : "";
     _name = detail.keys.contains("name") ? detail["name"] : "";
     _email = detail.keys.contains("email") ? detail["email"] : "";
@@ -31,17 +33,9 @@ class AppUser {
   String get getPhone => _phone;
   String get getProfileImageUrl => _profileImageUrl;
   String get getLinkId => _linkId;
-  String? get getRole {
-    if(_role == 0) return "admin";
-    if(_role == 1) return "student";
-    if(_role == 2) return "teacher";
-    return null;
-  }
-  String? get getGender {
-    if(_gender == 0) return "male";
-    if(_gender == 1) return "female";
-    return null;
-  }
+  String get getId => _id;
+  int? get getRole => _role;
+  int? get getGender => _gender;
 
   set setProfileImageUrl(String url) => _profileImageUrl = url;
   set setBirthday(DateTime birthday) => _birthday = birthday;

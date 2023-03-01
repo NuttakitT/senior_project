@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_card_widget.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -44,8 +45,9 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
   @override
   void didChangeDependencies() {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
-    // TODO listen to user id
-    _stream = query("user", tagBarSelected);
+    String id = context.watch<AppViewModel>().app.getUser.getId;
+    context.read<HelpDeskViewModel>().cleanModel();
+    _stream = query(id, tagBarSelected);
     super.didChangeDependencies();
   }
 
@@ -60,6 +62,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
         builder: (context) {
           String searchText = context.watch<HelpDeskViewModel>().getSearchText;
           if (searchText.isEmpty) {
+            context.read<HelpDeskViewModel>().cleanModel();
             return StreamBuilder(
               stream: _stream,
               builder: (context, snapshot) {
@@ -68,7 +71,6 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
                 } 
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.data!.docs.isNotEmpty) {
-                    context.read<HelpDeskViewModel>().cleanModel();
                     return FutureBuilder(
                       future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
                       builder: (context, futureSnapshot) {
@@ -98,8 +100,8 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
               },
             );
           }
-          // TODO listen to username
-          context.read<HelpDeskViewModel>().getHitsSearcher.query("user $searchText");
+          String username = context.watch<AppViewModel>().app.getUser.getUsername; 
+          context.read<HelpDeskViewModel>().getHitsSearcher.query("$username $searchText");
           return StreamBuilder(
             stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
             builder: (context, snapshot) {
@@ -111,22 +113,32 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
                 if (hits.isNotEmpty) {
                   List<String> docs = [];
                   for (var item in hits) {
-                    docs.add(item["docId"]);
+                    if (!docs.contains(item["docId"])) {
+                      docs.add(item["docId"]);
+                    }
                   }
                   context.read<HelpDeskViewModel>().cleanModel();
                   return FutureBuilder(
                     future: context.watch<HelpDeskViewModel>().reconstructSearchResult(docs),
                     builder: ((context, futureSnapshot) {
                       if (futureSnapshot.connectionState == ConnectionState.done) {
-                          List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                          return SizedBox(
-                            width: double.infinity,
-                            child: Column(
-                              children: generateContent(data),
-                            )
-                          );
-                        }
-                        return Container();
+                        List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+                        return FutureBuilder(
+                        future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+                        builder: (context, _) {
+                          if (_.connectionState == ConnectionState.done) {
+                              return SizedBox(
+                              width: double.infinity,
+                              child: Column(
+                                children: generateContent(data),
+                              )
+                            );
+                          }
+                          return const LoaderStatus(text: "Loading...");
+                        },
+                      );                         
+                      }
+                      return Container();
                     }),
                   );
                 }
