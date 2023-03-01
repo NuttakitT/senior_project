@@ -13,7 +13,8 @@ import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_mod
 
 class HelpDeskViewModel extends ChangeNotifier {
   HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
-  final FirebaseServices _service = FirebaseServices("task");
+  final FirebaseServices _serviceTask = FirebaseServices("task");
+  final FirebaseServices _serviceUser = FirebaseServices("user");
   final AlgoliaServices _algolia = AlgoliaServices("task");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
@@ -71,20 +72,28 @@ class HelpDeskViewModel extends ChangeNotifier {
     return _mobileMenuState.indexOf(true);
   }
 
-  Map<String, dynamic> formatTaskDetail(Map<String, dynamic> data) {
-    // TODO query username email form db
-    data.addEntries({
-      "username": "test",
-      "email": "runn@gmail.com",
-    }.entries);
-    return data;
+  Future<List<String>?> _getUserdetail(String uid) async {
+    final doc = await _serviceUser.getDocumentById(uid);
+    if (doc != null) {
+      return [doc.get("username"), doc.get("email")];
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> formatTaskDetail() async {
+    for (int i = 0; i < _task.length; i++) {
+      List<String>? list = await _getUserdetail(_task[i]["ownerId"]);
+      _task[i].addEntries({
+        "username": list![0],
+        "email": list[1],
+      }.entries);
+    }
   }
 
   Future<void> createTask(String title, String detail, int priority, String category) async {
     Task task = Task(
-      // TODO listen to current user
-      "user",
-      // FirebaseAuth.instance.currentUser!.uid,
+      FirebaseAuth.instance.currentUser!.uid,
       title,
       Content(detail),
       priority,
@@ -92,10 +101,10 @@ class HelpDeskViewModel extends ChangeNotifier {
     );
     _helpDeskModel.addTask(task);
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
+    List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
-      // TODO listen to current user
-      "username": "Runn",
-      "email": "runn@gmail.com",
+      "username": list![0],
+      "email": list[1],
       "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
       "category": task.getCategory,
       "priority": convertToString(false, task.getPriority),
@@ -114,7 +123,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "detail": detail
     };
     taskDetail.addAll({"objectID": objectId!});
-    await _service.setDocument(docId, taskDetail);
+    await _serviceTask.setDocument(docId, taskDetail);
   }
 
   void cleanModel() {
@@ -131,12 +140,12 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task.firstWhere((element) {
     return element.containsValue(taskId);
     })[isStatus ? "status" : "priority"] = value;
-    await _service.editDocument(docId, {isStatus ? "status" : "priority": value});
+    await _serviceTask.editDocument(docId, {isStatus ? "status" : "priority": value});
     await _algolia.updateObject(objectId, {isStatus ? "status" : "priority": convertToString(isStatus, value)});
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
-    QuerySnapshot? query = await _service.getDocumnetByKeyValuePair(["id"], [id]);
+    QuerySnapshot? query = await _serviceTask.getDocumnetByKeyValuePair(["id"], [id]);
     if (query!.docs.isNotEmpty) {
       String docId = query.docs.first.id;
       String taskId = query.docs.first.get("id");
@@ -156,7 +165,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   // ------------- Listen to database and update data in application ---------------
-  void _addQueryData(DocumentSnapshot snapshot) {
+  Future<void> _addQueryData(DocumentSnapshot snapshot) async {
     Task task = Task(
       snapshot.get("ownerId"),
       snapshot.get("title"),
@@ -168,11 +177,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       status: snapshot.get("status")
     );
     _helpDeskModel.addTask(task);
-    _task.add(
-      formatTaskDetail(
-        _helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1)
-      )
-    );
+    _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
   }
 
   void _modifyQueryData(DocumentSnapshot snapshot, int index) {
@@ -194,7 +199,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.added) {
-        _addQueryData(doc);
+        await _addQueryData(doc);
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.modified) {
         int index = snapshot.docChanges[i].newIndex;
@@ -211,7 +216,7 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   Future<void> reconstructSearchResult(List<String> docIds) async {
     for (int i = 0; i < docIds.length; i++) {
-      DocumentSnapshot? doc = await _service.getDocumentById(docIds[i]);
+      DocumentSnapshot? doc = await _serviceTask.getDocumentById(docIds[i]);
       if (doc != null) {
         _addQueryData(doc);
       }

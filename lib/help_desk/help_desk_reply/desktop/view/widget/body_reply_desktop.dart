@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_reply_demo.dart';
 import 'package:senior_project/help_desk/help_desk_reply/desktop/view/widget/chat_input_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_reply/desktop/view/widget/description_desktop.dart';
@@ -10,6 +12,8 @@ class BodyReplyDesktop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    int? role = context.watch<AppViewModel>().app.getUser.getRole; 
+
     return Padding(
       padding: const EdgeInsets.only(right: 20),
       child: Row(
@@ -73,12 +77,12 @@ class BodyReplyDesktop extends StatelessWidget {
               ),
             ),
           ),
-          //TODO listen to user role
-          const Flexible(
-              fit: FlexFit.tight,
-              child: DescriptionDesktop(
-                isAdmin: true,
-              ))
+          Flexible(
+            fit: FlexFit.tight,
+            child: DescriptionDesktop(
+              isAdmin: role == 0 ? true : false,
+            )
+          )
         ],
       ),
     );

@@ -78,7 +78,11 @@ class FirebaseServices {
       late Query query;
       if ((key.length == value.length) && key.isNotEmpty) {
         for (int i = 0; i < key.length; i++) {
-          query = _collection.where(key[i], isEqualTo: value[i]);
+          if (i != 0) {
+            query = query.where(key[i], isEqualTo: value[i]);
+          } else {
+            query = _collection.where(key[i], isEqualTo: value[i]);
+          }
         }
       }
       return await query.get();
@@ -106,11 +110,15 @@ class FirebaseServices {
   Stream<QuerySnapshot?> listenToDocumentByKeyValuePair(
     List<String> key, 
     List<dynamic> value
-  )  {
+  ) {
     late Query query;
     if ((key.length == value.length) && key.isNotEmpty) {
       for (int i = 0; i < key.length; i++) {
-        query = _collection.where(key[i], isEqualTo: value[i]);
+        if (i != 0) {
+          query = query.where(key[i], isEqualTo: value[i]);
+        } else {
+          query = _collection.where(key[i], isEqualTo: value[i]);
+        }
       }
     }
     return query.snapshots();

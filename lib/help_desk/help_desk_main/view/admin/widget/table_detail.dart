@@ -11,6 +11,10 @@ import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_ico
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TableDetail {
+  final BuildContext context;
+  final Map<String, dynamic> detail;
+  const TableDetail({required this.detail, required this.context});
+
   static TextStyle _detailTextStyle(double size, Color color) {
     return TextStyle(
         fontFamily: AppFontStyle.font,
@@ -19,8 +23,7 @@ class TableDetail {
         fontSize: size);
   }
 
-  static List<Widget> widget(
-      BuildContext context, Map<String, dynamic> detail) {
+  List<Widget> widget() {
     List<Color> statusColor = StatusColor.getColor(false, detail["status"]);
     String priority = context.watch<HelpDeskViewModel>().convertToString(false, detail["priority"]);
     String status = context.watch<HelpDeskViewModel>().convertToString(true, detail["status"]);
@@ -29,7 +32,7 @@ class TableDetail {
     
     return [
       SizedBox(
-        width: 180,
+        width: 200,
         child: Row(
           children: [
             Padding(
@@ -42,19 +45,33 @@ class TableDetail {
                       shape: BoxShape.circle, color: Color(0x6629B6F6)),
                   child: const Icon(Icons.person)),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  detail["username"],
-                  style: _detailTextStyle(20, ColorConstant.whiteBlack80),
-                ),
-                Text(
-                  detail["email"],
-                  style: _detailTextStyle(12, ColorConstant.whiteBlack60),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(children: [
+                      TextSpan(
+                        text: detail["username"],
+                        style: _detailTextStyle(20, ColorConstant.whiteBlack80),
+                      )
+                    ]),
+                  ),
+                  RichText(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(children: [
+                      TextSpan(
+                        text: detail["email"],
+                        style: _detailTextStyle(12, ColorConstant.whiteBlack60),
+                      )
+                    ]),
+                  ),
+                ],
+              ),
             )
           ],
         ),
