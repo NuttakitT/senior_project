@@ -81,13 +81,14 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> formatTaskDetail(Map<String, dynamic> data) async {
-    List<String>? list = await _getUserdetail(data["ownerId"]);
-    data.addEntries({
-      "username": list![0],
-      "email": list[1],
-    }.entries);
-    return data;
+  Future<void> formatTaskDetail() async {
+    for (int i = 0; i < _task.length; i++) {
+      List<String>? list = await _getUserdetail(_task[i]["ownerId"]);
+      _task[i].addEntries({
+        "username": list![0],
+        "email": list[1],
+      }.entries);
+    }
   }
 
   Future<void> createTask(String title, String detail, int priority, String category) async {
@@ -178,8 +179,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       status: snapshot.get("status")
     );
     _helpDeskModel.addTask(task);
-    Map<String, dynamic> data = await formatTaskDetail( _helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
-    _task.add(data);
+    _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
   }
 
   void _modifyQueryData(DocumentSnapshot snapshot, int index) {

@@ -45,11 +45,13 @@ class AuthenticationViewModel extends ChangeNotifier {
   }
 
   void changeVisibilityState() {
-      _visibilityText = !_visibilityText;
-    }
+    _visibilityText = !_visibilityText;
+    notifyListeners();
+  }
 
   void changeShowPageState() {
     _isShowLoginPage = !_isShowLoginPage;
+    notifyListeners();
   }
 
   void clearModel() {

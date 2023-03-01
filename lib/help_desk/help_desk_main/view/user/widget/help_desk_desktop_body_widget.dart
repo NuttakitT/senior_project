@@ -62,6 +62,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
         builder: (context) {
           String searchText = context.watch<HelpDeskViewModel>().getSearchText;
           if (searchText.isEmpty) {
+            context.read<HelpDeskViewModel>().cleanModel();
             return StreamBuilder(
               stream: _stream,
               builder: (context, snapshot) {
@@ -112,22 +113,32 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
                 if (hits.isNotEmpty) {
                   List<String> docs = [];
                   for (var item in hits) {
-                    docs.add(item["docId"]);
+                    if (!docs.contains(item["docId"])) {
+                      docs.add(item["docId"]);
+                    }
                   }
                   context.read<HelpDeskViewModel>().cleanModel();
                   return FutureBuilder(
                     future: context.watch<HelpDeskViewModel>().reconstructSearchResult(docs),
                     builder: ((context, futureSnapshot) {
                       if (futureSnapshot.connectionState == ConnectionState.done) {
-                          List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                          return SizedBox(
-                            width: double.infinity,
-                            child: Column(
-                              children: generateContent(data),
-                            )
-                          );
-                        }
-                        return Container();
+                        List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+                        return FutureBuilder(
+                        future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+                        builder: (context, _) {
+                          if (_.connectionState == ConnectionState.done) {
+                              return SizedBox(
+                              width: double.infinity,
+                              child: Column(
+                                children: generateContent(data),
+                              )
+                            );
+                          }
+                          return const LoaderStatus(text: "Loading...");
+                        },
+                      );                         
+                      }
+                      return Container();
                     }),
                   );
                 }

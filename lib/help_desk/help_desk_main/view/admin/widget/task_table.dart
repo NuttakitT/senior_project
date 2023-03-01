@@ -85,6 +85,7 @@ class _TaskTableState extends State<TaskTable> {
           builder: (context) {
             String searchText = context.watch<HelpDeskViewModel>().getSearchText;
             if (searchText.isEmpty) {
+              context.read<HelpDeskViewModel>().cleanModel();
               return StreamBuilder(
                 stream: _stream,
                 builder: (context, snapshot) {
@@ -98,18 +99,26 @@ class _TaskTableState extends State<TaskTable> {
                         builder: (context, futureSnapshot) {
                           if (futureSnapshot.connectionState == ConnectionState.done) {
                             List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                            return SizedBox(
-                              height: 680 + (screenHeight - 960),
-                              child: Scrollbar(
-                                controller: _vController,
-                                thumbVisibility: true,
-                                child: SingleChildScrollView(
-                                  controller: _vController,
-                                  child: Column(
-                                    children: generateContent(data)
-                                  ),
-                                ),
-                              )
+                            return FutureBuilder(
+                              future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+                              builder: (context, _) {
+                                if (_.connectionState == ConnectionState.done) {
+                                  return SizedBox(
+                                    height: 680 + (screenHeight - 960),
+                                    child: Scrollbar(
+                                      controller: _vController,
+                                      thumbVisibility: true,
+                                      child: SingleChildScrollView(
+                                        controller: _vController,
+                                        child: Column(
+                                          children: generateContent(data)
+                                        ),
+                                      ),
+                                    )
+                                  );
+                                }
+                                return const LoaderStatus(text: "Loading...");
+                              },
                             );
                           }
                           return Container();
@@ -137,25 +146,35 @@ class _TaskTableState extends State<TaskTable> {
                   if (hits.isNotEmpty) {
                     List<String> docs = [];
                     for (var item in hits) {
-                      docs.add(item["docId"]);
+                      if (!docs.contains(item["docId"])) {
+                        docs.add(item["docId"]);
+                      }
                     }
                     context.read<HelpDeskViewModel>().cleanModel();
                     return FutureBuilder(
                       future: context.watch<HelpDeskViewModel>().reconstructSearchResult(docs),
                       builder: ((context, snapshot) {
                         List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                        return SizedBox(
-                          height: 680 + (screenHeight - 960),
-                          child: Scrollbar(
-                            controller: _vController,
-                            thumbVisibility: true,
-                            child: SingleChildScrollView(
-                              controller: _vController,
-                              child: Column(
-                                children: generateContent(data)
-                              ),
-                            ),
-                          )
+                        return FutureBuilder(
+                          future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+                          builder: (context, _) {
+                            if (_.connectionState == ConnectionState.done) {
+                              return SizedBox(
+                                height: 680 + (screenHeight - 960),
+                                child: Scrollbar(
+                                  controller: _vController,
+                                  thumbVisibility: true,
+                                  child: SingleChildScrollView(
+                                    controller: _vController,
+                                    child: Column(
+                                      children: generateContent(data)
+                                    ),
+                                  ),
+                                )
+                              );
+                            }
+                            return const LoaderStatus(text: "Loading...");
+                          },
                         );
                       }),
                     );

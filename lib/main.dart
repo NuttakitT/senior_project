@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/description_mobile.dart';
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
         builder: (context, _) {
           if (_.connectionState == ConnectionState.done) {
             // context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
-            return HelpDeskMainView(isAdmin: true,);
+            return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0 ? true : false,);
           }
           return Container();
         }
