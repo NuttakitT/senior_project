@@ -79,6 +79,7 @@ class RoleSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
     double screenWidth = MediaQuery.of(context).size.width;
 

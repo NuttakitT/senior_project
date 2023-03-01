@@ -41,7 +41,7 @@ class _MainMenuState extends State<MainMenu> {
     bool isTeacherContactSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(3);
     bool isFaqSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(4);
     bool isProfileSelected = context.watch<TemplateDesktopViewModel>().getNavBarState(5);
-    bool isLogin = context.watch<AppViewModel>().hasUser;
+    bool isLogin = context.watch<AppViewModel>().isLogin;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -271,15 +271,15 @@ class _MainMenuState extends State<MainMenu> {
                 onTap: () {
                   if (isLogin) {
                     context.read<AppViewModel>().logout();
-                  } else {
-                    Navigator.pushAndRemoveUntil(
-                      context, 
-                      MaterialPageRoute(builder: (context) {
-                        return const AuthenticationPage();
-                      }), 
-                      (route) => false
-                    );
-                  }
+                  } 
+                  context.read<TemplateDesktopViewModel>().changeState(5, 1);
+                  Navigator.pushAndRemoveUntil(
+                    context, 
+                    MaterialPageRoute(builder: (context) {
+                      return MyProfileView();
+                    }), 
+                    (route) => false
+                  );
                 },
               ),
             ),

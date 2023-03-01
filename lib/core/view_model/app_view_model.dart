@@ -49,7 +49,8 @@ class AppViewModel extends ChangeNotifier {
     app.setAppUser = AppUser();
     _isLogin = false;
     notifyListeners();
+    FirebaseAuth.instance.signOut();
   }
 
-  bool get hasUser => _isLogin;
+  bool get isLogin => _isLogin;
 }

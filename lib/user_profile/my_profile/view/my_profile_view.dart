@@ -35,7 +35,7 @@ class MyProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int? role = context.watch<AppViewModel>().app.getUser.getRole; 
-    if (!context.watch<AppViewModel>().hasUser) {
+    if (!context.watch<AppViewModel>().isLogin) {
       return const AuthenticationPage();
     }
     if (role == 0) {

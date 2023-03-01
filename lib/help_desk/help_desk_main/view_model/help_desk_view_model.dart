@@ -178,7 +178,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       status: snapshot.get("status")
     );
     _helpDeskModel.addTask(task);
-    Map<String, dynamic> data = await  formatTaskDetail( _helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
+    Map<String, dynamic> data = await formatTaskDetail( _helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
     _task.add(data);
   }
 

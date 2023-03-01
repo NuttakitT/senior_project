@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
         ),
         builder: (context, _) {
           if (_.connectionState == ConnectionState.done) {
-            context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
-            return MyProfileView();
+            // context.read<AppViewModel>().selectView(MediaQuery.of(context).size.width);
+            return HelpDeskMainView(isAdmin: true,);
           }
           return Container();
         }

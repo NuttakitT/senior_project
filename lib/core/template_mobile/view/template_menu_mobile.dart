@@ -33,7 +33,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    bool isLogin = context.watch<AppViewModel>().hasUser;
+    bool isLogin = context.watch<AppViewModel>().isLogin;
     bool homeState = context.watch<TemplateMobileViewModel>().getMenuState(0);
     bool helpDeskState =
         context.watch<TemplateMobileViewModel>().getMenuState(1);
