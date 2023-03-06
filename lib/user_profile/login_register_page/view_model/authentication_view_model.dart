@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class AuthenticationViewModel extends ChangeNotifier {
   bool _isEmptyUsername = false;
   bool _visibilityText = true;
   bool _isShowLoginPage = true;
+  final int seed = Random().nextInt(100);
 
   bool get getVisibilityState => _visibilityText;
   bool get getIsShowLoginPage => _isShowLoginPage;
@@ -129,7 +131,7 @@ class AuthenticationViewModel extends ChangeNotifier {
       final secret = await FirebaseServices("user").getDocumnetByKeyValuePair(["email"], [registerModel.getEmail]);
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: registerModel.getEmail, 
-        password: Cryptor.encrypt(registerModel.getPassword as String, customSeed: int.parse(secret!.docs.first.get("secret")))[0]
+        password: Cryptor.encrypt(registerModel.getPassword as String, customSeed: secret!.docs.first.get("secret"))[0]
       );
       if (!credential.user!.emailVerified) {
         _errorText = "Please verify your email to login.";
@@ -161,16 +163,15 @@ class AuthenticationViewModel extends ChangeNotifier {
         notifyListeners();
         return false;
       }
-      int now = DateTime.now().second;
       final creadential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: registerModel.getEmail, 
-        password: Cryptor.encrypt(registerModel.getPassword as String, customSeed: now)[0]
+        password: Cryptor.encrypt(registerModel.getPassword as String, customSeed: seed)[0]
       );
       Map<String, dynamic> detail = {
         "id": creadential.user!.uid,
         "email": creadential.user!.email as String,
-        "username": Cryptor.encrypt(registerModel.getUsername, customSeed: now)[0],
-        "secret": now.toString()
+        "username": Cryptor.encrypt(registerModel.getUsername, customSeed: seed)[0],
+        "secret": seed
       };
       FirebaseServices("user").setDocument(
         creadential.user!.uid,
@@ -193,7 +194,6 @@ class AuthenticationViewModel extends ChangeNotifier {
   
   Future<bool> googleSignIn(BuildContext context) async {
     try {
-      int now = DateTime.now().second;
       GoogleAuthProvider provider = GoogleAuthProvider();
       provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
@@ -208,8 +208,8 @@ class AuthenticationViewModel extends ChangeNotifier {
           {
             "id": credential.user!.uid,
             "email": credential.user!.email as String,
-            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: now),
-            "secret": now.toString()
+            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: seed),
+            "secret": seed
           }
         );
       }
@@ -222,7 +222,6 @@ class AuthenticationViewModel extends ChangeNotifier {
 
   Future<bool> facebookSignIn(BuildContext context) async {
     try {
-      int now = DateTime.now().second;
       FacebookAuthProvider  provider = FacebookAuthProvider ();
       provider.addScope("email");
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
@@ -237,8 +236,8 @@ class AuthenticationViewModel extends ChangeNotifier {
           {
             "id": credential.user!.uid,
             "email": credential.user!.email as String,
-            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: now),
-            "secret": now.toString()
+            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: seed),
+            "secret": seed
           }
         );
       }
