@@ -243,7 +243,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   get getSearchText => _searchText;
-HitsSearcher get getHitsSearcher => _hitSearch;
+  HitsSearcher get getHitsSearcher => _hitSearch;
   void setSearchText(String text) {
     if (text.isNotEmpty) {
       _searchText = Cryptor.encrypt(text, customSeed: seed)[0];
