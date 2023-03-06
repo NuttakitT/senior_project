@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/cryptor.dart';
 import 'package:senior_project/user_profile/login_register_page/model/register_model.dart';
 
 class AuthenticationViewModel extends ChangeNotifier {
@@ -107,22 +108,28 @@ class AuthenticationViewModel extends ChangeNotifier {
   }
 
   Map<String, dynamic> storeAppUser(DocumentSnapshot snapshot) {
+    List<String> list = ["id", "email", "role", "gender", "secret", "birthday", "linkId"];
     Map<String, dynamic> result = {};
     String data = snapshot.data().toString();
     data = data.substring(1, data.length-1);
     List<String> chunk = data.split(", ");
     for (int i = 0; i < chunk.length; i++) {
       List<String> chunkData = chunk[i].split(": ");
-      result[chunkData[0]] = chunkData[1];
+      if (!list.contains(chunkData[0])) {
+        result[chunkData[0]] = Cryptor.decrypt(chunkData[1]);
+      } else {
+        result[chunkData[0]] = chunkData[1];
+      }
     }
     return result;
   }
 
   Future<bool> loginUser(BuildContext context) async {
     try {
+      final secret = await FirebaseServices("user").getDocumnetByKeyValuePair(["email"], [registerModel.getEmail]);
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: registerModel.getEmail, 
-        password: registerModel.getPassword as String
+        password: Cryptor.encrypt(registerModel.getPassword as String, customSeed: int.parse(secret!.docs.first.get("secret")))[0]
       );
       if (!credential.user!.emailVerified) {
         _errorText = "Please verify your email to login.";
@@ -140,7 +147,7 @@ class AuthenticationViewModel extends ChangeNotifier {
       notifyListeners();
       return false;
     } catch (e) {
-      _errorText = "An error occurred, Please try again";
+      _errorText = "An error occurred, $e";
       notifyListeners();
       return false;
     }
@@ -154,21 +161,22 @@ class AuthenticationViewModel extends ChangeNotifier {
         notifyListeners();
         return false;
       }
+      int now = DateTime.now().second;
       final creadential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: registerModel.getEmail, 
-        password: registerModel.getPassword as String
+        password: Cryptor.encrypt(registerModel.getPassword as String, customSeed: now)[0]
       );
       Map<String, dynamic> detail = {
         "id": creadential.user!.uid,
         "email": creadential.user!.email as String,
-        "username": registerModel.getUsername,
+        "username": Cryptor.encrypt(registerModel.getUsername, customSeed: now)[0],
+        "secret": now.toString()
       };
       FirebaseServices("user").setDocument(
         creadential.user!.uid,
         detail
       );
       FirebaseAuth.instance.currentUser?.sendEmailVerification();
-      context.read<AppViewModel>().setLoggedInUser(detail);
       _errorText = "";
       notifyListeners();
       return true;
@@ -177,7 +185,7 @@ class AuthenticationViewModel extends ChangeNotifier {
       notifyListeners();
       return false;
     } catch (e) {
-      _errorText = "An error occurred, Please try again";
+      _errorText = "An error occurred, $e";
       notifyListeners();
       return false;
     }
@@ -185,6 +193,7 @@ class AuthenticationViewModel extends ChangeNotifier {
   
   Future<bool> googleSignIn(BuildContext context) async {
     try {
+      int now = DateTime.now().second;
       GoogleAuthProvider provider = GoogleAuthProvider();
       provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
@@ -199,6 +208,8 @@ class AuthenticationViewModel extends ChangeNotifier {
           {
             "id": credential.user!.uid,
             "email": credential.user!.email as String,
+            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: now),
+            "secret": now.toString()
           }
         );
       }
@@ -211,6 +222,7 @@ class AuthenticationViewModel extends ChangeNotifier {
 
   Future<bool> facebookSignIn(BuildContext context) async {
     try {
+      int now = DateTime.now().second;
       FacebookAuthProvider  provider = FacebookAuthProvider ();
       provider.addScope("email");
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
@@ -225,6 +237,8 @@ class AuthenticationViewModel extends ChangeNotifier {
           {
             "id": credential.user!.uid,
             "email": credential.user!.email as String,
+            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: now),
+            "secret": now.toString()
           }
         );
       }
