@@ -77,7 +77,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   Future<List<String>?> _getUserdetail(String uid) async {
     final doc = await _serviceUser.getDocumentById(uid);
     if (doc != null) {
-      return [Cryptor.decrypt(doc.get("username")), doc.get("email")];
+      return [doc.get("username"), doc.get("email")];
     } else {
       return null;
     }
@@ -105,9 +105,9 @@ class HelpDeskViewModel extends ChangeNotifier {
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
-      "username": Cryptor.encrypt(list![0], customSeed: seed)[0],
+      "username": list![0],
       "email": Cryptor.encrypt(list[1], customSeed: seed)[0],
-      "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
+      "dateCreate": Cryptor.encrypt(DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate), customSeed: seed)[0],
       "category": Cryptor.encrypt(task.getCategory, customSeed: seed)[0],
       "priority": Cryptor.encrypt(convertToString(false, task.getPriority), customSeed: seed)[0],
       "status": Cryptor.encrypt(convertToString(true, task.getStatus), customSeed: seed)[0],

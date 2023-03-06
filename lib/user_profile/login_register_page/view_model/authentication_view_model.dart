@@ -18,7 +18,6 @@ class AuthenticationViewModel extends ChangeNotifier {
   bool _isEmptyUsername = false;
   bool _visibilityText = true;
   bool _isShowLoginPage = true;
-  final int seed = Random().nextInt(100);
 
   bool get getVisibilityState => _visibilityText;
   bool get getIsShowLoginPage => _isShowLoginPage;
@@ -110,7 +109,7 @@ class AuthenticationViewModel extends ChangeNotifier {
   }
 
   Map<String, dynamic> storeAppUser(DocumentSnapshot snapshot) {
-    List<String> list = ["id", "email", "role", "gender", "secret", "birthday", "linkId"];
+    List<String> list = ["id", "username", "email", "role", "gender", "secret", "birthday", "linkId"];
     Map<String, dynamic> result = {};
     String data = snapshot.data().toString();
     data = data.substring(1, data.length-1);
@@ -157,6 +156,7 @@ class AuthenticationViewModel extends ChangeNotifier {
 
   Future<bool> createUser(BuildContext context) async {
     try {
+      final int seed = Random().nextInt(100);
       final doc = await FirebaseServices("user").getDocumnetByKeyValuePair(["username"], [registerModel.getUsername]);
       if (doc != null && doc.size != 0) {
         _errorText = "Username already in user.";
@@ -170,7 +170,7 @@ class AuthenticationViewModel extends ChangeNotifier {
       Map<String, dynamic> detail = {
         "id": creadential.user!.uid,
         "email": creadential.user!.email as String,
-        "username": Cryptor.encrypt(registerModel.getUsername, customSeed: seed)[0],
+        "username": registerModel.getUsername,
         "secret": seed
       };
       FirebaseServices("user").setDocument(
@@ -194,6 +194,7 @@ class AuthenticationViewModel extends ChangeNotifier {
   
   Future<bool> googleSignIn(BuildContext context) async {
     try {
+      final int seed = Random().nextInt(100);
       GoogleAuthProvider provider = GoogleAuthProvider();
       provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
@@ -222,6 +223,7 @@ class AuthenticationViewModel extends ChangeNotifier {
 
   Future<bool> facebookSignIn(BuildContext context) async {
     try {
+      final int seed = Random().nextInt(100);
       FacebookAuthProvider  provider = FacebookAuthProvider ();
       provider.addScope("email");
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);

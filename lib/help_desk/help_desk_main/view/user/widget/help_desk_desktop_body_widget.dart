@@ -1,3 +1,4 @@
+import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,6 +56,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
   @override
   Widget build(BuildContext context) {
     var bodyPadding = const EdgeInsets.fromLTRB(77, 40, 20, 0);
+    String username = context.watch<AppViewModel>().app.getUser.getUsername;
 
     return Padding(
       padding: bodyPadding,
@@ -101,8 +103,6 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
               },
             );
           }
-          // String username = context.watch<AppViewModel>().app.getUser.getUsername; 
-          // TODO add filter username
           context.read<HelpDeskViewModel>().getHitsSearcher.query(searchText);
           return StreamBuilder(
             stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
@@ -115,7 +115,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
                 if (hits.isNotEmpty) {
                   List<String> docs = [];
                   for (var item in hits) {
-                    if (!docs.contains(item["docId"])) {
+                    if (!docs.contains(item["docId"]) && item["username"] == username) {
                       docs.add(item["docId"]);
                     }
                   }
