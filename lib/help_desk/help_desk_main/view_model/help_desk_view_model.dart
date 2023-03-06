@@ -9,6 +9,7 @@ import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/content.dart';
 import 'package:senior_project/core/model/help_desk/task.dart';
+import 'package:senior_project/core/view_model/cryptor.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
 
 class HelpDeskViewModel extends ChangeNotifier {
@@ -19,6 +20,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
   final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
+  final int seed = 100;
 
   String convertToString(bool isStatus, int taskState) {
     if (isStatus) {
@@ -75,7 +77,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   Future<List<String>?> _getUserdetail(String uid) async {
     final doc = await _serviceUser.getDocumentById(uid);
     if (doc != null) {
-      return [doc.get("username"), doc.get("email")];
+      return [Cryptor.decrypt(doc.get("username")), doc.get("email")];
     } else {
       return null;
     }
@@ -103,24 +105,24 @@ class HelpDeskViewModel extends ChangeNotifier {
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
-      "username": list![0],
-      "email": list[1],
+      "username": Cryptor.encrypt(list![0], customSeed: seed)[0],
+      "email": Cryptor.encrypt(list[1], customSeed: seed)[0],
       "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
-      "category": task.getCategory,
-      "priority": convertToString(false, task.getPriority),
-      "status": convertToString(true, task.getStatus),
-      "title": task.getTitle,
-      "detail": detail
+      "category": Cryptor.encrypt(task.getCategory, customSeed: seed)[0],
+      "priority": Cryptor.encrypt(convertToString(false, task.getPriority), customSeed: seed)[0],
+      "status": Cryptor.encrypt(convertToString(true, task.getStatus), customSeed: seed)[0],
+      "title": Cryptor.encrypt(task.getTitle, customSeed: seed)[0],
+      "detail":Cryptor.encrypt(detail, customSeed: seed)[0] 
     });
     Map<String, dynamic> taskDetail = {
       "id": task.getId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
-      "category": task.getCategory,
+      "category": Cryptor.encrypt(task.getCategory, customSeed: seed)[0],
       "priority": task.getPriority,
       "status": task.getStatus,
-      "title": task.getTitle,
-      "detail": detail
+      "title": Cryptor.encrypt(task.getTitle, customSeed: seed)[0],
+      "detail": Cryptor.encrypt(detail, customSeed: seed)[0]
     };
     taskDetail.addAll({"objectID": objectId!});
     await _serviceTask.setDocument(docId, taskDetail);
@@ -141,7 +143,9 @@ class HelpDeskViewModel extends ChangeNotifier {
     return element.containsValue(taskId);
     })[isStatus ? "status" : "priority"] = value;
     await _serviceTask.editDocument(docId, {isStatus ? "status" : "priority": value});
-    await _algolia.updateObject(objectId, {isStatus ? "status" : "priority": convertToString(isStatus, value)});
+    await _algolia.updateObject(objectId, {
+      isStatus ? "status" : "priority": Cryptor.encrypt(convertToString(isStatus, value), customSeed: seed)[0]
+    });
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
@@ -168,10 +172,10 @@ class HelpDeskViewModel extends ChangeNotifier {
   Future<void> _addQueryData(DocumentSnapshot snapshot) async {
     Task task = Task(
       snapshot.get("ownerId"),
-      snapshot.get("title"),
-      Content(snapshot.get("detail")),
+      Cryptor.decrypt(snapshot.get("title")),
+      Content(Cryptor.decrypt(snapshot.get("detail"))),
       snapshot.get("priority"),
-      snapshot.get("category"),
+      Cryptor.decrypt(snapshot.get("category")),
       id: snapshot.get("id"),
       dateCreate: snapshot.get("dateCreate").toDate(),
       status: snapshot.get("status")
@@ -242,7 +246,7 @@ class HelpDeskViewModel extends ChangeNotifier {
 HitsSearcher get getHitsSearcher => _hitSearch;
   void setSearchText(String text) {
     if (text.isNotEmpty) {
-      _searchText = text;
+      _searchText = Cryptor.encrypt(text, customSeed: seed)[0];
     } else {
       _searchText = "";
     }
