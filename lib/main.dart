@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/core/view_model/cryptor.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/description_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_reply/desktop/view/page/help_desk_reply_desktop.dart';
@@ -47,20 +48,20 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FutureBuilder(
-        future: context.read<AppViewModel>().initializeLoginState(
-          context,
-          FirebaseAuth.instance.currentUser == null 
-          ? false 
-          : true
-        ),
-        builder: (context, _) {
-          if (_.connectionState == ConnectionState.done) {
-            return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0 ? true : false,);
-          }
-          return Container();
-        }
-      )
+      home:  FutureBuilder(
+            future: context.read<AppViewModel>().initializeLoginState(
+              context,
+              FirebaseAuth.instance.currentUser == null 
+              ? false 
+              : true
+            ),
+            builder: (context, _) {
+              if (_.connectionState == ConnectionState.done) {
+                return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0 ? true : false,);
+              }
+              return Container();
+            }
+          ),
     );
   }
 }
