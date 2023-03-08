@@ -24,7 +24,6 @@ class DescriptionMobile extends StatelessWidget {
                 Icons.cancel_rounded,
                 color: ColorConstant.whiteBlack80,
               ),
-              //TODO close popup
               onTap: () {
                 Navigator.pop(context);
               },

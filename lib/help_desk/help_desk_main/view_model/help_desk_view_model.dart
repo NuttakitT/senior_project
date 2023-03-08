@@ -21,6 +21,13 @@ class HelpDeskViewModel extends ChangeNotifier {
   List<Map<String, dynamic>> _task = [];
   final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
   final int seed = 100;
+  // TODO testing reply page
+  bool _showReplyPage = false;
+  void changeReplyPageState(bool state) {
+    _showReplyPage = state;
+    notifyListeners();
+  }
+  get getIsShowReplyPage => _showReplyPage;
 
   String convertToString(bool isStatus, int taskState) {
     if (isStatus) {

@@ -24,7 +24,7 @@ class _HelpDeskReplyMobileState extends State<HelpDeskReplyMobile> {
               color: ColorConstant.whiteBlack80,
             ),
             onTap: () {
-              //TODO back to help desk main page
+              Navigator.pop(context);
             },
           ),
           //TODO pull name from back-end

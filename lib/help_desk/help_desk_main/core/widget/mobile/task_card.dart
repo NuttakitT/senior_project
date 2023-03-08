@@ -8,6 +8,7 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_reply/mobile/view/page/help_desk_reply_mobile.dart';
 
 class TaskCard extends StatefulWidget {
   final Map<String, dynamic> detail;
@@ -45,7 +46,11 @@ class _TaskCardState extends State<TaskCard> {
       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
       child: InkWell(
         onTap: () {
-          // TODO link to reply channel
+          Navigator.push(context, 
+            MaterialPageRoute(builder: (context) {
+              return const HelpDeskReplyMobile();
+            })
+          );
         },
         child: FittedBox(
           fit: BoxFit.scaleDown,
