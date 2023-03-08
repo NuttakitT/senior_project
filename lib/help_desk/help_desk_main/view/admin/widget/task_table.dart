@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/header_table.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/table_detail.dart';
@@ -77,6 +78,7 @@ class _TaskTableState extends State<TaskTable> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    String username = context.watch<AppViewModel>().app.getUser.getUsername;
     
     return Column(
       children: [
@@ -146,7 +148,7 @@ class _TaskTableState extends State<TaskTable> {
                   if (hits.isNotEmpty) {
                     List<String> docs = [];
                     for (var item in hits) {
-                      if (!docs.contains(item["docId"])) {
+                      if (!docs.contains(item["docId"]) && item["username"] == username) {
                         docs.add(item["docId"]);
                       }
                     }
