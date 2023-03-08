@@ -6,9 +6,10 @@ import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/view_model/cryptor.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/mobile/widget/description_mobile.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/desktop/page/help_desk_reply_desktop.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/mobile/page/help_desk_reply_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/description_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/help_desk_reply_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/help_desk_reply_mobile.dart';
 import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -56,12 +57,8 @@ class MyApp extends StatelessWidget {
               : true
             ),
             builder: (context, _) {
-              bool isMobile = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
               if (_.connectionState == ConnectionState.done) {
-                if (isMobile) {
-                  return const HelpDeskReplyMobile();
-                }
-                return const HelpDeskReplyDesktop();
+                return const HelpDeskReplyPage();
                 // return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0 ? true : false,);
               }
               return Container();

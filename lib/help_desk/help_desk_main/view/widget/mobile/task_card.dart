@@ -8,7 +8,7 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/mobile/page/help_desk_reply_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
 
 class TaskCard extends StatefulWidget {
   final Map<String, dynamic> detail;
@@ -48,7 +48,7 @@ class _TaskCardState extends State<TaskCard> {
         onTap: () {
           Navigator.push(context, 
             MaterialPageRoute(builder: (context) {
-              return const HelpDeskReplyMobile();
+              return const HelpDeskReplyPage();
             })
           );
         },

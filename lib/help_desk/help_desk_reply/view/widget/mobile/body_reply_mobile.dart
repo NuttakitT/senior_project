@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/mobile/widget/chat_input_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/chat_input_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/message.dart';
 
 class BodyReplyMobile extends StatefulWidget {

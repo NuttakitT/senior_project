@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/desktop/widget/chat_input_desktop.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/desktop/widget/description_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/chat_input_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/description_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/message.dart';
 
 class BodyReplyDesktop extends StatefulWidget {

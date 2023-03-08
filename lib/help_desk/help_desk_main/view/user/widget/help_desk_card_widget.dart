@@ -8,7 +8,7 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/desktop/page/help_desk_reply_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
 
 class HelpDeskCardWidget {
   final Map<String, dynamic> card;
@@ -166,11 +166,10 @@ class HelpDeskCardWidget {
                         height: 56.0,
                         child: TextButton(
                           onPressed: () {
-                            // TODO link to reply
                             Navigator.pushAndRemoveUntil(
                               context, 
                               MaterialPageRoute(builder: (context) {
-                                return const HelpDeskReplyDesktop();
+                                return const HelpDeskReplyPage();
                               }), 
                               (route) => false
                             );

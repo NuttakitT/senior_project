@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/mobile/widget/body_reply_mobile.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/mobile/widget/description_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/body_reply_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/description_mobile.dart';
 
 class HelpDeskReplyMobile extends StatefulWidget {
   const HelpDeskReplyMobile({super.key});
