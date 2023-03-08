@@ -6,10 +6,12 @@ import 'package:senior_project/help_desk/help_desk_reply/view/widget/text_messag
 class Message extends StatelessWidget {
   final String text;
   final bool isSender;
+  final bool isMobile;
   const Message({
     Key? key,
     required this.text,
     required this.isSender,
+    required this.isMobile
   }) : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class Message extends StatelessWidget {
           TextMessage(
             text: text,
             isSender: isSender,
+            isMobile: isMobile,
           ),
           //status
           if (isSender) const MessageStatusDot()

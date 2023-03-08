@@ -93,6 +93,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                         itemBuilder: (context, index) => Message(
                           isSender:  data[index]["isSender"],
                           text: data[index]["text"],
+                          isMobile: false,
                         ),
                       ),
                     ),

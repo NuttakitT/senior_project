@@ -41,6 +41,7 @@ class _BodyReplyMobileState extends State<BodyReplyMobile> {
               itemBuilder: (context, index) => Message(
                 isSender:  data[index]["isSender"],
                 text: data[index]["text"],
+                isMobile: true,
               ),
             ),
           ),
