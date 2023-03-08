@@ -8,7 +8,7 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_reply/mobile/view/page/help_desk_reply_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/mobile/page/help_desk_reply_mobile.dart';
 
 class TaskCard extends StatefulWidget {
   final Map<String, dynamic> detail;
