@@ -121,7 +121,6 @@ class _ActionButtonState extends State<ActionButton> {
               ),
               onTap: () {
                 // TODO link to reply (white oahge when redirecr)
-                context.read<HelpDeskViewModel>().changeReplyPageState(true);
                 Navigator.pop(context);
                 // Navigator.pushAndRemoveUntil(
                 //   context, 

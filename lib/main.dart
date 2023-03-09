@@ -10,6 +10,7 @@ import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_rep
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/description_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/help_desk_reply_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/help_desk_reply_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -33,6 +34,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => HelpDeskViewModel()),
         ChangeNotifierProvider(create: (context) => TemplateDesktopViewModel()),
         ChangeNotifierProvider(create: (context) => TemplateMobileViewModel()),
+        ChangeNotifierProvider(create: (context) => ReplyChannelViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -58,8 +60,8 @@ class MyApp extends StatelessWidget {
             ),
             builder: (context, _) {
               if (_.connectionState == ConnectionState.done) {
-                return const HelpDeskReplyPage();
-                // return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0 ? true : false,);
+                // return const HelpDeskReplyPage();
+                return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0 ? true : false,);
               }
               return Container();
             }

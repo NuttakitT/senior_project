@@ -48,7 +48,13 @@ class _TaskCardState extends State<TaskCard> {
         onTap: () {
           Navigator.push(context, 
             MaterialPageRoute(builder: (context) {
-              return const HelpDeskReplyPage();
+              return HelpDeskReplyPage(
+                taskId: widget.detail["id"],
+                taskTitle: widget.detail["title"],
+                taskDetail: widget.detail["detail"],
+                priority: widget.detail["priority"],
+                status: widget.detail["status"],
+              );
             })
           );
         },

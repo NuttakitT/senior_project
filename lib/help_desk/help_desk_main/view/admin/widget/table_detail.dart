@@ -9,6 +9,7 @@ import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/action_button.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
 
 class TableDetail {
   final BuildContext context;
@@ -190,7 +191,24 @@ class TableDetail {
         child: 
         Align(
           alignment: Alignment.center,
-          child: ActionButton(id: detail["id"],),
+          child: TextButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context, 
+                MaterialPageRoute(builder: (context) {
+                  return HelpDeskReplyPage(
+                    taskId: detail["id"],
+                    taskTitle: detail["title"],
+                    taskDetail: detail["detail"],
+                    priority: detail["priority"],
+                    status: detail["status"],
+                  );
+                }), 
+                (route) => false
+              );
+            }, child: Text("test"),
+          ),
+          // child: ActionButton(id: detail["id"],),
         )
       )
     ];

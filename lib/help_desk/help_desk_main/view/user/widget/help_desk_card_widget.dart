@@ -169,7 +169,13 @@ class HelpDeskCardWidget {
                             Navigator.pushAndRemoveUntil(
                               context, 
                               MaterialPageRoute(builder: (context) {
-                                return const HelpDeskReplyPage();
+                                return HelpDeskReplyPage(
+                                  taskId: card["id"],
+                                  taskTitle: card["title"],
+                                  taskDetail: card["detail"],
+                                  priority: card["priority"],
+                                  status: card["status"],
+                                );
                               }), 
                               (route) => false
                             );
