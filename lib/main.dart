@@ -7,6 +7,7 @@ import 'package:senior_project/core/template_community_board/view/mobile/page/te
 import 'package:senior_project/core/template_community_board/view/mobile/widget/community_content_mobile.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/core/view_model/cryptor.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/description_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_reply/desktop/view/page/help_desk_reply_desktop.dart';
@@ -46,18 +47,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Test',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: FutureBuilder(
-            future: context.read<AppViewModel>().initializeLoginState(context,
-                FirebaseAuth.instance.currentUser == null ? false : true),
-            builder: (context, _) {
-              if (_.connectionState == ConnectionState.done) {
-                return const TemplateCommunityBoardDesktop();
-              }
-              return Container();
-            }));
+      title: 'CPE Services',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: FutureBuilder(
+          future: context.read<AppViewModel>().initializeLoginState(context,
+              FirebaseAuth.instance.currentUser == null ? false : true),
+          builder: (context, _) {
+            if (_.connectionState == ConnectionState.done) {
+              return HelpDeskMainView(
+                isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0
+                    ? true
+                    : false,
+              );
+            }
+            return Container();
+          }),
+    );
   }
 }

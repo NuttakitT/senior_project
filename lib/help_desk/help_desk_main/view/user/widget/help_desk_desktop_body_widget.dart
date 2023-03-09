@@ -1,9 +1,11 @@
+import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/cryptor.dart';
 import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_card_widget.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -54,6 +56,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
   @override
   Widget build(BuildContext context) {
     var bodyPadding = const EdgeInsets.fromLTRB(77, 40, 20, 0);
+    String username = context.watch<AppViewModel>().app.getUser.getUsername;
 
     return Padding(
       padding: bodyPadding,
@@ -100,8 +103,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
               },
             );
           }
-          String username = context.watch<AppViewModel>().app.getUser.getUsername; 
-          context.read<HelpDeskViewModel>().getHitsSearcher.query("$username $searchText");
+          context.read<HelpDeskViewModel>().getHitsSearcher.query(searchText);
           return StreamBuilder(
             stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
             builder: (context, snapshot) {
@@ -113,7 +115,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
                 if (hits.isNotEmpty) {
                   List<String> docs = [];
                   for (var item in hits) {
-                    if (!docs.contains(item["docId"])) {
+                    if (!docs.contains(item["docId"]) && item["username"] == username) {
                       docs.add(item["docId"]);
                     }
                   }

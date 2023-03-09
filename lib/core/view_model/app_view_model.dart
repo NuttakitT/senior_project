@@ -37,9 +37,8 @@ class AppViewModel extends ChangeNotifier {
         Map<String, dynamic> detail = context.read<AuthenticationViewModel>().storeAppUser(snapshot);
         setLoggedInUser(detail);
       }
-    } else {
-      _isLogin = false;
-    }
+    } 
+    _isLogin = state;
   }
 
   Future<void> logout() async {

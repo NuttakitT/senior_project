@@ -108,14 +108,15 @@ class _MainMenuState extends State<MainMenu> {
                   onTap: () {
                     context.read<TemplateDesktopViewModel>().changeState(1, 1);
                     int? role = context.read<AppViewModel>().app.getUser.getRole;
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                       context, 
                       MaterialPageRoute(builder: (context) => 
                         HelpDeskMainView(isAdmin: role == 0
                           ? true 
                           : false
                         )
-                      )
+                      ), 
+                      (route) => false
                     );
                   },
                 ),

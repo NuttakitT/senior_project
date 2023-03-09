@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
-import 'package:senior_project/core/model/user/app_user.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class RoleSelectionViewModel extends ChangeNotifier{
