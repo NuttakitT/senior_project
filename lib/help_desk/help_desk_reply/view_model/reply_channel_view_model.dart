@@ -32,10 +32,10 @@ class ReplyChannelViewModel extends ChangeNotifier {
   }
 
   void reconstructData(QuerySnapshot snapshot) {
-    for (int i = 0; i < snapshot.docChanges.length-1; i++) {
+    for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.added) {
-        _model.addReply(doc.get("ownerId"), doc.get("message"), doc.get("time"), doc.get("seen"));
+        _model.addReply(doc.get("ownerId"), doc.get("message"), (doc.get("time") as Timestamp).toDate(), doc.get("seen"));
       } 
       if (snapshot.docChanges[i].type == DocumentChangeType.modified) {
         int index = snapshot.docChanges[i].newIndex;
