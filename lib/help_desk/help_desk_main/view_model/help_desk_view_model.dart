@@ -102,7 +102,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       category
     );
     _helpDeskModel.addTask(task);
-    String docId = task.getId;
+    String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
       "username": list![0],
