@@ -5,6 +5,7 @@ import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/chat_input_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/description_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/message.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 class BodyReplyDesktop extends StatefulWidget {
   const BodyReplyDesktop({super.key});
@@ -37,6 +38,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole; 
+    String taskTitle = context.watch<ReplyChannelViewModel>().getTaskData["title"];
 
     return Padding(
       padding: const EdgeInsets.only(right: 20),
@@ -73,10 +75,9 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                 topLeft: Radius.circular(16),
                                 topRight: Radius.circular(16))),
                         height: 80,
-                        //TODO name of task / Pull from back-end
-                        child: const Text(
-                          "Lorem Ipsum",
-                          style: TextStyle(
+                        child: Text(
+                          taskTitle,
+                          style: const TextStyle(
                               color: ColorConstant.whiteBlack80,
                               fontSize: 28,
                               fontWeight: FontWeight.bold),
