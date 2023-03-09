@@ -119,7 +119,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
                   }
                   context.read<HelpDeskViewModel>().cleanModel();
                   return FutureBuilder(
-                    future: context.watch<HelpDeskViewModel>().reconstructSearchResult(docs),
+                    future: context.read<HelpDeskViewModel>().reconstructSearchResult(docs),
                     builder: ((context, futureSnapshot) {
                       if (futureSnapshot.connectionState == ConnectionState.done) {
                         List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
