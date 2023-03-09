@@ -20,25 +20,6 @@ class BodyReplyDesktop extends StatefulWidget {
 }
 
 class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
-  List<Map<String, dynamic>> data = [
-    {
-      "text": "Hi people",
-      "isSender": true
-    },
-    {
-      "text": "Okay, How r u?",
-      "isSender": false
-    },
-    {
-      "text": "Fine",
-      "isSender": true
-    },
-    {
-      "text": "asddsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
-      "isSender": false
-    }
-  ];
-
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
