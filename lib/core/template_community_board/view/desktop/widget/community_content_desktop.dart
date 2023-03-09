@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class CommunityContentDesktop extends StatefulWidget {
   const CommunityContentDesktop({super.key});
@@ -15,7 +17,6 @@ class _CommunityContentMobileState extends State<CommunityContentDesktop> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
-        // height: double.minPositive,
         constraints: const BoxConstraints(maxWidth: 700),
         alignment: Alignment.topCenter,
         decoration: const BoxDecoration(color: ColorConstant.white),

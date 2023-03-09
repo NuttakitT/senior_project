@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/core/template_community_board/view/desktop/page/template_community_board_desktop.dart';
+import 'package:senior_project/core/template_community_board/view/mobile/page/template_community_board_mobile.dart';
+import 'package:senior_project/core/template_community_board/view/mobile/widget/community_content_mobile.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
@@ -47,13 +50,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: Builder(builder: (context) {
-          context
-              .read<AppViewModel>()
-              .selectView(MediaQuery.of(context).size.width);
-          return const HelpDeskMainView(
-            isAdmin: false,
-          );
-        }));
+        home: FutureBuilder(
+            future: context.read<AppViewModel>().initializeLoginState(context,
+                FirebaseAuth.instance.currentUser == null ? false : true),
+            builder: (context, _) {
+              if (_.connectionState == ConnectionState.done) {
+                return const TemplateCommunityBoardDesktop();
+              }
+              return Container();
+            }));
   }
 }
