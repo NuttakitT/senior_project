@@ -7,6 +7,7 @@ import 'package:senior_project/my_profile/view/user/widget/user_profile_header.d
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/my_profile/view/user/widget/user_profile_mobile.dart';
 import '../../../core/view_model/app_view_model.dart';
+import '../../model/user_profile_model.dart';
 
 class UserProfileView extends StatelessWidget {
   final Map<String, dynamic> data;

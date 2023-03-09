@@ -23,7 +23,7 @@ class AuthenticationViewModel extends ChangeNotifier {
   bool get getIsEmptyPassword => _isEmptyPassword;
   bool get getIsEmptyUsername => _isEmptyUsername;
   String get getErrorText => _errorText;
-  
+
   void clearErrorText() {
     _errorText = "";
     notifyListeners();
@@ -45,8 +45,8 @@ class AuthenticationViewModel extends ChangeNotifier {
   }
 
   void changeVisibilityState() {
-      _visibilityText = !_visibilityText;
-    }
+    _visibilityText = !_visibilityText;
+  }
 
   void changeShowPageState() {
     _isShowLoginPage = !_isShowLoginPage;
@@ -61,9 +61,9 @@ class AuthenticationViewModel extends ChangeNotifier {
     if (inputType == 0) {
       registerModel.setUsername = input;
     } else if (inputType == 1) {
-      final bool emailValid = 
-        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(input);
+      final bool emailValid = RegExp(
+              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+          .hasMatch(input);
       if (emailValid) {
         registerModel.setEmail = input;
       } else {
@@ -71,30 +71,30 @@ class AuthenticationViewModel extends ChangeNotifier {
       }
     } else if (inputType == 2) {
       registerModel.setPassword = input;
-    } 
+    }
   }
 
   bool checkkUserInput(bool isRegister) {
-    if(registerModel.getPassword!.isEmpty && 
-    registerModel.getEmail.isEmpty && 
-    ((isRegister && registerModel.getUsername.isEmpty) || !isRegister)) {
+    if (registerModel.getPassword!.isEmpty &&
+        registerModel.getEmail.isEmpty &&
+        ((isRegister && registerModel.getUsername.isEmpty) || !isRegister)) {
       _isEmptyPassword = true;
       _isEmptyEmail = true;
       _isEmptyUsername = true;
       notifyListeners();
       return false;
     }
-    if(registerModel.getPassword!.isEmpty) {
+    if (registerModel.getPassword!.isEmpty) {
       _isEmptyPassword = true;
       notifyListeners();
       return false;
-    } 
-    if(registerModel.getEmail.isEmpty) {
+    }
+    if (registerModel.getEmail.isEmpty) {
       _isEmptyEmail = true;
       notifyListeners();
       return false;
-    } 
-    if(isRegister && registerModel.getUsername.isEmpty) {
+    }
+    if (isRegister && registerModel.getUsername.isEmpty) {
       _isEmptyUsername = true;
       notifyListeners();
       return false;
@@ -107,7 +107,7 @@ class AuthenticationViewModel extends ChangeNotifier {
   Map<String, dynamic> storeAppUser(DocumentSnapshot snapshot) {
     Map<String, dynamic> result = {};
     String data = snapshot.data().toString();
-    data = data.substring(1, data.length-1);
+    data = data.substring(1, data.length - 1);
     List<String> chunk = data.split(", ");
     for (int i = 0; i < chunk.length; i++) {
       List<String> chunkData = chunk[i].split(": ");
@@ -119,10 +119,10 @@ class AuthenticationViewModel extends ChangeNotifier {
   Future<bool> loginUser(BuildContext context) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: registerModel.getEmail, 
-        password: registerModel.getPassword as String
-      );
-      final snapshot = await FirebaseServices("user").getDocumentById(credential.user!.uid);
+          email: registerModel.getEmail,
+          password: registerModel.getPassword as String);
+      final snapshot =
+          await FirebaseServices("user").getDocumentById(credential.user!.uid);
       Map<String, dynamic> detail = storeAppUser(snapshot!);
       context.read<AppViewModel>().setLoggedInUser(detail);
       _errorText = "";
@@ -141,19 +141,16 @@ class AuthenticationViewModel extends ChangeNotifier {
 
   Future<bool> createUser(BuildContext context) async {
     try {
-      final creadential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: registerModel.getEmail, 
-        password: registerModel.getPassword as String
-      );
+      final creadential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: registerModel.getEmail,
+              password: registerModel.getPassword as String);
       Map<String, dynamic> detail = {
         "id": creadential.user!.uid,
         "email": creadential.user!.email as String,
         "username": registerModel.getUsername,
       };
-      FirebaseServices("user").setDocument(
-        creadential.user!.uid,
-        detail
-      );
+      FirebaseServices("user").setDocument(creadential.user!.uid, detail);
       context.read<AppViewModel>().setLoggedInUser(detail);
       _errorText = "";
       notifyListeners();
@@ -168,25 +165,23 @@ class AuthenticationViewModel extends ChangeNotifier {
       return false;
     }
   }
-  
+
   Future<bool> googleSignIn(BuildContext context) async {
     try {
       GoogleAuthProvider provider = GoogleAuthProvider();
       provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
-      final snapshot = await FirebaseServices("user").getDocumentById(credential.user!.uid);
+      final snapshot =
+          await FirebaseServices("user").getDocumentById(credential.user!.uid);
       Map<String, dynamic> detail = {
         "id": credential.user!.uid,
         "email": credential.user!.email as String,
       };
       if (!snapshot!.exists) {
-        FirebaseServices("user").setDocument(
-          credential.user!.uid,
-          {
-            "id": credential.user!.uid,
-            "email": credential.user!.email as String,
-          }
-        );
+        FirebaseServices("user").setDocument(credential.user!.uid, {
+          "id": credential.user!.uid,
+          "email": credential.user!.email as String,
+        });
       }
       context.read<AppViewModel>().setLoggedInUser(detail);
       return true;
@@ -197,22 +192,20 @@ class AuthenticationViewModel extends ChangeNotifier {
 
   Future<bool> facebookSignIn(BuildContext context) async {
     try {
-      FacebookAuthProvider  provider = FacebookAuthProvider ();
+      FacebookAuthProvider provider = FacebookAuthProvider();
       provider.addScope("email");
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
       Map<String, dynamic> detail = {
         "id": credential.user!.uid,
         "email": credential.user!.email as String,
       };
-      final snapshot = await FirebaseServices("user").getDocumentById(credential.user!.uid);
+      final snapshot =
+          await FirebaseServices("user").getDocumentById(credential.user!.uid);
       if (!snapshot!.exists) {
-        FirebaseServices("user").setDocument(
-          credential.user!.uid,
-          {
-            "id": credential.user!.uid,
-            "email": credential.user!.email as String,
-          }
-        );
+        FirebaseServices("user").setDocument(credential.user!.uid, {
+          "id": credential.user!.uid,
+          "email": credential.user!.email as String,
+        });
       }
       context.read<AppViewModel>().setLoggedInUser(detail);
       return true;

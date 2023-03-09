@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/my_profile/view/user/user_profile_view.dart';
 import 'package:senior_project/my_profile/view/user/widget/admin_profile_view.dart';
 
-class MyProfileView extends StatelessWidget {
+import '../model/user_profile_model.dart';
+import '../view_model/user_profile_view_model.dart';
+
+class MyProfileView extends StatefulWidget {
   final bool isAdmin;
-  MyProfileView({super.key, required this.isAdmin});
+  final String uid;
+  const MyProfileView({super.key, required this.isAdmin, required this.uid});
+
+  @override
+  State<MyProfileView> createState() => _MyProfileViewState();
+}
+
+class _MyProfileViewState extends State<MyProfileView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<UserProfileViewModel>().getUser(widget.uid);
+  }
 
   final Map<String, dynamic> data = {
     "imageUrl": "https://picsum.photos/200/300",
@@ -32,10 +48,20 @@ class MyProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAdmin = widget.isAdmin;
+    final userData = context.select<UserProfileViewModel, UserModel?>(
+        (viewModel) => viewModel.user);
+
+    if (userData == null) {
+      return const Center(
+        child: Text("No results"),
+      );
+    }
+
     if (isAdmin) {
-      return AdminProfileView(data: adminData);
+      return AdminProfileView(data: userData.toMap());
     } else {
-      return UserProfileView(data: data);
+      return UserProfileView(data: userData.toMap());
     }
   }
 }
