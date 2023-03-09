@@ -9,7 +9,17 @@ class ReplyChannelViewModel extends ChangeNotifier {
   Map<String, dynamic> _taskData = {};
 
   set setTaskData(Map<String, dynamic> data) => _taskData = data;
-  get getTaskData => _taskData;
+  Map<String, dynamic> get getTaskData => _taskData;
+  List<Map<String, dynamic>> getReply(String id) {
+    List<Map<String, dynamic>> data = [];
+    for (int i = 0; i < _model.getReply.length; i++) {
+      data.add({
+        "text": _model.getReply[i]["text"],
+        "isSender": _model.getReply[i]["ownerId"] == id,
+      });
+    }
+    return data;
+  }
 
   void clearModel() {
     _model = HelpDeskReplyModel();
@@ -17,7 +27,8 @@ class ReplyChannelViewModel extends ChangeNotifier {
 
   Future<bool> createMessage(String docId, Map<String, dynamic> detail) async {
     _model.addReply(detail["ownerId"], detail["message"], detail["time"], detail["seen"]);
-    return await _service.addSubDocument(docId, "replyChannel", detail);
+    final snapshot = await _service.getAllSubDocument(docId, "replyChannel");
+    return await _service.setSubDocument(docId, "replyChannel", snapshot!.docs.length.toString(),detail);
   }
 
   void reconstructData(QuerySnapshot snapshot) {

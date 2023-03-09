@@ -10,9 +10,7 @@ class HelpDeskReplyModel {
     });
   }
 
-  List<Map<String, dynamic>> getReply() {
-    return _reply;
-  }
+  List<Map<String, dynamic>> get getReply => _reply;
 
   void changeSeenStatus(int index, bool status) {
     _reply[index]["seen"] = status;
