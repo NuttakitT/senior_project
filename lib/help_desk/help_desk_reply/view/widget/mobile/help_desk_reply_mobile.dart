@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/body_reply_mobile.dart';
-import 'package:senior_project/help_desk/help_desk_reply/mobile/view/widget/description_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/body_reply_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/description_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 class HelpDeskReplyMobile extends StatefulWidget {
   const HelpDeskReplyMobile({super.key});
@@ -13,24 +15,25 @@ class HelpDeskReplyMobile extends StatefulWidget {
 class _HelpDeskReplyMobileState extends State<HelpDeskReplyMobile> {
   @override
   Widget build(BuildContext context) {
+    String taskTitle = context.watch<ReplyChannelViewModel>().getTaskData["title"];
+
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: (){
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: ColorConstant.whiteBlack80,
+          ),
+        ),
         backgroundColor: ColorConstant.white,
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          InkWell(
-            child: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: ColorConstant.whiteBlack80,
-            ),
-            onTap: () {
-              //TODO back to help desk main page
-            },
-          ),
-          //TODO pull name from back-end
-          const Text(
-            "Lorem Ipsum",
-            style: TextStyle(color: ColorConstant.whiteBlack80, fontSize: 24),
+          Text(
+            taskTitle,
+            style: const TextStyle(color: ColorConstant.whiteBlack80, fontSize: 24),
           ),
           InkWell(
             child: const Icon(

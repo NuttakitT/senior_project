@@ -1,5 +1,4 @@
 import 'package:senior_project/core/model/content.dart';
-import 'package:senior_project/core/model/help_desk/reply_channel.dart';
 import 'package:uuid/uuid.dart';
 
 class Task {
@@ -11,7 +10,6 @@ class Task {
   late int _status;
   late String _title;
   late Content _content;
-  ReplyChannel? _replyCannel;
 
   Task(
     String ownerId,
@@ -51,7 +49,6 @@ class Task {
   int get getPriority => _priority;
   String get getTitle => _title;
   Content get getContent => _content;
-  ReplyChannel? get getRepkyChannel => _replyCannel;
 
   bool changePriority(int newPriority) {
     if (newPriority >= 0 && newPriority < 4) {
@@ -68,8 +65,4 @@ class Task {
     } 
     return false;
   }
-
-  // ReplyChannel createReplyChannel() {
-    
-  // }
 }

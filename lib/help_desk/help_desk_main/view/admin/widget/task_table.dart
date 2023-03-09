@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/header_table.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/table_detail.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';

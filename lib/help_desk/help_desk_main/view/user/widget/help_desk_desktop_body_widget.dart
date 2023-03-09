@@ -1,12 +1,10 @@
-import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/core/view_model/cryptor.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_card_widget.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
@@ -121,7 +119,7 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
                   }
                   context.read<HelpDeskViewModel>().cleanModel();
                   return FutureBuilder(
-                    future: context.watch<HelpDeskViewModel>().reconstructSearchResult(docs),
+                    future: context.read<HelpDeskViewModel>().reconstructSearchResult(docs),
                     builder: ((context, futureSnapshot) {
                       if (futureSnapshot.connectionState == ConnectionState.done) {
                         List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 class ChatInputDesktop extends StatelessWidget {
   const ChatInputDesktop({
@@ -8,6 +11,8 @@ class ChatInputDesktop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String userId = context.watch<AppViewModel>().app.getUser.getId;
+
     return ConstrainedBox(
       constraints: const BoxConstraints(maxHeight: 64),
       child: Container(
@@ -50,11 +55,22 @@ class ChatInputDesktop extends StatelessWidget {
               child: Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 16, right: 16),
-                child: const TextField(
-                  decoration: InputDecoration.collapsed(
+                child: TextField(
+                  decoration: const InputDecoration.collapsed(
                       hintText: "Type message...", border: InputBorder.none),
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: ColorConstant.whiteBlack50, fontSize: 14),
+                  onSubmitted: (value) {
+                    context.read<ReplyChannelViewModel>().createMessage(
+                    context.read<ReplyChannelViewModel>().getTaskData["docId"], 
+                    {
+                      "ownerId": userId,
+                      "message": value,
+                      "time": DateTime.now(),
+                      "seen": false
+                    }
+                  );
+                  },
                 ),
               ),
             )),
