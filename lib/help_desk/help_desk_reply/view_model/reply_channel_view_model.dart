@@ -26,7 +26,6 @@ class ReplyChannelViewModel extends ChangeNotifier {
   }
 
   Future<bool> createMessage(String docId, Map<String, dynamic> detail) async {
-    _model.addReply(detail["ownerId"], detail["message"], detail["time"], detail["seen"]);
     final snapshot = await _service.getAllSubDocument(docId, "replyChannel");
     return await _service.setSubDocument(docId, "replyChannel", snapshot!.docs.length.toString(),detail);
   }

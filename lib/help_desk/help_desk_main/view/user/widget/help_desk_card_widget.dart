@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -165,11 +165,13 @@ class HelpDeskCardWidget {
                             left: 16, bottom: 24.0, right: 16.0),
                         height: 56.0,
                         child: TextButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            String docId = await context.read<HelpDeskViewModel>().getTaskDocId(card["id"]);
                             Navigator.pushAndRemoveUntil(
                               context, 
                               MaterialPageRoute(builder: (context) {
                                 return HelpDeskReplyPage(
+                                  docId: docId,
                                   taskId: card["id"],
                                   taskTitle: card["title"],
                                   taskDetail: card["detail"],

@@ -6,6 +6,7 @@ import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/help
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 class HelpDeskReplyPage extends StatefulWidget {
+  final String docId;
   final String taskId;
   final String taskTitle;
   final String taskDetail;
@@ -13,6 +14,7 @@ class HelpDeskReplyPage extends StatefulWidget {
   final int status;
   const HelpDeskReplyPage({
     super.key, 
+    required this.docId,
     required this.taskId,
     required this.taskTitle,
     required this.taskDetail,
@@ -29,6 +31,7 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
   Widget build(BuildContext context) {
     bool isMobile = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
     context.read<ReplyChannelViewModel>().setTaskData = {
+      "docId": widget.docId,
       "id": widget.taskId,
       "title": widget.taskTitle,
       "detail": widget.taskDetail,

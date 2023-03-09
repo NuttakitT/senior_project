@@ -56,7 +56,7 @@ class ChatInputMobile extends StatelessWidget {
                     const TextStyle(color: ColorConstant.whiteBlack50, fontSize: 14),
                 onSubmitted: (value) {
                   context.read<ReplyChannelViewModel>().createMessage(
-                    context.read<ReplyChannelViewModel>().getTaskData["id"], 
+                    context.read<ReplyChannelViewModel>().getTaskData["docId"], 
                     {
                       "ownerId": userId,
                       "message": value,

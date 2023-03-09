@@ -19,7 +19,8 @@ class BodyReplyMobile extends StatefulWidget {
 class _BodyReplyMobileState extends State<BodyReplyMobile> {
   @override
   Widget build(BuildContext context) {
-    String docId = context.watch<ReplyChannelViewModel>().getTaskData["id"];
+    context.read<ReplyChannelViewModel>().clearModel();
+    String docId = context.watch<ReplyChannelViewModel>().getTaskData["docId"];
     String userId = context.watch<AppViewModel>().app.getUser.getId;
 
     return Column(

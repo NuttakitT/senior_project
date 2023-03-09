@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -192,11 +192,13 @@ class TableDetail {
         Align(
           alignment: Alignment.center,
           child: TextButton(
-            onPressed: () {
+            onPressed: () async {
+              String docId = await context.read<HelpDeskViewModel>().getTaskDocId(detail["id"]);
               Navigator.pushAndRemoveUntil(
                 context, 
                 MaterialPageRoute(builder: (context) {
                   return HelpDeskReplyPage(
+                    docId: docId,
                     taskId: detail["id"],
                     taskTitle: detail["title"],
                     taskDetail: detail["detail"],

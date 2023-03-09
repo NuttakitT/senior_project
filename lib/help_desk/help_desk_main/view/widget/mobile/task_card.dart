@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -49,10 +49,12 @@ class _TaskCardState extends State<TaskCard> {
           return Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
             child: InkWell(
-              onTap: () {
+              onTap: () async {
+                String docId = await context.read<HelpDeskViewModel>().getTaskDocId(widget.detail["id"]);
                 Navigator.push(context, 
                   MaterialPageRoute(builder: (context) {
                     return HelpDeskReplyPage(
+                      docId: docId,
                       taskId: widget.detail["id"],
                       taskTitle: widget.detail["title"],
                       taskDetail: widget.detail["detail"],
