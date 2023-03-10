@@ -1,8 +1,7 @@
 class UserModel {
-  final String uid;
+  final String id;
   final String imageUrl;
   final String name;
-  final String surname;
   final String aboutMe;
   final String email;
   final String phone;
@@ -10,10 +9,9 @@ class UserModel {
   final String role;
 
   UserModel({
-    required this.uid,
+    required this.id,
     required this.imageUrl,
     required this.name,
-    required this.surname,
     required this.aboutMe,
     required this.email,
     required this.phone,
@@ -22,11 +20,14 @@ class UserModel {
   });
 
   Map<String, dynamic> toMap() {
+    var nameOnly = name.split("_")[0];
+    var surnameOnly = name.split("_")[1];
+
     return {
-      'uid': uid,
+      'uid': id,
       'imageUrl': imageUrl,
-      'name': name,
-      'surname': surname,
+      'name': nameOnly,
+      'surname': surnameOnly,
       'aboutMe': aboutMe,
       'email': email,
       'phone': phone,

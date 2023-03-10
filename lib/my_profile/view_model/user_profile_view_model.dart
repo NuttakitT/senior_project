@@ -24,10 +24,9 @@ class UserProfileViewModel extends ChangeNotifier {
     if (snapshot != null) {
       final data = snapshot.data() as Map<String, dynamic>;
       return UserModel(
-          uid: uid,
+          id: uid,
           imageUrl: data[Consts.imageUrl],
           name: data[Consts.name],
-          surname: data[Consts.surname],
           aboutMe: data[Consts.aboutMe],
           email: data[Consts.email],
           phone: data[Consts.phone],

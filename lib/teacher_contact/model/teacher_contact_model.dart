@@ -1,5 +1,5 @@
 class TeacherContactModel {
-  final String uid;
+  final String id;
   final String imageUrl;
   final String gender;
   final String name;
@@ -11,7 +11,7 @@ class TeacherContactModel {
   final List<String> subjectId;
 
   TeacherContactModel(
-      {required this.uid,
+      {required this.id,
       required this.imageUrl,
       required this.gender,
       required this.name,
@@ -30,7 +30,7 @@ class TeacherContactModel {
     var thaiSurnameOnly = thaiName.split("_")[1];
 
     return {
-      'uid': uid,
+      'id': id,
       'imageUrl': imageUrl,
       'gender': gender,
       'name': nameOnly,
