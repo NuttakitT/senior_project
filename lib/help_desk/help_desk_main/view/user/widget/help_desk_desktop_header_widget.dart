@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/create_task_pop_up.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/create_task_pop_up.dart';
 
 class HelpDeskDesktopHeader {
   static TextStyle titleTextStyle() => const TextStyle(

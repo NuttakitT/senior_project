@@ -74,6 +74,11 @@ class HelpDeskViewModel extends ChangeNotifier {
     return _mobileMenuState.indexOf(true);
   }
 
+  Future<String> getTaskDocId(String taskId) async {
+    final snapshot = await _serviceTask.getDocumnetByKeyValuePair(["id"], [taskId]);
+    return snapshot!.docs.first.id;
+  }
+
   Future<List<String>?> _getUserdetail(String uid) async {
     final doc = await _serviceUser.getDocumentById(uid);
     if (doc != null) {

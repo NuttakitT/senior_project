@@ -5,10 +5,10 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/create_task.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/setting_pop_up.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/mobile/task_card.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/create_task.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/setting_pop_up.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/task_card.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 Stream? query(String id, int type) {

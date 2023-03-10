@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/help_desk_reply_desktop.dart';
 
 class PopupSubMenuItem<T> extends PopupMenuEntry<T> {
   const PopupSubMenuItem({
@@ -119,7 +120,20 @@ class _ActionButtonState extends State<ActionButton> {
                 style: AppFontStyle.wb80R14,
               ),
               onTap: () {
-                // TODO change to reply channel page
+                // TODO link to reply (white oahge when redirecr)
+                Navigator.pop(context);
+                // Navigator.pushAndRemoveUntil(
+                //   context, 
+                //   MaterialPageRoute(builder: (context) {
+                //     return const HelpDeskReplyDesktop();
+                //   }), 
+                //   (route) => false
+                // );
+                // Navigator.push(context, 
+                //   MaterialPageRoute(builder: (context) {
+                //     return const HelpDeskReplyDesktop();
+                //   })
+                // );
               },
             ),
           ];

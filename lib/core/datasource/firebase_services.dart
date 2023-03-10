@@ -141,4 +141,210 @@ class FirebaseServices {
       return false;
     }
   }
+
+  //**************************** Sub-collection ********************************
+
+  //------------------------ Create orperation ---------------------------------
+  // Create a document to the sub-collection of target document, using firebase
+  // auto-generated as a document's id. If has error, return false, 
+  // otherwise true.
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  // detail: data, in Map structre, to store in database. 
+  Future<bool> addSubDocument(
+    String parentId,
+    String subCollectionName,
+    Map<String, dynamic> detail
+  ) async {
+    try {
+      _collection.doc(parentId).collection(subCollectionName).add(detail);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Create a document to the sub-collection of target document, using sunId as 
+  // a document's id. If has error, return false, otherwise true.
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  // subId: String to use as document's id.
+  // detail: data, in Map structre, to store in database. 
+  Future<bool> setSubDocument(
+    String parentId, 
+    String subCollectionName,
+    String subId, 
+    Map<String, dynamic> detail
+  ) async {
+    try {
+      await _collection
+        .doc(parentId)
+        .collection(subCollectionName)
+        .doc(subId)
+        .set(detail);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //--------------------------- Update Operation -------------------------------
+  // Update data in the document of the sub-collection 
+  // that has a matching ID. If has error, return false, otherwise true.
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  // subId: ID of the target document.
+  // detail: data, in Map structure, to update(send only updated filed).
+  Future<bool> editSubDocument(
+    String parentId,
+    String subCollectionName,
+    String subId,  
+    Map<String, dynamic> detail
+  ) async {
+    try {
+      await _collection
+        .doc(parentId)
+        .collection(subCollectionName)
+        .doc(subId)
+        .update(detail);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //---------------------------- Delete operation ------------------------------
+  // Delete the document in the sub-collection that has a matching ID. 
+  // If has error, return false, otherwise true.
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  // subId: ID of the target document.
+  Future<bool> deleteSubDocument(
+    String parentId,
+    String subCollectionName,
+    String subId,
+  ) async {
+    try {
+      await _collection
+        .doc(parentId)
+        .collection(subCollectionName)
+        .doc(subId)
+        .delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //---------------------------- Read operation --------------------------------
+  // Get a document form the sub-collection that has a matching ID.
+  // If there is no requested document in databse, return null.
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  // subId: ID of the target document.
+  Future<DocumentSnapshot?> getSubDocumentById(
+    String parentId,
+    String subCollectionName,
+    String subId,
+  ) async {
+    try {
+      return await _collection
+        .doc(parentId)
+        .collection(subCollectionName)
+        .doc(subId)
+        .get();
+    } catch (e) {
+      return null;
+    }   
+  }
+
+  // Query documnets in the collection, using key-value to query.
+  // If there are no any documents, return null.
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  // key: list of the filed to query
+  // value: list of the value to query
+  // key and value must have the same length and in th same index
+  // refers to one pair of the key-value.
+  Future<QuerySnapshot?> getSubDocumnetByKeyValuePair(
+    String parentId,
+    String subCollectionName,
+    List<String> key, 
+    List<String> value, 
+  ) async {
+    try {
+      late Query query;
+      if ((key.length == value.length) && key.isNotEmpty) {
+        for (int i = 0; i < key.length; i++) {
+          if (i != 0) {
+            query = query.where(key[i], isEqualTo: value[i]);
+          } else {
+            query = _collection
+              .doc(parentId)
+              .collection(subCollectionName)
+              .where(key[i], isEqualTo: value[i]);
+          }
+        }
+      }
+      return await query.get();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Get all documents in the sub-collection, return null there are no
+  // document or collection in the database.
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  Future<QuerySnapshot?> getAllSubDocument(
+    String parentId,
+    String subCollectionName,
+  ) async {
+    try {
+      return await _collection.doc(parentId).collection(subCollectionName).get();
+    } catch (e) {
+      return null;
+    } 
+  }
+
+  //---------------------- Read operation(Real-time) ---------------------------
+  // A stream listener used as a listener for a document in sub-collection 
+  // queried by key-value.
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  // key: list of the filed to query
+  // value: list of the value to query
+  // key and value must have the same length and in th same index
+  // refers to one pair of the key-value.
+  Stream<QuerySnapshot?> listenToSubDocumentByKeyValuePair(
+    String parentId,
+    String subCollectionName,
+    List<String> key, 
+    List<dynamic> value
+  ) {
+    late Query query;
+    if ((key.length == value.length) && key.isNotEmpty) {
+      for (int i = 0; i < key.length; i++) {
+        if (i != 0) {
+          query = query.where(key[i], isEqualTo: value[i]);
+        } else {
+          query = _collection
+            .doc(parentId)
+            .collection(subCollectionName)
+            .where(key[i], isEqualTo: value[i]);
+        }
+      }
+    }
+    return query.snapshots();
+  }
+
+  // Return a stream listener used as a listener in the sub-collection
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  Stream<QuerySnapshot> listenToSubDocument(
+    String parentId,
+    String subCollectionName,
+  ) {
+    return _collection.doc(parentId).collection(subCollectionName).snapshots();
+  }
 }

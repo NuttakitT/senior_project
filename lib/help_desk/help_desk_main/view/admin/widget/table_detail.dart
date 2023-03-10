@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,8 +7,9 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/action_button.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
 
 class TableDetail {
   final BuildContext context;
@@ -190,7 +191,26 @@ class TableDetail {
         child: 
         Align(
           alignment: Alignment.center,
-          child: ActionButton(id: detail["id"],),
+          child: TextButton(
+            onPressed: () async {
+              String docId = await context.read<HelpDeskViewModel>().getTaskDocId(detail["id"]);
+              Navigator.pushAndRemoveUntil(
+                context, 
+                MaterialPageRoute(builder: (context) {
+                  return HelpDeskReplyPage(
+                    docId: docId,
+                    taskId: detail["id"],
+                    taskTitle: detail["title"],
+                    taskDetail: detail["detail"],
+                    priority: detail["priority"],
+                    status: detail["status"],
+                  );
+                }), 
+                (route) => false
+              );
+            }, child: Text("test"),
+          ),
+          // child: ActionButton(id: detail["id"],),
         )
       )
     ];

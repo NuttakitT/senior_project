@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/model/help_desk_reply_demo.dart';
-import 'package:senior_project/help_desk/help_desk_reply/desktop/view/widget/chat_input_desktop.dart';
-import 'package:senior_project/help_desk/help_desk_reply/desktop/view/widget/description_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/chat_input_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/description_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/message.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
-class BodyReplyDesktop extends StatelessWidget {
+Stream? query(String docId) {
+  return FirebaseServices("task").listenToSubDocument(docId, "replyChannel");
+}
+
+class BodyReplyDesktop extends StatefulWidget {
   const BodyReplyDesktop({super.key});
 
+  @override
+  State<BodyReplyDesktop> createState() => _BodyReplyDesktopState();
+}
+
+class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole; 
+    String taskTitle = context.watch<ReplyChannelViewModel>().getTaskData["title"];
+    String docId = context.watch<ReplyChannelViewModel>().getTaskData["docId"];
+    String userId = context.watch<AppViewModel>().app.getUser.getId;
+    context.read<ReplyChannelViewModel>().clearModel();
 
     return Padding(
       padding: const EdgeInsets.only(right: 20),
@@ -49,10 +64,9 @@ class BodyReplyDesktop extends StatelessWidget {
                                 topLeft: Radius.circular(16),
                                 topRight: Radius.circular(16))),
                         height: 80,
-                        //TODO name of task / Pull from back-end
-                        child: const Text(
-                          "Lorem Ipsum",
-                          style: TextStyle(
+                        child: Text(
+                          taskTitle,
+                          style: const TextStyle(
                               color: ColorConstant.whiteBlack80,
                               fontSize: 28,
                               fontWeight: FontWeight.bold),
@@ -64,12 +78,39 @@ class BodyReplyDesktop extends StatelessWidget {
                     decoration: const BoxDecoration(color: ColorConstant.white),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ListView.builder(
-                        itemCount: demoMessage.length,
-                        itemBuilder: (context, index) => Message(
-                          message: demoMessage[index],
-                        ),
-                      ),
+                      child: StreamBuilder(
+                        stream: query(docId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.active) {
+                            if (snapshot.data.docs.isNotEmpty) {
+                              context.read<ReplyChannelViewModel>().reconstructData(snapshot.data);
+                              List<Map<String, dynamic>> data = context.watch<ReplyChannelViewModel>().getReply(userId);
+                              return ListView.builder(
+                                itemCount: data.length,
+                                itemBuilder: (context, index) => Message(
+                                  isSender:  data[index]["isSender"],
+                                  text: data[index]["text"],
+                                  isMobile: false,
+                                ),
+                              );
+                            }
+                            return const Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: Text("No messages in this task"),
+                            );
+                          }
+                          return Center(
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle
+                              ),
+                              child: const CircularProgressIndicator()
+                            )
+                          );
+                        },
+                      )
                     ),
                   ),
                   const ChatInputDesktop(),
@@ -84,86 +125,6 @@ class BodyReplyDesktop extends StatelessWidget {
             )
           )
         ],
-      ),
-    );
-  }
-}
-
-class Message extends StatelessWidget {
-  const Message({
-    Key? key,
-    required this.message,
-  }) : super(key: key);
-
-  final MessageChat message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Row(
-        mainAxisAlignment:
-            message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          if (!message.isSender) ...[
-            //TODO Pull image profile sender
-            const Icon(
-              Icons.face_rounded,
-              color: ColorConstant.red40,
-            )
-          ],
-          const SizedBox(width: 8),
-          TextMessage(
-            messages: message,
-          ),
-          //status
-          if (message.isSender) const MessageStatusDot()
-        ],
-      ),
-    );
-  }
-}
-
-class TextMessage extends StatelessWidget {
-  const TextMessage({
-    Key? key,
-    required this.messages,
-  }) : super(key: key);
-
-  final MessageChat messages;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        // margin: const EdgeInsets.only(top: 24),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-            color:
-                ColorConstant.orange30.withOpacity(messages.isSender ? 1 : 0.4),
-            borderRadius: BorderRadius.circular(24)),
-        child: Text(
-          messages.text,
-          style:
-              const TextStyle(color: ColorConstant.whiteBlack80, fontSize: 16),
-        ));
-  }
-}
-
-class MessageStatusDot extends StatelessWidget {
-  const MessageStatusDot({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 8),
-      height: 12,
-      width: 12,
-      decoration: const BoxDecoration(
-          color: ColorConstant.green40, shape: BoxShape.circle),
-      child: const Icon(
-        Icons.done_rounded,
-        size: 8,
-        color: ColorConstant.white,
       ),
     );
   }

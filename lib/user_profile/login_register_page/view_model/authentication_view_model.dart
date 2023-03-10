@@ -209,7 +209,7 @@ class AuthenticationViewModel extends ChangeNotifier {
           {
             "id": credential.user!.uid,
             "email": credential.user!.email as String,
-            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: seed),
+            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: seed)[0],
             "secret": seed
           }
         );
@@ -238,7 +238,7 @@ class AuthenticationViewModel extends ChangeNotifier {
           {
             "id": credential.user!.uid,
             "email": credential.user!.email as String,
-            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: seed),
+            "username": Cryptor.encrypt(credential.user!.displayName as String, customSeed: seed)[0],
             "secret": seed
           }
         );
