@@ -22,29 +22,29 @@ class _MyProfileViewState extends State<MyProfileView> {
     context.read<UserProfileViewModel>().getUser(widget.uid);
   }
 
-  final Map<String, dynamic> data = {
-    "imageUrl": "https://picsum.photos/200/300",
-    "name": "RunnZazazazazaza",
-    "surname": "Siriphuwanich",
-    "aboutMe":
-        "lkjhgofdsgreewzxcxvvbnm,ertyulkij bowrbvfgiru bofgbrgbvoru botgbrewuofgberwou gboewrgberowuber bougterbugoe boregb eorugbeorugerg b eorgbeouj bo beroj gber ojgber ogjer hgfd ,mnbvctxyhjkygf nbvgcyhxuji g7hb fudjcis hrfuejidwx 8rfheijcnksx fheidcnk ihackzjb m9eqioadhkbczm9iyqdahbcz iwhfscbjkmx ",
-    "email": "runnsiriphuwanich@gmail.com",
-    "phone": "0909111111",
-    "gender": "Male",
-    "role": "User"
-  };
+  // final Map<String, dynamic> data = {
+  //   "imageUrl": "https://picsum.photos/200/300",
+  //   "name": "RunnZazazazazaza",
+  //   "surname": "Siriphuwanich",
+  //   "aboutMe":
+  //       "lkjhgofdsgreewzxcxvvbnm,ertyulkij bowrbvfgiru bofgbrgbvoru botgbrewuofgberwou gboewrgberowuber bougterbugoe boregb eorugbeorugerg b eorgbeouj bo beroj gber ojgber ogjer hgfd ,mnbvctxyhjkygf nbvgcyhxuji g7hb fudjcis hrfuejidwx 8rfheijcnksx fheidcnk ihackzjb m9eqioadhkbczm9iyqdahbcz iwhfscbjkmx ",
+  //   "email": "runnsiriphuwanich@gmail.com",
+  //   "phone": "0909111111",
+  //   "gender": "Male",
+  //   "role": "User"
+  // };
 
-  final Map<String, dynamic> adminData = {
-    "imageUrl": "https://picsum.photos/200/300",
-    "name": "Na Yao Yao yao yaoya ",
-    "surname": "DDDDDDDD",
-    "aboutMe":
-        "lkjhgofdsgreewzxcxvvbnm,ertyulkij bowrbvfgiru bofgbrgbvoru botgbrewuofgberwou gboewrgberowuber bougterbugoe boregb eorugbeorugerg b eorgbeouj bo beroj gber ojgber ogjer hgfd ,mnbvctxyhjkygf nbvgcyhxuji g7hb fudjcis hrfuejidwx 8rfheijcnksx fheidcnk ihackzjb m9eqioadhkbczm9iyqdahbcz iwhfscbjkmx ",
-    "email": "1234543212345@gmail.com",
-    "phone": "0909111111",
-    "officeHours": "9.30 - 16.30",
-    "role": "Admin"
-  };
+  // final Map<String, dynamic> adminData = {
+  //   "imageUrl": "https://picsum.photos/200/300",
+  //   "name": "Na Yao Yao yao yaoya ",
+  //   "surname": "DDDDDDDD",
+  //   "aboutMe":
+  //       "lkjhgofdsgreewzxcxvvbnm,ertyulkij bowrbvfgiru bofgbrgbvoru botgbrewuofgberwou gboewrgberowuber bougterbugoe boregb eorugbeorugerg b eorgbeouj bo beroj gber ojgber ogjer hgfd ,mnbvctxyhjkygf nbvgcyhxuji g7hb fudjcis hrfuejidwx 8rfheijcnksx fheidcnk ihackzjb m9eqioadhkbczm9iyqdahbcz iwhfscbjkmx ",
+  //   "email": "1234543212345@gmail.com",
+  //   "phone": "0909111111",
+  //   "officeHours": "9.30 - 16.30",
+  //   "role": "Admin"
+  // };
 
   @override
   Widget build(BuildContext context) {
