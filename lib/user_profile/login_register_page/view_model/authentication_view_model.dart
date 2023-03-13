@@ -62,49 +62,49 @@ class AuthenticationViewModel extends ChangeNotifier {
   }
 
   void getUserInput(int inputType, String input) {
-    if (inputType == 0) {
-      registerModel.setUsername = input;
-    } else if (inputType == 1) {
-      final bool emailValid = 
-        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(input);
-      if (emailValid) {
-        registerModel.setEmail = input;
-      } else {
-        registerModel.setEmail = "";
-      }
-    } else if (inputType == 2) {
-      registerModel.setPassword = input;
-    } 
+    // if (inputType == 0) {
+    //   registerModel.setUsername = input;
+    // } else if (inputType == 1) {
+    //   final bool emailValid = 
+    //     RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    //     .hasMatch(input);
+    //   if (emailValid) {
+    //     registerModel.setEmail = input;
+    //   } else {
+    //     registerModel.setEmail = "";
+    //   }
+    // } else if (inputType == 2) {
+    //   registerModel.setPassword = input;
+    // } 
   }
 
   bool checkkUserInput(bool isRegister) {
-    if(registerModel.getPassword!.isEmpty && 
-    registerModel.getEmail.isEmpty && 
-    ((isRegister && registerModel.getUsername.isEmpty) || !isRegister)) {
-      _isEmptyPassword = true;
-      _isEmptyEmail = true;
-      _isEmptyUsername = true;
-      notifyListeners();
-      return false;
-    }
-    if(registerModel.getPassword!.isEmpty) {
-      _isEmptyPassword = true;
-      notifyListeners();
-      return false;
-    } 
-    if(registerModel.getEmail.isEmpty) {
-      _isEmptyEmail = true;
-      notifyListeners();
-      return false;
-    } 
-    if(isRegister && registerModel.getUsername.isEmpty) {
-      _isEmptyUsername = true;
-      notifyListeners();
-      return false;
-    }
-    _errorText = "";
-    notifyListeners();
+    // if(registerModel.getPassword!.isEmpty && 
+    // registerModel.getEmail.isEmpty && 
+    // ((isRegister && registerModel.getUsername.isEmpty) || !isRegister)) {
+    //   _isEmptyPassword = true;
+    //   _isEmptyEmail = true;
+    //   _isEmptyUsername = true;
+    //   notifyListeners();
+    //   return false;
+    // }
+    // if(registerModel.getPassword!.isEmpty) {
+    //   _isEmptyPassword = true;
+    //   notifyListeners();
+    //   return false;
+    // } 
+    // if(registerModel.getEmail.isEmpty) {
+    //   _isEmptyEmail = true;
+    //   notifyListeners();
+    //   return false;
+    // } 
+    // if(isRegister && registerModel.getUsername.isEmpty) {
+    //   _isEmptyUsername = true;
+    //   notifyListeners();
+    //   return false;
+    // }
+    // _errorText = "";
+    // notifyListeners();
     return true;
   }
 
@@ -154,42 +154,42 @@ class AuthenticationViewModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> createUser(BuildContext context) async {
-    try {
-      final int seed = Random().nextInt(100);
-      final doc = await FirebaseServices("user").getDocumnetByKeyValuePair(["username"], [registerModel.getUsername]);
-      if (doc != null && doc.size != 0) {
-        _errorText = "Username already in user.";
-        notifyListeners();
-        return false;
-      }
-      final creadential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: registerModel.getEmail, 
-        password: Cryptor.encrypt(registerModel.getPassword as String, customSeed: seed)[0]
-      );
-      Map<String, dynamic> detail = {
-        "id": creadential.user!.uid,
-        "email": creadential.user!.email as String,
-        "username": registerModel.getUsername,
-        "secret": seed
-      };
-      FirebaseServices("user").setDocument(
-        creadential.user!.uid,
-        detail
-      );
-      FirebaseAuth.instance.currentUser?.sendEmailVerification();
-      _errorText = "";
-      notifyListeners();
-      return true;
-    } on FirebaseAuthException catch (e) {
-      _errorText = "An error occurred, ${e.code.replaceAll("-", " ")}";
-      notifyListeners();
-      return false;
-    } catch (e) {
-      _errorText = "An error occurred, $e";
-      notifyListeners();
-      return false;
-    }
+  Future<void> createUser(BuildContext context) async {
+    // try {
+    //   final int seed = Random().nextInt(100);
+    //   final doc = await FirebaseServices("user").getDocumnetByKeyValuePair(["username"], [registerModel.getUsername]);
+    //   if (doc != null && doc.size != 0) {
+    //     _errorText = "Username already in user.";
+    //     notifyListeners();
+    //     return false;
+    //   }
+    //   final creadential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    //     email: registerModel.getEmail, 
+    //     password: Cryptor.encrypt(registerModel.getPassword as String, customSeed: seed)[0]
+    //   );
+    //   Map<String, dynamic> detail = {
+    //     "id": creadential.user!.uid,
+    //     "email": creadential.user!.email as String,
+    //     "username": registerModel.getUsername,
+    //     "secret": seed
+    //   };
+    //   FirebaseServices("user").setDocument(
+    //     creadential.user!.uid,
+    //     detail
+    //   );
+    //   FirebaseAuth.instance.currentUser?.sendEmailVerification();
+    //   _errorText = "";
+    //   notifyListeners();
+    //   return true;
+    // } on FirebaseAuthException catch (e) {
+    //   _errorText = "An error occurred, ${e.code.replaceAll("-", " ")}";
+    //   notifyListeners();
+    //   return false;
+    // } catch (e) {
+    //   _errorText = "An error occurred, $e";
+    //   notifyListeners();
+    //   return false;
+    // }
   }
   
   Future<bool> googleSignIn(BuildContext context) async {
@@ -244,6 +244,28 @@ class AuthenticationViewModel extends ChangeNotifier {
         );
       }
       context.read<AppViewModel>().setLoggedInUser(detail);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> login(BuildContext context) async {
+    final provider = OAuthProvider("microsoft.com");
+    provider.setCustomParameters({
+      "tenant": "6f4432dc-20d2-441d-b1db-ac3380ba633d"
+    });
+    provider.addScope("email");
+    provider.addScope("User.read");
+    try {
+      final credential = await FirebaseAuth.instance.signInWithPopup(provider);
+      context.read<AppViewModel>().setLoggedInUser({
+        "id": credential.user!.uid,
+        "email": credential.user!.email,
+        "name": credential.user!.displayName,
+        "phone": credential.user?.phoneNumber,
+        "profileImageUrl": credential.user?.photoURL
+      });
       return true;
     } catch (e) {
       return false;
