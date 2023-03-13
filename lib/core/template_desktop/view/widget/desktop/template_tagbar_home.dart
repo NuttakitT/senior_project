@@ -20,9 +20,7 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
     bool menu2 = context.watch<TemplateDesktopViewModel>().getHomeState(1);
 
     return Container(
-      padding: const EdgeInsets.only(left: 72),
       decoration: const BoxDecoration(color: ColorConstant.blue0),
-      width: 400,
       height: double.infinity,
       child: SingleChildScrollView(
         child: Column(
