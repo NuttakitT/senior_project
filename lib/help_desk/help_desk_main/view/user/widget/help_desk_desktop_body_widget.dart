@@ -54,7 +54,8 @@ class _HelpDeskDesktopBodyState extends State<HelpDeskDesktopBody> {
   @override
   Widget build(BuildContext context) {
     var bodyPadding = const EdgeInsets.fromLTRB(77, 40, 20, 0);
-    String username = context.watch<AppViewModel>().app.getUser.getUsername;
+    String username = "test";
+    // String username = context.watch<AppViewModel>().app.getUser.getUsername;
 
     return Padding(
       padding: bodyPadding,

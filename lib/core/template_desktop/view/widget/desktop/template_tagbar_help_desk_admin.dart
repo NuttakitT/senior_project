@@ -31,7 +31,7 @@ class _TemplateTagBarHelpDeskAdminState
     
 
     return Container(
-      decoration: const BoxDecoration(color: ColorConstant.blue0),
+      decoration: const BoxDecoration(color: ColorConstant.whiteBlack85),
       height: double.infinity,
       child: SingleChildScrollView(
         child: Column(
@@ -39,7 +39,7 @@ class _TemplateTagBarHelpDeskAdminState
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                  top: 16, right: 24, left: 24, bottom: 40),
+                  top: 24, right: 24, left: 24, bottom: 40),
               child: Container(
                 alignment: AlignmentDirectional.center,
                 decoration: BoxDecoration(
@@ -85,6 +85,14 @@ class _TemplateTagBarHelpDeskAdminState
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: TagBarHelpDesk(name: "All Ticket", state: menuSelected[0], index: 0, id: "",),
             ),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Container(
+                width: 280,
+                height: 1,
+                color: Colors.white,
+              ),
+            ),
             const Divider(),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -98,7 +106,14 @@ class _TemplateTagBarHelpDeskAdminState
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: TagBarHelpDesk(name: "Closed", state: menuSelected[3], index: 3, id: "",),
             ),
-            const Divider(),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Container(
+                width: 280,
+                height: 1,
+                color: Colors.white,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: TagBarHelpDesk(name: "Urgent", state: menuSelected[4], index: 4, id: "",),

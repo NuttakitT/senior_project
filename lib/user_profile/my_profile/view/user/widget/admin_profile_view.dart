@@ -23,8 +23,6 @@ class AdminProfileView extends StatelessWidget {
       ));
     } else {
       return TemplateDesktop(
-          faqmenu: false,
-          faqmenuadmin: false,
           helpdesk: false,
           helpdeskadmin: false,
           home: false,
