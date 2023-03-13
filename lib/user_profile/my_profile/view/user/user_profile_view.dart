@@ -5,8 +5,8 @@ import 'package:senior_project/user_profile/my_profile/view/user/widget/user_pro
 import 'package:senior_project/user_profile/my_profile/view/user/widget/user_profile_edit_button_bar.dart';
 import 'package:senior_project/user_profile/my_profile/view/user/widget/user_profile_header.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
-import 'package:senior_project/my_profile/view/user/widget/user_profile_mobile.dart';
 import '../../../../core/view_model/app_view_model.dart';
+import 'widget/user_profile_mobile.dart';
 
 class UserProfileView extends StatelessWidget {
   final Map<String, dynamic> data;

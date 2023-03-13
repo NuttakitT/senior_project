@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
-
-import '../model/user_profile_model.dart';
+import 'package:senior_project/my_profile/model/user_profile_model.dart';
 
 class UserProfileViewModel extends ChangeNotifier {
   final firebaseServiceForUser = FirebaseServices("user");

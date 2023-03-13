@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/my_profile/view/user/user_profile_view.dart';
-import 'package:senior_project/my_profile/view/user/widget/admin_profile_view.dart';
+import 'package:senior_project/user_profile/my_profile/view/user/user_profile_view.dart';
+import 'package:senior_project/user_profile/my_profile/view/user/widget/admin_profile_view.dart';
 
 import '../../../my_profile/model/user_profile_model.dart';
 import '../view_model/user_profile_view_model.dart';

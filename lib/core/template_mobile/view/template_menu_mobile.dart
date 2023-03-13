@@ -146,16 +146,13 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(1);
-                        int? role = context.read<AppViewModel>().app.getUser.getRole;
+                        int? role =
+                            context.read<AppViewModel>().app.getUser.getRole;
                         Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => 
-                            HelpDeskMainView(isAdmin: role == 0
-                              ? true 
-                              : false
-                            )
-                          )
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HelpDeskMainView(
+                                    isAdmin: role == 0 ? true : false)));
                       },
                     ),
                   ),
@@ -231,13 +228,16 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(3);
-                        Navigator.pushAndRemoveUntil(
-                          context, 
-                          MaterialPageRoute(builder: (context) {
-                            return MyProfileView();
-                          }), 
-                          (route) => false
-                        );
+                        Navigator.pushAndRemoveUntil(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MyProfileView(
+                              isAdmin: context
+                                      .watch<AppViewModel>()
+                                      .app
+                                      .getUser
+                                      .getRole ==
+                                  0);
+                        }), (route) => false);
                       },
                     ),
                   ),
@@ -268,13 +268,10 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                     if (isLogin) {
                       await context.read<AppViewModel>().logout();
                     } else {
-                      Navigator.pushAndRemoveUntil(
-                        context, 
-                        MaterialPageRoute(builder: (context) {
-                          return const AuthenticationPage();
-                        }), 
-                        (route) => false
-                      );
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const AuthenticationPage();
+                      }), (route) => false);
                     }
                   },
                 ),
