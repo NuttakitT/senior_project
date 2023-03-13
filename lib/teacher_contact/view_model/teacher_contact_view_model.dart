@@ -8,8 +8,10 @@ import '../model/teacher_contact_model.dart';
 class TeacherContactViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final firebaseService = FirebaseServices("teacherContact");
+  late String _name;
   List<TeacherContactModel>? _teacherList;
   List<TeacherContactModel>? get teacherList => _teacherList;
+  set name(String value) => _name = value;
 
   // MARK: - Add Contact
   Future<void> addContact() async {
@@ -21,6 +23,14 @@ class TeacherContactViewModel extends ChangeNotifier {
       return;
     }
     formKey.currentState?.save();
+    //  Navigator.pop(context);
+  }
+
+  String? validateName(String value) {
+    if (value.isEmpty) {
+      return 'Please enter name';
+    }
+    return null;
   }
 
   // MARK: - Teacher Contact

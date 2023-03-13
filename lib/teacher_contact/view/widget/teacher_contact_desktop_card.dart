@@ -238,6 +238,7 @@ class TeacherContactDesktopHeader extends StatelessWidget {
                   child: TextButton(
                     onPressed: () {
                       viewModel.toggleAddContactButton();
+                      // open pop-up
                     },
                     style: ButtonStyle(
                         backgroundColor:
