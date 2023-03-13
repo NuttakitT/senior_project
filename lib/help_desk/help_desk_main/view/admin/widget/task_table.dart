@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/loader_status.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/header_table.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/table_detail.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -53,7 +53,7 @@ class _TaskTableState extends State<TaskTable> {
               bottom: BorderSide(width: 2, color: ColorConstant.whiteBlack5))),
       height: 80,
       child: Row(
-        children: TableDetail.widget(context, detail),
+        children: TableDetail(context: context, detail: detail).widget(),
       ),
     );
   }
@@ -69,6 +69,7 @@ class _TaskTableState extends State<TaskTable> {
   @override
   void didChangeDependencies() {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+    context.read<HelpDeskViewModel>().cleanModel();
     _stream = query(tagBarSelected);
     super.didChangeDependencies();
   }
@@ -76,7 +77,7 @@ class _TaskTableState extends State<TaskTable> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-
+    
     return Column(
       children: [
         HeaderTable.widget(),
@@ -84,6 +85,7 @@ class _TaskTableState extends State<TaskTable> {
           builder: (context) {
             String searchText = context.watch<HelpDeskViewModel>().getSearchText;
             if (searchText.isEmpty) {
+              context.read<HelpDeskViewModel>().cleanModel();
               return StreamBuilder(
                 stream: _stream,
                 builder: (context, snapshot) {
@@ -92,24 +94,31 @@ class _TaskTableState extends State<TaskTable> {
                   } 
                   if (snapshot.connectionState == ConnectionState.active) {   
                     if (snapshot.data!.docs.isNotEmpty) {
-                      context.read<HelpDeskViewModel>().cleanModel();
                       return FutureBuilder(
                         future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
                         builder: (context, futureSnapshot) {
                           if (futureSnapshot.connectionState == ConnectionState.done) {
                             List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                            return SizedBox(
-                              height: 680 + (screenHeight - 960),
-                              child: Scrollbar(
-                                controller: _vController,
-                                thumbVisibility: true,
-                                child: SingleChildScrollView(
-                                  controller: _vController,
-                                  child: Column(
-                                    children: generateContent(data)
-                                  ),
-                                ),
-                              )
+                            return FutureBuilder(
+                              future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+                              builder: (context, _) {
+                                if (_.connectionState == ConnectionState.done) {
+                                  return SizedBox(
+                                    height: 680 + (screenHeight - 960),
+                                    child: Scrollbar(
+                                      controller: _vController,
+                                      thumbVisibility: true,
+                                      child: SingleChildScrollView(
+                                        controller: _vController,
+                                        child: Column(
+                                          children: generateContent(data)
+                                        ),
+                                      ),
+                                    )
+                                  );
+                                }
+                                return const LoaderStatus(text: "Loading...");
+                              },
                             );
                           }
                           return Container();
@@ -137,25 +146,35 @@ class _TaskTableState extends State<TaskTable> {
                   if (hits.isNotEmpty) {
                     List<String> docs = [];
                     for (var item in hits) {
-                      docs.add(item["docId"]);
+                      if (!docs.contains(item["docId"])) {
+                        docs.add(item["docId"]);
+                      }
                     }
                     context.read<HelpDeskViewModel>().cleanModel();
                     return FutureBuilder(
                       future: context.watch<HelpDeskViewModel>().reconstructSearchResult(docs),
                       builder: ((context, snapshot) {
                         List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                        return SizedBox(
-                          height: 680 + (screenHeight - 960),
-                          child: Scrollbar(
-                            controller: _vController,
-                            thumbVisibility: true,
-                            child: SingleChildScrollView(
-                              controller: _vController,
-                              child: Column(
-                                children: generateContent(data)
-                              ),
-                            ),
-                          )
+                        return FutureBuilder(
+                          future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+                          builder: (context, _) {
+                            if (_.connectionState == ConnectionState.done) {
+                              return SizedBox(
+                                height: 680 + (screenHeight - 960),
+                                child: Scrollbar(
+                                  controller: _vController,
+                                  thumbVisibility: true,
+                                  child: SingleChildScrollView(
+                                    controller: _vController,
+                                    child: Column(
+                                      children: generateContent(data)
+                                    ),
+                                  ),
+                                )
+                              );
+                            }
+                            return const LoaderStatus(text: "Loading...");
+                          },
                         );
                       }),
                     );

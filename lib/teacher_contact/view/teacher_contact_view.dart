@@ -14,7 +14,9 @@ class TeacherContactView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
+    bool isMobileSite = context
+        .watch<AppViewModel>()
+        .getMobileSiteState(MediaQuery.of(context).size.width);
     final teacherContactList =
         context.select<TeacherContactViewModel, List<TeacherContactModel>?>(
             (viewModel) => viewModel.teacherList);
