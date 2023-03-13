@@ -20,9 +20,9 @@ class UserProfileEditButtonBar extends StatelessWidget {
         create: (_) => UserProfileViewModel(),
         child: Consumer<UserProfileViewModel>(
             builder: (context, viewModel, child) {
-          if (viewModel.isEditing == false) {
-            return Container();
-          }
+          // if (viewModel.isEditing == false) {
+          //   return Container();
+          // }
           return Padding(
               padding: const EdgeInsets.only(right: 102, top: 24),
               child: ButtonBar(

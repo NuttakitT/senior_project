@@ -178,8 +178,6 @@ class TeachContactDesktopDetailCell extends StatelessWidget {
     if (detailString == "null") {
       return Container();
     }
-    TextEditingController textController =
-        TextEditingController(text: detailString);
 
     return ChangeNotifierProvider(
       create: (_) => TeacherContactViewModel(),
@@ -195,17 +193,10 @@ class TeachContactDesktopDetailCell extends StatelessWidget {
                     child: DefaultTextStyle(
                         style: AppFontStyle.wb50R16, child: Text(title))),
                 Expanded(
-                    flex: 7,
-                    child: TextField(
-                      textAlign: TextAlign.start,
-                      enabled: viewModel.isEditing,
-                      controller: textController,
-                      style: AppFontStyle.wb80R16,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 0.0),
-                        border: InputBorder.none,
-                      ),
-                    )),
+                  flex: 7,
+                  child: DefaultTextStyle(
+                      style: AppFontStyle.wb80R16, child: Text(detailString)),
+                ),
               ],
             ),
             const SizedBox(height: 8.0)
@@ -246,8 +237,7 @@ class TeacherContactDesktopHeader extends StatelessWidget {
                   height: 40,
                   child: TextButton(
                     onPressed: () {
-                      viewModel.toggleEditButton();
-                      print(viewModel.isEditing);
+                      viewModel.toggleAddContactButton();
                     },
                     style: ButtonStyle(
                         backgroundColor:

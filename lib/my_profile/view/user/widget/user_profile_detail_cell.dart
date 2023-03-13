@@ -28,16 +28,9 @@ class UserProfileDetailCell extends StatefulWidget {
 }
 
 class _UserProfileDetailCellState extends State<UserProfileDetailCell> {
-  TextEditingController leftFieldTextController =
-      TextEditingController(text: '');
-  TextEditingController rightFieldTextController =
-      TextEditingController(text: '');
-
   @override
   void initState() {
     super.initState();
-    leftFieldTextController.text = widget.leftCellDetail ?? '';
-    rightFieldTextController.text = widget.rightCellDetail ?? '';
   }
 
   @override
@@ -72,14 +65,19 @@ class _UserProfileDetailCellState extends State<UserProfileDetailCell> {
                 if (widget.leftCellDetail != null)
                   Expanded(
                       flex: 3,
-                      child: TextField(
-                        enabled: true,
-                        controller: leftFieldTextController,
+                      child: Text(
+                        widget.leftCellDetail!,
                         style: UserProfileDetailCell.informationDetailTextStyle,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                        ),
-                      )),
+                      )
+                      // child: TextField(
+                      //   enabled: true,
+                      //   controller: leftFieldTextController,
+                      //   style: UserProfileDetailCell.informationDetailTextStyle,
+                      //   decoration: const InputDecoration(
+                      //     border: InputBorder.none,
+                      //   ),
+                      // )
+                      ),
                 if (widget.rightCellDetail != null)
                   Expanded(
                       flex: 1,
@@ -91,13 +89,9 @@ class _UserProfileDetailCellState extends State<UserProfileDetailCell> {
                 if (widget.rightCellDetail != null)
                   Expanded(
                       flex: 3,
-                      child: TextField(
-                        enabled: true,
-                        controller: rightFieldTextController,
+                      child: Text(
+                        widget.rightCellDetail!,
                         style: UserProfileDetailCell.informationDetailTextStyle,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                        ),
                       )),
                 if (widget.rightCellDetail == null)
                   Expanded(flex: 4, child: Container())

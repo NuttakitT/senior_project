@@ -13,8 +13,7 @@ class UserProfileCard {
   static EdgeInsets informationPadding =
       const EdgeInsets.fromLTRB(20, 16, 20, 16);
 
-  static Widget widget(BuildContext context, Map<String, dynamic> profileData,
-      bool isCurrentlyEditProfile) {
+  static Widget widget(BuildContext context, Map<String, dynamic> profileData) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(

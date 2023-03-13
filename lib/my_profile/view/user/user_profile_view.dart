@@ -16,13 +16,11 @@ class UserProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState;
-    bool isCurrentlyEditData = false;
 
     if (isMobileSite) {
       return TemplateMenuMobile(
           content: UserProfileMobile(
         profileData: data,
-        isCurrentlyEditData: isCurrentlyEditData,
       ));
     } else {
       return TemplateDesktop(
@@ -35,11 +33,7 @@ class UserProfileView extends StatelessWidget {
           content: Column(
             children: [
               UserProfileHeader.widget(context),
-              UserProfileCard.widget(context, data, isCurrentlyEditData),
-              UserProfileEditButtonBar(
-                didTapCancel: (p0) {},
-                didTapSaveChange: (p0) {},
-              )
+              UserProfileCard.widget(context, data),
             ],
           ));
     }

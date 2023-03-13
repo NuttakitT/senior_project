@@ -7,16 +7,11 @@ import '../model/user_profile_model.dart';
 
 class UserProfileViewModel extends ChangeNotifier {
   final firebaseServiceForUser = FirebaseServices("user");
-  bool _isEditing = false;
+  final _currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
   UserModel? _user;
   UserModel? get user => _user;
-
-  bool get isEditing => _isEditing;
-
-  void toggleEditButton() {
-    _isEditing = !_isEditing;
-    notifyListeners();
-  }
+  String? get currentUserId => _currentUserId;
 
   Future<UserModel?> getUserProfile(String uid) async {
     final snapshot = await firebaseServiceForUser.getDocumentById(uid);
@@ -36,7 +31,7 @@ class UserProfileViewModel extends ChangeNotifier {
     return null;
   }
 
-  Future<void> getUser(String uid) async {
+  Future<void> _getUser(String uid) async {
     _user = await getUserProfile(uid);
     notifyListeners();
   }
@@ -48,6 +43,15 @@ class UserProfileViewModel extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  void getUserUid() {
+    final uid = currentUserId;
+    if (uid == null) {
+      return;
+    }
+    _getUser(uid);
+    notifyListeners();
   }
 }
 

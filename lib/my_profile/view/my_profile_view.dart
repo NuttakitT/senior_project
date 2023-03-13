@@ -8,8 +8,7 @@ import '../view_model/user_profile_view_model.dart';
 
 class MyProfileView extends StatefulWidget {
   final bool isAdmin;
-  final String uid;
-  const MyProfileView({super.key, required this.isAdmin, required this.uid});
+  const MyProfileView({super.key, required this.isAdmin});
 
   @override
   State<MyProfileView> createState() => _MyProfileViewState();
@@ -19,7 +18,7 @@ class _MyProfileViewState extends State<MyProfileView> {
   @override
   void initState() {
     super.initState();
-    context.read<UserProfileViewModel>().getUser(widget.uid);
+    context.read<UserProfileViewModel>().getUserUid();
   }
 
   // final Map<String, dynamic> data = {

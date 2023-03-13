@@ -6,15 +6,26 @@ import '../../core/datasource/firebase_services.dart';
 import '../model/teacher_contact_model.dart';
 
 class TeacherContactViewModel extends ChangeNotifier {
+  final formKey = GlobalKey<FormState>();
   final firebaseService = FirebaseServices("teacherContact");
-  bool _isEditing = false;
   List<TeacherContactModel>? _teacherList;
   List<TeacherContactModel>? get teacherList => _teacherList;
 
-  bool get isEditing => _isEditing;
+  // MARK: - Add Contact
+  Future<void> addContact() async {
+    final currentState = formKey.currentState;
+    if (currentState == null) {
+      return;
+    }
+    if (currentState.validate() == false) {
+      return;
+    }
+    formKey.currentState?.save();
+  }
 
-  void toggleEditButton() {
-    _isEditing = !_isEditing;
+  // MARK: - Teacher Contact
+  void toggleAddContactButton() {
+    // handle add Contacxt pop-up
     notifyListeners();
   }
 

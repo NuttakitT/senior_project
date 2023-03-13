@@ -18,49 +18,15 @@ class UserProfileHeader {
         children: [
           DefaultTextStyle(
             style: titleTextStyle,
-            child: const Text("My Profile"),
+            child: Text(Consts.myProfile),
           ),
           const Spacer(),
-          ChangeNotifierProvider(
-              create: (_) => UserProfileViewModel(),
-              child: Consumer<UserProfileViewModel>(
-                  builder: (context, viewModel, child) {
-                if (viewModel.isEditing) {
-                  return Container();
-                }
-                return SizedBox(
-                  width: 178,
-                  height: 40,
-                  child: TextButton(
-                    onPressed: () {
-                      viewModel.toggleEditButton();
-                    },
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(ColorConstant.orange40),
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          "Edit Profile",
-                          style: createTaskButtonStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }))
         ],
       ),
     );
   }
+}
+
+class Consts {
+  static String myProfile = "My Profile";
 }
