@@ -222,9 +222,9 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                       ),
                       onTap: () {
                         // TODO edit profile
-                        // context
-                        //     .read<TemplateMobileViewModel>()
-                        //     .changeMenuState(3);
+                        context
+                            .read<TemplateMobileViewModel>()
+                            .changeMenuState(3);
                         // Navigator.pushAndRemoveUntil(
                         //   context, 
                         //   MaterialPageRoute(builder: (context) {
