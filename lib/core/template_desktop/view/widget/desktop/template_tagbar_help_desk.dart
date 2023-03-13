@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar_helpdesk.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 //call function from tabtag_help.dart
@@ -21,7 +22,7 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(2),
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(3),
     ];
-    String id = "user"; // TODO listen to current user id
+    String id = context.watch<AppViewModel>().app.getUser.getId;
 
     return Container(
       padding: const EdgeInsets.only(left: 72),

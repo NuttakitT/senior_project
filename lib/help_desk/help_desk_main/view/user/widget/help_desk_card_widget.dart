@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,8 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
 
 class HelpDeskCardWidget {
   final Map<String, dynamic> card;
@@ -86,7 +87,7 @@ class HelpDeskCardWidget {
                                 style: AppFontStyle.wb80R24,
                               ),
                               TextSpan(
-                                    text: "#${card["id"][0]}${card["id"][1]}${card["id"][2]}",
+                                    text: " #${card["id"][0]}${card["id"][1]}${card["id"][2]}",
                                     style: const TextStyle(
                                       fontFamily: AppFontStyle.font,
                                       fontWeight: FontWeight.w400,
@@ -164,8 +165,22 @@ class HelpDeskCardWidget {
                             left: 16, bottom: 24.0, right: 16.0),
                         height: 56.0,
                         child: TextButton(
-                          onPressed: () {
-                            // TODO: - reply channel
+                          onPressed: () async {
+                            String docId = await context.read<HelpDeskViewModel>().getTaskDocId(card["id"]);
+                            Navigator.pushAndRemoveUntil(
+                              context, 
+                              MaterialPageRoute(builder: (context) {
+                                return HelpDeskReplyPage(
+                                  docId: docId,
+                                  taskId: card["id"],
+                                  taskTitle: card["title"],
+                                  taskDetail: card["detail"],
+                                  priority: card["priority"],
+                                  status: card["status"],
+                                );
+                              }), 
+                              (route) => false
+                            );
                           },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(

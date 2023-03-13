@@ -4,6 +4,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 Stream? query(String id, int type) {
@@ -75,6 +76,8 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLogin = context.watch<AppViewModel>().isLogin;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: InkWell(
@@ -106,31 +109,42 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
                   width: 40,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                  child: StreamBuilder(
-                    stream: _stream,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.active) {
-                        if (snapshot.hasData) {
-                          oldAmount = snapshot.data!.docs.length;
+                  child: Builder(
+                    builder: (context) {
+                      if (!isLogin) {
+                        return const Text(
+                          "0",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: ColorConstant.whiteBlack80),
+                        );
+                      }
+                      return StreamBuilder(
+                        stream: _stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.active) {
+                            if (snapshot.hasData) {
+                              oldAmount = snapshot.data!.docs.length;
+                              return Text(
+                                (snapshot.data!.docs.length).toString(),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(color: ColorConstant.whiteBlack80),
+                              );
+                            }
+                            context.read<HelpDeskViewModel>().cleanModel();
+                            return Text(
+                              oldAmount.toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: ColorConstant.whiteBlack80),
+                            );
+                          }
                           return Text(
-                            (snapshot.data!.docs.length).toString(),
+                            oldAmount.toString(),
                             textAlign: TextAlign.center,
                             style: const TextStyle(color: ColorConstant.whiteBlack80),
                           );
-                        }
-                        context.read<HelpDeskViewModel>().cleanModel();
-                        return Text(
-                          oldAmount.toString(),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: ColorConstant.whiteBlack80),
-                        );
-                      }
-                      return Text(
-                        oldAmount.toString(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: ColorConstant.whiteBlack80),
+                        },
                       );
-                    },
+                    }
                   ),
                 ),
               ],

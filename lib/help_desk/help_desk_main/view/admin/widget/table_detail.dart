@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,10 +7,15 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/assets/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/widget/action_button.dart';
-import 'package:senior_project/help_desk/help_desk_main/core/widget/priority_icon.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
 
 class TableDetail {
+  final BuildContext context;
+  final Map<String, dynamic> detail;
+  const TableDetail({required this.detail, required this.context});
+
   static TextStyle _detailTextStyle(double size, Color color) {
     return TextStyle(
         fontFamily: AppFontStyle.font,
@@ -19,8 +24,7 @@ class TableDetail {
         fontSize: size);
   }
 
-  static List<Widget> widget(
-      BuildContext context, Map<String, dynamic> detail) {
+  List<Widget> widget() {
     List<Color> statusColor = StatusColor.getColor(false, detail["status"]);
     String priority = context.watch<HelpDeskViewModel>().convertToString(false, detail["priority"]);
     String status = context.watch<HelpDeskViewModel>().convertToString(true, detail["status"]);
@@ -29,7 +33,7 @@ class TableDetail {
     
     return [
       SizedBox(
-        width: 180,
+        width: 200,
         child: Row(
           children: [
             Padding(
@@ -42,19 +46,33 @@ class TableDetail {
                       shape: BoxShape.circle, color: Color(0x6629B6F6)),
                   child: const Icon(Icons.person)),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  detail["username"],
-                  style: _detailTextStyle(20, ColorConstant.whiteBlack80),
-                ),
-                Text(
-                  detail["email"],
-                  style: _detailTextStyle(12, ColorConstant.whiteBlack60),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(children: [
+                      TextSpan(
+                        text: detail["username"],
+                        style: _detailTextStyle(20, ColorConstant.whiteBlack80),
+                      )
+                    ]),
+                  ),
+                  RichText(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(children: [
+                      TextSpan(
+                        text: detail["email"],
+                        style: _detailTextStyle(12, ColorConstant.whiteBlack60),
+                      )
+                    ]),
+                  ),
+                ],
+              ),
             )
           ],
         ),
@@ -173,7 +191,26 @@ class TableDetail {
         child: 
         Align(
           alignment: Alignment.center,
-          child: ActionButton(id: detail["id"],),
+          child: TextButton(
+            onPressed: () async {
+              String docId = await context.read<HelpDeskViewModel>().getTaskDocId(detail["id"]);
+              Navigator.pushAndRemoveUntil(
+                context, 
+                MaterialPageRoute(builder: (context) {
+                  return HelpDeskReplyPage(
+                    docId: docId,
+                    taskId: detail["id"],
+                    taskTitle: detail["title"],
+                    taskDetail: detail["detail"],
+                    priority: detail["priority"],
+                    status: detail["status"],
+                  );
+                }), 
+                (route) => false
+              );
+            }, child: Text("test"),
+          ),
+          // child: ActionButton(id: detail["id"],),
         )
       )
     ];
