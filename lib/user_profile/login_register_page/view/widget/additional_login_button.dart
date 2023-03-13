@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/user_profile/login_register_page/view_model/authentication_view_model.dart';
 import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 
@@ -31,13 +32,12 @@ class AdditionalLoginButton {
                     .googleSignIn(context);
             if (isSuccess) {
               // ignore: use_build_context_synchronously
-              Navigator.pushAndRemoveUntil(
-                context, 
-                MaterialPageRoute(builder: (context) {
-                  return MyProfileView();
-                }), 
-                (route) => false
-              );
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                return MyProfileView(
+                    isAdmin:
+                        context.watch<AppViewModel>().app.getUser.getRole == 0);
+              }), (route) => false);
             }
           },
           style: ButtonStyle(

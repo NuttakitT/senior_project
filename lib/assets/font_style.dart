@@ -278,6 +278,11 @@ extension AppFontStyle on FontStyle {
       fontWeight: AppFontWeight.bold,
       color: ColorConstant.orange50,
       fontSize: 16.0);
+  static const orange70Md28 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.medium,
+      color: ColorConstant.orange70,
+      fontSize: 28);
   static const orange70SemiB28 = TextStyle(
       fontFamily: font,
       color: ColorConstant.orange70,

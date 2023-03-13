@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/user_profile/my_profile/view/user/widget/user_profile_about_me.dart';
@@ -12,8 +13,7 @@ class UserProfileCard {
   static EdgeInsets informationPadding =
       const EdgeInsets.fromLTRB(20, 16, 20, 16);
 
-  static Widget widget(BuildContext context, Map<String, dynamic> profileData,
-      bool isCurrentlyEditProfile) {
+  static Widget widget(BuildContext context, Map<String, dynamic> profileData) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(
