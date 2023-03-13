@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/teacher_contact/view/widget/add_contact_popup.dart';
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -237,8 +238,11 @@ class TeacherContactDesktopHeader extends StatelessWidget {
                   height: 40,
                   child: TextButton(
                     onPressed: () {
-                      viewModel.toggleAddContactButton();
-                      // open pop-up
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const AddContactPopup();
+                          });
                     },
                     style: ButtonStyle(
                         backgroundColor:

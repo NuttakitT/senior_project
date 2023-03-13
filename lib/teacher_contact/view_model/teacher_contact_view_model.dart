@@ -8,36 +8,25 @@ import '../model/teacher_contact_model.dart';
 class TeacherContactViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final firebaseService = FirebaseServices("teacherContact");
-  late String _name;
   List<TeacherContactModel>? _teacherList;
   List<TeacherContactModel>? get teacherList => _teacherList;
-  set name(String value) => _name = value;
 
   // MARK: - Add Contact
-  Future<void> addContact() async {
-    final currentState = formKey.currentState;
-    if (currentState == null) {
-      return;
-    }
-    if (currentState.validate() == false) {
-      return;
-    }
-    formKey.currentState?.save();
-    //  Navigator.pop(context);
-  }
-
-  String? validateName(String value) {
-    if (value.isEmpty) {
-      return 'Please enter name';
-    }
-    return null;
+  Future<void> createNewContact() async {
+    // TeacherContactModel model = TeacherContactModel(
+    //     id: id,
+    //     imageUrl: imageUrl,
+    //     gender: gender,
+    //     name: name,
+    //     thaiName: thaiName,
+    //     email: email,
+    //     phone: phone,
+    //     officeHours: officeHours,
+    //     facebookLink: facebookLink,
+    //     subjectId: subjectId);
   }
 
   // MARK: - Teacher Contact
-  void toggleAddContactButton() {
-    // handle add Contacxt pop-up
-    notifyListeners();
-  }
 
   Future<List<TeacherContactModel>?> getAllTeacherContacts() async {
     final snapshot = await firebaseService.getAllDocument();

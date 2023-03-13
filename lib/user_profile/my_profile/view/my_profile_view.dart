@@ -18,8 +18,28 @@ class _MyProfileViewState extends State<MyProfileView> {
   @override
   void initState() {
     super.initState();
-    context.read<UserProfileViewModel>().getUserUid();
+    context.read<UserProfileViewModel>().currentUserId;
   }
+
+  @override
+  Widget build(BuildContext context) {
+    final isAdmin = widget.isAdmin;
+    final userData = context.select<UserProfileViewModel, UserModel?>(
+        (viewModel) => viewModel.user);
+
+    if (userData == null) {
+      return const Center(
+        child: Text("No results"),
+      );
+    }
+
+    if (isAdmin) {
+      return AdminProfileView(data: userData.toMap());
+    } else {
+      return UserProfileView(data: userData.toMap());
+    }
+  }
+}
 
   // final Map<String, dynamic> data = {
   //   "imageUrl": "https://picsum.photos/200/300",
@@ -44,23 +64,3 @@ class _MyProfileViewState extends State<MyProfileView> {
   //   "officeHours": "9.30 - 16.30",
   //   "role": "Admin"
   // };
-
-  @override
-  Widget build(BuildContext context) {
-    final isAdmin = widget.isAdmin;
-    final userData = context.select<UserProfileViewModel, UserModel?>(
-        (viewModel) => viewModel.user);
-
-    if (userData == null) {
-      return const Center(
-        child: Text("No results"),
-      );
-    }
-
-    if (isAdmin) {
-      return AdminProfileView(data: userData.toMap());
-    } else {
-      return UserProfileView(data: userData.toMap());
-    }
-  }
-}

@@ -30,6 +30,27 @@ class TeacherContactView extends StatelessWidget {
       teacherContactData.add(teacherCon);
     }
 
+    if (isMobileSite) {
+      return Container();
+    } else {}
+    return TemplateDesktop(
+        faqmenu: false,
+        faqmenuadmin: false,
+        helpdesk: false,
+        helpdeskadmin: false,
+        home: false,
+        useTemplatescroll: true,
+        content: Column(
+          children: [
+            TeacherContactDesktopHeader(
+              isAdmin: isAdmin,
+            ),
+            TeacherContactDesktopListView(
+              teacherContactList: teacherContactData,
+            )
+          ],
+        ));
+
     // final List<Map<String, dynamic>> teacherContactList = [
     //   {
     //     "imageUrl": "https://picsum.photos/200/300",
@@ -89,26 +110,5 @@ class TeacherContactView extends StatelessWidget {
     //     "facebookLink": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     //   },
     // ];
-
-    if (isMobileSite) {
-      return Container();
-    } else {}
-    return TemplateDesktop(
-        faqmenu: false,
-        faqmenuadmin: false,
-        helpdesk: false,
-        helpdeskadmin: false,
-        home: false,
-        useTemplatescroll: true,
-        content: Column(
-          children: [
-            TeacherContactDesktopHeader(
-              isAdmin: isAdmin,
-            ),
-            TeacherContactDesktopListView(
-              teacherContactList: teacherContactData,
-            )
-          ],
-        ));
   }
 }

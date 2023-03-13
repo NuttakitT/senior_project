@@ -12,7 +12,7 @@ class UserProfileViewModel extends ChangeNotifier {
   UserModel? get user => _user;
   String? get currentUserId => _currentUserId;
 
-  Future<UserModel?> getUserProfile(String uid) async {
+  Future<UserModel?> _getUserProfile(String uid) async {
     final snapshot = await firebaseServiceForUser.getDocumentById(uid);
 
     if (snapshot != null) {
@@ -31,7 +31,7 @@ class UserProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> _getUser(String uid) async {
-    _user = await getUserProfile(uid);
+    _user = await _getUserProfile(uid);
     notifyListeners();
   }
 
@@ -42,15 +42,6 @@ class UserProfileViewModel extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
-  }
-
-  void getUserUid() {
-    final uid = currentUserId;
-    if (uid == null) {
-      return;
-    }
-    _getUser(uid);
-    notifyListeners();
   }
 }
 
