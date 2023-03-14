@@ -24,7 +24,9 @@ class TeacherContactView extends StatelessWidget {
         "email": "runnsiriphuwanich@gmail.com",
         "phone": "0812343212",
         "officeHours": "12.00 - 17.00",
-        "facebookLink": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        "facebookLink": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "subject":
+            "CPE 401 Software Engineering Project\nCPE111 Data Structuressss"
       },
       {
         "imageUrl": "https://picsum.photos/200/300",

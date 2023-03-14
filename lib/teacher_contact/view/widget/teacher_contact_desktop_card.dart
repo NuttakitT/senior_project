@@ -5,8 +5,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../assets/color_constant.dart';
 
 class TeacherContactDesktopCard extends StatelessWidget {
-  const TeacherContactDesktopCard({super.key, required this.cardDetail});
+  const TeacherContactDesktopCard(
+      {super.key, required this.cardDetail, required this.isEditting});
   final Map<String, dynamic> cardDetail;
+  final bool isEditting;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,18 +62,22 @@ class TeacherContactDesktopCard extends StatelessWidget {
                   TeachContactDesktopDetailCell(
                     title: "Mail",
                     detail: cardDetail['email'],
+                    isEditting: isEditting,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Phone",
                     detail: cardDetail['phone'],
+                    isEditting: isEditting,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Office Hours",
                     detail: cardDetail['officeHours'],
+                    isEditting: isEditting,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Subject",
                     detail: cardDetail['subject'],
+                    isEditting: isEditting,
                   ),
                 ],
               ),
@@ -113,7 +119,6 @@ class TeacherContactDesktopCard extends StatelessWidget {
                             final Uri params = Uri(
                               scheme: 'mailto',
                               path: cardDetail['email'],
-                              // query: 'subject=$subject&body=$body',
                             );
                             Uri uri = Uri.parse(params.toString());
                             if (await canLaunchUrl(uri)) {
@@ -165,11 +170,15 @@ class TeacherContactDesktopCard extends StatelessWidget {
 
 class TeachContactDesktopDetailCell extends StatelessWidget {
   const TeachContactDesktopDetailCell(
-      {Key? key, required this.title, required this.detail})
+      {Key? key,
+      required this.title,
+      required this.detail,
+      required this.isEditting})
       : super(key: key);
 
   final String title;
   final dynamic detail;
+  final bool isEditting;
 
   @override
   Widget build(BuildContext context) {
@@ -177,9 +186,13 @@ class TeachContactDesktopDetailCell extends StatelessWidget {
     if (detailString == "null") {
       return Container();
     }
+    TextEditingController textController =
+        TextEditingController(text: detailString);
+
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
                 flex: 3,
@@ -187,8 +200,14 @@ class TeachContactDesktopDetailCell extends StatelessWidget {
                     style: AppFontStyle.wb50R16, child: Text(title))),
             Expanded(
                 flex: 7,
-                child: DefaultTextStyle(
-                    style: AppFontStyle.wb80R16, child: Text(detailString))),
+                child: TextField(
+                  enabled: isEditting,
+                  controller: textController,
+                  style: AppFontStyle.wb80R16,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                )),
           ],
         ),
         const SizedBox(height: 8.0)
