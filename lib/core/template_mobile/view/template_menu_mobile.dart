@@ -141,16 +141,13 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(1);
-                        int? role = context.read<AppViewModel>().app.getUser.getRole;
+                        int? role =
+                            context.read<AppViewModel>().app.getUser.getRole;
                         Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => 
-                            HelpDeskMainView(isAdmin: role == 0
-                              ? true 
-                              : false
-                            )
-                          )
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HelpDeskMainView(
+                                    isAdmin: role == 0 ? true : false)));
                       },
                     ),
                   ),

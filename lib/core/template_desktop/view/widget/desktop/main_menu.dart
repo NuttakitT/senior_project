@@ -123,12 +123,13 @@ class _MainMenuState extends State<MainMenu> {
               onPressed: () async {
                 bool isSuccess = await context.read<AppViewModel>().login(context);
                 if (isSuccess) {
-                  Navigator.pushAndRemoveUntil(
-                    context, 
-                    MaterialPageRoute(builder: (context) {
-                      return MyProfileView();
-                    }), 
-                  (route) => false);
+                  // TODO link to home
+                  // Navigator.pushAndRemoveUntil(
+                  //   context, 
+                  //   MaterialPageRoute(builder: (context) {
+                  //     return MyProfileView(isAdmin: false,);
+                  //   }), 
+                  // (route) => false);
                 }
               },
               style: ButtonStyle(

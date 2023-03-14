@@ -30,7 +30,7 @@ class AdminProfileView extends StatelessWidget {
           content: Column(
             children: [
               UserProfileHeader.widget(context),
-              UserProfileCard.widget(context, data, false)
+              UserProfileCard.widget(context, data)
             ],
           ));
     }
