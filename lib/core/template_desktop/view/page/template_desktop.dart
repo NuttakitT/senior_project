@@ -36,7 +36,12 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
     double contentSize = 1112;
 
     return Container(
-      // TODO background
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/desktop_background.png"),
+          fit: BoxFit.cover
+        )
+      ),
       height: height,
       width: hasMenu 
         ? (screenWidth - 328) > contentSize
