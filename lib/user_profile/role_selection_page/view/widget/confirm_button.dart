@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 import 'package:senior_project/user_profile/role_selection_page/view_model/role_selection_view_model.dart';
 
@@ -24,13 +25,13 @@ class ConfirmButton {
                   .backButtonLogic(context);
           if (isSuccess) {
             if (isConfirmButton) {
-              Navigator.pushAndRemoveUntil(
-                context, 
-                MaterialPageRoute(builder: (context) {
-                  return MyProfileView();
-                }), 
-                (route) => false
-              );
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                return MyProfileView(
+                  isAdmin:
+                      context.watch<AppViewModel>().app.getUser.getRole == 0,
+                );
+              }), (route) => false);
             } else {
               Navigator.pop(context);
             }
