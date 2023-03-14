@@ -6,8 +6,8 @@ import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/user_profile/login_register_page/view_model/authentication_view_model.dart';
-import 'package:senior_project/user_profile/role_selection_page/view_model/role_selection_view_model.dart';
+import 'package:senior_project/teacher_contact/view/teacher_contact_view.dart';
+import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 import 'core/template_mobile/view_model/template_mobile_view_model.dart';
 import 'firebase_options.dart';
 import 'help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -19,13 +19,12 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthenticationViewModel()),
         ChangeNotifierProvider(create: (context) => AppViewModel()),
-        ChangeNotifierProvider(create: (context) => RoleSelectionViewModel()),
         ChangeNotifierProvider(create: (context) => HelpDeskViewModel()),
         ChangeNotifierProvider(create: (context) => TemplateDesktopViewModel()),
         ChangeNotifierProvider(create: (context) => TemplateMobileViewModel()),
         ChangeNotifierProvider(create: (context) => ReplyChannelViewModel()),
+        ChangeNotifierProvider(create: (context) => TeacherContactViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -47,12 +46,7 @@ class MyApp extends StatelessWidget {
               FirebaseAuth.instance.currentUser == null ? false : true),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
-              // return const HelpDeskReplyPage();
-              return HelpDeskMainView(
-                isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0
-                    ? true
-                    : false,
-              );
+              return const HelpDeskMainView(isAdmin: false,);
             }
             return Container();
           }),

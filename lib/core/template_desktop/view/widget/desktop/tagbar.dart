@@ -29,8 +29,8 @@ class _TagBarState extends State<TagBar> {
         child: Container(
           decoration: BoxDecoration(
               color: widget.state == true
-                  ? ColorConstant.orange20
-                  : ColorConstant.blue0,
+                  ? ColorConstant.orange80
+                  : ColorConstant.whiteBlack85,
               borderRadius: BorderRadius.circular(8)),
           height: 40,
           width: 280,
@@ -42,7 +42,11 @@ class _TagBarState extends State<TagBar> {
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Text(
                   widget.name,
-                  style: AppFontStyle.wb80R20,
+                  style: const TextStyle(
+                    fontFamily: AppFontStyle.font,
+                    fontWeight: AppFontWeight.regular,
+                    color: ColorConstant.white,
+                    fontSize: 20),
                   textAlign: TextAlign.left,
                 ),
               ),

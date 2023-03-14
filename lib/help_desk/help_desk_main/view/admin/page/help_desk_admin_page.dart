@@ -46,8 +46,6 @@ class _HelpDeskAdminPageState extends State<HelpDeskAdminPage> {
           ));
     }
     return TemplateDesktop(
-      faqmenu: false,
-      faqmenuadmin: false,
       helpdesk: false,
       helpdeskadmin: true,
       home: false,

@@ -49,8 +49,6 @@ class _HelpDeskMainDesktopWidgetState extends State<HelpDeskMainDesktopWidget> {
           ));
     }
     return TemplateDesktop(
-        faqmenu: false,
-        faqmenuadmin: false,
         helpdesk: true,
         helpdeskadmin: false,
         home: false,
