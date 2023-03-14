@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
-  List<bool> _navBarState = [true, false, false, false, false, false];
+  List<bool> _navBarState = [true, false, false, false];
   List<bool> _helpDeskTagBar = [true, false, false, false, false, false, false, false]; 
   // TODO query amount from db
   List<bool> _homeTagBar = [true, false]; 
@@ -65,7 +65,7 @@ class TemplateDesktopViewModel extends ChangeNotifier {
   void changeState(int index, int type) {
     List<bool> menuTemplate = _selectState(type);
     int trueStateIndex = menuTemplate.indexOf(true);
-    if (trueStateIndex != index && trueStateIndex != -1) {
+    if (index < menuTemplate.length && trueStateIndex != index && trueStateIndex != -1) {
       menuTemplate[trueStateIndex] = false;
       menuTemplate[index] = true;
       _copyValue(menuTemplate, type);

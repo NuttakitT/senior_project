@@ -3,7 +3,10 @@ import 'package:senior_project/teacher_contact/view/widget/teacher_contact_deskt
 
 class TeacherContactDesktopListView extends StatelessWidget {
   const TeacherContactDesktopListView(
-      {super.key, required this.teacherContactList});
+      {super.key,
+      required this.isMobileSite,
+      required this.teacherContactList});
+  final bool isMobileSite;
   final List<Map<String, dynamic>?> teacherContactList;
 
   @override
@@ -19,7 +22,7 @@ class TeacherContactDesktopListView extends StatelessWidget {
       height: MediaQuery.of(context).size.height - 162,
       child: GridView.count(
           padding: const EdgeInsets.only(top: 40, left: 102, right: 102),
-          crossAxisCount: 2,
+          crossAxisCount: isMobileSite ? 1 : 2,
           childAspectRatio: 2,
           mainAxisSpacing: 20.0,
           crossAxisSpacing: 20.0,

@@ -23,8 +23,6 @@ class AdminProfileView extends StatelessWidget {
       ));
     } else {
       return TemplateDesktop(
-          faqmenu: false,
-          faqmenuadmin: false,
           helpdesk: false,
           helpdeskadmin: false,
           home: false,
@@ -32,7 +30,7 @@ class AdminProfileView extends StatelessWidget {
           content: Column(
             children: [
               UserProfileHeader.widget(context),
-              UserProfileCard.widget(context, data, false)
+              UserProfileCard.widget(context, data)
             ],
           ));
     }

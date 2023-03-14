@@ -25,9 +25,7 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
     String id = context.watch<AppViewModel>().app.getUser.getId;
 
     return Container(
-      padding: const EdgeInsets.only(left: 72),
-      decoration: const BoxDecoration(color: ColorConstant.blue0),
-      width: 400,
+      decoration: const BoxDecoration(color: ColorConstant.whiteBlack85),
       height: double.infinity,
       child: SingleChildScrollView(
         child: Column(
@@ -35,7 +33,7 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                  top: 16, right: 24, left: 24, bottom: 40),
+                  top: 24, right: 24, left: 24, bottom: 40),
               child: Container(
                 decoration: BoxDecoration(
                     color: ColorConstant.white,
@@ -80,7 +78,14 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: TagBarHelpDesk(name: "All status", state: menuSelected[0], index: 0, id: id,),
             ),
-            const Divider(),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Container(
+                width: 280,
+                height: 1,
+                color: Colors.white,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: TagBarHelpDesk(name: "Not Start", state: menuSelected[1], index: 1, id: id,),

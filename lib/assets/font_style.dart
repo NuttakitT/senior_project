@@ -278,6 +278,11 @@ extension AppFontStyle on FontStyle {
       fontWeight: AppFontWeight.bold,
       color: ColorConstant.orange50,
       fontSize: 16.0);
+  static const orange70Md28 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.medium,
+      color: ColorConstant.orange70,
+      fontSize: 28);
   static const orange70SemiB28 = TextStyle(
       fontFamily: font,
       color: ColorConstant.orange70,
@@ -308,10 +313,10 @@ extension AppFontStyle on FontStyle {
       color: ColorConstant.orange90,
       fontSize: 28,
       fontWeight: AppFontWeight.bold);
-  static const orange90B36 = TextStyle(
+  static const orange70B36 = TextStyle(
       fontFamily: font,
       fontWeight: AppFontWeight.bold,
-      color: ColorConstant.orange90,
+      color: ColorConstant.orange70,
       fontSize: 36);
 
   // red
@@ -325,7 +330,7 @@ extension AppFontStyle on FontStyle {
   static const blue90B36 = TextStyle(
       fontFamily: font,
       fontWeight: AppFontWeight.bold,
-      color: ColorConstant.blue90,
+      color: Color(0xFF64B5F6),
       fontSize: 36);
   static const blue90B28 = TextStyle(
       fontFamily: font,

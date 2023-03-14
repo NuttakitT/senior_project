@@ -20,9 +20,7 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
     bool menu2 = context.watch<TemplateDesktopViewModel>().getHomeState(1);
 
     return Container(
-      padding: const EdgeInsets.only(left: 72),
-      decoration: const BoxDecoration(color: ColorConstant.blue0),
-      width: 400,
+      decoration: const BoxDecoration(color: ColorConstant.whiteBlack85),
       height: double.infinity,
       child: SingleChildScrollView(
         child: Column(
@@ -30,7 +28,7 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                  top: 16, right: 24, left: 24, bottom: 40),
+                  top: 24, right: 24, left: 24, bottom: 40),
               child: Container(
                 decoration: BoxDecoration(
                     color: ColorConstant.white,
@@ -59,24 +57,30 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
                 ),
               ),
             ),
-            Padding(
+            Container(
+              width: 326,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(right: 8),
                     child: Text(
-                      "Tag Post",
-                      style: AppFontStyle.wb80B20,
+                      "Topic",
+                      style: TextStyle(
+                        fontFamily: AppFontStyle.font,
+                        color: ColorConstant.white,
+                        fontWeight: AppFontWeight.bold,
+                        fontSize: 20),
                       textAlign: TextAlign.left,
                     ),
                   ),
                   Expanded(
                     child: Container(
                       height: 1,
-                      color: ColorConstant.whiteBlack20,
+                      color: Colors.white,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

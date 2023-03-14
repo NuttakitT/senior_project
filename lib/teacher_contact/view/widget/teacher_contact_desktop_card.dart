@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/teacher_contact/view/widget/add_contact_popup.dart';
+import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../assets/color_constant.dart';
@@ -113,7 +116,6 @@ class TeacherContactDesktopCard extends StatelessWidget {
                             final Uri params = Uri(
                               scheme: 'mailto',
                               path: cardDetail['email'],
-                              // query: 'subject=$subject&body=$body',
                             );
                             Uri uri = Uri.parse(params.toString());
                             if (await canLaunchUrl(uri)) {
@@ -177,22 +179,31 @@ class TeachContactDesktopDetailCell extends StatelessWidget {
     if (detailString == "null") {
       return Container();
     }
-    return Column(
-      children: [
-        Row(
+
+    return ChangeNotifierProvider(
+      create: (_) => TeacherContactViewModel(),
+      child: Consumer<TeacherContactViewModel>(
+          builder: (context, viewModel, child) {
+        return Column(
           children: [
-            Expanded(
-                flex: 3,
-                child: DefaultTextStyle(
-                    style: AppFontStyle.wb50R16, child: Text(title))),
-            Expanded(
-                flex: 7,
-                child: DefaultTextStyle(
-                    style: AppFontStyle.wb80R16, child: Text(detailString))),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: DefaultTextStyle(
+                        style: AppFontStyle.wb50R16, child: Text(title))),
+                Expanded(
+                  flex: 7,
+                  child: DefaultTextStyle(
+                      style: AppFontStyle.wb80R16, child: Text(detailString)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0)
           ],
-        ),
-        const SizedBox(height: 8.0)
-      ],
+        );
+      }),
     );
   }
 }
@@ -218,35 +229,45 @@ class TeacherContactDesktopHeader extends StatelessWidget {
           ),
           const Spacer(),
           if (isAdmin)
-            SizedBox(
-              width: 178,
-              height: 40,
-              child: TextButton(
-                onPressed: () {
-                  // TODO edit profile lofic
-                },
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(ColorConstant.orange40),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.add,
-                      color: Colors.white,
+            ChangeNotifierProvider(
+              create: (_) => TeacherContactViewModel(),
+              child: Consumer<TeacherContactViewModel>(
+                  builder: (context, viewModel, child) {
+                return SizedBox(
+                  width: 178,
+                  height: 40,
+                  child: TextButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const AddContactPopup();
+                          });
+                    },
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(ColorConstant.orange40),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "Add Contact",
+                          style: AppFontStyle.whiteSemiB16,
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      "Add Contact",
-                      style: AppFontStyle.whiteSemiB16,
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }),
             )
         ],
       ),
