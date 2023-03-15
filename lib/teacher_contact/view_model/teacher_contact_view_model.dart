@@ -12,18 +12,18 @@ class TeacherContactViewModel extends ChangeNotifier {
   List<TeacherContactModel>? get teacherList => _teacherList;
 
   // MARK: - Add Contact
-  Future<void> createNewContact() async {
-    // TeacherContactModel model = TeacherContactModel(
-    //     id: id,
-    //     imageUrl: imageUrl,
-    //     gender: gender,
-    //     name: name,
-    //     thaiName: thaiName,
-    //     email: email,
-    //     phone: phone,
-    //     officeHours: officeHours,
-    //     facebookLink: facebookLink,
-    //     subjectId: subjectId);
+  Future<void> createNewContact(AddTeacherContactRequest request) async {
+    TeacherContactModel model = TeacherContactModel(
+      id: "docId",
+      imageUrl: request.imageUrl,
+      name: "${request.firstName} ${request.lastName}",
+      thaiName: "${request.thaiName} ${request.thaiLastName}",
+      email: request.email,
+      phone: request.phone,
+      officeHours: request.officeHours,
+      facebookLink: request.facebookLink,
+      subjectId: request.subjectId,
+    );
   }
 
   // MARK: - Teacher Contact
@@ -42,7 +42,6 @@ class TeacherContactViewModel extends ChangeNotifier {
       TeacherContactModel teacherContact = TeacherContactModel(
         id: data[Consts.id],
         imageUrl: data[Consts.imageUrl],
-        gender: data[Consts.gender],
         name: data[Consts.name],
         thaiName: data[Consts.thaiName],
         email: data[Consts.email],

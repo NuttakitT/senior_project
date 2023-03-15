@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/teacher_contact/model/teacher_contact_model.dart';
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 
 class AddContactPopup extends StatefulWidget {
@@ -12,6 +13,19 @@ class AddContactPopup extends StatefulWidget {
 }
 
 class _AddContactPopupState extends State<AddContactPopup> {
+  static List<String> daysOfWeek = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+
+  TimeOfDay startTime = TimeOfDay(hour: 8, minute: 30);
+  TimeOfDay endTime = TimeOfDay(hour: 17, minute: 30);
+
   String firstName = "";
   bool isFirstNameEmpty = false;
   String lastName = "";
@@ -20,9 +34,13 @@ class _AddContactPopupState extends State<AddContactPopup> {
   bool isEmailEmpty = false;
   String phoneNumber = "";
   bool isPhoneNumberEmpty = false;
+  String startHours = "";
+  String endHours = "";
+  String officeHourDay = daysOfWeek.first;
   String facebookLink = "";
   bool isFacebookLinkEmpty = false;
   List<String> subjects = [];
+  bool isSubjectEmpty = false;
   String profileImage = "";
 
   bool get textFieldAllFilled =>
@@ -30,7 +48,8 @@ class _AddContactPopupState extends State<AddContactPopup> {
       isLastNameEmpty &&
       isEmailEmpty &&
       isPhoneNumberEmpty &&
-      isFacebookLinkEmpty;
+      isFacebookLinkEmpty &&
+      isSubjectEmpty;
 
   Color setColorOfTextField(bool emptyFlag) {
     if (!emptyFlag) {
@@ -46,6 +65,11 @@ class _AddContactPopupState extends State<AddContactPopup> {
 
   @override
   Widget build(BuildContext context) {
+    final startTimeHour = startTime.hour.toString().padLeft(2, '0');
+    final startTimeMinute = startTime.minute.toString().padLeft(2, '0');
+
+    final endTimeHour = endTime.hour.toString().padLeft(2, '0');
+    final endTimeMinute = endTime.minute.toString().padLeft(2, '0');
     return AlertDialog(
       backgroundColor: ColorConstant.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -194,6 +218,114 @@ class _AddContactPopupState extends State<AddContactPopup> {
                 ],
               ),
               // End
+              // [2.5] Office Hours
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(children: [
+                      DefaultTextStyle(
+                          style: AppFontStyle.wb80R20,
+                          child: Text(Consts.officeHoursLabel)),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        height: 40,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 158,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color: setColorOfTextField(
+                                        false)), // False is not empty
+                              ),
+                              child: GestureDetector(
+                                child: Text('$startTimeHour:$startTimeMinute',
+                                    style: AppFontStyle.wb80R16),
+                                onTap: () async {
+                                  TimeOfDay? newTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: startTime,
+                                  );
+
+                                  if (newTime == null) return;
+
+                                  setState(() {
+                                    startTime = newTime;
+                                  });
+                                },
+                              ),
+                            ),
+                            Container(
+                              width: 158,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color: setColorOfTextField(
+                                        false)), // False is not empty
+                              ),
+                              child: GestureDetector(
+                                child: Text('$endTimeHour:$endTimeMinute',
+                                    style: AppFontStyle.wb80R16),
+                                onTap: () async {
+                                  TimeOfDay? newTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: endTime,
+                                  );
+
+                                  if (newTime == null) return;
+
+                                  setState(() {
+                                    endTime = newTime;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(children: [
+                      DefaultTextStyle(
+                          style: AppFontStyle.wb80R20,
+                          child: Text(Consts.facebookLinkLabel)),
+                      const SizedBox(height: 8),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: setColorOfTextField(false)),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            value: officeHourDay,
+                            style: AppFontStyle.wb60R16,
+                            items: daysOfWeek
+                                .map<DropdownMenuItem<String>>((value) {
+                              return DropdownMenuItem(
+                                  value: value, child: Text(value));
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                officeHourDay = value!;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ],
+              ),
+              // End
               // [3] FacebookLink
               const SizedBox(height: 24),
               Row(
@@ -219,6 +351,40 @@ class _AddContactPopupState extends State<AddContactPopup> {
                           onTap: () {
                             setState(() {
                               isFacebookLinkEmpty = false;
+                            });
+                          },
+                        ),
+                      ),
+                    ]),
+                  ),
+                ],
+              ),
+              // End
+              // [4] Subject
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(children: [
+                      DefaultTextStyle(
+                          style: AppFontStyle.wb80R20,
+                          child: Text(Consts.subjectLabel)),
+                      const SizedBox(height: 8),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                              color: setColorOfTextField(isSubjectEmpty)),
+                        ),
+                        child: TextField(
+                          onChanged: (value) {
+                            subjects.add(value);
+                          },
+                          onTap: () {
+                            setState(() {
+                              isSubjectEmpty = false;
                             });
                           },
                         ),
@@ -288,9 +454,24 @@ class _AddContactPopupState extends State<AddContactPopup> {
                             });
                           }
                           if (textFieldAllFilled) {
+                            final officeHours =
+                                '$officeHourDay $startTimeHour:$startTimeMinute - $endTimeHour:$endTimeMinute';
+                            final request = AddTeacherContactRequest(
+                              imageUrl: "imageUrl",
+                              firstName: firstName,
+                              lastName: lastName,
+                              thaiName: "thaiName",
+                              thaiLastName: "thaiLastName",
+                              email: email,
+                              phone: phoneNumber,
+                              officeHours: officeHours,
+                              facebookLink: facebookLink,
+                              subjectId: subjects,
+                            );
                             await context
                                 .read<TeacherContactViewModel>()
-                                .createNewContact();
+                                .createNewContact(request);
+
                             Navigator.pop(context);
                           }
                         },
@@ -327,7 +508,9 @@ class Consts {
   static String lastNameLabel = "Last Name";
   static String emailLabel = "E-mail";
   static String phoneNumberLabel = "Phone number";
+  static String officeHoursLabel = "Office Hours";
   static String facebookLinkLabel = "Facebook link";
+  static String subjectLabel = "Subject";
 
   static String cancel = "Cancel";
   static String confirm = "Confirm";
