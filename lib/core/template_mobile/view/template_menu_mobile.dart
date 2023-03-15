@@ -5,7 +5,6 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
-import 'package:senior_project/user_profile/login_register_page/view/page/authentication_page.dart';
 import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 
 class TemplateMenuMobile extends StatefulWidget {
@@ -32,7 +31,6 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
     bool isLogin = context.watch<AppViewModel>().isLogin;
     bool homeState = context.watch<TemplateMobileViewModel>().getMenuState(0);
     bool helpDeskState =
@@ -43,13 +41,10 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: ColorConstant.whiteBlack80),
-        title: RichText(
-            text: const TextSpan(children: [
-          TextSpan(text: "Help ", style: AppFontStyle.blue90B28),
-          TextSpan(text: "Desk", style: AppFontStyle.orange90B28)
-        ])),
-        backgroundColor: ColorConstant.white,
+        iconTheme: const IconThemeData(color: ColorConstant.white),
+        centerTitle: true,
+        title: Image.asset('assets/images/icon.png'),
+        backgroundColor: ColorConstant.whiteBlack90,
         toolbarHeight: 90,
       ),
       backgroundColor: Colors.white,
@@ -174,9 +169,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                               ),
                             ),
                             Text(
-                              (screenWidth <= textBreakPoint)
-                                  ? 'Room \nReservation'
-                                  : 'Room Reservation',
+                              "Teacher Contact",
                               style: TextStyle(
                                 fontSize: 24,
                                 color: roomState
@@ -191,7 +184,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(2);
-                        //TODO when click link to room reservation page
+                        //TODO when click link to teacher contact
                       },
                     ),
                   ),
@@ -213,7 +206,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                               ),
                             ),
                             Text(
-                              'My Profile',
+                              'Edit Profile',
                               style: TextStyle(
                                 fontSize: 24,
                                 color: profileState
@@ -225,19 +218,17 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         ),
                       ),
                       onTap: () {
+                        // TODO edit profile
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(3);
-                        Navigator.pushAndRemoveUntil(context,
-                            MaterialPageRoute(builder: (context) {
-                          return MyProfileView(
-                              isAdmin: context
-                                      .watch<AppViewModel>()
-                                      .app
-                                      .getUser
-                                      .getRole ==
-                                  0);
-                        }), (route) => false);
+                        // Navigator.pushAndRemoveUntil(
+                        //   context, 
+                        //   MaterialPageRoute(builder: (context) {
+                        //     return MyProfileView();
+                        //   }), 
+                        //   (route) => false
+                        // );
                       },
                     ),
                   ),
@@ -268,10 +259,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                     if (isLogin) {
                       await context.read<AppViewModel>().logout();
                     } else {
-                      Navigator.pushAndRemoveUntil(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const AuthenticationPage();
-                      }), (route) => false);
+                      await context.read<AppViewModel>().login(context);
                     }
                   },
                 ),
