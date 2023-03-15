@@ -8,7 +8,8 @@ import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/admin/page/help_desk_admin_page.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/page/help_desk_main_desktop_widget.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_desktop_body_widget.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/help_desk_desktop_header_widget.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/desktop/body.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/desktop/header.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/mobile_widget.dart';
 
 class HelpDeskMainView extends StatelessWidget {
@@ -75,8 +76,8 @@ class HelpDeskMainView extends StatelessWidget {
               alignment: AlignmentDirectional.topCenter,
               child: ListView(
                 children: [
-                  HelpDeskDesktopHeader.widget(context, isAdmin),
-                  const HelpDeskDesktopBody()
+                  Header.widget(context, isAdmin),
+                  const Body()
                 ],
               ),
             );
