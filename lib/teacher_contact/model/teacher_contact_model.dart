@@ -1,5 +1,7 @@
+import 'package:uuid/uuid.dart';
+
 class TeacherContactModel {
-  final String id;
+  final String? id;
   final String imageUrl;
   final String name;
   final String thaiName;
@@ -10,7 +12,7 @@ class TeacherContactModel {
   final List<String> subjectId;
 
   TeacherContactModel(
-      {required this.id,
+      {this.id,
       required this.imageUrl,
       required this.name,
       required this.thaiName,

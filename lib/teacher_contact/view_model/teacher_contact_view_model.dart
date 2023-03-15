@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../core/datasource/firebase_services.dart';
 import '../model/teacher_contact_model.dart';
@@ -15,8 +16,9 @@ class TeacherContactViewModel extends ChangeNotifier {
 
   // MARK: - Add Contact
   Future<void> createNewContact(AddTeacherContactRequest request) async {
+    final docId = getUuid();
     TeacherContactModel model = TeacherContactModel(
-      id: "docId",
+      id: docId,
       imageUrl: request.imageUrl,
       name: "${request.firstName} ${request.lastName}",
       thaiName: "${request.thaiName} ${request.thaiLastName}",
@@ -26,6 +28,23 @@ class TeacherContactViewModel extends ChangeNotifier {
       facebookLink: request.facebookLink,
       subjectId: request.subjectId,
     );
+
+    Map<String, dynamic> teacherContactDetail = {
+      "id": docId,
+      "imageUrl": model.imageUrl,
+      "name": model.name,
+      "thaiName": model.thaiName,
+      "email": model.email,
+      "phone": model.phone,
+      "officeHours": model.officeHours,
+      "facebookLink": model.facebookLink,
+      "subjectId": model.subjectId
+    };
+    await firebaseService.setDocument(docId, teacherContactDetail);
+  }
+
+  String getUuid() {
+    return const Uuid().v1();
   }
 
   // MARK: - Teacher Contact
