@@ -1,7 +1,8 @@
+import 'package:uuid/uuid.dart';
+
 class TeacherContactModel {
-  final String id;
+  final String? id;
   final String imageUrl;
-  final String gender;
   final String name;
   final String thaiName;
   final String email;
@@ -11,9 +12,8 @@ class TeacherContactModel {
   final List<String> subjectId;
 
   TeacherContactModel(
-      {required this.id,
+      {this.id,
       required this.imageUrl,
-      required this.gender,
       required this.name,
       required this.thaiName,
       required this.email,
@@ -32,7 +32,6 @@ class TeacherContactModel {
     return {
       'id': id,
       'imageUrl': imageUrl,
-      'gender': gender,
       'name': nameOnly,
       'surname': surnameOnly,
       'thaiName': thaiNameOnly,
@@ -44,4 +43,29 @@ class TeacherContactModel {
       'subjectId': subjectId
     };
   }
+}
+
+class AddTeacherContactRequest {
+  String imageUrl;
+  String firstName;
+  String lastName;
+  String thaiName;
+  String thaiLastName;
+  String email;
+  String phone;
+  final String officeHours;
+  final String facebookLink;
+  final List<String> subjectId;
+
+  AddTeacherContactRequest(
+      {required this.imageUrl,
+      required this.firstName,
+      required this.lastName,
+      required this.thaiName,
+      required this.thaiLastName,
+      required this.email,
+      required this.phone,
+      required this.officeHours,
+      required this.facebookLink,
+      required this.subjectId});
 }

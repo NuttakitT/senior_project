@@ -40,14 +40,14 @@ class TeacherContactDesktopCard extends StatelessWidget {
                 DefaultTextStyle(
                   style: AppFontStyle.wb80Md24,
                   child: Text(
-                    cardDetail['name'] + " " + cardDetail['surname'],
+                    cardDetail['name'],
                     textAlign: TextAlign.center,
                   ),
                 ),
                 DefaultTextStyle(
                   style: AppFontStyle.wb70R16,
                   child: Text(
-                    cardDetail['thaiName'] + ' ' + cardDetail['thaiSurname'],
+                    cardDetail['thaiName'],
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -74,89 +74,96 @@ class TeacherContactDesktopCard extends StatelessWidget {
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Subject",
-                    detail: cardDetail['subject'],
+                    // detail: cardDetail["subjectId"]
+                    //     .toString()
+                    //     .replaceAll(RegExp('[|]|,'), '\n'),
+                    detail: cardDetail['subjectId'].join('\n'),
+                  ),
+                  TeachContactDesktopDetailCell(
+                    title: "Facebook link",
+                    detail: cardDetail['facebookLink'],
                   ),
                 ],
               ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: ButtonBar(
-                  alignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      child: CircleAvatar(
-                        backgroundColor: ColorConstant.facebookColor,
-                        child: IconButton(
-                          onPressed: () async {
-                            Uri uri = Uri.parse(cardDetail['facebookLink']);
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            } else {
-                              throw 'Link broken';
-                            }
-                          },
-                          icon: const Icon(Icons.facebook),
-                          color: ColorConstant.white,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: ColorConstant.black,
-                          width: 1.0,
-                        ),
-                      ),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: IconButton(
-                          onPressed: () async {
-                            final Uri params = Uri(
-                              scheme: 'mailto',
-                              path: cardDetail['email'],
-                            );
-                            Uri uri = Uri.parse(params.toString());
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            } else {
-                              throw 'Could not launch $uri';
-                            }
-                          },
-                          icon: const Icon(Icons.mail),
-                          color: ColorConstant.black,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: ColorConstant.green40,
-                          width: 1.0,
-                        ),
-                      ),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: IconButton(
-                          onPressed: () async {
-                            final phoneString = "tel:${cardDetail['phone']}";
-                            Uri uri = Uri.parse(phoneString);
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            } else {
-                              throw 'Phone number is invalid';
-                            }
-                          },
-                          icon: const Icon(Icons.phone),
-                          color: ColorConstant.green40,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              // Positioned(
+              //   bottom: 0,
+              //   right: 0,
+              //   child: ButtonBar(
+              //     alignment: MainAxisAlignment.end,
+              //     children: [
+              //       Container(
+              //         child: CircleAvatar(
+              //           backgroundColor: ColorConstant.facebookColor,
+              //           child: IconButton(
+              //             onPressed: () async {
+              //               Uri uri = Uri.parse(cardDetail['facebookLink']);
+              //               if (await canLaunchUrl(uri)) {
+              //                 await launchUrl(uri);
+              //               } else {
+              //                 throw 'Link broken';
+              //               }
+              //             },
+              //             icon: const Icon(Icons.facebook),
+              //             color: ColorConstant.white,
+              //           ),
+              //         ),
+              //       ),
+              //       Container(
+              //         decoration: BoxDecoration(
+              //           shape: BoxShape.circle,
+              //           border: Border.all(
+              //             color: ColorConstant.black,
+              //             width: 1.0,
+              //           ),
+              //         ),
+              //         child: CircleAvatar(
+              //           backgroundColor: Colors.white,
+              //           child: IconButton(
+              //             onPressed: () async {
+              //               final Uri params = Uri(
+              //                 scheme: 'mailto',
+              //                 path: cardDetail['email'],
+              //               );
+              //               Uri uri = Uri.parse(params.toString());
+              //               if (await canLaunchUrl(uri)) {
+              //                 await launchUrl(uri);
+              //               } else {
+              //                 throw 'Could not launch $uri';
+              //               }
+              //             },
+              //             icon: const Icon(Icons.mail),
+              //             color: ColorConstant.black,
+              //           ),
+              //         ),
+              //       ),
+              //       Container(
+              //         decoration: BoxDecoration(
+              //           shape: BoxShape.circle,
+              //           border: Border.all(
+              //             color: ColorConstant.green40,
+              //             width: 1.0,
+              //           ),
+              //         ),
+              //         child: CircleAvatar(
+              //           backgroundColor: Colors.white,
+              //           child: IconButton(
+              //             onPressed: () async {
+              //               final phoneString = "tel:${cardDetail['phone']}";
+              //               Uri uri = Uri.parse(phoneString);
+              //               if (await canLaunchUrl(uri)) {
+              //                 await launchUrl(uri);
+              //               } else {
+              //                 throw 'Phone number is invalid';
+              //               }
+              //             },
+              //             icon: const Icon(Icons.phone),
+              //             color: ColorConstant.green40,
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // )
             ]),
           )
         ],
@@ -187,7 +194,7 @@ class TeachContactDesktopDetailCell extends StatelessWidget {
         return Column(
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                     flex: 3,
