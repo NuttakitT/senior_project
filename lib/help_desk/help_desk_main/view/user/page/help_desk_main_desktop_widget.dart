@@ -6,7 +6,6 @@ import 'package:senior_project/core/template_desktop/view/page/template_desktop.
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/mobile_widget.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_desktop_header_widget.dart';
 import '../widget/help_desk_desktop_body_widget.dart';
 
 class HelpDeskMainDesktopWidget extends StatefulWidget {
@@ -75,9 +74,9 @@ class _HelpDeskMainDesktopWidgetState extends State<HelpDeskMainDesktopWidget> {
                   maxHeight: screenHeight - 155),
               alignment: AlignmentDirectional.topCenter,
               child: ListView(
-                children: [
-                  HelpDeskDesktopHeader.widget(context),
-                  const HelpDeskDesktopBody()
+                children: const [
+                  // HelpDeskDesktopHeader.widget(context),
+                  HelpDeskDesktopBody()
                 ],
               ),
             );
