@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,8 @@ import '../model/teacher_contact_model.dart';
 class TeacherContactViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final firebaseService = FirebaseServices("teacherContact");
-  List<TeacherContactModel>? _teacherList;
-  List<TeacherContactModel>? get teacherList => _teacherList;
+  List<Map<String, dynamic>?>? _teacherList;
+  List<Map<String, dynamic>?>? get teacherList => _teacherList;
 
   // MARK: - Add Contact
   Future<void> createNewContact(AddTeacherContactRequest request) async {
@@ -28,38 +30,26 @@ class TeacherContactViewModel extends ChangeNotifier {
 
   // MARK: - Teacher Contact
 
-  Future<List<TeacherContactModel>?> getAllTeacherContacts() async {
+  Future<List<Map<String, dynamic>?>?> _getAllTeacherContacts() async {
     final snapshot = await firebaseService.getAllDocument();
 
-    if (snapshot == null) {
+    if (snapshot?.size == 0) {
       return null;
     }
 
-    List<TeacherContactModel> teacherContacts = [];
+    List<Map<String, dynamic>> teacherContacts = [];
 
-    for (QueryDocumentSnapshot doc in snapshot.docs) {
+    for (QueryDocumentSnapshot doc in snapshot!.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      TeacherContactModel teacherContact = TeacherContactModel(
-        id: data[Consts.id],
-        imageUrl: data[Consts.imageUrl],
-        name: data[Consts.name],
-        thaiName: data[Consts.thaiName],
-        email: data[Consts.email],
-        phone: data[Consts.phone],
-        officeHours: data[Consts.officeHours],
-        facebookLink: data[Consts.facebookLink],
-        subjectId: List<String>.from(data[Consts.subjectId]),
-      );
-      teacherContacts.add(teacherContact);
+      teacherContacts.add(data);
     }
 
     _teacherList = teacherContacts;
     return _teacherList;
   }
 
-  Future<void> getTeacherContacts() async {
-    _teacherList = await getAllTeacherContacts();
-    notifyListeners();
+  Future<List<Map<String, dynamic>?>?> getTeacherContacts() async {
+    return await _getAllTeacherContacts();
   }
 
   Future<void> updateTeacherContactDetailById(
@@ -71,6 +61,8 @@ class TeacherContactViewModel extends ChangeNotifier {
       print(e);
     }
   }
+
+  Future<void> _uploadImageAndTurnToUrl(File file) async {}
 }
 
 class Consts {

@@ -30,6 +30,10 @@ class _AddContactPopupState extends State<AddContactPopup> {
   bool isFirstNameEmpty = false;
   String lastName = "";
   bool isLastNameEmpty = false;
+  String firstNameThai = "";
+  bool isFirstNameThaiEmpty = false;
+  String lastNameThai = "";
+  bool isLastNameThaiEmpty = false;
   String email = "";
   bool isEmailEmpty = false;
   String phoneNumber = "";
@@ -46,6 +50,8 @@ class _AddContactPopupState extends State<AddContactPopup> {
   bool get textFieldAllFilled =>
       isFirstNameEmpty &&
       isLastNameEmpty &&
+      isFirstNameThaiEmpty &&
+      isLastNameThaiEmpty &&
       isEmailEmpty &&
       isPhoneNumberEmpty &&
       isFacebookLinkEmpty &&
@@ -97,304 +103,512 @@ class _AddContactPopupState extends State<AddContactPopup> {
                   style: AppFontStyle.wb60L18,
                   child: Text(Consts.addContactDetail)),
               // [1] First Name and Last Name
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Column(children: [
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb80R20,
-                          child: Text(Consts.firstNameLabel)),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                              color: setColorOfTextField(isFirstNameEmpty)),
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            firstName = value;
-                          },
-                          onTap: () {
-                            setState(() {
-                              isFirstNameEmpty = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.firstNameLabel)),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color:
+                                        setColorOfTextField(isFirstNameEmpty)),
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  decoration: const InputDecoration.collapsed(
+                                      hintText: ""),
+                                  onChanged: (value) {
+                                    firstName = value;
+                                  },
+                                  onTap: () {
+                                    setState(() {
+                                      isFirstNameEmpty = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Column(children: [
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb80R20,
-                          child: Text(Consts.lastNameLabel)),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                              color: setColorOfTextField(isLastNameEmpty)),
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            lastName = value;
-                          },
-                          onTap: () {
-                            setState(() {
-                              isLastNameEmpty = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.lastNameLabel)),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color:
+                                        setColorOfTextField(isLastNameEmpty)),
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  decoration: const InputDecoration.collapsed(
+                                      hintText: ""),
+                                  onChanged: (value) {
+                                    lastName = value;
+                                  },
+                                  onTap: () {
+                                    setState(() {
+                                      isLastNameEmpty = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
+                  ),
+                ],
+              ),
+              // End
+              // [1.5] THAI First Name and Last Name
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.firstNameThaiLabel)),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color: setColorOfTextField(
+                                        isFirstNameThaiEmpty)),
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  decoration: const InputDecoration.collapsed(
+                                      hintText: ""),
+                                  onChanged: (value) {
+                                    firstNameThai = value;
+                                  },
+                                  onTap: () {
+                                    setState(() {
+                                      isFirstNameThaiEmpty = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.lastNameThaiLabel)),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color: setColorOfTextField(
+                                        isLastNameThaiEmpty)),
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  decoration: const InputDecoration.collapsed(
+                                      hintText: ""),
+                                  onChanged: (value) {
+                                    lastNameThai = value;
+                                  },
+                                  onTap: () {
+                                    setState(() {
+                                      isLastNameThaiEmpty = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
                   ),
                 ],
               ),
               // End
               // [2] Email and Phone Number
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Column(children: [
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb80R20,
-                          child: Text(Consts.emailLabel)),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                              color: setColorOfTextField(isEmailEmpty)),
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            email = value;
-                          },
-                          onTap: () {
-                            setState(() {
-                              isEmailEmpty = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.emailLabel)),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color: setColorOfTextField(isEmailEmpty)),
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  decoration: const InputDecoration.collapsed(
+                                      hintText: ""),
+                                  onChanged: (value) {
+                                    email = value;
+                                  },
+                                  onTap: () {
+                                    setState(() {
+                                      isEmailEmpty = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Column(children: [
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb80R20,
-                          child: Text(Consts.phoneNumberLabel)),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                              color: setColorOfTextField(isPhoneNumberEmpty)),
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            phoneNumber = value;
-                          },
-                          onTap: () {
-                            setState(() {
-                              isPhoneNumberEmpty = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.phoneNumberLabel)),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color: setColorOfTextField(
+                                        isPhoneNumberEmpty)),
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  decoration: const InputDecoration.collapsed(
+                                      hintText: ""),
+                                  onChanged: (value) {
+                                    phoneNumber = value;
+                                  },
+                                  onTap: () {
+                                    setState(() {
+                                      isPhoneNumberEmpty = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
                   ),
                 ],
               ),
               // End
               // [2.5] Office Hours
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Column(children: [
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb80R20,
-                          child: Text(Consts.officeHoursLabel)),
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        height: 40,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: 158,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                    color: setColorOfTextField(
-                                        false)), // False is not empty
-                              ),
-                              child: GestureDetector(
-                                child: Text('$startTimeHour:$startTimeMinute',
-                                    style: AppFontStyle.wb80R16),
-                                onTap: () async {
-                                  TimeOfDay? newTime = await showTimePicker(
-                                    context: context,
-                                    initialTime: startTime,
-                                  );
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.officeHoursLabel)),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 158,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                          color: setColorOfTextField(
+                                              false)), // False is not empty
+                                    ),
+                                    child: GestureDetector(
+                                      child: Text(
+                                        '$startTimeHour:$startTimeMinute',
+                                        style: AppFontStyle.wb80R16,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () async {
+                                        TimeOfDay? newTime =
+                                            await showTimePicker(
+                                          context: context,
+                                          initialTime: startTime,
+                                        );
 
-                                  if (newTime == null) return;
+                                        if (newTime == null) return;
 
-                                  setState(() {
-                                    startTime = newTime;
-                                  });
-                                },
+                                        setState(() {
+                                          startTime = newTime;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  DefaultTextStyle(
+                                      style: AppFontStyle.wb60R14,
+                                      child: Text(Consts.to)),
+                                  const Spacer(),
+                                  Container(
+                                    width: 158,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                          color: setColorOfTextField(
+                                              false)), // False is not empty
+                                    ),
+                                    child: GestureDetector(
+                                      child: Text(
+                                        '$endTimeHour:$endTimeMinute',
+                                        style: AppFontStyle.wb80R16,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () async {
+                                        TimeOfDay? newTime =
+                                            await showTimePicker(
+                                          context: context,
+                                          initialTime: endTime,
+                                        );
+
+                                        if (newTime == null) return;
+
+                                        setState(() {
+                                          endTime = newTime;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Container(
-                              width: 158,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                    color: setColorOfTextField(
-                                        false)), // False is not empty
-                              ),
-                              child: GestureDetector(
-                                child: Text('$endTimeHour:$endTimeMinute',
-                                    style: AppFontStyle.wb80R16),
-                                onTap: () async {
-                                  TimeOfDay? newTime = await showTimePicker(
-                                    context: context,
-                                    initialTime: endTime,
-                                  );
-
-                                  if (newTime == null) return;
-
-                                  setState(() {
-                                    endTime = newTime;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ]),
+                          ]),
+                    ),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Column(children: [
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb80R20,
-                          child: Text(Consts.facebookLinkLabel)),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: setColorOfTextField(false)),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: officeHourDay,
-                            style: AppFontStyle.wb60R16,
-                            items: daysOfWeek
-                                .map<DropdownMenuItem<String>>((value) {
-                              return DropdownMenuItem(
-                                  value: value, child: Text(value));
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                officeHourDay = value!;
-                              });
-                            },
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ),
-                    ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.officeDayLabel)),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: 478,
+                              child: Container(
+                                height: 40,
+                                width: 478,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                      color: setColorOfTextField(false)),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    value: officeHourDay,
+                                    style: AppFontStyle.wb60R16,
+                                    items: daysOfWeek
+                                        .map<DropdownMenuItem<String>>((value) {
+                                      return DropdownMenuItem(
+                                          value: value,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0),
+                                            child: Text(value),
+                                          ));
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        officeHourDay = value!;
+                                      });
+                                    },
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
                   ),
                 ],
               ),
               // End
               // [3] FacebookLink
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Column(children: [
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb80R20,
-                          child: Text(Consts.facebookLinkLabel)),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                              color: setColorOfTextField(isFacebookLinkEmpty)),
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            facebookLink = value;
-                          },
-                          onTap: () {
-                            setState(() {
-                              isFacebookLinkEmpty = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.facebookLinkLabel)),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color: setColorOfTextField(
+                                        isFacebookLinkEmpty)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: TextField(
+                                    decoration: const InputDecoration.collapsed(
+                                        hintText: ""),
+                                    onChanged: (value) {
+                                      facebookLink = value;
+                                    },
+                                    onTap: () {
+                                      setState(() {
+                                        isFacebookLinkEmpty = false;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.subjectLabel)),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                    color: setColorOfTextField(isSubjectEmpty)),
+                              ),
+                              child: TextField(
+                                onChanged: (value) {
+                                  subjects.add(value);
+                                },
+                                onTap: () {
+                                  setState(() {
+                                    isSubjectEmpty = false;
+                                  });
+                                },
+                              ),
+                            ),
+                          ]),
+                    ),
                   ),
                 ],
               ),
               // End
-              // [4] Subject
-              const SizedBox(height: 24),
+              // [5] Image
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Column(children: [
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb80R20,
-                          child: Text(Consts.subjectLabel)),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                              color: setColorOfTextField(isSubjectEmpty)),
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            subjects.add(value);
-                          },
-                          onTap: () {
-                            setState(() {
-                              isSubjectEmpty = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultTextStyle(
+                                style: AppFontStyle.wb80R20,
+                                child: Text(Consts.uploadImageLabel)),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: TextButton(
+                                onPressed: () async {},
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        ColorConstant.orange40),
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            side: const BorderSide(
+                                                color:
+                                                    ColorConstant.orange40)))),
+                                child: Text(
+                                  Consts.upload,
+                                  style: AppFontStyle.whiteB16,
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
                   ),
                 ],
               ),
               // End
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
               // [] Button Bar
               Row(
                 children: [
@@ -438,6 +652,16 @@ class _AddContactPopupState extends State<AddContactPopup> {
                               isLastNameEmpty = true;
                             });
                           }
+                          if (firstNameThai.isEmpty) {
+                            setState(() {
+                              isFirstNameThaiEmpty = true;
+                            });
+                          }
+                          if (lastNameThai.isEmpty) {
+                            setState(() {
+                              isLastNameThaiEmpty = true;
+                            });
+                          }
                           if (email.isEmpty) {
                             setState(() {
                               isEmailEmpty = true;
@@ -449,6 +673,11 @@ class _AddContactPopupState extends State<AddContactPopup> {
                             });
                           }
                           if (facebookLink.isEmpty) {
+                            setState(() {
+                              isFacebookLinkEmpty = true;
+                            });
+                          }
+                          if (subjects.isEmpty) {
                             setState(() {
                               isFacebookLinkEmpty = true;
                             });
@@ -506,12 +735,18 @@ class Consts {
   static String addContactDetail = "Fill in more information of teacher.";
   static String firstNameLabel = "First Name";
   static String lastNameLabel = "Last Name";
+  static String firstNameThaiLabel = "Thai First Name";
+  static String lastNameThaiLabel = "Thai Last Name";
   static String emailLabel = "E-mail";
   static String phoneNumberLabel = "Phone number";
   static String officeHoursLabel = "Office Hours";
+  static String officeDayLabel = "Office Day";
   static String facebookLinkLabel = "Facebook link";
   static String subjectLabel = "Subject";
+  static String uploadImageLabel = "Profile Image";
 
   static String cancel = "Cancel";
   static String confirm = "Confirm";
+  static String to = "to";
+  static String upload = "Upload";
 }
