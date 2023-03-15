@@ -40,6 +40,8 @@ class TeacherContactViewModel extends ChangeNotifier {
       "facebookLink": model.facebookLink,
       "subjectId": model.subjectId
     };
+
+    print(teacherContactDetail);
     await firebaseService.setDocument(docId, teacherContactDetail);
   }
 

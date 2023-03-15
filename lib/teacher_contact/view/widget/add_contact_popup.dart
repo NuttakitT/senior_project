@@ -48,14 +48,14 @@ class _AddContactPopupState extends State<AddContactPopup> {
   String profileImage = "";
 
   bool get textFieldAllFilled =>
-      isFirstNameEmpty &&
-      isLastNameEmpty &&
-      isFirstNameThaiEmpty &&
-      isLastNameThaiEmpty &&
-      isEmailEmpty &&
-      isPhoneNumberEmpty &&
-      isFacebookLinkEmpty &&
-      isSubjectEmpty;
+      !isFirstNameEmpty &&
+      !isLastNameEmpty &&
+      !isFirstNameThaiEmpty &&
+      !isLastNameThaiEmpty &&
+      !isEmailEmpty &&
+      !isPhoneNumberEmpty &&
+      !isFacebookLinkEmpty &&
+      !isSubjectEmpty;
 
   Color setColorOfTextField(bool emptyFlag) {
     if (!emptyFlag) {
@@ -686,7 +686,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                             final officeHours =
                                 '$officeHourDay $startTimeHour:$startTimeMinute - $endTimeHour:$endTimeMinute';
                             final request = AddTeacherContactRequest(
-                              imageUrl: "imageUrl",
+                              imageUrl: "https://picsum.photos/200/300",
                               firstName: firstName,
                               lastName: lastName,
                               thaiName: firstNameThai,
