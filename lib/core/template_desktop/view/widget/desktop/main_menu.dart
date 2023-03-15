@@ -139,7 +139,7 @@ class _MainMenuState extends State<MainMenu> {
                 padding: MaterialStateProperty.all(
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 10.5)
                 ),
-                maximumSize: MaterialStateProperty.all(
+                fixedSize: MaterialStateProperty.all(
                   const Size(227, 40)
                 ),
                 shape: MaterialStateProperty.all(
