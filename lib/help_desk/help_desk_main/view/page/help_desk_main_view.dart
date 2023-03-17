@@ -69,16 +69,26 @@ class HelpDeskMainView extends StatelessWidget {
               );
               }
             return Container(
-              constraints: BoxConstraints(
-                  maxWidth: screenWidth,
-                  minWidth: 200,
-                  maxHeight: screenHeight - 155),
               alignment: AlignmentDirectional.topCenter,
-              child: ListView(
-                children: [
-                  Header.widget(context, isAdmin),
-                  const Body()
-                ],
+              child: Builder(
+                builder: (context) {
+                  if (screenHeight < 500) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Header.widget(context, isAdmin),
+                          const Body()
+                        ],
+                      ),
+                    );
+                  }
+                  return Column(
+                    children: [
+                      Header.widget(context, isAdmin),
+                      const Body()
+                    ],
+                  );
+                }
               ),
             );
           }

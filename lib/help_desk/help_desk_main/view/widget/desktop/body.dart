@@ -93,7 +93,9 @@ class _BodyState extends State<Body> {
             ]
           ),
           ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: screenHeight - 376),
+            constraints: BoxConstraints(
+              maxHeight: screenHeight < 500 ? 500 : screenHeight - 376
+            ),
             child: Scrollbar(
               controller: controller,
               thumbVisibility: true,
@@ -102,6 +104,16 @@ class _BodyState extends State<Body> {
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                    Content(size: contentSize),
                     Content(size: contentSize),
                     Content(size: contentSize),
                     Content(size: contentSize),
