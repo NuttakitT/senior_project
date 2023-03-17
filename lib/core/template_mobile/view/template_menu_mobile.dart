@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
-import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 
 class TemplateMenuMobile extends StatefulWidget {
   final Widget content;

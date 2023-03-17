@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/desktop/content.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -10,6 +11,8 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  ScrollController controller = ScrollController();
+
   Widget _iconLoader() {
     return Row(
       children: [
@@ -43,43 +46,72 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double contentCount = 50;
+    double contentSize = 56;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Column(
         children: [
-          Container(
-            height: 72,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              )
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            alignment: AlignmentDirectional.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    // TODO refresh
-                  },
-                  icon: const Icon(Icons.refresh_rounded, 
-                    color: ColorConstant.whiteBlack70,
+          Stack(
+            children: [
+              Container(
+                height: 73,
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: ColorConstant.whiteBlack40)
+                  )
+                ),
+              ),
+              Container(
+                height: 72,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
                   ),
                 ),
-                _iconLoader()
-              ],
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                alignment: AlignmentDirectional.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        // TODO refresh
+                      },
+                      icon: const Icon(Icons.refresh_rounded, 
+                        color: ColorConstant.whiteBlack70,
+                      ),
+                    ),
+                    _iconLoader()
+                  ],
+                ),
+              ),
+            ]
+          ),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: screenHeight - 376),
+            child: Scrollbar(
+              controller: controller,
+              thumbVisibility: true,
+              child: SingleChildScrollView(
+                controller: controller,
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                    Content(size: contentSize),
+                  ],
+                ),
+              ),
             ),
           ),
-          // TODO body
           Container(
-            height: 100,
-            color: Colors.amber,
-          ),
-          Container(
-            height: 72,
+            height: 56,
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(

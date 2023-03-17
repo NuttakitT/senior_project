@@ -18,7 +18,7 @@ class HelpDeskMainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
+    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole;
@@ -51,7 +51,7 @@ class HelpDeskMainView extends StatelessWidget {
         helpdesk: true,
         helpdeskadmin: false,
         home: false,
-        useTemplatescroll: true,
+        useTemplatescroll: false,
         content: Builder(
           builder: (context) {
             isLogin = true;

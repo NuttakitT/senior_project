@@ -64,7 +64,7 @@ class Header {
                     },
                     style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(ColorConstant.orange40),
+                            MaterialStateProperty.all(ColorConstant.orange50),
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8))),
                         fixedSize: MaterialStateProperty.all(
