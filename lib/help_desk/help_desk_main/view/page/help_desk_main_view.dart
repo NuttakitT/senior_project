@@ -5,9 +5,6 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/admin/page/help_desk_admin_page.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/user/page/help_desk_main_desktop_widget.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/user/widget/help_desk_desktop_body_widget.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/desktop/body.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/desktop/header.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/mobile_widget.dart';
@@ -19,7 +16,6 @@ class HelpDeskMainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
-    double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole;
     bool isLogin = context.watch<AppViewModel>().isLogin;
@@ -77,7 +73,7 @@ class HelpDeskMainView extends StatelessWidget {
                       child: Column(
                         children: [
                           Header.widget(context, isAdmin),
-                          const Body()
+                          const Body(isAdmin: true,)
                         ],
                       ),
                     );
@@ -85,7 +81,7 @@ class HelpDeskMainView extends StatelessWidget {
                   return Column(
                     children: [
                       Header.widget(context, isAdmin),
-                      const Body()
+                      const Body(isAdmin: true,)
                     ],
                   );
                 }

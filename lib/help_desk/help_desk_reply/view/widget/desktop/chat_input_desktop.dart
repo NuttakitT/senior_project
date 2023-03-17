@@ -17,6 +17,7 @@ class ChatInputDesktop extends StatelessWidget {
       constraints: const BoxConstraints(maxHeight: 64),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        alignment: Alignment.center,
         decoration: BoxDecoration(
             color: ColorConstant.white,
             boxShadow: [
@@ -33,13 +34,13 @@ class ChatInputDesktop extends StatelessWidget {
           children: [
             InkWell(
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 //Todo fill color
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(360)),
                 child: const Icon(
                   Icons.add,
-                  color: ColorConstant.orange40,
+                  color: ColorConstant.blue40,
                 ),
               ),
               //TODO Send image or video
@@ -51,7 +52,7 @@ class ChatInputDesktop extends StatelessWidget {
               decoration: BoxDecoration(
                   color: ColorConstant.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: ColorConstant.orange40)),
+                  border: Border.all(color: ColorConstant.whiteBlack40)),
               child: Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 16, right: 16),
@@ -74,12 +75,29 @@ class ChatInputDesktop extends StatelessWidget {
                 ),
               ),
             )),
-            const InkWell(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.sentiment_satisfied_alt_rounded),
+            InkWell(
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Icon(
+                  Icons.sentiment_satisfied_alt_rounded,
+                  color: ColorConstant.blue40,
+                ),
               ),
-              //Todo Emoji
+              onTap: () {
+                //Todo Emoji
+              },
+            ),
+            InkWell(
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Icon(
+                  Icons.send_rounded,
+                  color: ColorConstant.blue40,
+                ),
+              ),
+              onTap: () {
+                //Todo send message
+              },
             )
           ],
         ),

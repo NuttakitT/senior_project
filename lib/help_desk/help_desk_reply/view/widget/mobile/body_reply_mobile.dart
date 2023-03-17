@@ -41,6 +41,7 @@ class _BodyReplyMobileState extends State<BodyReplyMobile> {
                         isSender:  data[index]["isSender"],
                         text: data[index]["text"],
                         isMobile: true,
+                        time: "3 Mar - 19:13PM",
                       ),
                     );
                   }

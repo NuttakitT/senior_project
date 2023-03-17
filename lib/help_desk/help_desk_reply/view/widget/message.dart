@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/message_status_dot.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/text_message.dart';
 
 class Message extends StatelessWidget {
   final String text;
+  final String time;
   final bool isSender;
   final bool isMobile;
   const Message({
     Key? key,
     required this.text,
     required this.isSender,
-    required this.isMobile
+    required this.isMobile,
+    required this.time
   }) : super(key: key);
 
   @override
@@ -26,17 +29,32 @@ class Message extends StatelessWidget {
             //TODO Pull image profile sender
             const Icon(
               Icons.face_rounded,
-              color: ColorConstant.red40,
+              color: ColorConstant.blue70,
             )
           ],
           const SizedBox(width: 8),
-          TextMessage(
-            text: text,
-            isSender: isSender,
-            isMobile: isMobile,
+          Column(
+            crossAxisAlignment: !isSender ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+            children: [
+              TextMessage(
+                text: text,
+                isSender: isSender,
+                isMobile: isMobile,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  time,
+                  style: const TextStyle(
+                    fontFamily: AppFontStyle.font,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    color: ColorConstant.whiteBlack70
+                  ),
+                ),
+              )
+            ],
           ),
-          //status
-          if (isSender) const MessageStatusDot()
         ],
       ),
     );
