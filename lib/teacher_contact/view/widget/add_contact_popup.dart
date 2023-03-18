@@ -1,4 +1,8 @@
+import 'dart:html' as html;
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
@@ -43,9 +47,13 @@ class _AddContactPopupState extends State<AddContactPopup> {
   String officeHourDay = daysOfWeek.first;
   String facebookLink = "";
   bool isFacebookLinkEmpty = false;
-  List<String> subjects = [];
+  List<String> selectedSubjects = [];
   bool isSubjectEmpty = false;
   String profileImage = "";
+
+  File? imageFile;
+  String? imageUrl;
+  final picker = ImagePicker();
 
   bool get textFieldAllFilled =>
       !isFirstNameEmpty &&
@@ -76,6 +84,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
 
     final endTimeHour = endTime.hour.toString().padLeft(2, '0');
     final endTimeMinute = endTime.minute.toString().padLeft(2, '0');
+
     return AlertDialog(
       backgroundColor: ColorConstant.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -128,7 +137,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                               child: Center(
                                 child: TextField(
                                   decoration: const InputDecoration.collapsed(
-                                      hintText: ""),
+                                      hintText: "First Name eg. Nick"),
                                   onChanged: (value) {
                                     firstName = value;
                                   },
@@ -541,23 +550,36 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 child: Text(Consts.subjectLabel)),
                             const SizedBox(height: 8),
                             Container(
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                    color: setColorOfTextField(isSubjectEmpty)),
-                              ),
-                              child: TextField(
-                                onChanged: (value) {
-                                  subjects.add(value);
-                                },
-                                onTap: () {
-                                  setState(() {
-                                    isSubjectEmpty = false;
-                                  });
-                                },
-                              ),
-                            ),
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                      color:
+                                          setColorOfTextField(isSubjectEmpty)),
+                                ),
+                                child: FutureBuilder(
+                                    future: context
+                                        .read<TeacherContactViewModel>()
+                                        .getSubjects(),
+                                    builder: (context, snapshot) {
+                                      List<Subject> subjects =
+                                          Subject.subjectsFromJson(
+                                              snapshot.data);
+                                      final items = subjects
+                                          .map((subject) => MultiSelectItem<
+                                                  Subject>(subject,
+                                              "${subject.id} ${subject.name}"))
+                                          .toList();
+                                      return MultiSelectDialog(
+                                        initialValue: const [],
+                                        items: items,
+                                        onConfirm: (selectedList) {
+                                          selectedSubjects = context
+                                              .read<TeacherContactViewModel>()
+                                              .getSubjectStrings(selectedList);
+                                        },
+                                      );
+                                    })),
                           ]),
                     ),
                   ),
@@ -585,7 +607,18 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: TextButton(
-                                onPressed: () async {},
+                                onPressed: () async {
+                                  final pickedFile = await ImagePicker()
+                                      .pickImage(source: ImageSource.gallery);
+                                  if (pickedFile != null) {
+                                    setState(() {
+                                      //  imageUrl = _uploadImage(File(pickedFile.path));
+                                      // imageUrl = context
+                                      //     .read<TeacherContactViewModel>()
+                                      //     .getImageUrl(pickedFile.path);
+                                    });
+                                  }
+                                },
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
                                         ColorConstant.orange40),
@@ -642,32 +675,56 @@ class _AddContactPopupState extends State<AddContactPopup> {
                       height: 40,
                       child: TextButton(
                         onPressed: () async {
-                          if (firstName.isEmpty) {
+                          if (firstName.isEmpty ||
+                              context
+                                      .read<TeacherContactViewModel>()
+                                      .validateNameField(firstName) ==
+                                  false) {
                             setState(() {
                               isFirstNameEmpty = true;
                             });
                           }
-                          if (lastName.isEmpty) {
+                          if (lastName.isEmpty ||
+                              context
+                                      .read<TeacherContactViewModel>()
+                                      .validateNameField(lastName) ==
+                                  false) {
                             setState(() {
                               isLastNameEmpty = true;
                             });
                           }
-                          if (firstNameThai.isEmpty) {
+                          if (firstNameThai.isEmpty ||
+                              context
+                                      .read<TeacherContactViewModel>()
+                                      .validateNameField(firstNameThai) ==
+                                  false) {
                             setState(() {
                               isFirstNameThaiEmpty = true;
                             });
                           }
-                          if (lastNameThai.isEmpty) {
+                          if (lastNameThai.isEmpty ||
+                              context
+                                      .read<TeacherContactViewModel>()
+                                      .validateNameField(lastNameThai) ==
+                                  false) {
                             setState(() {
                               isLastNameThaiEmpty = true;
                             });
                           }
-                          if (email.isEmpty) {
+                          if (email.isEmpty ||
+                              context
+                                      .read<TeacherContactViewModel>()
+                                      .validateEmailField(email) ==
+                                  false) {
                             setState(() {
                               isEmailEmpty = true;
                             });
                           }
-                          if (phoneNumber.isEmpty) {
+                          if (phoneNumber.isEmpty ||
+                              context
+                                      .read<TeacherContactViewModel>()
+                                      .validatePhoneNumber(phoneNumber) ==
+                                  false) {
                             setState(() {
                               isPhoneNumberEmpty = true;
                             });
@@ -677,7 +734,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                               isFacebookLinkEmpty = true;
                             });
                           }
-                          if (subjects.isEmpty) {
+                          if (selectedSubjects.isEmpty) {
                             setState(() {
                               isFacebookLinkEmpty = true;
                             });
@@ -695,7 +752,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                               phone: phoneNumber,
                               officeHours: officeHours,
                               facebookLink: facebookLink,
-                              subjectId: subjects,
+                              subjectId: selectedSubjects,
                             );
                             await context
                                 .read<TeacherContactViewModel>()

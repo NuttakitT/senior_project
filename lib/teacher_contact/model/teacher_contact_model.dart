@@ -69,3 +69,22 @@ class AddTeacherContactRequest {
       required this.facebookLink,
       required this.subjectId});
 }
+
+class Subject {
+  String id;
+  String name;
+
+  Subject({required this.id, required this.name});
+
+  static List<Subject> subjectsFromJson(List<Map<String, dynamic>?>? json) {
+    if (json == null) {
+      return [];
+    }
+    return json.map((subject) {
+      return Subject(
+        id: subject!['subjectId'],
+        name: subject['name'],
+      );
+    }).toList();
+  }
+}
