@@ -54,6 +54,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
   File? imageFile;
   String? imageUrl;
   final picker = ImagePicker();
+  String uploadResult = "Upload image by pressing upload button.";
 
   bool get textFieldAllFilled =>
       !isFirstNameEmpty &&
@@ -606,40 +607,57 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                   style: AppFontStyle.wb80R20,
                                   child: Text(Consts.uploadImageLabel)),
                               const SizedBox(height: 8),
-                              Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: TextButton(
-                                  onPressed: () async {
-                                    final pickedFile = await ImagePicker()
-                                        .pickImage(source: ImageSource.gallery);
-                                    if (pickedFile != null) {
-                                      setState(() {
-                                        //  imageUrl = _uploadImage(File(pickedFile.path));
-                                        // imageUrl = context
-                                        //     .read<TeacherContactViewModel>()
-                                        //     .getImageUrl(pickedFile.path);
-                                      });
-                                    }
-                                  },
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              ColorConstant.orange40),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              side: const BorderSide(
-                                                  color: ColorConstant
-                                                      .orange40)))),
-                                  child: Text(
-                                    Consts.upload,
-                                    style: AppFontStyle.whiteB16,
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: TextButton(
+                                      onPressed: () async {
+                                        final pickedFile = await ImagePicker()
+                                            .pickImage(
+                                                source: ImageSource.gallery);
+                                        if (pickedFile != null) {
+                                          setState(() {
+                                            uploadResult = Consts.uploadSuccess;
+                                            //  imageUrl = _uploadImage(File(pickedFile.path));
+                                            // imageUrl = context
+                                            //     .read<TeacherContactViewModel>()
+                                            //     .getImageUrl(pickedFile.path);
+                                          });
+                                        } else {
+                                          setState(() {
+                                            uploadResult = Consts.uplaodFailed;
+                                          });
+                                        }
+                                      },
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  ColorConstant.orange40),
+                                          shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  side: const BorderSide(
+                                                      color: ColorConstant
+                                                          .orange40)))),
+                                      child: Text(
+                                        Consts.upload,
+                                        style: AppFontStyle.whiteB16,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  SizedBox(width: 16),
+                                  Text(
+                                    uploadResult,
+                                    style: uploadResult == Consts.uplaodFailed
+                                        ? AppFontStyle.red40R14
+                                        : AppFontStyle.wb60R14,
+                                  )
+                                ],
                               ),
                             ]),
                       ),
@@ -813,4 +831,7 @@ class Consts {
   static String confirm = "Confirm";
   static String to = "to";
   static String upload = "Upload";
+
+  static String uploadSuccess = "Upload Complete!";
+  static String uplaodFailed = "Error";
 }
