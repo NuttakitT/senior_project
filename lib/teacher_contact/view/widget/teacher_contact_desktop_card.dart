@@ -63,25 +63,27 @@ class TeacherContactDesktopCard extends StatelessWidget {
                   TeachContactDesktopDetailCell(
                     title: "Mail",
                     detail: cardDetail['email'],
+                    isClickable: false,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Phone",
                     detail: cardDetail['phone'],
+                    isClickable: false,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Office Hours",
                     detail: cardDetail['officeHours'],
+                    isClickable: false,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Subject",
-                    // detail: cardDetail["subjectId"]
-                    //     .toString()
-                    //     .replaceAll(RegExp('[|]|,'), '\n'),
                     detail: cardDetail['subjectId'].join('\n'),
+                    isClickable: false,
                   ),
                   TeachContactDesktopDetailCell(
                     title: "Facebook link",
                     detail: cardDetail['facebookLink'],
+                    isClickable: true,
                   ),
                 ],
               ),
@@ -174,11 +176,15 @@ class TeacherContactDesktopCard extends StatelessWidget {
 
 class TeachContactDesktopDetailCell extends StatelessWidget {
   const TeachContactDesktopDetailCell(
-      {Key? key, required this.title, required this.detail})
+      {Key? key,
+      required this.title,
+      required this.detail,
+      required this.isClickable})
       : super(key: key);
 
   final String title;
   final dynamic detail;
+  final bool isClickable;
 
   @override
   Widget build(BuildContext context) {
@@ -202,8 +208,26 @@ class TeachContactDesktopDetailCell extends StatelessWidget {
                         style: AppFontStyle.wb50R16, child: Text(title))),
                 Expanded(
                   flex: 7,
-                  child: DefaultTextStyle(
-                      style: AppFontStyle.wb80R16, child: Text(detailString)),
+                  child: isClickable
+                      ? GestureDetector(
+                          onTap: () async {
+                            Uri uri = Uri.parse(detailString);
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            } else {
+                              throw 'Link broken';
+                            }
+                          },
+                          child: DefaultTextStyle(
+                              style: AppFontStyle.wb80R16,
+                              child: Text(
+                                detailString,
+                                style: const TextStyle(
+                                    decoration: TextDecoration.underline),
+                              )))
+                      : DefaultTextStyle(
+                          style: AppFontStyle.wb80R16,
+                          child: Text(detailString)),
                 ),
               ],
             ),
