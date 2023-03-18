@@ -578,6 +578,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                         return MultiSelectDialogField(
                                           initialValue: const [],
                                           items: items,
+                                          searchable: true,
                                           onConfirm: (selectedList) {
                                             selectedSubjects = context
                                                 .read<TeacherContactViewModel>()
