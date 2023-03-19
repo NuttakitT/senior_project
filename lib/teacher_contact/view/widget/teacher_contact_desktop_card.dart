@@ -10,14 +10,14 @@ import '../../../assets/color_constant.dart';
 
 class TeacherContactDesktopCard extends StatelessWidget {
   const TeacherContactDesktopCard(
-      {super.key, required this.cardDetail, required this.isMobileSite});
+      {super.key, required this.cardDetail, required this.isEditable});
   final Map<String, dynamic> cardDetail;
-  final bool isMobileSite;
+  final bool isEditable;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (isMobileSite) {
+        if (!isEditable) {
           return;
         }
         try {
@@ -39,6 +39,7 @@ class TeacherContactDesktopCard extends StatelessWidget {
               context: context,
               builder: (context) {
                 return AddContactPopup(
+                  id: cardDetail['id'],
                   data: editData,
                 );
               });
@@ -231,6 +232,7 @@ class TeacherContactDesktopHeader extends StatelessWidget {
                           context: context,
                           builder: (context) {
                             return const AddContactPopup(
+                              id: null,
                               data: null,
                             );
                           });

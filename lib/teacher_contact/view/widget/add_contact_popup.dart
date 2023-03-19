@@ -9,7 +9,8 @@ import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_m
 
 class AddContactPopup extends StatefulWidget {
   final AddTeacherContactRequest? data;
-  const AddContactPopup({super.key, required this.data});
+  final String? id;
+  const AddContactPopup({super.key, required this.data, required this.id});
 
   @override
   State<AddContactPopup> createState() => _AddContactPopupState();
@@ -809,7 +810,12 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 facebookLink: facebookLink,
                                 subjectId: selectedSubjects,
                               );
-
+                              if (widget.id != null) {
+                                String? id = widget.id!;
+                                await context
+                                    .read<TeacherContactViewModel>()
+                                    .editContact(id, request);
+                              }
                               await context
                                   .read<TeacherContactViewModel>()
                                   .createNewContact(request);

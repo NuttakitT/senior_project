@@ -49,6 +49,24 @@ class TeacherContactViewModel extends ChangeNotifier {
     await firebaseService.setDocument(docId, teacherContactDetail);
   }
 
+  Future<bool> editContact(String id, AddTeacherContactRequest request) async {
+    String name = "${request.firstName} ${request.lastName}";
+    String thaiName = "${request.thaiName} ${request.thaiLastName}";
+    Map<String, dynamic> teacherContactDetail = {
+      "imageUrl": request.imageUrl,
+      "name": name,
+      "thaiName": thaiName,
+      "email": request.email,
+      "phone": request.phone,
+      "officeHours": request.officeHours,
+      "facebookLink": request.facebookLink,
+      "subjectId": request.subjectId
+    };
+    final bool isSuccess =
+        await firebaseService.editDocument(id, teacherContactDetail);
+    return isSuccess;
+  }
+
   bool validateNameField(String input) {
     if (input.isEmpty) {
       return false;

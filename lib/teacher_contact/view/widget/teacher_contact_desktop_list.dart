@@ -5,8 +5,10 @@ class TeacherContactDesktopListView extends StatelessWidget {
   const TeacherContactDesktopListView(
       {super.key,
       required this.isMobileSite,
+      required this.isAdmin,
       required this.teacherContactList});
   final bool isMobileSite;
+  final bool isAdmin;
   final List<Map<String, dynamic>?> teacherContactList;
 
   @override
@@ -32,7 +34,7 @@ class TeacherContactDesktopListView extends StatelessWidget {
           children: List.generate(cards.length, (index) {
             return TeacherContactDesktopCard(
               cardDetail: cards[index],
-              isMobileSite: isMobileSite,
+              isEditable: !isMobileSite && isAdmin,
             );
           })),
     );

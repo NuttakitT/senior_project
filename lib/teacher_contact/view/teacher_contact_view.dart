@@ -25,7 +25,8 @@ class TeacherContactView extends StatelessWidget {
           return isMobileSite
               ? TemplateMenuMobile(
                   content: TeacherContactDesktopListView(
-                  isMobileSite: true,
+                  isMobileSite: isMobileSite,
+                  isAdmin: isAdmin,
                   teacherContactList: snapshot.data ?? [],
                 ))
               : TemplateDesktop(
@@ -40,6 +41,7 @@ class TeacherContactView extends StatelessWidget {
                       ),
                       TeacherContactDesktopListView(
                         isMobileSite: false,
+                        isAdmin: isAdmin,
                         teacherContactList: snapshot.data ?? [],
                       )
                     ],
