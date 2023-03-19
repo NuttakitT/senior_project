@@ -1,5 +1,3 @@
-import 'dart:html' as html;
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -10,7 +8,9 @@ import 'package:senior_project/teacher_contact/model/teacher_contact_model.dart'
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 
 class AddContactPopup extends StatefulWidget {
-  const AddContactPopup({super.key});
+  final AddTeacherContactRequest? data;
+  final String? id;
+  const AddContactPopup({super.key, required this.data, required this.id});
 
   @override
   State<AddContactPopup> createState() => _AddContactPopupState();
@@ -51,12 +51,13 @@ class _AddContactPopupState extends State<AddContactPopup> {
   bool isSubjectEmpty = false;
   String profileImage = "";
 
-  File? imageFile;
+  XFile? imageFile;
   String? imageUrl;
+  bool isImageError = false;
   final picker = ImagePicker();
   String uploadResult = "Upload image by pressing upload button.";
 
-  bool get textFieldAllFilled =>
+  bool get allFieldNotError =>
       !isFirstNameEmpty &&
       !isLastNameEmpty &&
       !isFirstNameThaiEmpty &&
@@ -64,6 +65,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
       !isEmailEmpty &&
       !isPhoneNumberEmpty &&
       !isFacebookLinkEmpty &&
+      !isImageError &&
       !isSubjectEmpty;
 
   Color setColorOfTextField(bool emptyFlag) {
@@ -80,6 +82,20 @@ class _AddContactPopupState extends State<AddContactPopup> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController firstNameController =
+        TextEditingController(text: widget.data?.firstName);
+    TextEditingController lastNameController =
+        TextEditingController(text: widget.data?.firstName);
+    TextEditingController firstNameThaiController =
+        TextEditingController(text: widget.data?.thaiName);
+    TextEditingController lastNameThaiController =
+        TextEditingController(text: widget.data?.thaiLastName);
+    TextEditingController emailTextController =
+        TextEditingController(text: widget.data?.email);
+    TextEditingController phoneController =
+        TextEditingController(text: widget.data?.phone);
+    TextEditingController facebookController =
+        TextEditingController(text: widget.data?.facebookLink);
     final startTimeHour = startTime.hour.toString().padLeft(2, '0');
     final startTimeMinute = startTime.minute.toString().padLeft(2, '0');
 
@@ -101,7 +117,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                   children: [
                     DefaultTextStyle(
                         style: AppFontStyle.orange70Md28,
-                        child: Text(Consts.addContactTitle)),
+                        child: Text(widget.data == null
+                            ? Consts.addContactTitle
+                            : Consts.editContactInformation)),
                     const Spacer(),
                     IconButton(
                         onPressed: () {
@@ -138,6 +156,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 ),
                                 child: Center(
                                   child: TextField(
+                                    controller: firstNameController,
                                     decoration: const InputDecoration.collapsed(
                                         hintText: "First Name eg. Nick"),
                                     onChanged: (value) {
@@ -175,6 +194,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 ),
                                 child: Center(
                                   child: TextField(
+                                    controller: lastNameController,
                                     decoration: const InputDecoration.collapsed(
                                         hintText: ""),
                                     onChanged: (value) {
@@ -219,6 +239,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 ),
                                 child: Center(
                                   child: TextField(
+                                    controller: firstNameThaiController,
                                     decoration: const InputDecoration.collapsed(
                                         hintText: ""),
                                     onChanged: (value) {
@@ -256,6 +277,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 ),
                                 child: Center(
                                   child: TextField(
+                                    controller: lastNameThaiController,
                                     decoration: const InputDecoration.collapsed(
                                         hintText: ""),
                                     onChanged: (value) {
@@ -299,6 +321,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 ),
                                 child: Center(
                                   child: TextField(
+                                    controller: emailTextController,
                                     decoration: const InputDecoration.collapsed(
                                         hintText: ""),
                                     onChanged: (value) {
@@ -336,6 +359,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 ),
                                 child: Center(
                                   child: TextField(
+                                    controller: phoneController,
                                     decoration: const InputDecoration.collapsed(
                                         hintText: ""),
                                     onChanged: (value) {
@@ -525,6 +549,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Center(
                                     child: TextField(
+                                      controller: facebookController,
                                       decoration:
                                           const InputDecoration.collapsed(
                                               hintText: ""),
@@ -623,14 +648,13 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                         if (pickedFile != null) {
                                           setState(() {
                                             uploadResult = Consts.uploadSuccess;
-                                            //  imageUrl = _uploadImage(File(pickedFile.path));
-                                            // imageUrl = context
-                                            //     .read<TeacherContactViewModel>()
-                                            //     .getImageUrl(pickedFile.path);
+                                            imageFile = pickedFile;
+                                            isImageError = false;
                                           });
                                         } else {
                                           setState(() {
                                             uploadResult = Consts.uplaodFailed;
+                                            isImageError = true;
                                           });
                                         }
                                       },
@@ -764,11 +788,18 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 isFacebookLinkEmpty = true;
                               });
                             }
-                            if (textFieldAllFilled) {
+                            final imageUrl = await context
+                                .read<TeacherContactViewModel>()
+                                .getImageUrl(imageFile);
+                            if (imageUrl == null) {
+                              isImageError = true;
+                            }
+                            if (allFieldNotError) {
                               final officeHours =
                                   '$officeHourDay $startTimeHour:$startTimeMinute - $endTimeHour:$endTimeMinute';
+
                               final request = AddTeacherContactRequest(
-                                imageUrl: "https://picsum.photos/200/300",
+                                imageUrl: imageUrl ?? "",
                                 firstName: firstName,
                                 lastName: lastName,
                                 thaiName: firstNameThai,
@@ -779,6 +810,12 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 facebookLink: facebookLink,
                                 subjectId: selectedSubjects,
                               );
+                              if (widget.id != null) {
+                                String? id = widget.id!;
+                                await context
+                                    .read<TeacherContactViewModel>()
+                                    .editContact(id, request);
+                              }
                               await context
                                   .read<TeacherContactViewModel>()
                                   .createNewContact(request);
@@ -815,6 +852,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
 
 class Consts {
   static String addContactTitle = "Add Contact";
+  static String editContactInformation = "Edit Information";
   static String addContactDetail = "Fill in more information of teacher.";
   static String firstNameLabel = "First Name";
   static String lastNameLabel = "Last Name";

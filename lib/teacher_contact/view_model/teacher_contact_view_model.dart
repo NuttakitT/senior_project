@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/datasource/firebase_services.dart';
 import '../model/teacher_contact_model.dart';
+import 'package:path/path.dart' as Path;
 
 class TeacherContactViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -44,6 +47,24 @@ class TeacherContactViewModel extends ChangeNotifier {
       "subjectId": model.subjectId
     };
     await firebaseService.setDocument(docId, teacherContactDetail);
+  }
+
+  Future<bool> editContact(String id, AddTeacherContactRequest request) async {
+    String name = "${request.firstName} ${request.lastName}";
+    String thaiName = "${request.thaiName} ${request.thaiLastName}";
+    Map<String, dynamic> teacherContactDetail = {
+      "imageUrl": request.imageUrl,
+      "name": name,
+      "thaiName": thaiName,
+      "email": request.email,
+      "phone": request.phone,
+      "officeHours": request.officeHours,
+      "facebookLink": request.facebookLink,
+      "subjectId": request.subjectId
+    };
+    final bool isSuccess =
+        await firebaseService.editDocument(id, teacherContactDetail);
+    return isSuccess;
   }
 
   bool validateNameField(String input) {
@@ -134,10 +155,24 @@ class TeacherContactViewModel extends ChangeNotifier {
     }
   }
 
-  Future<String?> getImageUrl(File? file) async {
+  Future<String?> getImageUrl(XFile? file) async {
+    String? imageUrl;
     if (file != null) {
-      return "";
+      final imageFile = File(file.path);
+      String fileName = Path.basename(imageFile.path);
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child("Image-$fileName");
+
+      UploadTask task = ref.putFile(imageFile);
+      await task.whenComplete(() async {
+        var url = await ref.getDownloadURL();
+        imageUrl = url.toString();
+      }).catchError((e) {
+        print(e);
+      });
+      return imageUrl;
     }
+    return null;
   }
 }
 
