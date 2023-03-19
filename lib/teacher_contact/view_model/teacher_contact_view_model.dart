@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/datasource/firebase_services.dart';
 import '../model/teacher_contact_model.dart';
+import 'package:path/path.dart' as Path;
 
 class TeacherContactViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -134,10 +137,24 @@ class TeacherContactViewModel extends ChangeNotifier {
     }
   }
 
-  Future<String?> getImageUrl(File? file) async {
+  Future<String?> getImageUrl(XFile? file) async {
+    String? imageUrl;
     if (file != null) {
-      return "";
+      final imageFile = File(file.path);
+      String fileName = Path.basename(imageFile.path);
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child("Image-$fileName");
+
+      UploadTask task = ref.putFile(imageFile);
+      await task.whenComplete(() async {
+        var url = await ref.getDownloadURL();
+        imageUrl = url.toString();
+      }).catchError((e) {
+        print(e);
+      });
+      return imageUrl;
     }
+    return null;
   }
 }
 

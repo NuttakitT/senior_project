@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/teacher_contact/model/teacher_contact_model.dart';
 import 'package:senior_project/teacher_contact/view/widget/add_contact_popup.dart';
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,167 +9,124 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../assets/color_constant.dart';
 
 class TeacherContactDesktopCard extends StatelessWidget {
-  const TeacherContactDesktopCard({super.key, required this.cardDetail});
+  const TeacherContactDesktopCard(
+      {super.key, required this.cardDetail, required this.isMobileSite});
   final Map<String, dynamic> cardDetail;
+  final bool isMobileSite;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-          border: Border.all(color: ColorConstant.orange50, width: 1),
-          borderRadius: BorderRadius.circular(16.0),
-          color: Colors.white),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // left column
-          SizedBox(
-            width: 200,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    cardDetail['imageUrl'],
-                    width: 140.0,
-                    height: 140.0,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 4.0),
-                DefaultTextStyle(
-                  style: AppFontStyle.wb80Md24,
-                  child: Text(
-                    cardDetail['name'],
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                DefaultTextStyle(
-                  style: AppFontStyle.wb70R16,
-                  child: Text(
-                    cardDetail['thaiName'],
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(height: 4.0),
-              ],
-            ),
-          ),
-          // right column
-          Expanded(
-            child: Stack(children: [
-              Column(
+    return GestureDetector(
+      onTap: () {
+        if (isMobileSite) {
+          return;
+        }
+        try {
+          final nameSplitted = cardDetail['name'].split(' ') as List<String>;
+          final thaiNameSplitted =
+              cardDetail['thaiName'].split(' ') as List<String>;
+          final editData = AddTeacherContactRequest(
+              imageUrl: cardDetail['imageUrl'],
+              firstName: nameSplitted[0],
+              lastName: nameSplitted[1],
+              thaiName: thaiNameSplitted[0],
+              thaiLastName: thaiNameSplitted[1],
+              email: cardDetail['email'],
+              phone: cardDetail['phone'],
+              officeHours: "",
+              facebookLink: cardDetail['facebookLink'],
+              subjectId: cardDetail['subjectId']);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AddContactPopup(
+                  data: editData,
+                );
+              });
+        } catch (e) {
+          print(e);
+        }
+
+        // handle edit data
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+        decoration: BoxDecoration(
+            border: Border.all(color: ColorConstant.orange50, width: 1),
+            borderRadius: BorderRadius.circular(16.0),
+            color: Colors.white),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // left column
+            SizedBox(
+              width: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TeachContactDesktopDetailCell(
-                    title: "Mail",
-                    detail: cardDetail['email'],
-                    isClickable: false,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      cardDetail['imageUrl'],
+                      width: 140.0,
+                      height: 140.0,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  TeachContactDesktopDetailCell(
-                    title: "Phone",
-                    detail: cardDetail['phone'],
-                    isClickable: false,
+                  const SizedBox(height: 4.0),
+                  DefaultTextStyle(
+                    style: AppFontStyle.wb80Md24,
+                    child: Text(
+                      cardDetail['name'],
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  TeachContactDesktopDetailCell(
-                    title: "Office Hours",
-                    detail: cardDetail['officeHours'],
-                    isClickable: false,
+                  DefaultTextStyle(
+                    style: AppFontStyle.wb70R16,
+                    child: Text(
+                      cardDetail['thaiName'],
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  TeachContactDesktopDetailCell(
-                    title: "Subject",
-                    detail: cardDetail['subjectId'].join('\n'),
-                    isClickable: false,
-                  ),
-                  TeachContactDesktopDetailCell(
-                    title: "Facebook link",
-                    detail: cardDetail['facebookLink'],
-                    isClickable: true,
-                  ),
+                  const SizedBox(height: 4.0),
                 ],
               ),
-              // Positioned(
-              //   bottom: 0,
-              //   right: 0,
-              //   child: ButtonBar(
-              //     alignment: MainAxisAlignment.end,
-              //     children: [
-              //       Container(
-              //         child: CircleAvatar(
-              //           backgroundColor: ColorConstant.facebookColor,
-              //           child: IconButton(
-              //             onPressed: () async {
-              //               Uri uri = Uri.parse(cardDetail['facebookLink']);
-              //               if (await canLaunchUrl(uri)) {
-              //                 await launchUrl(uri);
-              //               } else {
-              //                 throw 'Link broken';
-              //               }
-              //             },
-              //             icon: const Icon(Icons.facebook),
-              //             color: ColorConstant.white,
-              //           ),
-              //         ),
-              //       ),
-              //       Container(
-              //         decoration: BoxDecoration(
-              //           shape: BoxShape.circle,
-              //           border: Border.all(
-              //             color: ColorConstant.black,
-              //             width: 1.0,
-              //           ),
-              //         ),
-              //         child: CircleAvatar(
-              //           backgroundColor: Colors.white,
-              //           child: IconButton(
-              //             onPressed: () async {
-              //               final Uri params = Uri(
-              //                 scheme: 'mailto',
-              //                 path: cardDetail['email'],
-              //               );
-              //               Uri uri = Uri.parse(params.toString());
-              //               if (await canLaunchUrl(uri)) {
-              //                 await launchUrl(uri);
-              //               } else {
-              //                 throw 'Could not launch $uri';
-              //               }
-              //             },
-              //             icon: const Icon(Icons.mail),
-              //             color: ColorConstant.black,
-              //           ),
-              //         ),
-              //       ),
-              //       Container(
-              //         decoration: BoxDecoration(
-              //           shape: BoxShape.circle,
-              //           border: Border.all(
-              //             color: ColorConstant.green40,
-              //             width: 1.0,
-              //           ),
-              //         ),
-              //         child: CircleAvatar(
-              //           backgroundColor: Colors.white,
-              //           child: IconButton(
-              //             onPressed: () async {
-              //               final phoneString = "tel:${cardDetail['phone']}";
-              //               Uri uri = Uri.parse(phoneString);
-              //               if (await canLaunchUrl(uri)) {
-              //                 await launchUrl(uri);
-              //               } else {
-              //                 throw 'Phone number is invalid';
-              //               }
-              //             },
-              //             icon: const Icon(Icons.phone),
-              //             color: ColorConstant.green40,
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // )
-            ]),
-          )
-        ],
+            ),
+            // right column
+            Expanded(
+              child: Stack(children: [
+                Column(
+                  children: [
+                    TeachContactDesktopDetailCell(
+                      title: "Mail",
+                      detail: cardDetail['email'],
+                      isClickable: false,
+                    ),
+                    TeachContactDesktopDetailCell(
+                      title: "Phone",
+                      detail: cardDetail['phone'],
+                      isClickable: false,
+                    ),
+                    TeachContactDesktopDetailCell(
+                      title: "Office Hours",
+                      detail: cardDetail['officeHours'],
+                      isClickable: false,
+                    ),
+                    TeachContactDesktopDetailCell(
+                      title: "Subject",
+                      detail: cardDetail['subjectId'].join('\n'),
+                      isClickable: false,
+                    ),
+                    TeachContactDesktopDetailCell(
+                      title: "Facebook link",
+                      detail: cardDetail['facebookLink'],
+                      isClickable: true,
+                    ),
+                  ],
+                ),
+              ]),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -272,7 +230,9 @@ class TeacherContactDesktopHeader extends StatelessWidget {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return const AddContactPopup();
+                            return const AddContactPopup(
+                              data: null,
+                            );
                           });
                     },
                     style: ButtonStyle(

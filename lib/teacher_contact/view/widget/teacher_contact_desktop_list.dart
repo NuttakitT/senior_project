@@ -32,6 +32,7 @@ class TeacherContactDesktopListView extends StatelessWidget {
           children: List.generate(cards.length, (index) {
             return TeacherContactDesktopCard(
               cardDetail: cards[index],
+              isMobileSite: isMobileSite,
             );
           })),
     );
