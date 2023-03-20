@@ -11,7 +11,8 @@ import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channe
 class Content extends StatefulWidget {
   final double size;
   final Map<String, dynamic> detail;
-  const Content({super.key, required this.size, required this.detail});
+  final int index;
+  const Content({super.key, required this.size, required this.detail, required this.index});
 
   @override
   State<Content> createState() => _ContentState();
@@ -34,6 +35,7 @@ class _ContentState extends State<Content> {
 
     return InkWell(
       onTap: () {
+        context.read<HelpDeskViewModel>().setSelectedTicket = widget.index + 1;
         context.read<ReplyChannelViewModel>().setTaskData = {
           "docId": widget.detail["docId"],
           "id": widget.detail["id"],

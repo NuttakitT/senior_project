@@ -119,7 +119,7 @@ class _BodyState extends State<Body> {
   String stausValue = status[0];
   String adminValue = admin[0];
 
-  Widget _iconLoader(BuildContext context, bool isFirst) {
+  Widget _iconLoader(BuildContext context, bool isShowMessagePage) {
     int start = context.read<HelpDeskViewModel>().getStartTicket as int;
     int end = context.read<HelpDeskViewModel>().getEndTicket as int;
     int all = context.read<HelpDeskViewModel>().getAllTicket as int;
@@ -155,7 +155,9 @@ class _BodyState extends State<Body> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            "$start-$end of $all",
+            isShowMessagePage 
+            ? "${context.read<HelpDeskViewModel>().getSelectedTicket} of $all"
+            : "$start-$end of $all",
             style: const TextStyle(
               fontFamily: AppFontStyle.font,
               fontWeight: FontWeight.normal,
@@ -196,7 +198,7 @@ class _BodyState extends State<Body> {
   List<Widget> _generateContent(List<Map<String, dynamic>> details) {
     List<Widget> list = [];
     for (int i = 0; i < details.length; i++) {
-      list.add(Content(size: contentSize, detail: details[i]));
+      list.add(Content(size: contentSize, detail: details[i], index: i,));
     }
     return list;
   }
@@ -375,10 +377,10 @@ class _BodyState extends State<Body> {
                     ),
                     const Spacer(),
                     FutureBuilder(
-                      future: context.read<HelpDeskViewModel>().initTicket(isAdmin, id),
+                      future: context.read<HelpDeskViewModel>().initTicket(isAdmin, id, 2),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          return _iconLoader(context, false);
+                          return _iconLoader(context, isShowMesg);
                         }
                         return Container();
                       },
@@ -523,10 +525,10 @@ class _BodyState extends State<Body> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       FutureBuilder(
-                        future: context.read<HelpDeskViewModel>().initTicket(isAdmin, id),
+                        future: context.read<HelpDeskViewModel>().initTicket(isAdmin, id, 2),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.done) {
-                            return _iconLoader(context, false);
+                            return _iconLoader(context, isShowMesg);
                           }
                           return Container();
                         },

@@ -23,17 +23,20 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? _allTicket;
   int? _startTicket;
   int? _endTicket;
+  int? _selectedTicket;
 
   int? get getAllTicket => _allTicket;
   int? get getStartTicket => _startTicket;
   int? get getEndTicket => _endTicket;
+  int? get getSelectedTicket => _selectedTicket;
+  set setSelectedTicket(int index) => _selectedTicket = index;
 
-  Future<void> initTicket(bool isAdmin, String id) async {
+  Future<void> initTicket(bool isAdmin, String id, int limit) async {
     String filed = isAdmin ? "adminId" : "ownerId";
     final snapshot = await _serviceTicket.getDocumnetByKeyValuePair([filed], [id]);
     _allTicket = snapshot!.docs.length;
     _startTicket = 1;
-    _endTicket = 2;
+    _endTicket = limit;
   }
 
   get getIsShowMessagePage => _isShowMessagePage;
