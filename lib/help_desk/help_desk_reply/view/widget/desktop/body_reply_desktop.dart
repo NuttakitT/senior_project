@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
@@ -7,7 +8,7 @@ import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/chat_input_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/chat_input.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/description_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/message.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
@@ -33,31 +34,9 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
     String userId = context.watch<AppViewModel>().app.getUser.getId;
     int status = context.watch<ReplyChannelViewModel>().getTaskData["status"];
     int priority = context.watch<ReplyChannelViewModel>().getTaskData["priority"];
+    DateTime dateCreated = context.watch<ReplyChannelViewModel>().getTaskData["time"];
     context.read<ReplyChannelViewModel>().clearModel();
     String adminName = "NaYao";
-    String dateCreated = "3 Mar - 17:15PM";
-    List<Map<String, dynamic>> data = [
-      {
-        "text": "asdasd as ad asd as ",
-        "isSender": true
-      },
-      {
-        "text": "asdasd as ad asd asasd as ",
-        "isSender": true
-      },
-      {
-        "text": "asdasdd as ",
-        "isSender": false
-      },
-      {
-        "text": "asdasd as ad asd as dfgdfgdfgd",
-        "isSender": true
-      },
-      {
-        "text": "aasdasdas",
-        "isSender": false
-      },
-    ];
 
     return Container(
       padding: const EdgeInsets.only(right: 20),
@@ -140,7 +119,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                 ),
                 const Spacer(),
                 Text(
-                  dateCreated,
+                  DateFormat("dd MMMM - hh:mm a").format(dateCreated),
                   style: const TextStyle(
                     fontFamily: AppFontStyle.font,
                     fontSize: 18,
@@ -235,7 +214,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                           },
                         )
                       ),
-                      const ChatInputDesktop(),
+                      const ChatInput(),
                     ],
                   ),
                 ),

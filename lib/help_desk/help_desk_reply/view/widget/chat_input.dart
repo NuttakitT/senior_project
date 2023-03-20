@@ -4,10 +4,17 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
-class ChatInputDesktop extends StatelessWidget {
-  const ChatInputDesktop({
+class ChatInput extends StatefulWidget {
+  const ChatInput({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<ChatInput> createState() => _ChatInputState();
+}
+
+class _ChatInputState extends State<ChatInput> {
+  String text = "";
 
   @override
   Widget build(BuildContext context) {
@@ -61,16 +68,8 @@ class ChatInputDesktop extends StatelessWidget {
                       hintText: "Type message...", border: InputBorder.none),
                   style: const TextStyle(
                       color: ColorConstant.whiteBlack50, fontSize: 14),
-                  onSubmitted: (value) {
-                    context.read<ReplyChannelViewModel>().createMessage(
-                    context.read<ReplyChannelViewModel>().getTaskData["docId"], 
-                    {
-                      "ownerId": userId,
-                      "message": value,
-                      "time": DateTime.now(),
-                      "seen": false
-                    }
-                  );
+                  onChanged: (value) {
+                    text = value;
                   },
                 ),
               ),
@@ -96,7 +95,17 @@ class ChatInputDesktop extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                //Todo send message
+                if (text.isNotEmpty) {
+                  context.read<ReplyChannelViewModel>().createMessage(
+                    context.read<ReplyChannelViewModel>().getTaskData["docId"], 
+                    {
+                      "ownerId": userId,
+                      "message": text,
+                      "time": DateTime.now(),
+                      "seen": false
+                    }
+                  );
+                }
               },
             )
           ],

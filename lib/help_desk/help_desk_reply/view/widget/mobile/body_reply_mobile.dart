@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/chat_input_mobile.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view/widget/chat_input.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/message.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
@@ -64,7 +64,7 @@ class _BodyReplyMobileState extends State<BodyReplyMobile> {
             )
           ),
         ),
-        const ChatInputMobile(),
+        const ChatInput(),
       ],
     );
   }
