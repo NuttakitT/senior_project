@@ -7,26 +7,50 @@ import 'package:senior_project/core/template_desktop/view_model/template_desktop
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
-Stream? query(String id, int type) {
-  final FirebaseServices service = FirebaseServices("task");
-  if (id.isEmpty) {
+Stream? query(String id, int type, bool isAdmin) {
+  final FirebaseServices service = FirebaseServices("ticket");
+  if (isAdmin) {
     switch (type) {
       case 0:
-        return service.listenToDocument();
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId"], 
+          [id], 
+        );
       case 1:
-        return service.listenToDocumentByKeyValuePair(["status"], [0]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "status"], 
+          [id, 0],
+        );
       case 2: 
-        return service.listenToDocumentByKeyValuePair(["status"], [1]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "status"], 
+          [id, 1],
+        );
       case 3:
-        return service.listenToDocumentByKeyValuePair(["status"], [2]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "status"], 
+          [id, 2],
+        );
       case 4:
-        return service.listenToDocumentByKeyValuePair(["priority"], [3]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "priority"], 
+          [id, 3],
+        );
       case 5:
-        return service.listenToDocumentByKeyValuePair(["priority"], [2]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "priority"], 
+          [id, 2],
+        );
       case 6:
-        return service.listenToDocumentByKeyValuePair(["priority"], [1]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "priority"], 
+          [id, 1],
+        );
       case 7:
-        return service.listenToDocumentByKeyValuePair(["priority"], [0]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "priority"], 
+          [id, 0],
+        );
       default:
         return null;
     }
@@ -70,7 +94,8 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
   @override
   void didChangeDependencies() {
     context.read<HelpDeskViewModel>().cleanModel();
-    _stream = query(widget.id, widget.index);
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+    _stream = query(widget.id, widget.index, isAdmin);
     super.didChangeDependencies();
   }
 

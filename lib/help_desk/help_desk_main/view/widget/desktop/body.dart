@@ -120,24 +120,42 @@ class _BodyState extends State<Body> {
   String adminValue = admin[0];
 
   Widget _iconLoader(BuildContext context, bool isFirst) {
+    int start = context.read<HelpDeskViewModel>().getStartTicket as int;
+    int end = context.read<HelpDeskViewModel>().getEndTicket as int;
+    int all = context.read<HelpDeskViewModel>().getAllTicket as int;
+
     return Row(
       children: [
-        IconButton(
-          onPressed: () {
-            // TODO go back
-          }, 
-          icon: const Icon(Icons.keyboard_arrow_left_rounded)
+        Builder(
+          builder: (context) {
+            if (start != 1) {
+              return IconButton(
+                onPressed: () {
+                  // TODO go back
+                }, 
+                icon: const Icon(Icons.keyboard_arrow_left_rounded)
+              );
+            }
+            return Container();
+          },
         ),
-        IconButton(
-          onPressed: () {
-            // TODO go back
-          }, 
-          icon: const Icon(Icons.keyboard_double_arrow_left_rounded)
+        Builder(
+          builder: (context) {
+            if (start != 1) {
+              return IconButton(
+                onPressed: () {
+                  // TODO go back
+                }, 
+                icon: const Icon(Icons.keyboard_double_arrow_left_rounded)
+              );
+            }
+            return Container();
+          },
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            "${context.read<HelpDeskViewModel>().getStartTicket}-${context.read<HelpDeskViewModel>().getEndTicket} of ${context.read<HelpDeskViewModel>().getAllTicket}",
+            "$start-$end of $all",
             style: const TextStyle(
               fontFamily: AppFontStyle.font,
               fontWeight: FontWeight.normal,
@@ -146,18 +164,32 @@ class _BodyState extends State<Body> {
             ),
           ),
         ),
-        IconButton(
-          onPressed: () {
-            // TODO load more
-          }, 
-          icon: const Icon(Icons.keyboard_arrow_right_rounded)
+        Builder(
+          builder: (context) {
+            if (end != all) {
+              return IconButton(
+                onPressed: () {
+                  // TODO load more
+                }, 
+                icon: const Icon(Icons.keyboard_arrow_right_rounded)
+              );
+            }
+            return Container();
+          },
         ),
-        IconButton(
-          onPressed: () {
-            // TODO load more
-          }, 
-          icon: const Icon(Icons.keyboard_double_arrow_right_rounded)
-        )
+        Builder(
+          builder: (context) {
+            if (end != all) {
+              return IconButton(
+                onPressed: () {
+                  // TODO load more
+                }, 
+                icon: const Icon(Icons.keyboard_double_arrow_right_rounded)
+              );
+            }
+            return Container();
+          },
+        ),
       ],
     );
   }
@@ -183,7 +215,6 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     bool isShowMesg = context.watch<HelpDeskViewModel>().getIsShowMessagePage;
-    int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
     String id = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
 

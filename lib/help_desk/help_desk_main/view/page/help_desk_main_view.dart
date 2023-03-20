@@ -44,8 +44,8 @@ class HelpDeskMainView extends StatelessWidget {
           ));
     }
     return TemplateDesktop(
-        helpdesk: true,
-        helpdeskadmin: false,
+        helpdesk: !isAdmin,
+        helpdeskadmin: isAdmin,
         home: false,
         useTemplatescroll: false,
         content: Builder(
