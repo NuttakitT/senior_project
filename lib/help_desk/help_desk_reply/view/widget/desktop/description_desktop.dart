@@ -19,9 +19,8 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
   String dropdownValueStatus = status.first;
   @override
   Widget build(BuildContext context) {
-    // String taskDetail = context.watch<ReplyChannelViewModel>().getTaskData["detail"];
-    String taskDetail = "sssssssssssad asddddddddddddd asdasdasd sad as asd";
-    String category = "รายวิชา";
+    String taskDetail = context.watch<ReplyChannelViewModel>().getTaskData["detail"];
+    String category = context.watch<ReplyChannelViewModel>().getTaskData["category"];
 
     return Column(
       children: [

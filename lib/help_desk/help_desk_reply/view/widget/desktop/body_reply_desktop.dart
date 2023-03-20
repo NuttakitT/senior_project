@@ -175,6 +175,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                         constraints: const BoxConstraints(minHeight: 300),
                         height: screenHeight - 560,
                         decoration: const BoxDecoration(color: ColorConstant.whiteBlack5),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: StreamBuilder(
                           stream: query(docId),
                           builder: (context, snapshot) {
