@@ -9,18 +9,23 @@ import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/content.dart';
 import 'package:senior_project/core/model/help_desk/task.dart';
-import 'package:senior_project/core/view_model/cryptor.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
 
 class HelpDeskViewModel extends ChangeNotifier {
   HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
-  final FirebaseServices _serviceTask = FirebaseServices("task");
+  final FirebaseServices _serviceTask = FirebaseServices("ticket");
   final FirebaseServices _serviceUser = FirebaseServices("user");
-  final AlgoliaServices _algolia = AlgoliaServices("task");
+  final AlgoliaServices _algolia = AlgoliaServices("ticket");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
   final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
-  final int seed = 100;
+  bool _isShowMessagePage = false;
+
+  get getIsShowMessagePage => _isShowMessagePage;
+  void setShowMessagePageState(bool state) {
+    _isShowMessagePage = state;
+    notifyListeners();
+  } 
 
   String convertToString(bool isStatus, int taskState) {
     if (isStatus) {
@@ -81,8 +86,8 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   Future<List<String>?> _getUserdetail(String uid) async {
     final doc = await _serviceUser.getDocumentById(uid);
-    if (doc != null) {
-      return [doc.get("username"), doc.get("email")];
+    if (doc!.exists) {
+      return [doc.get("name"), doc.get("email")];
     } else {
       return null;
     }
@@ -92,7 +97,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     for (int i = 0; i < _task.length; i++) {
       List<String>? list = await _getUserdetail(_task[i]["ownerId"]);
       _task[i].addEntries({
-        "username": list![0],
+        "name": list![0],
         "email": list[1],
       }.entries);
     }
@@ -110,24 +115,26 @@ class HelpDeskViewModel extends ChangeNotifier {
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
-      "username": list![0],
-      "email": Cryptor.encrypt(list[1], customSeed: seed)[0],
-      "dateCreate": Cryptor.encrypt(DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate), customSeed: seed)[0],
-      "category": Cryptor.encrypt(task.getCategory, customSeed: seed)[0],
-      "priority": Cryptor.encrypt(convertToString(false, task.getPriority), customSeed: seed)[0],
-      "status": Cryptor.encrypt(convertToString(true, task.getStatus), customSeed: seed)[0],
-      "title": Cryptor.encrypt(task.getTitle, customSeed: seed)[0],
-      "detail":Cryptor.encrypt(detail, customSeed: seed)[0] 
+      "ownerName": list![0],
+      "email": list[1],
+      "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
+      "category": task.getCategory,
+      "priority": convertToString(false, task.getPriority),
+      "status": convertToString(true, task.getStatus),
+      "title": task.getTitle,
+      "detail": detail,
+      "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
     });
     Map<String, dynamic> taskDetail = {
       "id": task.getId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
-      "category": Cryptor.encrypt(task.getCategory, customSeed: seed)[0],
+      "category": task.getCategory,
       "priority": task.getPriority,
       "status": task.getStatus,
-      "title": Cryptor.encrypt(task.getTitle, customSeed: seed)[0],
-      "detail": Cryptor.encrypt(detail, customSeed: seed)[0]
+      "title": task.getTitle,
+      "detail": detail,
+      "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
     };
     taskDetail.addAll({"objectID": objectId!});
     await _serviceTask.setDocument(docId, taskDetail);
@@ -149,7 +156,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     })[isStatus ? "status" : "priority"] = value;
     await _serviceTask.editDocument(docId, {isStatus ? "status" : "priority": value});
     await _algolia.updateObject(objectId, {
-      isStatus ? "status" : "priority": Cryptor.encrypt(convertToString(isStatus, value), customSeed: seed)[0]
+      isStatus ? "status" : "priority": convertToString(isStatus, value)
     });
   }
 
@@ -177,16 +184,17 @@ class HelpDeskViewModel extends ChangeNotifier {
   Future<void> _addQueryData(DocumentSnapshot snapshot) async {
     Task task = Task(
       snapshot.get("ownerId"),
-      Cryptor.decrypt(snapshot.get("title")),
-      Content(Cryptor.decrypt(snapshot.get("detail"))),
+      snapshot.get("title"),
+      Content(snapshot.get("detail")),
       snapshot.get("priority"),
-      Cryptor.decrypt(snapshot.get("category")),
+      snapshot.get("category"),
       id: snapshot.get("id"),
       dateCreate: snapshot.get("dateCreate").toDate(),
       status: snapshot.get("status")
     );
     _helpDeskModel.addTask(task);
     _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
+    _task[_helpDeskModel.getTask.length-1].addEntries({"docId": snapshot.id}.entries);
   }
 
   void _modifyQueryData(DocumentSnapshot snapshot, int index) {
@@ -251,7 +259,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   HitsSearcher get getHitsSearcher => _hitSearch;
   void setSearchText(String text) {
     if (text.isNotEmpty) {
-      _searchText = Cryptor.encrypt(text, customSeed: seed)[0];
+      _searchText = text;
     } else {
       _searchText = "";
     }

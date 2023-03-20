@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 class Content extends StatefulWidget {
   final double size;
-  const Content({super.key, required this.size});
+  final Map<String, dynamic> detail;
+  const Content({super.key, required this.size, required this.detail});
 
   @override
   State<Content> createState() => _ContentState();
@@ -24,12 +27,22 @@ class _ContentState extends State<Content> {
 
   @override
   Widget build(BuildContext context) {
-    int status = 1;
-    int priority = 3;
+    int status = widget.detail["status"];
+    int priority = widget.detail["priority"];
+    String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
+    String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
 
     return InkWell(
       onTap: () {
-        print("test");
+        context.read<ReplyChannelViewModel>().setTaskData = {
+          "docId": widget.detail["docId"],
+          "id": widget.detail["id"],
+          "title": widget.detail["title"],
+          "detail": widget.detail["detail"],
+          "priority": widget.detail["priority"],
+          "status": widget.detail["status"]
+        };
+        context.read<HelpDeskViewModel>().setShowMessagePageState(true);
       },
       child: Container(
         height: widget.size,
@@ -52,7 +65,7 @@ class _ContentState extends State<Content> {
                 ),
                 alignment: Alignment.center,
                 child: const Text(
-                  "1", 
+                  "1", // TODO unread msg
                   style: TextStyle(
                     fontFamily: AppFontStyle.font,
                     color: Colors.white,
@@ -70,7 +83,7 @@ class _ContentState extends State<Content> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "Nuttakit Pliankhunthud Tiew",
+                      text: widget.detail["name"],
                       style: textStyle(false, ColorConstant.whiteBlack90, AppFontStyle.font)
                     )
                   ]
@@ -143,11 +156,11 @@ class _ContentState extends State<Content> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "การฝึกงาน",
+                      text: widget.detail["title"],
                       style: textStyle(false, ColorConstant.whiteBlack90, AppFontStyle.thaiFont)
                     ),
                     TextSpan(
-                      text: " - aaaaaa aaaaa aaaaaa aaaaa aaaaaaa aaaaa aaaaaaa aaaaa aaaaaaaa aaaaaaaaa aaaaaa aaaaaa aaaaaa aaaaaaaa aaaaaaaaaaaaaaaaaa",
+                      text: " - ${widget.detail["detail"]}",
                       style: textStyle(false, ColorConstant.whiteBlack60, AppFontStyle.thaiFont)
                     )
                   ]
@@ -159,9 +172,11 @@ class _ContentState extends State<Content> {
               child: Container(
                 alignment: Alignment.center,
                 width: 70,
-                child: const Text(
-                  "09:41 AM",
-                  style: TextStyle(
+                child: Text(
+                  localTime == taskTime 
+                    ? DateFormat('hh:mm a').format(widget.detail["time"]) 
+                    : DateFormat('dd MMM').format(widget.detail["time"]),
+                  style: const TextStyle(
                     fontFamily: AppFontStyle.font,
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
