@@ -73,6 +73,11 @@ class FirebaseServices {
   Future<QuerySnapshot?> getDocumnetByKeyValuePair(
     List<String> key, 
     List<String> value, 
+    {
+      int? limit,
+      String? orderingField,
+      bool descending = false
+    }
   ) async {
     try {
       late Query query;
@@ -85,6 +90,12 @@ class FirebaseServices {
           }
         }
       }
+      if (orderingField != null) {
+        query = query.orderBy(orderingField, descending: descending);
+      }
+      if (limit != null) {
+        query = query.limit(limit);
+      } 
       return await query.get();
     } catch (e) {
       return null;
@@ -102,14 +113,19 @@ class FirebaseServices {
   }
 
   //---------------------- Read operation(Real-time) ---------------------------
-  // A stream listener used as a listener for a document queried by key-value.
+  // A stream listener use as a listener for a document queried by key-value.
   // key: list of the filed to query
   // value: list of the value to query
   // key and value must have the same length and in th same index
   // refers to one pair of the key-value.
   Stream<QuerySnapshot?> listenToDocumentByKeyValuePair(
     List<String> key, 
-    List<dynamic> value
+    List<dynamic> value,
+    {
+      int? limit,
+      String? orderingField,
+      bool descending = false,
+    }
   ) {
     late Query query;
     if ((key.length == value.length) && key.isNotEmpty) {
@@ -121,6 +137,12 @@ class FirebaseServices {
         }
       }
     }
+    if (orderingField != null) {
+        query = query.orderBy(orderingField, descending: descending);
+    }
+    if (limit != null) {
+      query = query.limit(limit);
+    } 
     return query.snapshots();
   }
 

@@ -13,13 +13,28 @@ import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_mod
 
 class HelpDeskViewModel extends ChangeNotifier {
   HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
-  final FirebaseServices _serviceTask = FirebaseServices("ticket");
+  final FirebaseServices _serviceTicket = FirebaseServices("ticket");
   final FirebaseServices _serviceUser = FirebaseServices("user");
   final AlgoliaServices _algolia = AlgoliaServices("ticket");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
   final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
   bool _isShowMessagePage = false;
+  int? _allTicket;
+  int? _startTicket;
+  int? _endTicket;
+
+  int? get getAllTicket => _allTicket;
+  int? get getStartTicket => _startTicket;
+  int? get getEndTicket => _endTicket;
+
+  Future<void> initTicket(bool isAdmin, String id) async {
+    String filed = isAdmin ? "adminId" : "ownerId";
+    final snapshot = await _serviceTicket.getDocumnetByKeyValuePair([filed], [id]);
+    _allTicket = snapshot!.docs.length;
+    _startTicket = 1;
+    _endTicket = 2;
+  }
 
   get getIsShowMessagePage => _isShowMessagePage;
   void setShowMessagePageState(bool state) {
@@ -55,7 +70,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   get getCategory => _category;
-  get getTask => _task.reversed.toList();
+  List<Map<String, dynamic>>  get getTask => _task;
 
   bool? getMobileMenuState(int index) {
     if (index >= 0 && index < 4) {
@@ -80,7 +95,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<String> getTaskDocId(String taskId) async {
-    final snapshot = await _serviceTask.getDocumnetByKeyValuePair(["id"], [taskId]);
+    final snapshot = await _serviceTicket.getDocumnetByKeyValuePair(["id"], [taskId]);
     return snapshot!.docs.first.id;
   }
 
@@ -137,7 +152,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
     };
     taskDetail.addAll({"objectID": objectId!});
-    await _serviceTask.setDocument(docId, taskDetail);
+    await _serviceTicket.setDocument(docId, taskDetail);
   }
 
   void cleanModel() {
@@ -154,14 +169,14 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task.firstWhere((element) {
     return element.containsValue(taskId);
     })[isStatus ? "status" : "priority"] = value;
-    await _serviceTask.editDocument(docId, {isStatus ? "status" : "priority": value});
+    await _serviceTicket.editDocument(docId, {isStatus ? "status" : "priority": value});
     await _algolia.updateObject(objectId, {
       isStatus ? "status" : "priority": convertToString(isStatus, value)
     });
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
-    QuerySnapshot? query = await _serviceTask.getDocumnetByKeyValuePair(["id"], [id]);
+    QuerySnapshot? query = await _serviceTicket.getDocumnetByKeyValuePair(["id"], [id]);
     if (query!.docs.isNotEmpty) {
       String docId = query.docs.first.id;
       String taskId = query.docs.first.get("id");
@@ -233,7 +248,7 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   Future<void> reconstructSearchResult(List<String> docIds) async {
     for (int i = 0; i < docIds.length; i++) {
-      DocumentSnapshot? doc = await _serviceTask.getDocumentById(docIds[i]);
+      DocumentSnapshot? doc = await _serviceTicket.getDocumentById(docIds[i]);
       if (doc != null) {
         _addQueryData(doc);
       }

@@ -13,37 +13,87 @@ import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/bod
 
 Stream? query(String id, int type, bool isAdmin) {
   final FirebaseServices service = FirebaseServices("ticket");
- if (isAdmin) {
+  int limit = 2;
+  bool descending = true;
+  if (isAdmin) {
     switch (type) {
       case 0:
-        return service.listenToDocumentByKeyValuePair(["adminId"], [id]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId"], 
+          [id], 
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 1:
-        return service.listenToDocumentByKeyValuePair(["adminId", "status"], [id, 0]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "status"], 
+          [id, 0],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 2: 
-        return service.listenToDocumentByKeyValuePair(["adminId", "status"], [id, 1]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "status"], 
+          [id, 1],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 3:
-        return service.listenToDocumentByKeyValuePair(["adminId", "status"], [id, 2]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "status"], 
+          [id, 2],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 4:
-        return service.listenToDocumentByKeyValuePair(["adminId", "priority"], [id, 3]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "priority"], 
+          [id, 3],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 5:
-        return service.listenToDocumentByKeyValuePair(["adminId", "priority"], [id, 2]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "priority"], 
+          [id, 2],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 6:
-        return service.listenToDocumentByKeyValuePair(["adminId", "priority"], [id, 1]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "priority"], 
+          [id, 1],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 7:
-        return service.listenToDocumentByKeyValuePair(["adminId", "priority"], [id, 0]);
+        return service.listenToDocumentByKeyValuePair(
+          ["adminId", "priority"], 
+          [id, 0],
+          limit: limit, orderingField: 'dateCreate', descending: descending  
+        );
       default:
         return null;
     }
   } else {
     switch (type) {
       case 0:
-        return service.listenToDocumentByKeyValuePair(["ownerId"], [id]);
+        return service.listenToDocumentByKeyValuePair(
+          ["ownerId"], 
+          [id],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 1:
-        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 0]);
+        return service.listenToDocumentByKeyValuePair(
+          ["ownerId", "status"], 
+          [id, 0],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 2:
-        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 1]);
+        return service.listenToDocumentByKeyValuePair(
+          ["ownerId", "status"], 
+          [id, 1],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       case 3:
-        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 2]);
+        return service.listenToDocumentByKeyValuePair(
+          ["ownerId", "status"], 
+          [id, 2],
+          limit: limit, orderingField: 'dateCreate', descending: descending
+        );
       default:
         return null;
     }
@@ -69,28 +119,7 @@ class _BodyState extends State<Body> {
   String stausValue = status[0];
   String adminValue = admin[0];
 
-  List<Map<String, dynamic>> details = [
-    {
-      // "id": "",
-      // "docId": "",
-      "title": "test",
-      "detail": "asdfghj",
-      "status": 1,
-      "priority": 0,
-      "ownerName": "TEST TEST",
-      "time": DateTime.now()
-    },
-    {
-      "title": "test",
-      "detail": "asdfghj",
-      "status": 2,
-      "priority": 2,
-      "ownerName": "TEST TEST",
-      "time": DateTime.now()
-    }
-  ];
-
-  Widget _iconLoader(bool isFirst) {
+  Widget _iconLoader(BuildContext context, bool isFirst) {
     return Row(
       children: [
         IconButton(
@@ -105,11 +134,11 @@ class _BodyState extends State<Body> {
           }, 
           icon: const Icon(Icons.keyboard_double_arrow_left_rounded)
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            "1-5 of 5",
-            style: TextStyle(
+            "${context.read<HelpDeskViewModel>().getStartTicket}-${context.read<HelpDeskViewModel>().getEndTicket} of ${context.read<HelpDeskViewModel>().getAllTicket}",
+            style: const TextStyle(
               fontFamily: AppFontStyle.font,
               fontWeight: FontWeight.normal,
               fontSize: 16,
@@ -154,6 +183,9 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     bool isShowMesg = context.watch<HelpDeskViewModel>().getIsShowMessagePage;
+    int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+    String id = context.watch<AppViewModel>().app.getUser.getId;
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -186,9 +218,10 @@ class _BodyState extends State<Body> {
                       padding: const EdgeInsets.only(right: 40),
                       child: IconButton(
                         onPressed: () {
-                          // TODO refresh
                           if (isShowMesg) {
                             context.read<HelpDeskViewModel>().setShowMessagePageState(false);
+                          } else {
+                            // TODO refresh
                           }
                         },
                         icon: Icon(
@@ -310,7 +343,15 @@ class _BodyState extends State<Body> {
                       }
                     ),
                     const Spacer(),
-                    _iconLoader(false)
+                    FutureBuilder(
+                      future: context.read<HelpDeskViewModel>().initTicket(isAdmin, id),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return _iconLoader(context, false);
+                        }
+                        return Container();
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -344,7 +385,22 @@ class _BodyState extends State<Body> {
                   child: SingleChildScrollView(
                     controller: controller,
                     scrollDirection: Axis.vertical,
-                    child: StreamBuilder(
+                    child:
+                    // FutureBuilder(
+                    //   future: FirebaseServices("ticket").getDocumnetByKeyValuePair(["ownerId"], [id], limit: 1, orderingField: 'dateCreate', descending: true),
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.connectionState == ConnectionState.done) {
+                    //       if (snapshot.hasData) {
+                    //         print(snapshot.data!.docs.first.data());
+                    //       }
+                    //     }
+                    //     return const LoaderStatus(text: "Loading...");
+                    //   },
+                    // ),
+                    
+                    
+                    
+                    StreamBuilder(
                       stream: _stream,
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
@@ -356,16 +412,27 @@ class _BodyState extends State<Body> {
                               future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
                               builder: (context, futureSnapshot) {
                                 if (futureSnapshot.connectionState == ConnectionState.done) {
-                                  List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
                                   return FutureBuilder(
                                     future: context.read<HelpDeskViewModel>().formatTaskDetail(),
                                     builder: (context, _) {
+                                      List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
                                       if (_.connectionState == ConnectionState.done) {
                                         return Column(
                                           children: _generateContent(content)
                                         );
                                       }
-                                      return const LoaderStatus(text: "Loading...");
+                                      return Container(
+                                        height: contentSize,
+                                        width: double.infinity,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border(
+                                            bottom: BorderSide(color: ColorConstant.whiteBlack30),
+                                          )
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: const LoaderStatus(text: "Loading...")
+                                      );
                                     },
                                   );
                                 }
@@ -374,10 +441,32 @@ class _BodyState extends State<Body> {
                             );
                           } else {
                             context.read<HelpDeskViewModel>().cleanModel();
-                            return const LoaderStatus(text: "No task in this section");
+                            return Container(
+                              height: contentSize,
+                              width: double.infinity,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                border: Border(
+                                  bottom: BorderSide(color: ColorConstant.whiteBlack30),
+                                )
+                              ),
+                              alignment: Alignment.center,
+                              child: const LoaderStatus(text: "No task in this section")
+                            );
                           }      
                         } else {
-                          return const LoaderStatus(text: "Loading...");
+                          return Container(
+                            height: contentSize,
+                            width: double.infinity,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              border: Border(
+                                bottom: BorderSide(color: ColorConstant.whiteBlack30),
+                              )
+                            ),
+                            alignment: Alignment.center,
+                            child: const LoaderStatus(text: "Loading...")
+                          );
                         }
                       },
                     ),
@@ -402,7 +491,15 @@ class _BodyState extends State<Body> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      _iconLoader(false),
+                      FutureBuilder(
+                        future: context.read<HelpDeskViewModel>().initTicket(isAdmin, id),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return _iconLoader(context, false);
+                          }
+                          return Container();
+                        },
+                      ),
                     ],
                   )
                 );
