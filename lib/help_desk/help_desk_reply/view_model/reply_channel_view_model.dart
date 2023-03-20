@@ -5,7 +5,7 @@ import 'package:senior_project/help_desk/help_desk_reply/model/help_desk_reply_m
 
 class ReplyChannelViewModel extends ChangeNotifier {
   HelpDeskReplyModel _model = HelpDeskReplyModel();
-  final FirebaseServices _service = FirebaseServices("task");
+  final FirebaseServices _service = FirebaseServices("ticket");
   Map<String, dynamic> _taskData = {};
 
   set setTaskData(Map<String, dynamic> data) => _taskData = data;
