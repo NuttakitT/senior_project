@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
       home: FutureBuilder(
           future: context.read<AppViewModel>().initializeLoginState(context,
-              FirebaseAuth.instance.currentUser == null ? false : true),
+              !(FirebaseAuth.instance.currentUser == null)),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
               return const HelpDeskMainView(isAdmin: false);

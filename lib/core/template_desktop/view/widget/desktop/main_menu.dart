@@ -123,12 +123,14 @@ class _MainMenuState extends State<MainMenu> {
                 bool isSuccess = await context.read<AppViewModel>().login(context);
                 if (isSuccess) {
                   // TODO link to home
-                  // Navigator.pushAndRemoveUntil(
-                  //   context, 
-                  //   MaterialPageRoute(builder: (context) {
-                  //     return MyProfileView(isAdmin: false,);
-                  //   }), 
-                  // (route) => false);
+                  Navigator.pushAndRemoveUntil(
+                    context, 
+                    MaterialPageRoute(builder: (context) {
+                      return HelpDeskMainView(
+                        isAdmin: context.read<AppViewModel>().app.getUser.getRole == 0 ? true : false,
+                      );
+                    }), 
+                  (route) => false);
                 }
               },
               style: ButtonStyle(

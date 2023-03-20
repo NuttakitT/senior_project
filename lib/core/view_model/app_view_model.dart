@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/model/user/app_user.dart';
 import 'package:senior_project/core/view_model/cryptor.dart';
@@ -45,25 +46,16 @@ class AppViewModel extends ChangeNotifier {
   }
 
   Future<void> initializeLoginState(BuildContext context, bool state) async {
-    if (state) {
-      // final snapshot = await FirebaseServices("user").getDocumentById(
-      //   FirebaseAuth.instance.currentUser!.uid
-      // );
-      // if (snapshot != null) {
-      //   Map<String, dynamic> detail = storeAppUser(snapshot);
-      //   setLoggedInUser(detail);
-      // }
-      // TODO manage role
-      final credential = FirebaseAuth.instance.currentUser;
-      setLoggedInUser({
-        "id": credential!.uid,
-        "email": credential.email,
-        "name": credential.displayName,
-        "phone": credential.phoneNumber,
-        "profileImageUrl": credential.photoURL,
-      });
-    } 
     _isLogin = state;
+    if (state) {
+      final snapshot = await FirebaseServices("user").getDocumentById(
+        FirebaseAuth.instance.currentUser!.uid
+      );
+      if (snapshot!.exists) {
+        Map<String, dynamic> detail = storeAppUser(snapshot);
+        setLoggedInUser(detail);
+      }
+    } 
   }
 
   Future<bool> login(BuildContext context) async {
@@ -75,12 +67,26 @@ class AppViewModel extends ChangeNotifier {
     provider.addScope("User.read");
     try {
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
+      final snapshot = await FirebaseServices("user").getDocumentById(
+        credential.user!.uid
+      );
+      if (!snapshot!.exists) {
+        FirebaseServices("user").setDocument(credential.user!.uid, {
+          "id": credential.user!.uid,
+          "email": credential.user!.email,
+          "name": credential.user!.displayName,
+          "phone": credential.user!.phoneNumber,
+          "profileImageUrl": credential.user!.photoURL,
+          "role": 1
+        });
+      }
       setLoggedInUser({
         "id": credential.user!.uid,
         "email": credential.user!.email,
         "name": credential.user!.displayName,
         "phone": credential.user!.phoneNumber,
-        "profileImageUrl": credential.user!.photoURL
+        "profileImageUrl": credential.user!.photoURL,
+        "role": 1
       });
       return true;
     } catch (e) {
