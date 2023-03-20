@@ -25,6 +25,9 @@ class _MainMenuState extends State<MainMenu> {
       color: state ? Colors.white : ColorConstant.whiteBlack30);
   final ScrollController _controller = ScrollController();
   bool isNotificationEnabled = false;
+  OverlayEntry overlayEntry = OverlayEntry(builder: (builder) {
+    return Container();
+  });
 
   Widget _navbar(BuildContext context) {
     bool isHomeSelected =
@@ -166,7 +169,6 @@ class _MainMenuState extends State<MainMenu> {
                         color: Colors.white,
                       ),
                       onTap: () {
-                        print(isNotificationEnabled);
                         setState(() {
                           isNotificationEnabled = !isNotificationEnabled;
                           print(isNotificationEnabled);
@@ -197,14 +199,16 @@ class _MainMenuState extends State<MainMenu> {
         ]);
   }
 
-  void _showNotifications(BuildContext context, bool isOpen) {
+  void _showNotifications(BuildContext context, bool isOpen) async {
     OverlayState? overlayState = Overlay.of(context);
-    OverlayEntry overlayEntry = OverlayEntry(
-        builder: (BuildContext context) => isOpen
-            ? const Positioned(
-                top: 76.0, right: 100.0, child: NotificationOverlay())
-            : Container());
-    overlayState?.insert(overlayEntry);
+    if (isOpen) {
+      overlayEntry = OverlayEntry(
+          builder: (BuildContext context) => const Positioned(
+              top: 76.0, right: 100.0, child: NotificationOverlay()));
+      overlayState?.insert(overlayEntry);
+    } else {
+      overlayEntry.remove();
+    }
   }
 
   @override
