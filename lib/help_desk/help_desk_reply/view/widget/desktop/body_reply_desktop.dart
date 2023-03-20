@@ -14,7 +14,7 @@ import 'package:senior_project/help_desk/help_desk_reply/view/widget/message.dar
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 Stream? query(String docId) {
-  return FirebaseServices("task").listenToSubDocument(docId, "replyChannel");
+  return FirebaseServices("ticket").listenToSubDocument(docId, "replyChannel");
 }
 
 class BodyReplyDesktop extends StatefulWidget {
@@ -189,7 +189,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                     isSender:  data[index]["isSender"],
                                     text: data[index]["text"],
                                     isMobile: false,
-                                    time: "3 Mar - 19:13PM",
+                                    time: data[index]["time"],
                                   ),
                                 );
                               }
@@ -198,7 +198,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                 child: Container(
                                   width: double.infinity,
                                   alignment: Alignment.topCenter,
-                                  child: const Text("No messages in this task")
+                                  child: const Text("No messages in this ticket")
                                 ),
                               );
                             }

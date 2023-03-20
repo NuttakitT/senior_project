@@ -7,7 +7,7 @@ import 'package:senior_project/help_desk/help_desk_reply/view/widget/message.dar
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 Stream? query(String docId) {
-  return FirebaseServices("task").listenToSubDocument(docId, "replyChannel");
+  return FirebaseServices("ticket").listenToSubDocument(docId, "replyChannel");
 }
 class BodyReplyMobile extends StatefulWidget {
   const BodyReplyMobile({super.key});
@@ -41,13 +41,13 @@ class _BodyReplyMobileState extends State<BodyReplyMobile> {
                         isSender:  data[index]["isSender"],
                         text: data[index]["text"],
                         isMobile: true,
-                        time: "3 Mar - 19:13PM",
+                        time: data[index]["time"],
                       ),
                     );
                   }
                   return const Padding(
                     padding: EdgeInsets.only(top: 16),
-                    child: Text("No messages in this task"),
+                    child: Text("No messages in this ticket"),
                   );
                 }
                 return Center(
