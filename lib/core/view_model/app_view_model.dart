@@ -29,15 +29,14 @@ class AppViewModel extends ChangeNotifier {
   }
 
   Map<String, dynamic> storeAppUser(DocumentSnapshot snapshot) {
-    List<String> list = ["id", "username", "email", "role", "gender", "secret", "birthday", "linkId"];
     Map<String, dynamic> result = {};
     String data = snapshot.data().toString();
     data = data.substring(1, data.length-1);
     List<String> chunk = data.split(", ");
     for (int i = 0; i < chunk.length; i++) {
       List<String> chunkData = chunk[i].split(": ");
-      if (!list.contains(chunkData[0])) {
-        result[chunkData[0]] = Cryptor.decrypt(chunkData[1]);
+      if (chunkData[0] == "role") {
+        result[chunkData[0]] = int.parse(chunkData[1]);
       } else {
         result[chunkData[0]] = chunkData[1];
       }
