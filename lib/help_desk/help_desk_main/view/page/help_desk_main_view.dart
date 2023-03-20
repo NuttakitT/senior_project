@@ -50,7 +50,6 @@ class HelpDeskMainView extends StatelessWidget {
         useTemplatescroll: false,
         content: Builder(
           builder: (context) {
-            isLogin = true;
             if (!isLogin) {
               return const Center(
                 child: Text(
