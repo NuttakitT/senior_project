@@ -13,15 +13,23 @@ class AppViewModel extends ChangeNotifier {
   App app = App();
   final double _mobileWidthBreakpoint = 430;
   late bool _isLogin;
+  late bool _isEmailNotificationEnabled = false;
 
   bool getMobileSiteState(double pixelWidth) {
-    if(pixelWidth <= _mobileWidthBreakpoint) {
+    if (pixelWidth <= _mobileWidthBreakpoint) {
       return true;
     } else {
       return false;
     }
   }
-  
+
+  bool get isEmailNotificationEnabled => _isEmailNotificationEnabled;
+
+  void toggleEmailNotification(bool value) {
+    _isEmailNotificationEnabled = value;
+    notifyListeners();
+  }
+
   void setLoggedInUser(Map<String, dynamic> detail) {
     AppUser user = AppUser.overloaddedConstructor(detail);
     app.setAppUser = user;
@@ -30,10 +38,19 @@ class AppViewModel extends ChangeNotifier {
   }
 
   Map<String, dynamic> storeAppUser(DocumentSnapshot snapshot) {
-    List<String> list = ["id", "username", "email", "role", "gender", "secret", "birthday", "linkId"];
+    List<String> list = [
+      "id",
+      "username",
+      "email",
+      "role",
+      "gender",
+      "secret",
+      "birthday",
+      "linkId"
+    ];
     Map<String, dynamic> result = {};
     String data = snapshot.data().toString();
-    data = data.substring(1, data.length-1);
+    data = data.substring(1, data.length - 1);
     List<String> chunk = data.split(", ");
     for (int i = 0; i < chunk.length; i++) {
       List<String> chunkData = chunk[i].split(": ");
@@ -64,15 +81,14 @@ class AppViewModel extends ChangeNotifier {
         "phone": credential.phoneNumber,
         "profileImageUrl": credential.photoURL,
       });
-    } 
+    }
     _isLogin = state;
   }
 
   Future<bool> login(BuildContext context) async {
     final provider = OAuthProvider("microsoft.com");
-    provider.setCustomParameters({
-      "tenant": "6f4432dc-20d2-441d-b1db-ac3380ba633d"
-    });
+    provider.setCustomParameters(
+        {"tenant": "6f4432dc-20d2-441d-b1db-ac3380ba633d"});
     provider.addScope("email");
     provider.addScope("User.read");
     try {

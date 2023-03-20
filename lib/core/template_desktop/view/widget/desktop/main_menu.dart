@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/template_desktop/view/widget/desktop/notification_overlay.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
@@ -23,6 +24,7 @@ class _MainMenuState extends State<MainMenu> {
       fontSize: 20,
       color: state ? Colors.white : ColorConstant.whiteBlack30);
   final ScrollController _controller = ScrollController();
+  bool isNotificationEnabled = false;
 
   Widget _navbar(BuildContext context) {
     bool isHomeSelected =
@@ -34,7 +36,6 @@ class _MainMenuState extends State<MainMenu> {
     bool isRoleManageSelected =
         context.watch<TemplateDesktopViewModel>().getNavBarState(3);
     bool isLogin = context.watch<AppViewModel>().isLogin;
-
     return Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,8 +166,12 @@ class _MainMenuState extends State<MainMenu> {
                         color: Colors.white,
                       ),
                       onTap: () {
-                        _showNotifications(context);
-                        // TODO show notification
+                        print(isNotificationEnabled);
+                        setState(() {
+                          isNotificationEnabled = !isNotificationEnabled;
+                          print(isNotificationEnabled);
+                        });
+                        _showNotifications(context, isNotificationEnabled);
                       },
                     ),
                   ),
@@ -192,28 +197,13 @@ class _MainMenuState extends State<MainMenu> {
         ]);
   }
 
-  void _showNotifications(BuildContext context) {
+  void _showNotifications(BuildContext context, bool isOpen) {
     OverlayState? overlayState = Overlay.of(context);
     OverlayEntry overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => Positioned(
-        top: 76.0,
-        right: 100.0,
-        child: Container(
-          width: 500.0,
-          height: 320.0,
-          color: Colors.red,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              DefaultTextStyle(
-                style: AppFontStyle.wb30R16,
-                child: Text("Hi krubb"),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+        builder: (BuildContext context) => isOpen
+            ? const Positioned(
+                top: 76.0, right: 100.0, child: NotificationOverlay())
+            : Container());
     overlayState?.insert(overlayEntry);
   }
 
