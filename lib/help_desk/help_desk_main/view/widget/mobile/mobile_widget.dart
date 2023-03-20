@@ -12,7 +12,7 @@ import 'package:senior_project/help_desk/help_desk_main/view/widget/mobile/task_
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 Stream? query(String id, int type) {
-  final FirebaseServices service = FirebaseServices("task");
+  final FirebaseServices service = FirebaseServices("ticket");
  if (id.isEmpty) {
     switch (type) {
       case 0:

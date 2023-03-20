@@ -80,7 +80,7 @@ class HelpDeskMainView extends StatelessWidget {
                   return Column(
                     children: [
                       Header.widget(context, isAdmin),
-                      const Body(isAdmin: true,)
+                      Body(isAdmin: isAdmin,)
                     ],
                   );
                 }

@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
               !(FirebaseAuth.instance.currentUser == null)),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
-              return const HelpDeskMainView(isAdmin: false);
+              return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0);
             }
             return Container();
           }),

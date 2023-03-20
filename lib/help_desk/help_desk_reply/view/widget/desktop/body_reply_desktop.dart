@@ -27,15 +27,13 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    // int? role = context.watch<AppViewModel>().app.getUser.getRole; 
-    // String taskTitle = context.watch<ReplyChannelViewModel>().getTaskData["title"];
-    // String docId = context.watch<ReplyChannelViewModel>().getTaskData["docId"];
-    // String userId = context.watch<AppViewModel>().app.getUser.getId;
-    // context.read<ReplyChannelViewModel>().clearModel();
-    int role = 0;
-    int status = 1;
-    int priority = 2;
-    String taskTitle = "Test";
+    int? role = context.watch<AppViewModel>().app.getUser.getRole; 
+    String taskTitle = context.watch<ReplyChannelViewModel>().getTaskData["title"];
+    String docId = context.watch<ReplyChannelViewModel>().getTaskData["docId"];
+    String userId = context.watch<AppViewModel>().app.getUser.getId;
+    int status = context.watch<ReplyChannelViewModel>().getTaskData["status"];
+    int priority = context.watch<ReplyChannelViewModel>().getTaskData["priority"];
+    context.read<ReplyChannelViewModel>().clearModel();
     String adminName = "NaYao";
     String dateCreated = "3 Mar - 17:15PM";
     List<Map<String, dynamic>> data = [
@@ -198,16 +196,44 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                         constraints: const BoxConstraints(minHeight: 300),
                         height: screenHeight - 560,
                         decoration: const BoxDecoration(color: ColorConstant.whiteBlack5),
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: data.length,
-                          itemBuilder: (context, index) => Message(
-                            isSender:  data[index]["isSender"],
-                            text: data[index]["text"],
-                            isMobile: false,
-                            time: "3 Mar - 19:13PM",
-                          ),
-                        ),
+                        child: StreamBuilder(
+                          stream: query(docId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.active) {
+                              if (snapshot.data.docs.isNotEmpty) {
+                                context.read<ReplyChannelViewModel>().reconstructData(snapshot.data);
+                                List<Map<String, dynamic>> data = context.watch<ReplyChannelViewModel>().getReply(userId);
+                                return ListView.builder(
+                                  itemCount: data.length,
+                                  itemBuilder: (context, index) => Message(
+                                    isSender:  data[index]["isSender"],
+                                    text: data[index]["text"],
+                                    isMobile: false,
+                                    time: "3 Mar - 19:13PM",
+                                  ),
+                                );
+                              }
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: Container(
+                                  width: double.infinity,
+                                  alignment: Alignment.topCenter,
+                                  child: const Text("No messages in this task")
+                                ),
+                              );
+                            }
+                            return Center(
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle
+                                ),
+                                child: const CircularProgressIndicator()
+                              )
+                            );
+                          },
+                        )
                       ),
                       const ChatInputDesktop(),
                     ],
