@@ -34,7 +34,7 @@ class TeacherContactDesktopCard extends StatelessWidget {
               phone: cardDetail['phone'],
               officeHours: "",
               facebookLink: cardDetail['facebookLink'],
-              subjectId: cardDetail['subjectId']);
+              subjectId: []);
           showDialog(
               context: context,
               builder: (context) {
