@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/app.dart';
@@ -13,7 +14,13 @@ class AppViewModel extends ChangeNotifier {
   App app = App();
   final double _mobileWidthBreakpoint = 430;
   late bool _isLogin;
-  late bool _isEmailNotificationEnabled = false;
+  bool _isEmailEnable = false;
+  TimeOfDay _startTime = const TimeOfDay(hour: 8, minute: 0);
+  TimeOfDay _endTime = const TimeOfDay(hour: 17, minute: 0);
+
+  bool get isEmailEnable => _isEmailEnable;
+  TimeOfDay get startTime => _startTime;
+  TimeOfDay get endTime => _endTime;
 
   bool getMobileSiteState(double pixelWidth) {
     if (pixelWidth <= _mobileWidthBreakpoint) {
@@ -23,10 +30,16 @@ class AppViewModel extends ChangeNotifier {
     }
   }
 
-  bool get isEmailNotificationEnabled => _isEmailNotificationEnabled;
+  void updateSwitchValue(bool value) {
+    // call firebase
+    _isEmailEnable = value;
+    notifyListeners();
+  }
 
-  void toggleEmailNotification(bool value) {
-    _isEmailNotificationEnabled = value;
+  Future<void> setTime(TimeOfDay start, TimeOfDay end) async {
+    // call firebase
+    _startTime = start;
+    _endTime = end;
     notifyListeners();
   }
 

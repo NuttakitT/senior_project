@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
@@ -12,16 +14,14 @@ class NotificationOverlay extends StatefulWidget {
 }
 
 class _NotificationOverlayState extends State<NotificationOverlay> {
-  late bool isEmailNotificationEnabled;
-  TimeOfDay startTime = TimeOfDay(hour: 8, minute: 30);
-  TimeOfDay endTime = TimeOfDay(hour: 17, minute: 30);
-
+  late TimeOfDay startTime;
+  late TimeOfDay endTime;
   @override
   void initState() {
     // TODO: implement initState
+    startTime = context.read<AppViewModel>().startTime;
+    endTime = context.read<AppViewModel>().endTime;
     super.initState();
-    isEmailNotificationEnabled =
-        context.read<AppViewModel>().isEmailNotificationEnabled;
   }
 
   @override
@@ -72,11 +72,13 @@ class _NotificationOverlayState extends State<NotificationOverlay> {
                       child: Material(
                         child: Switch(
                             activeColor: ColorConstant.blue40,
-                            value: isEmailNotificationEnabled,
+                            value: context.read<AppViewModel>().isEmailEnable,
                             onChanged: (value) {
-                              context
-                                  .read<AppViewModel>()
-                                  .toggleEmailNotification(value);
+                              setState(() {
+                                context
+                                    .read<AppViewModel>()
+                                    .updateSwitchValue(value);
+                              });
                             }),
                       ),
                     )
@@ -164,6 +166,17 @@ class _NotificationOverlayState extends State<NotificationOverlay> {
                         },
                       ),
                     ),
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {
+                          context
+                              .read<AppViewModel>()
+                              .setTime(startTime, endTime);
+                        },
+                        child: Text(
+                          Consts.set,
+                          style: AppFontStyle.orange40B16,
+                        ))
                   ],
                 ),
               ),
@@ -183,4 +196,5 @@ class Consts {
   static String timeDetailLabel =
       "Set start-time and end-time for notification.";
   static String to = "to";
+  static String set = "Set";
 }

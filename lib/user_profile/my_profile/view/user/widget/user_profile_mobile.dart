@@ -67,26 +67,6 @@ class _UserProfileMobileState extends State<UserProfileMobile> {
             const SizedBox(
               height: 16,
             ),
-            // Container(
-            //   decoration: BoxDecoration(
-            //     border: Border.all(color: ColorConstant.orange40, width: 1),
-            //     borderRadius: BorderRadius.circular(8.0),
-            //     color: Colors.white,
-            //   ),
-            //   child: TextButton(
-            //     child: const Padding(
-            //       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            //       child: DefaultTextStyle(
-            //         style: AppFontStyle.orange40B16,
-            //         child: Text("Edit Profile"),
-            //       ),
-            //     ),
-            //     onPressed: () {
-            //       toggleEditProfileButton();
-            //       print(_isEditting);
-            //     },
-            //   ),
-            // ),
             const SizedBox(
               height: 24,
             ),

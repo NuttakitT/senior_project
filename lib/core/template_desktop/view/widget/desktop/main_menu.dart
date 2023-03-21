@@ -171,9 +171,10 @@ class _MainMenuState extends State<MainMenu> {
                       onTap: () {
                         setState(() {
                           isNotificationEnabled = !isNotificationEnabled;
-                          print(isNotificationEnabled);
                         });
-                        _showNotifications(context, isNotificationEnabled);
+                        Future.delayed(Duration.zero, () {
+                          _showNotifications(context, isNotificationEnabled);
+                        });
                       },
                     ),
                   ),
