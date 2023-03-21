@@ -38,7 +38,6 @@ class UserProfileViewModel extends ChangeNotifier {
   Future<void> updateProfile(String uid, Map<String, dynamic> data) async {
     try {
       await firebaseServiceForUser.editDocument(uid, data);
-      print('Update success');
     } catch (e) {
       print(e);
     }
