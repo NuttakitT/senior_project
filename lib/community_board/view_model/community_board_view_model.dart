@@ -60,7 +60,16 @@ class CommunityBoardViewModel extends ChangeNotifier {
     return filteredPosts;
   }
 
-  Future<void> getPostDetail(String docId) async {}
+  Future<Map<String, dynamic>?> getPostDetail(String docId) async {
+    final snapshot = await _service.getDocumentById(docId);
+
+    if (snapshot != null) {
+      final data = snapshot.data() as Map<String, dynamic>;
+      return data;
+    }
+    return null;
+  }
+
   Future<void> approvePost(String docId) async {}
 
   Future<void> createComment(CreateCommentRequest request) async {}
