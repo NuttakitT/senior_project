@@ -73,6 +73,7 @@ class _BodyState extends State<Body> {
               return IconButton(
                 onPressed: () {
                   // TODO load more
+                  context.read<HelpDeskViewModel>().setLoadMore(true);
                 }, 
                 icon: const Icon(Icons.keyboard_arrow_right_rounded)
               );

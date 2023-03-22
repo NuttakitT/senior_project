@@ -70,6 +70,11 @@ class FirebaseServices {
   // value: list of the value to query
   // key and value must have the same length and in th same index
   // refers to one pair of the key-value.
+  //
+  // Optional parameters
+  // limit: number of query result
+  // orderingField: ordering result by target string
+  // descending: ordering type
   Future<QuerySnapshot?> getDocumnetByKeyValuePair(
     List<String> key, 
     List<String> value, 
@@ -118,6 +123,12 @@ class FirebaseServices {
   // value: list of the value to query
   // key and value must have the same length and in th same index
   // refers to one pair of the key-value.
+  //
+  // Optional parameters
+  // limit: number of query result
+  // orderingField: ordering result by target string
+  // descending: ordering type
+  // afterDoc: start query result after target document
   Stream<QuerySnapshot?> listenToDocumentByKeyValuePair(
     List<String> key, 
     List<dynamic> value,
@@ -125,6 +136,7 @@ class FirebaseServices {
       int? limit,
       String? orderingField,
       bool descending = false,
+      DocumentSnapshot? afterDoc
     }
   ) {
     late Query query;
@@ -143,6 +155,9 @@ class FirebaseServices {
     if (limit != null) {
       query = query.limit(limit);
     } 
+    if (afterDoc != null) {
+      query = query.startAfterDocument(afterDoc);
+    }
     return query.snapshots();
   }
 

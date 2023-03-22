@@ -24,6 +24,18 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? _startTicket;
   int? _endTicket;
   int? _selectedTicket;
+  DocumentSnapshot? _lastDoc;
+  bool _isLoadMore = false;
+
+  DocumentSnapshot? get getLasDoc => _lastDoc;
+  void setLastDoc(DocumentSnapshot doc) {
+    _lastDoc = doc;
+  }
+  bool get getIsLoadMore => _isLoadMore;
+  void setLoadMore(bool state) {
+    _isLoadMore = state;
+    notifyListeners();
+  }
 
   int? get getAllTicket => _allTicket;
   int? get getStartTicket => _startTicket;
