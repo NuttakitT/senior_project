@@ -2,25 +2,44 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/model/user/app_user.dart';
-import 'package:senior_project/core/view_model/cryptor.dart';
 
 class AppViewModel extends ChangeNotifier {
   App app = App();
   final double _mobileWidthBreakpoint = 430;
   late bool _isLogin;
+  bool _isEmailEnable = false;
+  TimeOfDay _startTime = const TimeOfDay(hour: 8, minute: 0);
+  TimeOfDay _endTime = const TimeOfDay(hour: 17, minute: 0);
+
+  bool get isEmailEnable => _isEmailEnable;
+  TimeOfDay get startTime => _startTime;
+  TimeOfDay get endTime => _endTime;
 
   bool getMobileSiteState(double pixelWidth) {
-    if(pixelWidth <= _mobileWidthBreakpoint) {
+    if (pixelWidth <= _mobileWidthBreakpoint) {
       return true;
     } else {
       return false;
     }
   }
-  
+
+  void updateSwitchValue(bool value) {
+    // call firebase
+    _isEmailEnable = value;
+    notifyListeners();
+  }
+
+  Future<void> setTime(TimeOfDay start, TimeOfDay end) async {
+    // call firebase
+    _startTime = start;
+    _endTime = end;
+    notifyListeners();
+  }
+
   void setLoggedInUser(Map<String, dynamic> detail) {
     AppUser user = AppUser.overloaddedConstructor(detail);
     app.setAppUser = user;
@@ -31,7 +50,7 @@ class AppViewModel extends ChangeNotifier {
   Map<String, dynamic> storeAppUser(DocumentSnapshot snapshot) {
     Map<String, dynamic> result = {};
     String data = snapshot.data().toString();
-    data = data.substring(1, data.length-1);
+    data = data.substring(1, data.length - 1);
     List<String> chunk = data.split(", ");
     for (int i = 0; i < chunk.length; i++) {
       List<String> chunkData = chunk[i].split(": ");
@@ -59,9 +78,8 @@ class AppViewModel extends ChangeNotifier {
 
   Future<bool> login(BuildContext context) async {
     final provider = OAuthProvider("microsoft.com");
-    provider.setCustomParameters({
-      "tenant": "6f4432dc-20d2-441d-b1db-ac3380ba633d"
-    });
+    provider.setCustomParameters(
+        {"tenant": "6f4432dc-20d2-441d-b1db-ac3380ba633d"});
     provider.addScope("email");
     provider.addScope("User.read");
     try {
