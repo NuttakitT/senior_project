@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
@@ -13,89 +14,25 @@ Stream? query(String id, int type, bool isAdmin) {
   final FirebaseServices service = FirebaseServices("ticket");
   int limit = 2;
   bool descending = true;
-  if (isAdmin) {
-    switch (type) {
-      case 0:
-        return service.listenToDocumentByKeyValuePair(
-          ["ownerId"], 
-          [id], 
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 1:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "status"], 
-          [id, 0],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 2: 
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "status"], 
-          [id, 1],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 3:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "status"], 
-          [id, 2],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 4:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "priority"], 
-          [id, 3],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 5:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "priority"], 
-          [id, 2],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 6:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "priority"], 
-          [id, 1],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 7:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "priority"], 
-          [id, 0],
-          limit: limit, orderingField: 'dateCreate', descending: descending  
-        );
-      default:
-        return null;
-    }
-  } else {
-    switch (type) {
-      case 0:
-        return service.listenToDocumentByKeyValuePair(
-          ["ownerId"], 
-          [id],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 1:
-        return service.listenToDocumentByKeyValuePair(
-          ["ownerId", "status"], 
-          [id, 0],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 2:
-        return service.listenToDocumentByKeyValuePair(
-          ["ownerId", "status"], 
-          [id, 1],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      case 3:
-        return service.listenToDocumentByKeyValuePair(
-          ["ownerId", "status"], 
-          [id, 2],
-          limit: limit, orderingField: 'dateCreate', descending: descending
-        );
-      default:
-        return null;
-    }
+  if (type == 0) {
+    return service.listenToDocumentByKeyValuePair(
+      [isAdmin ? "adminId" : "ownerId"], 
+      [id],
+      limit: limit, orderingField: 'dateCreate', descending: descending
+    );
+  } 
+  if (type > 3){
+    return service.listenToDocumentByKeyValuePair(
+      [isAdmin ? "adminId" : "ownerId", "priority"], 
+      [id, (type-7).abs()],
+      limit: limit, orderingField: 'dateCreate', descending: descending
+    );
   }
+  return service.listenToDocumentByKeyValuePair(
+    [isAdmin ? "adminId" : "ownerId", "status"], 
+    [id, type-1],
+    limit: limit, orderingField: 'dateCreate', descending: descending
+  );
 }
 
 class TicketList extends StatefulWidget {

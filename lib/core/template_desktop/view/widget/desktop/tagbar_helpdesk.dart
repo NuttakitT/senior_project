@@ -9,65 +9,22 @@ import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_vie
 
 Stream? query(String id, int type, bool isAdmin) {
   final FirebaseServices service = FirebaseServices("ticket");
-  if (isAdmin) {
-    switch (type) {
-      case 0:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId"], 
-          [id], 
-        );
-      case 1:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "status"], 
-          [id, 0],
-        );
-      case 2: 
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "status"], 
-          [id, 1],
-        );
-      case 3:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "status"], 
-          [id, 2],
-        );
-      case 4:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "priority"], 
-          [id, 3],
-        );
-      case 5:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "priority"], 
-          [id, 2],
-        );
-      case 6:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "priority"], 
-          [id, 1],
-        );
-      case 7:
-        return service.listenToDocumentByKeyValuePair(
-          ["adminId", "priority"], 
-          [id, 0],
-        );
-      default:
-        return null;
-    }
-  } else {
-    switch (type) {
-      case 0:
-        return service.listenToDocumentByKeyValuePair(["ownerId"], [id]);
-      case 1:
-        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 0]);
-      case 2:
-        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 1]);
-      case 3:
-        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 2]);
-      default:
-        return null;
-    }
+  if (type == 0) {
+    return service.listenToDocumentByKeyValuePair(
+      [isAdmin ? "adminId" : "ownerId"], 
+      [id],
+    );
+  } 
+  if (type > 3){
+    return service.listenToDocumentByKeyValuePair(
+      [isAdmin ? "adminId" : "ownerId", "priority"], 
+      [id, (type-7).abs()],
+    );
   }
+  return service.listenToDocumentByKeyValuePair(
+    [isAdmin ? "adminId" : "ownerId", "status"], 
+    [id, type-1],
+  );
 }
 
 class TagBarHelpDesk extends StatefulWidget {

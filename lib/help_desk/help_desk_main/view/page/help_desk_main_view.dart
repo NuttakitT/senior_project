@@ -8,9 +8,6 @@ import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/body.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/header.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/mobile/mobile_widget.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 class HelpDeskMainView extends StatelessWidget {
   final bool isAdmin;
