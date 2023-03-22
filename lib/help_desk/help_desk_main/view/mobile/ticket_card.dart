@@ -33,15 +33,7 @@ class _TicketCardState extends State<TicketCard> {
     String status = context
         .watch<HelpDeskViewModel>()
         .convertToString(true, widget.detail["status"]);
-    String priority = context
-        .watch<HelpDeskViewModel>()
-        .convertToString(false, widget.detail["priority"]);
-    List<Color> statusColor =
-        StatusColor.getColor(true, widget.detail["status"]);
-    IconData priorityIcon = PriorityIcon.getIcon(widget.detail["priority"]);
-    String time = DateFormat('hh:mm a').format(widget.detail["time"]);
     double cardWidth = 396;
-    TextStyle labelStyle = AppFontStyle.wb80L14;
     String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
     String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
 
