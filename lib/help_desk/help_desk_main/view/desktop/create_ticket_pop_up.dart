@@ -6,14 +6,14 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/assets/font_style.dart';
 
-class CreateTaskPopup extends StatefulWidget {
-  const CreateTaskPopup({super.key});
+class CreateTicketPopup extends StatefulWidget {
+  const CreateTicketPopup({super.key});
 
   @override
-  State<CreateTaskPopup> createState() => _CreateTaskPopupState();
+  State<CreateTicketPopup> createState() => _CreateTicketPopupState();
 }
 
-class _CreateTaskPopupState extends State<CreateTaskPopup> {
+class _CreateTicketPopupState extends State<CreateTicketPopup> {
   static List<String> priority = ["Low", "Medium", "High", "Urgent"];
   late List<String> category;
   String priorityValue = priority.first;

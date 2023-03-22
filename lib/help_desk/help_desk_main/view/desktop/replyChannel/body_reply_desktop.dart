@@ -9,7 +9,7 @@ import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_ico
 import 'package:senior_project/help_desk/help_desk_main/view/widget/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/chat_input.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/widget/desktop/description_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/description_desktop.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/message.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
@@ -32,8 +32,6 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
     String taskTitle = context.watch<ReplyChannelViewModel>().getTaskData["title"];
     String docId = context.watch<ReplyChannelViewModel>().getTaskData["docId"];
     String userId = context.watch<AppViewModel>().app.getUser.getId;
-    int status = context.watch<ReplyChannelViewModel>().getTaskData["status"];
-    int priority = context.watch<ReplyChannelViewModel>().getTaskData["priority"];
     DateTime dateCreated = context.watch<ReplyChannelViewModel>().getTaskData["time"];
     context.read<ReplyChannelViewModel>().clearModel();
     String adminName = "NaYao";
@@ -64,58 +62,74 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: Container(
-                    width: 90,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: StatusColor.statusColor(status)![2]),
-                      color: StatusColor.statusColor(status)![0],
-                      borderRadius: BorderRadius.circular(6)
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      context.watch<HelpDeskViewModel>().convertToString(true, status),
-                      style: TextStyle(
-                        fontFamily: AppFontStyle.font,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: StatusColor.statusColor(status)![1]
-                      ),
-                    ),
-                  ),
+                StreamBuilder(
+                  stream: FirebaseServices("ticket").listenToDocument(docId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: Container(
+                          width: 90,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: StatusColor.statusColor(snapshot.data!.get("status"))![2]),
+                            color: StatusColor.statusColor(snapshot.data!.get("status"))![0],
+                            borderRadius: BorderRadius.circular(6)
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            context.watch<HelpDeskViewModel>().convertToString(true, snapshot.data!.get("status")),
+                            style: TextStyle(
+                              fontFamily: AppFontStyle.font,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16,
+                              color: StatusColor.statusColor(snapshot.data!.get("status"))![1]
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    return Container();
+                  }
                 ),
-                Container(
-                  width: 86,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: ColorConstant.whiteBlack20),
-                    color: ColorConstant.whiteBlack40,
-                    borderRadius: BorderRadius.circular(6)
-                  ),
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Icon(
-                          PriorityIcon.getIcon(priority),
-                          color: ColorConstant.whiteBlack5,
+                StreamBuilder(
+                  stream: FirebaseServices("ticket").listenToDocument(docId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      return Container(
+                        width: 100,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: ColorConstant.whiteBlack20),
+                          color: ColorConstant.whiteBlack40,
+                          borderRadius: BorderRadius.circular(6)
                         ),
-                      ),
-                      Text(
-                        context.watch<HelpDeskViewModel>().convertToString(false, priority),
-                        style: const TextStyle(
-                          fontFamily: AppFontStyle.font,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                          color: ColorConstant.whiteBlack5
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Icon(
+                                PriorityIcon.getIcon(snapshot.data!.get("priority")),
+                                color: ColorConstant.whiteBlack5,
+                              ),
+                            ),
+                            Text(
+                              context.watch<HelpDeskViewModel>().convertToString(false, snapshot.data!.get("priority")),
+                              style: const TextStyle(
+                                fontFamily: AppFontStyle.font,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                                color: ColorConstant.whiteBlack5
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
+                      );
+                    }
+                    return Container();
+                  }
                 ),
                 const Spacer(),
                 Text(

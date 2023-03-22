@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/widget/desktop/create_task_pop_up.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/desktop/create_ticket_pop_up.dart';
 
 class Header {
   static TextStyle titleTextStyle() => const TextStyle(
@@ -59,7 +59,7 @@ class Header {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return const CreateTaskPopup();
+                            return const CreateTicketPopup();
                           });
                     },
                     style: ButtonStyle(

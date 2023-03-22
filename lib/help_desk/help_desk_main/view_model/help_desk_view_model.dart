@@ -179,11 +179,11 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
-    QuerySnapshot? query = await _serviceTicket.getDocumnetByKeyValuePair(["id"], [id]);
-    if (query!.docs.isNotEmpty) {
-      String docId = query.docs.first.id;
-      String taskId = query.docs.first.get("id");
-      String objectId = query.docs.first.get("objectID");
+    DocumentSnapshot? query = await _serviceTicket.getDocumentById(id);
+    if (query!.exists) {
+      String docId = query.id;
+      String taskId = query.get("id");
+      String objectId = query.get("objectID");
       if (isStatus) {
         _helpDeskModel.getTask.firstWhere((element) {
           return element.getId == taskId;
@@ -263,13 +263,13 @@ class HelpDeskViewModel extends ChangeNotifier {
   HitsSearcher _hitSearch = HitsSearcher(
     applicationID: "LEPUBBA9NX", 
     apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "task");
+    indexName: "ticket");
 
   void initHitSearcher() {
     _hitSearch = HitsSearcher(
     applicationID: "LEPUBBA9NX", 
     apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "task");
+    indexName: "ticket");
     notifyListeners();
   }
 

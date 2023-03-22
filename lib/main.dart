@@ -13,6 +13,7 @@ import 'firebase_options.dart';
 import 'help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

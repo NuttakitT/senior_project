@@ -70,7 +70,7 @@ class AppViewModel extends ChangeNotifier {
         credential.user!.uid
       );
       if (!snapshot!.exists) {
-        FirebaseServices("user").setDocument(credential.user!.uid, {
+        await FirebaseServices("user").setDocument(credential.user!.uid, {
           "id": credential.user!.uid,
           "email": credential.user!.email,
           "name": credential.user!.displayName,
@@ -85,7 +85,7 @@ class AppViewModel extends ChangeNotifier {
         "name": credential.user!.displayName,
         "phone": credential.user!.phoneNumber,
         "profileImageUrl": credential.user!.photoURL,
-        "role": 1
+        "role": snapshot.get("role")
       });
       return true;
     } catch (e) {

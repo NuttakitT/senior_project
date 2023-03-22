@@ -147,8 +147,12 @@ class FirebaseServices {
   }
 
   // Return a stream listener used as a listener in the collection
-  Stream<QuerySnapshot> listenToDocument() {
+  Stream<QuerySnapshot> listenToallDocument() {
     return _collection.snapshots();
+  }
+
+  Stream<DocumentSnapshot> listenToDocument(String docId) {
+    return _collection.doc(docId).snapshots();
   }
 
   //---------------------------- Delete operation ------------------------------

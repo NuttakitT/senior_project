@@ -10,15 +10,15 @@ import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_ico
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
 
-class TaskCard extends StatefulWidget {
+class TicketCard extends StatefulWidget {
   final Map<String, dynamic> detail;
-  const TaskCard({super.key, required this.detail});
+  const TicketCard({super.key, required this.detail});
 
   @override
-  State<TaskCard> createState() => _TaskCardState();
+  State<TicketCard> createState() => _TicketCardState();
 }
 
-class _TaskCardState extends State<TaskCard> {
+class _TicketCardState extends State<TicketCard> {
   TextStyle detailStyle(Color color) {
     return TextStyle(
         fontFamily: AppFontStyle.font,
@@ -55,11 +55,13 @@ class _TaskCardState extends State<TaskCard> {
                   MaterialPageRoute(builder: (context) {
                     return HelpDeskReplyPage(
                       docId: docId,
-                      taskId: widget.detail["id"],
-                      taskTitle: widget.detail["title"],
-                      taskDetail: widget.detail["detail"],
+                      id: widget.detail["id"],
+                      title: widget.detail["title"],
+                      detail: widget.detail["detail"],
                       priority: widget.detail["priority"],
                       status: widget.detail["status"],
+                      category: widget.detail["category"],
+                      time: widget.detail["time"],
                     );
                   })
                 );
