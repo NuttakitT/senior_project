@@ -19,16 +19,17 @@ class TicketCard extends StatefulWidget {
 }
 
 class _TicketCardState extends State<TicketCard> {
-  TextStyle detailStyle(Color color) {
+  TextStyle detailStyle(double size, bool isRead, Color color) {
     return TextStyle(
         fontFamily: AppFontStyle.font,
-        fontWeight: AppFontWeight.regular,
-        fontSize: 14,
+        fontWeight: isRead ? AppFontWeight.regular : AppFontWeight.medium,
+        fontSize: size,
         color: color);
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isRead = false; // TODO is read?
     String status = context
         .watch<HelpDeskViewModel>()
         .convertToString(true, widget.detail["status"]);
@@ -41,6 +42,8 @@ class _TicketCardState extends State<TicketCard> {
     String time = DateFormat('hh:mm a').format(widget.detail["time"]);
     double cardWidth = 396;
     TextStyle labelStyle = AppFontStyle.wb80L14;
+    String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
+    String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
 
     return FutureBuilder(
       future: context.read<HelpDeskViewModel>().formatTaskDetail(),
@@ -68,234 +71,112 @@ class _TicketCardState extends State<TicketCard> {
               },
               child: FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Container(
+                child: SizedBox(
                   width: cardWidth,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: ColorConstant.orange50),
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.white),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                  child: Row(
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              ConstrainedBox(
-                                constraints: const BoxConstraints(maxWidth: 220),
-                                child: Padding(
-                                    padding: const EdgeInsets.only(right: 16),
-                                    child: RichText(
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: widget.detail["title"],
-                                            style: AppFontStyle.wb80SemiB20,
-                                          )
-                                        ],
-                                      ),
-                                    )),
-                              ),
-                              Text(
-                                "#${widget.detail["id"][0]}${widget.detail["id"][1]}${widget.detail["id"][2]}",
-                                style: const TextStyle(
-                                  fontFamily: AppFontStyle.font,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16,
-                                  color: ColorConstant.whiteBlack60
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Icon(
-                            Icons.turn_right_rounded,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 4),
-                              child: Container(
-                                height: 18,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: statusColor[0],
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 4),
-                                      child: Container(
-                                        width: 8,
-                                        height: 8,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: statusColor[1],
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      status,
-                                      style: TextStyle(
-                                          fontFamily: AppFontStyle.font,
-                                          fontWeight: AppFontWeight.regular,
-                                          fontSize: 12,
-                                          color: statusColor[1]),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 18,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: ColorConstant.whiteBlack5,
-                              ),
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                      padding: const EdgeInsets.only(right: 5.2),
-                                      child: Icon(
-                                        priorityIcon,
-                                        size: 14,
-                                        color: ColorConstant.whiteBlack70,
-                                      )),
-                                  Text(
-                                    priority,
-                                    style: AppFontStyle.wb50R12,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: ColorConstant.blue20
+                        ),
+                        child: const Icon(
+                          Icons.person_rounded,
+                          color: ColorConstant.whiteBlack90,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Row(
+                      Container(
+                        width: 332,
+                        padding: const EdgeInsets.only(left: 16),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Flexible(
-                              flex: 2,
-                              fit: FlexFit.tight,
-                              child: Text(
-                                "Sender name:",
-                                style: labelStyle,
-                              ),
-                            ),
-                            Flexible(
-                                flex: 2,
-                                fit: FlexFit.tight,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  fit: FlexFit.tight,
+                                  flex: 2,
                                   child: RichText(
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     text: TextSpan(
                                       children: [
                                         TextSpan(
-                                          text: widget.detail["username"],
-                                          style:
-                                              detailStyle(ColorConstant.whiteBlack80),
+                                          text: widget.detail["name"],
+                                          style: detailStyle(
+                                            16, 
+                                            isRead, 
+                                            isRead ? ColorConstant.whiteBlack60 : ColorConstant.whiteBlack90
+                                          )
                                         )
-                                      ],
+                                      ]
+                                    ),
+                                  )
+                                ),
+                                Text(
+                                  localTime == taskTime 
+                                    ? DateFormat('hh:mm a').format(widget.detail["time"]) 
+                                    : DateFormat('dd MMM').format(widget.detail["time"]),
+                                  style: detailStyle(
+                                    14, 
+                                    isRead,
+                                    isRead ? ColorConstant.whiteBlack40 : ColorConstant.whiteBlack80
+                                  )
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "[$status] ",
+                                  style: detailStyle(
+                                    14, 
+                                    isRead,
+                                    isRead ? ColorConstant.whiteBlack60 : ColorConstant.whiteBlack80
+                                  )
+                                ), 
+                                Flexible(
+                                  fit: FlexFit.tight,
+                                  flex: 3,
+                                  child: RichText(
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: widget.detail["title"],
+                                          style: detailStyle(
+                                            14, 
+                                            isRead, 
+                                            isRead ? ColorConstant.whiteBlack60 : ColorConstant.whiteBlack80
+                                          )
+                                        )
+                                      ]
                                     ),
                                   ),
-                                )),
-                            Flexible(
-                              fit: FlexFit.tight,
-                              child: Text(
-                                "Time:",
-                                style: labelStyle,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 2,
-                              fit: FlexFit.tight,
-                              child: Text(
-                                time,
-                                style: detailStyle(ColorConstant.whiteBlack80),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Row(
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              fit: FlexFit.tight,
-                              child: Text(
-                                "Category:",
-                                style: labelStyle,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 5,
-                              fit: FlexFit.tight,
-                              child: RichText(
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: widget.detail["category"],
-                                      style: detailStyle(ColorConstant.whiteBlack80),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          "Detail",
-                          style: labelStyle,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Container(
-                          height: 64,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: ColorConstant.whiteBlack15),
-                              borderRadius: BorderRadius.circular(4)),
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          child: RichText(
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: widget.detail["detail"],
-                                  style: detailStyle(ColorConstant.whiteBlack60),
                                 )
                               ],
                             ),
-                          ),
+                            RichText(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: widget.detail["detail"],
+                                    style: detailStyle(
+                                      14, 
+                                      isRead, 
+                                      isRead ? ColorConstant.whiteBlack60 : ColorConstant.whiteBlack80
+                                    )
+                                  )
+                                ]
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     ],

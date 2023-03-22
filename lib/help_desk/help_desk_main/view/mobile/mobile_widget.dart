@@ -17,12 +17,14 @@ Stream? query(String id, int type, bool isAdmin) {
     return service.listenToDocumentByKeyValuePair(
     [isAdmin ? "adminId" : "ownerId"],
     [id], 
+    orderingField: 'dateCreate',
     descending: true
   );
   }
   return service.listenToDocumentByKeyValuePair(
     [isAdmin ? "adminId" : "ownerId", "status"],
     [id, type-1], 
+    orderingField: 'dateCreate',
     descending: true
   );
 }
