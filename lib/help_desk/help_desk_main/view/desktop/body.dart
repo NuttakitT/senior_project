@@ -21,36 +21,41 @@ class _BodyState extends State<Body> {
   ScrollController controller = ScrollController();
 
   Widget _iconLoader(BuildContext context, bool isShowMessagePage) {
-    int start = context.read<HelpDeskViewModel>().getStartTicket as int;
-    int end = context.read<HelpDeskViewModel>().getEndTicket as int;
-    int all = context.read<HelpDeskViewModel>().getAllTicket as int;
+    int start = context.watch<HelpDeskViewModel>().getStartTicket as int;
+    int end = context.watch<HelpDeskViewModel>().getEndTicket as int;
+    int all = context.watch<HelpDeskViewModel>().getAllTicket as int;
 
     return Row(
       children: [
         Builder(
           builder: (context) {
-            if (start != 1) {
-              return IconButton(
-                onPressed: () {
-                  // TODO go back
-                }, 
-                icon: const Icon(Icons.keyboard_arrow_left_rounded)
-              );
-            }
-            return Container();
-          },
-        ),
-        Builder(
-          builder: (context) {
-            if (start != 1) {
+            // if (start != 1) {
               return IconButton(
                 onPressed: () {
                   // TODO go back
                 }, 
                 icon: const Icon(Icons.keyboard_double_arrow_left_rounded)
               );
-            }
-            return Container();
+            // }
+            // return Container();
+          },
+        ),
+        Builder(
+          builder: (context) {
+            // if (start != 1) {
+              return IconButton(
+                onPressed: () {
+                  // TODO go back
+                  // context.read<HelpDeskViewModel>().setPageNumber(
+                  //   context.read<HelpDeskViewModel>().getPageNumber - 1
+                  // );
+                  context.read<HelpDeskViewModel>().setIsLoadMore(false);
+                  context.read<HelpDeskViewModel>().setIsLoadLess(true);
+                }, 
+                icon: const Icon(Icons.keyboard_arrow_left_rounded)
+              );
+            // }
+            // return Container();
           },
         ),
         Padding(
@@ -69,29 +74,33 @@ class _BodyState extends State<Body> {
         ),
         Builder(
           builder: (context) {
-            if (end != all) {
+            // if (end != all) {
               return IconButton(
                 onPressed: () {
                   // TODO load more
-                  context.read<HelpDeskViewModel>().setLoadMore(true);
+                  // context.read<HelpDeskViewModel>().setPageNumber(
+                  //   context.read<HelpDeskViewModel>().getPageNumber + 1
+                  // );
+                  context.read<HelpDeskViewModel>().setIsLoadMore(true);
+                  context.read<HelpDeskViewModel>().setIsLoadLess(false);
                 }, 
                 icon: const Icon(Icons.keyboard_arrow_right_rounded)
               );
-            }
-            return Container();
+            // }
+            // return Container();
           },
         ),
         Builder(
           builder: (context) {
-            if (end != all) {
+            // if (end != all) {
               return IconButton(
                 onPressed: () {
                   // TODO load more
                 }, 
                 icon: const Icon(Icons.keyboard_double_arrow_right_rounded)
               );
-            }
-            return Container();
+            // }
+            // return Container();
           },
         ),
       ],

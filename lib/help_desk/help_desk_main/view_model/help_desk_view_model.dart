@@ -1,5 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
-
+// ignore_for_file: depend_on_referenced_packages, prefer_final_fields
 import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,17 +22,52 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? _allTicket;
   int? _startTicket;
   int? _endTicket;
-  int? _selectedTicket;
+  int? _selectedTicket; 
+  // List<DocumentSnapshot?> _previousFirst = [];
+  List<int> test = [];
+  DocumentSnapshot? _previousFirst;
   DocumentSnapshot? _lastDoc;
+  DocumentSnapshot? _firstDoc;
+  // int pageNumber = 1;
   bool _isLoadMore = false;
+  bool _isLoadLess = false;
 
-  DocumentSnapshot? get getLasDoc => _lastDoc;
+  DocumentSnapshot? get getLastDoc => _lastDoc;
   void setLastDoc(DocumentSnapshot doc) {
     _lastDoc = doc;
   }
+  DocumentSnapshot? get getFirstDoc => _firstDoc;
+  // DocumentSnapshot? get getPreviousFirst {
+  //   if (_previousFirst.isNotEmpty) {
+  //     return _previousFirst.removeLast();
+  //   } 
+  //   return null;
+  // } 
+  void setFirstDoc(DocumentSnapshot doc) {
+    // _previousFirst.add(_firstDoc);
+    // print("a" + _previousFirst.length.toString());
+    _previousFirst = _firstDoc;
+    _firstDoc = doc;
+    print("previoud $_previousFirst");
+    print("new $_firstDoc");
+
+    // * Solution for chunk load
+    // * collect previous first doc of chunk (has bug can't add DocumentSnapshot to list)
+    // * in case new ticket add to db, it will show when return to first page (also the number of the ticket in view)
+  }
+  // int get getPageNumber => pageNumber;
+  // void setPageNumber(int num) {
+  //   pageNumber = num;
+  //   notifyListeners();
+  // }
   bool get getIsLoadMore => _isLoadMore;
-  void setLoadMore(bool state) {
+  bool get getIsLoadLess => _isLoadLess;
+  void setIsLoadMore(bool state) {
     _isLoadMore = state;
+    notifyListeners();
+  }
+  void setIsLoadLess(bool state) {
+    _isLoadLess = state;
     notifyListeners();
   }
 

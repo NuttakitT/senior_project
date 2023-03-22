@@ -136,7 +136,8 @@ class FirebaseServices {
       int? limit,
       String? orderingField,
       bool descending = false,
-      DocumentSnapshot? afterDoc
+      DocumentSnapshot? startDoc,
+      bool isReverse = false
     }
   ) {
     late Query query;
@@ -155,8 +156,12 @@ class FirebaseServices {
     if (limit != null) {
       query = query.limit(limit);
     } 
-    if (afterDoc != null) {
-      query = query.startAfterDocument(afterDoc);
+    if (startDoc != null) {
+      if (isReverse) {
+        query = query.startAtDocument(startDoc);
+      } else {
+        query = query.startAfterDocument(startDoc);
+      }
     }
     return query.snapshots();
   }
