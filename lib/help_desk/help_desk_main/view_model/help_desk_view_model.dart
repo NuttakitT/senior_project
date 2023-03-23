@@ -220,7 +220,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     })[isStatus ? "status" : "priority"] = value;
     await _serviceTicket.editDocument(docId, {isStatus ? "status" : "priority": value});
     await _algolia.updateObject(objectId, {
-      isStatus ? "status" : "priority": convertToString(isStatus, value)
+      isStatus ? "status" : "priority": convertToString(isStatus, value) // TODO change to int value
     });
   }
 
