@@ -116,6 +116,11 @@ extension AppFontStyle on FontStyle {
       fontWeight: AppFontWeight.medium,
       color: ColorConstant.whiteBlack50,
       fontSize: 16.0);
+  static const wb60L12 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.light,
+      fontSize: 12,
+      color: ColorConstant.whiteBlack60);
   static const wb60L14 = TextStyle(
       fontFamily: font,
       fontWeight: AppFontWeight.light,
