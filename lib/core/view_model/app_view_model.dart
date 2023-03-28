@@ -22,6 +22,10 @@ class AppViewModel extends ChangeNotifier {
   TimeOfDay get startTime => _startTime;
   TimeOfDay get endTime => _endTime;
 
+  AppViewModel() {
+    getSettingDetail();
+  }
+
   bool getMobileSiteState(double pixelWidth) {
     if (pixelWidth <= _mobileWidthBreakpoint) {
       return true;
@@ -30,17 +34,67 @@ class AppViewModel extends ChangeNotifier {
     }
   }
 
-  void updateSwitchValue(bool value) {
-    // call firebase
+  Future<void> updateSwitchValue(bool value) async {
+    Map<String, dynamic> detail = {"emailEnabled": value};
+    String userId = app.getUser.getId;
+    final service = FirebaseServices("user");
+    final snapshot = await service.getAllSubDocument(userId, "setting");
+    if (snapshot?.size == 0) {
+      service.addSubDocument(userId, "setting", detail);
+    } else {
+      final subDocId = snapshot?.docs[0].id;
+      if (subDocId == null) return;
+      service.editSubDocument(userId, "setting", subDocId, detail);
+    }
+
     _isEmailEnable = value;
     notifyListeners();
   }
 
   Future<void> setTime(TimeOfDay start, TimeOfDay end) async {
-    // call firebase
+    Map<String, dynamic> detail = {
+      "startTime": start.toString(),
+      "endTime": end.toString()
+    };
+    String userId = app.getUser.getId;
+    final service = FirebaseServices("user");
+    final snapshot = await service.getAllSubDocument(userId, "setting");
+    if (snapshot?.size == 0) {
+      service.addSubDocument(userId, "setting", detail);
+    } else {
+      final subDocId = snapshot?.docs[0].id;
+      if (subDocId == null) return;
+      service.editSubDocument(userId, "setting", subDocId, detail);
+    }
+
     _startTime = start;
     _endTime = end;
     notifyListeners();
+  }
+
+  void getSettingDetail() async {
+    String userId = app.getUser.getId;
+    final service = FirebaseServices("user");
+    final snapshot = await service.getAllSubDocument(userId, "setting");
+    if (snapshot?.size == 0) {
+      Map<String, dynamic> detail = {
+        "emailEnabled": false,
+        "startTime": const TimeOfDay(hour: 8, minute: 30).toString(),
+        "endTime": const TimeOfDay(hour: 17, minute: 30).toString()
+      };
+      service.addSubDocument(userId, "setting", detail);
+      return;
+    } else {
+      try {
+        final data = snapshot?.docs[0];
+        _isEmailEnable = data?['emailEnabled'];
+        _startTime = data?['startTime'];
+        _endTime = data?['endTime'];
+        notifyListeners();
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 
   void setLoggedInUser(Map<String, dynamic> detail) {
