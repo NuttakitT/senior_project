@@ -5,7 +5,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/desktop/content.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/content_loader.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
@@ -15,11 +15,12 @@ Stream? query(
   bool isAdmin, 
   {
     DocumentSnapshot? startDoc, 
-    bool isReverse = false
+    bool isReverse = false,
+    int? limit
   }) {
   final FirebaseServices service = FirebaseServices("ticket");
-  int limit = 5;
   bool descending = true;
+  limit ??= 5;
   if (type == 0) {
     return service.listenToDocumentByKeyValuePair(
       [isAdmin ? "adminId" : "ownerId"], 
@@ -48,7 +49,8 @@ Stream? query(
 }
 
 class TicketList extends StatefulWidget {
-  const TicketList({super.key});
+  final int? limit;
+  const TicketList({super.key, required this.limit});
 
   @override
   State<TicketList> createState() => _TicketListState();
@@ -58,16 +60,7 @@ class _TicketListState extends State<TicketList> {
   double contentSize = 56;
   Stream? _firestPageStream;
   Stream? _loadOlderStream;
-  Stream? _loadNewerStream;
   ScrollController controller = ScrollController();
-
-  List<Widget> _generateContent(List<Map<String, dynamic>> details) {
-    List<Widget> list = [];
-    for (int i = 0; i < details.length; i++) {
-      list.add(Content(size: contentSize, detail: details[i], index: i,));
-    }
-    return list;
-  }
 
   @override
   void initState() {
@@ -81,12 +74,13 @@ class _TicketListState extends State<TicketList> {
     String uid = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     context.read<HelpDeskViewModel>().cleanModel();
-    _firestPageStream = query(uid, tagBarSelected, isAdmin);
+    _firestPageStream = query(uid, tagBarSelected, isAdmin, limit: widget.limit);
     _loadOlderStream = query(
       uid, 
       tagBarSelected, 
       isAdmin, 
-      startDoc: context.watch<HelpDeskViewModel>().getLastDoc
+      startDoc: context.watch<HelpDeskViewModel>().getLastDoc,
+      limit: widget.limit
     );
     super.didChangeDependencies();
   }
@@ -106,50 +100,11 @@ class _TicketListState extends State<TicketList> {
           scrollDirection: Axis.vertical,
           child: Builder(
             builder: (context) {
-              // * test chunk loader
               if (context.watch<HelpDeskViewModel>().getIsLoadMore) {
-                return StreamBuilder(
-                  stream: _loadOlderStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      if (snapshot.data!.docs.isNotEmpty) {
-                        context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
-                        context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
-                        return FutureBuilder(
-                          future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
-                          builder: (context, futureSnapshot) {
-                            if (futureSnapshot.connectionState == ConnectionState.done) {
-                              return FutureBuilder(
-                                future: context.read<HelpDeskViewModel>().formatTaskDetail(),
-                                builder: (context, _) {
-                                  List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-                                  if (_.connectionState == ConnectionState.done) {
-                                    return Column(
-                                      children: _generateContent(content)
-                                    );
-                                  }
-                                  return Container(
-                                    height: contentSize,
-                                    width: double.infinity,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border(
-                                        bottom: BorderSide(color: ColorConstant.whiteBlack30),
-                                      )
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: const LoaderStatus(text: "Loading...")
-                                  );
-                                },
-                              );
-                            }
-                            return Container();
-                          },
-                        );
-                      }
-                    }
-                    return Container();
-                  },
+                return ContentLoader(
+                  contentSize: contentSize, 
+                  stream: _loadOlderStream, 
+                  isReverse: false,
                 );
               } else if (context.watch<HelpDeskViewModel>().getIsLoadLess) {
                 return FutureBuilder(
@@ -159,119 +114,18 @@ class _TicketListState extends State<TicketList> {
                       int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
                       String uid = context.watch<AppViewModel>().app.getUser.getId;
                       bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
-                      return StreamBuilder(
+                      return ContentLoader(
+                        contentSize: contentSize, 
                         stream: query(
                           uid, 
                           tagBarSelected, 
                           isAdmin, 
                           startDoc: snapshot.data, 
                           isReverse: true
-                        ),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.active) {
-                            if (snapshot.data!.docs.isNotEmpty) {
-                              // context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
-                              context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
-                              return FutureBuilder(
-                                future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
-                                builder: (context, futureSnapshot) {
-                                  if (futureSnapshot.connectionState == ConnectionState.done) {
-                                    return FutureBuilder(
-                                      future: context.read<HelpDeskViewModel>().formatTaskDetail(),
-                                      builder: (context, _) {
-                                        List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-                                        if (_.connectionState == ConnectionState.done) {
-                                          return Column(
-                                            children: _generateContent(content)
-                                          );
-                                        }
-                                        return Container(
-                                          height: contentSize,
-                                          width: double.infinity,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border(
-                                              bottom: BorderSide(color: ColorConstant.whiteBlack30),
-                                            )
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: const LoaderStatus(text: "Loading...")
-                                        );
-                                      },
-                                    );
-                                  }
-                                  return Container();
-                                },
-                              );
-                            }
-                          }
-                          return Container();
-                        },
+                        ), 
+                        isReverse: true
                       );
                     }
-                    return const LoaderStatus(text: "Loading...");
-                  },
-                );
-              }
-
-
-              return StreamBuilder(
-                stream: _firestPageStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const LoaderStatus(text: "Error occurred");
-                  } 
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    if (snapshot.data!.docs.isNotEmpty) {
-                      context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
-                      context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
-                      return FutureBuilder(
-                        future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
-                        builder: (context, futureSnapshot) {
-                          if (futureSnapshot.connectionState == ConnectionState.done) {
-                            return FutureBuilder(
-                              future: context.read<HelpDeskViewModel>().formatTaskDetail(),
-                              builder: (context, _) {
-                                List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-                                if (_.connectionState == ConnectionState.done) {
-                                  return Column(
-                                    children: _generateContent(content)
-                                  );
-                                }
-                                return Container(
-                                  height: contentSize,
-                                  width: double.infinity,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border(
-                                      bottom: BorderSide(color: ColorConstant.whiteBlack30),
-                                    )
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: const LoaderStatus(text: "Loading...")
-                                );
-                              },
-                            );
-                          }
-                          return Container();
-                        },
-                      );
-                    } else {
-                      context.read<HelpDeskViewModel>().cleanModel();
-                      return Container(
-                        height: contentSize,
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          border: Border(
-                            bottom: BorderSide(color: ColorConstant.whiteBlack30),
-                          )
-                        ),
-                        alignment: Alignment.center,
-                        child: const LoaderStatus(text: "No task in this section")
-                      );
-                    }      
-                  } else {
                     return Container(
                       height: contentSize,
                       width: double.infinity,
@@ -284,8 +138,13 @@ class _TicketListState extends State<TicketList> {
                       alignment: Alignment.center,
                       child: const LoaderStatus(text: "Loading...")
                     );
-                  }
-                },
+                  },
+                );
+              } 
+                return ContentLoader(
+                contentSize: contentSize, 
+                stream: _firestPageStream, 
+                isReverse: false,
               );
             }
           ),

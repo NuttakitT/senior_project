@@ -17,6 +17,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   final AlgoliaServices _algolia = AlgoliaServices("ticket");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
+  List<Map<String, dynamic>> _previousTask = [];
   final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
   bool _isShowMessagePage = false;
   int? _allTicket;
@@ -26,7 +27,6 @@ class HelpDeskViewModel extends ChangeNotifier {
   List<String> _previousFirst = [];
   DocumentSnapshot? _lastDoc;
   DocumentSnapshot? _firstDoc;
-  // int pageNumber = 1;
   bool _isLoadMore = false;
   bool _isLoadLess = false;
 
@@ -35,6 +35,8 @@ class HelpDeskViewModel extends ChangeNotifier {
     _lastDoc = doc;
   }
   DocumentSnapshot? get getFirstDoc => _firstDoc;
+  get getPreviousFirstList => _previousFirst;
+  set setPreviousFirstList(List<String> list) => _previousFirst = list;
   Future<DocumentSnapshot?> get getPreviousFirst async {
     if (_previousFirst.isNotEmpty) {
       _previousFirst.removeLast();
@@ -44,27 +46,51 @@ class HelpDeskViewModel extends ChangeNotifier {
     return null;
   } 
   void setFirstDoc(DocumentSnapshot doc) {
-    // _previousFirst.add(_firstDoc);
-    // print("a" + _previousFirst.length.toString());
     _previousFirst.add(doc.id);
     _firstDoc = doc;
     // * Solution for chunk load
-    // * collect previous first doc of chunk (has bug can't add DocumentSnapshot to list)
     // * in case new ticket add to db, it will show when return to first page (also the number of the ticket in view)
   }
-  // int get getPageNumber => pageNumber;
-  // void setPageNumber(int num) {
-  //   pageNumber = num;
-  //   notifyListeners();
-  // }
-  bool get getIsLoadMore => _isLoadMore;
-  bool get getIsLoadLess => _isLoadLess;
-  void setIsLoadMore(bool state) {
-    _isLoadMore = state;
+
+  get getPrevoiousTask => _previousTask;
+  void setPreviousTask(List<Map<String, dynamic>> list) {
+    _previousTask = list;
+  }
+
+  void clearContentController() {
+    _firstDoc = null;
+    _lastDoc = null;
+    _isLoadLess = false;
+    _isLoadMore = false;
+    _previousTask = [];
     notifyListeners();
   }
-  void setIsLoadLess(bool state) {
+
+  bool get getIsLoadMore => _isLoadMore;
+  bool get getIsLoadLess => _isLoadLess;
+  void setIsLoadMore(bool state, int limit) {
+    _isLoadMore = state;
+    if (state) {
+      _startTicket = _startTicket! + limit;
+      _endTicket = (_startTicket! + limit) > _allTicket! 
+        ? _allTicket
+        : _startTicket! + limit - 1;
+    }
+    notifyListeners();
+  }
+  void setIsLoadLess(bool state, int limit) {
     _isLoadLess = state;
+    if (state) {
+      _startTicket = _startTicket! - limit;
+      _endTicket = (_startTicket! + limit) > _allTicket! 
+        ? _allTicket
+        : _startTicket! + limit - 1;
+      if (_startTicket == 1) {
+        _isLoadLess = false;
+        _isLoadMore = false;
+      }
+      notifyListeners();
+    }
     notifyListeners();
   }
 
@@ -73,13 +99,20 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? get getEndTicket => _endTicket;
   int? get getSelectedTicket => _selectedTicket;
   set setSelectedTicket(int index) => _selectedTicket = index;
+  set setAllTicket(int number) {
+    _allTicket = number;
+  } 
 
-  Future<void> initTicket(bool isAdmin, String id, int limit) async {
-    String filed = isAdmin ? "adminId" : "ownerId";
-    final snapshot = await _serviceTicket.getDocumnetByKeyValuePair([filed], [id]);
-    _allTicket = snapshot!.docs.length;
-    _startTicket = 1;
-    _endTicket = limit;
+  void initTicket(int all, int limit)  {
+    if (!_isLoadMore && !_isLoadLess) {
+      _startTicket = 1;
+      _allTicket = all;
+      if (_allTicket! < limit) {
+        _endTicket = _allTicket; 
+      } else {
+        _endTicket = _startTicket! + limit - 1;
+      }
+    }
   }
 
   get getIsShowMessagePage => _isShowMessagePage;
