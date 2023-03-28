@@ -18,6 +18,7 @@ class _NotificationOverlayState extends State<NotificationOverlay> {
   late TimeOfDay endTime;
   @override
   void initState() {
+    context.read<AppViewModel>().getSettingDetail();
     // TODO: implement initState
     startTime = context.read<AppViewModel>().startTime;
     endTime = context.read<AppViewModel>().endTime;
