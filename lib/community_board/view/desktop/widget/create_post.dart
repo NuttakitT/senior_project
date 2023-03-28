@@ -60,7 +60,7 @@ class _CreatePostState extends State<CreatePost> {
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
                   padding: EdgeInsets.only(bottom: 8),
@@ -82,38 +82,39 @@ class _CreatePostState extends State<CreatePost> {
                     ),
                   ),
                 ),
-                InkWell(
-                  child: Container(
-                    width: 92,
-                    height: 40,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: ColorConstant.white,
-                        border: Border.all(color: ColorConstant.orange50)),
-                    child: Row(
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.only(right: 4),
-                          child: Icon(
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Stack(children: <Widget>[
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: ColorConstant.orange50,
+                                width: 1,
+                                strokeAlign: StrokeAlign.outside)),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                          fixedSize: const Size.fromHeight(40),
+                          foregroundColor: ColorConstant.orange50,
+                          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                          backgroundColor: ColorConstant.white,
+                          textStyle: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500)),
+                      child: Row(
+                        children: const [
+                          Icon(
                             Icons.add,
                             color: ColorConstant.orange50,
                             size: 16,
                           ),
-                        ),
-                        Text(
-                          "Add Topic",
-                          style: TextStyle(
-                              color: ColorConstant.orange50,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
+                          Text("Add Topic"),
+                        ],
+                      ),
                     ),
-                  ),
-                  onTap: () {
-                    //TODO add topic
-                  },
+                  ]),
                 ),
               ],
             ),
@@ -134,44 +135,58 @@ class _CreatePostState extends State<CreatePost> {
                 Column(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8)),
-                          color: ColorConstant.whiteBlack10,
-                          border:
-                              Border.all(color: ColorConstant.whiteBlack40)),
-                      child: Container(
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: BoxDecoration(
-                              color: ColorConstant.white,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(8)),
-                              border:
-                                  Border.all(color: ColorConstant.orange50)),
-                          child: Row(
-                            children: const [
-                              Padding(
-                                padding: EdgeInsets.only(right: 4),
-                                child: Icon(
-                                  Icons.add_photo_alternate_rounded,
-                                  color: ColorConstant.orange50,
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                topRight: Radius.circular(8)),
+                            color: ColorConstant.whiteBlack10,
+                            border:
+                                Border.all(color: ColorConstant.whiteBlack40)),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Stack(children: <Widget>[
+                                Positioned.fill(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: ColorConstant.orange50,
+                                            width: 1,
+                                            strokeAlign: StrokeAlign.outside)),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Add Image",
-                                style: TextStyle(
-                                    color: ColorConstant.orange50,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          )),
-                    ),
+                                TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                      fixedSize: const Size.fromWidth(116),
+                                      foregroundColor: ColorConstant.orange50,
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 8, 16, 8),
+                                      backgroundColor: ColorConstant.white,
+                                      textStyle: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold)),
+                                  child: Row(
+                                    children: const [
+                                      Icon(
+                                        Icons.add_photo_alternate_rounded,
+                                        color: ColorConstant.orange50,
+                                        size: 16,
+                                      ),
+                                      Text("Add Image"),
+                                    ],
+                                  ),
+                                ),
+                              ]),
+                            ),
+                          ],
+                        )),
                     const TextField(
                       decoration: InputDecoration(
                         hintText: "รายละเอียด",
@@ -188,20 +203,23 @@ class _CreatePostState extends State<CreatePost> {
               ],
             ),
           ),
-          Container(
-              alignment: Alignment.center,
-              height: 40,
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                  color: ColorConstant.orange50,
-                  borderRadius: BorderRadius.circular(16)),
-              child: const Text(
-                "Post",
-                style: TextStyle(
-                    color: ColorConstant.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ))
+          InkWell(
+            child: Container(
+                alignment: Alignment.center,
+                height: 40,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                    color: ColorConstant.orange50,
+                    borderRadius: BorderRadius.circular(16)),
+                child: const Text(
+                  "Post",
+                  style: TextStyle(
+                      color: ColorConstant.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                )),
+            onTap: () {},
+          )
         ],
       ),
     );
