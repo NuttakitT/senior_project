@@ -77,7 +77,7 @@ class FirebaseServices {
   // descending: ordering type
   Future<QuerySnapshot?> getDocumnetByKeyValuePair(
     List<String> key, 
-    List<String> value, 
+    List<dynamic> value, 
     {
       int? limit,
       String? orderingField,
