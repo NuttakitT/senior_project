@@ -82,8 +82,12 @@ class _TicketListState extends State<TicketList> {
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     context.read<HelpDeskViewModel>().cleanModel();
     _firestPageStream = query(uid, tagBarSelected, isAdmin);
-    _loadOlderStream = query(uid, tagBarSelected, isAdmin, startDoc: context.watch<HelpDeskViewModel>().getLastDoc);
-    // _loadNewerStream = query(uid, tagBarSelected, isAdmin, startDoc: context.watch<HelpDeskViewModel>().getPreviousFirst);
+    _loadOlderStream = query(
+      uid, 
+      tagBarSelected, 
+      isAdmin, 
+      startDoc: context.watch<HelpDeskViewModel>().getLastDoc
+    );
     super.didChangeDependencies();
   }
 
@@ -148,47 +152,64 @@ class _TicketListState extends State<TicketList> {
                   },
                 );
               } else if (context.watch<HelpDeskViewModel>().getIsLoadLess) {
-                return StreamBuilder(
-                  stream: _loadNewerStream,
+                return FutureBuilder(
+                  future: context.read<HelpDeskViewModel>().getPreviousFirst,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      if (snapshot.data!.docs.isNotEmpty) {
-                        // context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
-                        context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
-                        return FutureBuilder(
-                          future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
-                          builder: (context, futureSnapshot) {
-                            if (futureSnapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+                      String uid = context.watch<AppViewModel>().app.getUser.getId;
+                      bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+                      return StreamBuilder(
+                        stream: query(
+                          uid, 
+                          tagBarSelected, 
+                          isAdmin, 
+                          startDoc: snapshot.data, 
+                          isReverse: true
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.active) {
+                            if (snapshot.data!.docs.isNotEmpty) {
+                              // context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
+                              context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
                               return FutureBuilder(
-                                future: context.read<HelpDeskViewModel>().formatTaskDetail(),
-                                builder: (context, _) {
-                                  List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-                                  if (_.connectionState == ConnectionState.done) {
-                                    return Column(
-                                      children: _generateContent(content)
+                                future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
+                                builder: (context, futureSnapshot) {
+                                  if (futureSnapshot.connectionState == ConnectionState.done) {
+                                    return FutureBuilder(
+                                      future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+                                      builder: (context, _) {
+                                        List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
+                                        if (_.connectionState == ConnectionState.done) {
+                                          return Column(
+                                            children: _generateContent(content)
+                                          );
+                                        }
+                                        return Container(
+                                          height: contentSize,
+                                          width: double.infinity,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border(
+                                              bottom: BorderSide(color: ColorConstant.whiteBlack30),
+                                            )
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: const LoaderStatus(text: "Loading...")
+                                        );
+                                      },
                                     );
                                   }
-                                  return Container(
-                                    height: contentSize,
-                                    width: double.infinity,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border(
-                                        bottom: BorderSide(color: ColorConstant.whiteBlack30),
-                                      )
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: const LoaderStatus(text: "Loading...")
-                                  );
+                                  return Container();
                                 },
                               );
                             }
-                            return Container();
-                          },
-                        );
-                      }
+                          }
+                          return Container();
+                        },
+                      );
                     }
-                    return Container();
+                    return const LoaderStatus(text: "Loading...");
                   },
                 );
               }

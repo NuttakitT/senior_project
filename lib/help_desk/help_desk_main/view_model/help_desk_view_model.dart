@@ -23,9 +23,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? _startTicket;
   int? _endTicket;
   int? _selectedTicket; 
-  // List<DocumentSnapshot?> _previousFirst = [];
-  List<int> test = [];
-  DocumentSnapshot? _previousFirst;
+  List<String> _previousFirst = [];
   DocumentSnapshot? _lastDoc;
   DocumentSnapshot? _firstDoc;
   // int pageNumber = 1;
@@ -37,20 +35,19 @@ class HelpDeskViewModel extends ChangeNotifier {
     _lastDoc = doc;
   }
   DocumentSnapshot? get getFirstDoc => _firstDoc;
-  // DocumentSnapshot? get getPreviousFirst {
-  //   if (_previousFirst.isNotEmpty) {
-  //     return _previousFirst.removeLast();
-  //   } 
-  //   return null;
-  // } 
+  Future<DocumentSnapshot?> get getPreviousFirst async {
+    if (_previousFirst.isNotEmpty) {
+      _previousFirst.removeLast();
+      String docId = _previousFirst.removeLast();
+      return await _serviceTicket.getDocumentById(docId);
+    } 
+    return null;
+  } 
   void setFirstDoc(DocumentSnapshot doc) {
     // _previousFirst.add(_firstDoc);
     // print("a" + _previousFirst.length.toString());
-    _previousFirst = _firstDoc;
+    _previousFirst.add(doc.id);
     _firstDoc = doc;
-    print("previoud $_previousFirst");
-    print("new $_firstDoc");
-
     // * Solution for chunk load
     // * collect previous first doc of chunk (has bug can't add DocumentSnapshot to list)
     // * in case new ticket add to db, it will show when return to first page (also the number of the ticket in view)
