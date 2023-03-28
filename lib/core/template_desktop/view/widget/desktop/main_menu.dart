@@ -48,7 +48,7 @@ class _MainMenuState extends State<MainMenu> {
                 padding: const EdgeInsets.only(right: 40),
                 child: InkWell(
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(0, 1);
+                    context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
                     // TODO link to home page
                   },
                   splashFactory: NoSplash.splashFactory,
@@ -67,7 +67,7 @@ class _MainMenuState extends State<MainMenu> {
                     style: _navbarTextStyle(isHelpDeskSelected),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(1, 1);
+                    context.read<TemplateDesktopViewModel>().changeState(context, 1, 1);
                     int? role =
                         context.read<AppViewModel>().app.getUser.getRole;
                     Navigator.pushAndRemoveUntil(
@@ -88,7 +88,7 @@ class _MainMenuState extends State<MainMenu> {
                     style: _navbarTextStyle(isTeacherContactSelected),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(2, 1);
+                    context.read<TemplateDesktopViewModel>().changeState(context, 2, 1);
                     // TODO link to teacher contact
                   },
                 ),
@@ -109,7 +109,7 @@ class _MainMenuState extends State<MainMenu> {
                         onTap: () {
                           context
                               .read<TemplateDesktopViewModel>()
-                              .changeState(3, 1);
+                              .changeState(context, 3, 1);
                           // TODO link to Role Management
                         },
                       ),
