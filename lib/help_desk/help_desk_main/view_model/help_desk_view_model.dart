@@ -209,12 +209,12 @@ class HelpDeskViewModel extends ChangeNotifier {
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
-      "ownerName": list![0],
+      "name": list![0],
       "email": list[1],
       "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
       "category": task.getCategory,
-      "priority": convertToString(false, task.getPriority),
-      "status": convertToString(true, task.getStatus),
+      "priority": task.getPriority,
+      "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
       "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
@@ -328,7 +328,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   Future<void> reconstructSearchResult(List<String> docIds) async {
     for (int i = 0; i < docIds.length; i++) {
       DocumentSnapshot? doc = await _serviceTicket.getDocumentById(docIds[i]);
-      if (doc != null) {
+      if (doc!.exists) {
         _addQueryData(doc);
       }
     }

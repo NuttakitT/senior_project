@@ -6,6 +6,7 @@ import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/content_loader.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/text_search_result.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
@@ -88,6 +89,7 @@ class _TicketListState extends State<TicketList> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxHeight: screenHeight < 500 ? 500 : screenHeight - 376
@@ -100,53 +102,62 @@ class _TicketListState extends State<TicketList> {
           scrollDirection: Axis.vertical,
           child: Builder(
             builder: (context) {
-              if (context.watch<HelpDeskViewModel>().getIsLoadMore) {
-                return ContentLoader(
-                  contentSize: contentSize, 
-                  stream: _loadOlderStream, 
-                  isReverse: false,
-                );
-              } else if (context.watch<HelpDeskViewModel>().getIsLoadLess) {
-                return FutureBuilder(
-                  future: context.read<HelpDeskViewModel>().getPreviousFirst,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
-                      String uid = context.watch<AppViewModel>().app.getUser.getId;
-                      bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+              String searchText = context.watch<HelpDeskViewModel>().getSearchText;
+              if (searchText.isEmpty) {
+                return Builder(
+                  builder: (context) {
+                    if (context.watch<HelpDeskViewModel>().getIsLoadMore) {
                       return ContentLoader(
                         contentSize: contentSize, 
-                        stream: query(
-                          uid, 
-                          tagBarSelected, 
-                          isAdmin, 
-                          startDoc: snapshot.data, 
-                          isReverse: true
-                        ), 
-                        isReverse: true
+                        stream: _loadOlderStream, 
+                        isReverse: false,
                       );
-                    }
-                    return Container(
-                      height: contentSize,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        border: Border(
-                          bottom: BorderSide(color: ColorConstant.whiteBlack30),
-                        )
-                      ),
-                      alignment: Alignment.center,
-                      child: const LoaderStatus(text: "Loading...")
+                    } else if (context.watch<HelpDeskViewModel>().getIsLoadLess) {
+                      return FutureBuilder(
+                        future: context.read<HelpDeskViewModel>().getPreviousFirst,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+                            String uid = context.watch<AppViewModel>().app.getUser.getId;
+                            bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+                            return ContentLoader(
+                              contentSize: contentSize, 
+                              stream: query(
+                                uid, 
+                                tagBarSelected, 
+                                isAdmin, 
+                                startDoc: snapshot.data, 
+                                isReverse: true
+                              ), 
+                              isReverse: true
+                            );
+                          }
+                          return Container(
+                            height: contentSize,
+                            width: double.infinity,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              border: Border(
+                                bottom: BorderSide(color: ColorConstant.whiteBlack30),
+                              )
+                            ),
+                            alignment: Alignment.center,
+                            child: const LoaderStatus(text: "Loading...")
+                          );
+                        },
+                      );
+                    } 
+                      return ContentLoader(
+                      contentSize: contentSize, 
+                      stream: _firestPageStream, 
+                      isReverse: false,
                     );
-                  },
+                  }
                 );
-              } 
-                return ContentLoader(
-                contentSize: contentSize, 
-                stream: _firestPageStream, 
-                isReverse: false,
-              );
-            }
+              }
+              context.read<HelpDeskViewModel>().getHitsSearcher.query(searchText);
+              return TextSearchResult(contentSize: contentSize);
+            },
           ),
         ),
       ),

@@ -44,7 +44,11 @@ class _BodyState extends State<Body> {
   int limit = 5;
 
   Widget _iconLoader(bool isShowMessagePage, int start, int end, int all, int limit) {
+    String srearchText = context.watch<HelpDeskViewModel>().getSearchText;
     if (all == 0) {
+      return Container();
+    }
+    if (srearchText.isNotEmpty) {
       return Container();
     }
     return Row(
