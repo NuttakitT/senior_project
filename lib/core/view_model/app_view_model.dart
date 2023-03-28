@@ -22,10 +22,6 @@ class AppViewModel extends ChangeNotifier {
   TimeOfDay get startTime => _startTime;
   TimeOfDay get endTime => _endTime;
 
-  AppViewModel() {
-    getSettingDetail();
-  }
-
   bool getMobileSiteState(double pixelWidth) {
     if (pixelWidth <= _mobileWidthBreakpoint) {
       return true;
