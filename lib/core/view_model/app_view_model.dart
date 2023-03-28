@@ -75,8 +75,8 @@ class AppViewModel extends ChangeNotifier {
     if (snapshot?.size == 0) {
       Map<String, dynamic> detail = {
         "emailEnabled": false,
-        "startTime": const TimeOfDay(hour: 8, minute: 30).toString(),
-        "endTime": const TimeOfDay(hour: 17, minute: 30).toString()
+        "startTime": const TimeOfDay(hour: 8, minute: 0).toString(),
+        "endTime": const TimeOfDay(hour: 17, minute: 0).toString()
       };
       service.addSubDocument(userId, "setting", detail);
       return;
