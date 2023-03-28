@@ -48,9 +48,13 @@ class AppViewModel extends ChangeNotifier {
   }
 
   Future<void> setTime(TimeOfDay start, TimeOfDay end) async {
+    final startDate = DateTime(0, 0, 0, start.hour, start.minute);
+    final startTimeStamp = Timestamp.fromDate(startDate);
+    final endDate = DateTime(0, 0, 0, end.hour, end.minute);
+    final endTimeStamp = Timestamp.fromDate(endDate);
     Map<String, dynamic> detail = {
-      "startTime": start.toString(),
-      "endTime": end.toString()
+      "startTime": startTimeStamp,
+      "endTime": endTimeStamp
     };
     String userId = app.getUser.getId;
     final service = FirebaseServices("user");
@@ -75,8 +79,8 @@ class AppViewModel extends ChangeNotifier {
     if (snapshot?.size == 0) {
       Map<String, dynamic> detail = {
         "emailEnabled": false,
-        "startTime": const TimeOfDay(hour: 8, minute: 0).toString(),
-        "endTime": const TimeOfDay(hour: 17, minute: 0).toString()
+        "startTime": const TimeOfDay(hour: 8, minute: 0),
+        "endTime": const TimeOfDay(hour: 17, minute: 0)
       };
       service.addSubDocument(userId, "setting", detail);
       return;
@@ -84,8 +88,14 @@ class AppViewModel extends ChangeNotifier {
       try {
         final data = snapshot?.docs[0];
         _isEmailEnable = data?['emailEnabled'];
-        _startTime = data?['startTime'];
-        _endTime = data?['endTime'];
+        final start = data?['startTime'] as Timestamp;
+        final startDateTime = start.toDate();
+        final startTimeOfDay = TimeOfDay.fromDateTime(startDateTime);
+        final end = data?['endTime'] as Timestamp;
+        final endDateTime = end.toDate();
+        final endTimeOfDay = TimeOfDay.fromDateTime(endDateTime);
+        _startTime = startTimeOfDay;
+        _endTime = endTimeOfDay;
         notifyListeners();
       } catch (e) {
         print(e);
