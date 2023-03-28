@@ -30,17 +30,80 @@ class AppViewModel extends ChangeNotifier {
     }
   }
 
-  void updateSwitchValue(bool value) {
-    // call firebase
+  Future<void> updateSwitchValue(bool value) async {
+    Map<String, dynamic> detail = {Consts.emailEnabled: value};
+    String userId = app.getUser.getId;
+    final service = FirebaseServices("user");
+    final snapshot = await service.getAllSubDocument(userId, Consts.setting);
+    if (snapshot?.size == 0) {
+      service.addSubDocument(userId, Consts.setting, detail);
+    } else {
+      final subDocId = snapshot?.docs[0].id;
+      if (subDocId == null) return;
+      service.editSubDocument(userId, Consts.setting, subDocId, detail);
+    }
+
     _isEmailEnable = value;
     notifyListeners();
   }
 
   Future<void> setTime(TimeOfDay start, TimeOfDay end) async {
-    // call firebase
+    final startDate = DateTime(0, 0, 0, start.hour, start.minute);
+    final startTimeStamp = Timestamp.fromDate(startDate);
+    final endDate = DateTime(0, 0, 0, end.hour, end.minute);
+    final endTimeStamp = Timestamp.fromDate(endDate);
+    Map<String, dynamic> detail = {
+      Consts.startTime: startTimeStamp,
+      Consts.endTime: endTimeStamp
+    };
+    String userId = app.getUser.getId;
+    final service = FirebaseServices("user");
+    final snapshot = await service.getAllSubDocument(userId, Consts.setting);
+    if (snapshot?.size == 0) {
+      service.addSubDocument(userId, Consts.setting, detail);
+    } else {
+      final subDocId = snapshot?.docs[0].id;
+      if (subDocId == null) return;
+      service.editSubDocument(userId, Consts.setting, subDocId, detail);
+    }
+
     _startTime = start;
     _endTime = end;
     notifyListeners();
+  }
+
+  void getSettingDetail() async {
+    String userId = app.getUser.getId;
+    final service = FirebaseServices("user");
+    final snapshot = await service.getAllSubDocument(userId, Consts.setting);
+    if (snapshot?.size == 0) {
+      Map<String, dynamic> detail = {
+        Consts.emailEnabled: false,
+        Consts.startTime: const TimeOfDay(hour: 8, minute: 0),
+        Consts.endTime: const TimeOfDay(hour: 17, minute: 0)
+      };
+      service.addSubDocument(userId, Consts.setting, detail);
+      return;
+    } else {
+      try {
+        final data = snapshot?.docs[0];
+        _isEmailEnable = data?[Consts.emailEnabled];
+
+        final start = data?[Consts.startTime] as Timestamp;
+        final startDateTime = start.toDate();
+        final startTimeOfDay = TimeOfDay.fromDateTime(startDateTime);
+        _startTime = startTimeOfDay;
+
+        final end = data?[Consts.endTime] as Timestamp;
+        final endDateTime = end.toDate();
+        final endTimeOfDay = TimeOfDay.fromDateTime(endDateTime);
+        _endTime = endTimeOfDay;
+
+        notifyListeners();
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 
   void setLoggedInUser(Map<String, dynamic> detail) {
@@ -127,4 +190,11 @@ class AppViewModel extends ChangeNotifier {
   }
 
   bool get isLogin => _isLogin;
+}
+
+class Consts {
+  static String setting = "setting";
+  static String emailEnabled = "emailEnabled";
+  static String startTime = "startTime";
+  static String endTime = "endTime";
 }
