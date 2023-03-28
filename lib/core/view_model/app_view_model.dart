@@ -31,16 +31,16 @@ class AppViewModel extends ChangeNotifier {
   }
 
   Future<void> updateSwitchValue(bool value) async {
-    Map<String, dynamic> detail = {"emailEnabled": value};
+    Map<String, dynamic> detail = {Consts.emailEnabled: value};
     String userId = app.getUser.getId;
     final service = FirebaseServices("user");
-    final snapshot = await service.getAllSubDocument(userId, "setting");
+    final snapshot = await service.getAllSubDocument(userId, Consts.setting);
     if (snapshot?.size == 0) {
-      service.addSubDocument(userId, "setting", detail);
+      service.addSubDocument(userId, Consts.setting, detail);
     } else {
       final subDocId = snapshot?.docs[0].id;
       if (subDocId == null) return;
-      service.editSubDocument(userId, "setting", subDocId, detail);
+      service.editSubDocument(userId, Consts.setting, subDocId, detail);
     }
 
     _isEmailEnable = value;
@@ -53,18 +53,18 @@ class AppViewModel extends ChangeNotifier {
     final endDate = DateTime(0, 0, 0, end.hour, end.minute);
     final endTimeStamp = Timestamp.fromDate(endDate);
     Map<String, dynamic> detail = {
-      "startTime": startTimeStamp,
-      "endTime": endTimeStamp
+      Consts.startTime: startTimeStamp,
+      Consts.endTime: endTimeStamp
     };
     String userId = app.getUser.getId;
     final service = FirebaseServices("user");
-    final snapshot = await service.getAllSubDocument(userId, "setting");
+    final snapshot = await service.getAllSubDocument(userId, Consts.setting);
     if (snapshot?.size == 0) {
-      service.addSubDocument(userId, "setting", detail);
+      service.addSubDocument(userId, Consts.setting, detail);
     } else {
       final subDocId = snapshot?.docs[0].id;
       if (subDocId == null) return;
-      service.editSubDocument(userId, "setting", subDocId, detail);
+      service.editSubDocument(userId, Consts.setting, subDocId, detail);
     }
 
     _startTime = start;
@@ -75,26 +75,26 @@ class AppViewModel extends ChangeNotifier {
   void getSettingDetail() async {
     String userId = app.getUser.getId;
     final service = FirebaseServices("user");
-    final snapshot = await service.getAllSubDocument(userId, "setting");
+    final snapshot = await service.getAllSubDocument(userId, Consts.setting);
     if (snapshot?.size == 0) {
       Map<String, dynamic> detail = {
-        "emailEnabled": false,
-        "startTime": const TimeOfDay(hour: 8, minute: 0),
-        "endTime": const TimeOfDay(hour: 17, minute: 0)
+        Consts.emailEnabled: false,
+        Consts.startTime: const TimeOfDay(hour: 8, minute: 0),
+        Consts.endTime: const TimeOfDay(hour: 17, minute: 0)
       };
-      service.addSubDocument(userId, "setting", detail);
+      service.addSubDocument(userId, Consts.setting, detail);
       return;
     } else {
       try {
         final data = snapshot?.docs[0];
-        _isEmailEnable = data?['emailEnabled'];
+        _isEmailEnable = data?[Consts.emailEnabled];
 
-        final start = data?['startTime'] as Timestamp;
+        final start = data?[Consts.startTime] as Timestamp;
         final startDateTime = start.toDate();
         final startTimeOfDay = TimeOfDay.fromDateTime(startDateTime);
         _startTime = startTimeOfDay;
 
-        final end = data?['endTime'] as Timestamp;
+        final end = data?[Consts.endTime] as Timestamp;
         final endDateTime = end.toDate();
         final endTimeOfDay = TimeOfDay.fromDateTime(endDateTime);
         _endTime = endTimeOfDay;
@@ -190,4 +190,11 @@ class AppViewModel extends ChangeNotifier {
   }
 
   bool get isLogin => _isLogin;
+}
+
+class Consts {
+  static String setting = "setting";
+  static String emailEnabled = "emailEnabled";
+  static String startTime = "startTime";
+  static String endTime = "endTime";
 }
