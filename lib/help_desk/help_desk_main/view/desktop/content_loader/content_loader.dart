@@ -45,7 +45,6 @@ class _ContentLoaderState extends State<ContentLoader> {
                     future: context.read<HelpDeskViewModel>().formatTaskDetail(),
                     builder: (context, _) {
                       List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-                      // context.read<HelpDeskViewModel>().setPreviousTask(content);
                       if (_.connectionState == ConnectionState.done) {
                         return Column(
                           children: GenerateContent.generateContent(content, widget.contentSize)
@@ -70,11 +69,6 @@ class _ContentLoaderState extends State<ContentLoader> {
               },
             );
           } else {
-            // return Column(
-            //   children: GenerateContent.generateContent(
-            //     context.watch<HelpDeskViewModel>().getPrevoiousTask, widget.contentSize
-            //   )
-            // );
             context.read<HelpDeskViewModel>().cleanModel();
             return Container(
               height: widget.contentSize,

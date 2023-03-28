@@ -17,7 +17,6 @@ class HelpDeskViewModel extends ChangeNotifier {
   final AlgoliaServices _algolia = AlgoliaServices("ticket");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
-  List<Map<String, dynamic>> _previousTask = [];
   final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
   bool _isShowMessagePage = false;
   int? _allTicket;
@@ -26,7 +25,6 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? _selectedTicket; 
   List<String> _previousFirst = [];
   DocumentSnapshot? _lastDoc;
-  DocumentSnapshot? _firstDoc;
   bool _isLoadMore = false;
   bool _isLoadLess = false;
 
@@ -34,7 +32,6 @@ class HelpDeskViewModel extends ChangeNotifier {
   void setLastDoc(DocumentSnapshot doc) {
     _lastDoc = doc;
   }
-  DocumentSnapshot? get getFirstDoc => _firstDoc;
   get getPreviousFirstList => _previousFirst;
   set setPreviousFirstList(List<String> list) => _previousFirst = list;
   Future<DocumentSnapshot?> get getPreviousFirst async {
@@ -47,22 +44,12 @@ class HelpDeskViewModel extends ChangeNotifier {
   } 
   void setFirstDoc(DocumentSnapshot doc) {
     _previousFirst.add(doc.id);
-    _firstDoc = doc;
-    // * Solution for chunk load
-    // * in case new ticket add to db, it will show when return to first page (also the number of the ticket in view)
-  }
-
-  get getPrevoiousTask => _previousTask;
-  void setPreviousTask(List<Map<String, dynamic>> list) {
-    _previousTask = list;
   }
 
   void clearContentController() {
-    _firstDoc = null;
     _lastDoc = null;
     _isLoadLess = false;
     _isLoadMore = false;
-    _previousTask = [];
     notifyListeners();
   }
 
