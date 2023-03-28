@@ -88,14 +88,17 @@ class AppViewModel extends ChangeNotifier {
       try {
         final data = snapshot?.docs[0];
         _isEmailEnable = data?['emailEnabled'];
+
         final start = data?['startTime'] as Timestamp;
         final startDateTime = start.toDate();
         final startTimeOfDay = TimeOfDay.fromDateTime(startDateTime);
+        _startTime = startTimeOfDay;
+
         final end = data?['endTime'] as Timestamp;
         final endDateTime = end.toDate();
         final endTimeOfDay = TimeOfDay.fromDateTime(endDateTime);
-        _startTime = startTimeOfDay;
         _endTime = endTimeOfDay;
+
         notifyListeners();
       } catch (e) {
         print(e);
