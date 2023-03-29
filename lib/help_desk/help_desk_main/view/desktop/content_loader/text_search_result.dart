@@ -18,7 +18,8 @@ class TextSearchResult extends StatefulWidget {
 class _TextSearchResultState extends State<TextSearchResult> {
   @override
   Widget build(BuildContext context) {
-    String email = context.watch<AppViewModel>().app.getUser.getEmail;
+    String id = context.watch<AppViewModel>().app.getUser.getId;
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
     
     return StreamBuilder(
@@ -45,18 +46,19 @@ class _TextSearchResultState extends State<TextSearchResult> {
             for (var item in hits) {
               if (tagBarSelected > 3) {
                 if (!docs.contains(item["docId"]) 
-                  && item["email"] == email 
-                  && item["priority"] == (tagBarSelected-7).abs()) {
+                && item[isAdmin ? "adminId" : "ownerId"] == id 
+                && item["priority"] == (tagBarSelected-7).abs()) {
                   docs.add(item["docId"]);
                 }
               } else if (tagBarSelected > 0 && tagBarSelected < 4) {
                 if (!docs.contains(item["docId"]) 
-                  && item["email"] == email 
-                  && item["status"] == tagBarSelected-1) {
+                && item[isAdmin ? "adminId" : "ownerId"] == id 
+                && item["status"] == tagBarSelected-1) {
                   docs.add(item["docId"]);
                 }
               } else {
-                if (!docs.contains(item["docId"]) && item["email"] == email) {
+                if (!docs.contains(item["docId"]) 
+                && item[isAdmin ? "adminId" : "ownerId"] == id) {
                   docs.add(item["docId"]);
                 }
               }

@@ -2,6 +2,7 @@
 import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_project/core/datasource/algolia_services.dart';
@@ -85,7 +86,10 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? get getStartTicket => _startTicket;
   int? get getEndTicket => _endTicket;
   int? get getSelectedTicket => _selectedTicket;
-  set setSelectedTicket(int index) => _selectedTicket = index;
+  set setSelectedTicket(int index) {
+    _selectedTicket = index;
+    notifyListeners();
+  } 
   set setAllTicket(int number) {
     _allTicket = number;
   } 
@@ -198,6 +202,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     String? objectId = await _algolia.addObject(docId, {
       "name": list![0],
       "email": list[1],
+      "ownerId": FirebaseAuth.instance.currentUser!.uid,
       "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
       "category": task.getCategory,
       "priority": task.getPriority,
@@ -305,8 +310,6 @@ class HelpDeskViewModel extends ChangeNotifier {
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.removed) {
         int index = snapshot.docChanges[i].oldIndex;
-        String docId = snapshot.docChanges[i].doc.get("objectID");
-        await _algolia.deleteObject(docId);
         _removeQueryData(index);
       }
     }

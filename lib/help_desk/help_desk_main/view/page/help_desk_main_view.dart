@@ -19,25 +19,8 @@ class HelpDeskMainView extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole;
     bool isLogin = context.watch<AppViewModel>().isLogin;
-    // bool isShowMessagePage = context.watch<HelpDeskViewModel>().getIsShowMessagePage;
-    // Map<String, dynamic> messageDetail = context.watch<ReplyChannelViewModel>().getTaskData;
 
     if (isMobileSite) {
-      // if (isShowMessagePage) {
-      //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //     return HelpDeskReplyPage(
-      //     docId: messageDetail["docId"],
-      //     id: messageDetail["id"],
-      //     title: messageDetail["title"],
-      //     detail: messageDetail["detail"],
-      //     priority: messageDetail["priority"],
-      //     status: messageDetail["status"],
-      //     category: messageDetail["category"],
-      //     time: messageDetail["time"]
-      //   );
-      //   }));
-        
-      // }
       return TemplateMenuMobile(
           content: Builder(
             builder: (context) {
