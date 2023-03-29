@@ -8,10 +8,17 @@ import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/body.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/header.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/mobile/mobile_widget.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
-class HelpDeskMainView extends StatelessWidget {
+class HelpDeskMainView extends StatefulWidget {
   final bool isAdmin;
   const HelpDeskMainView({super.key, required this.isAdmin});
+
+  @override
+  State<HelpDeskMainView> createState() => _HelpDeskMainViewState();
+}
+
+class _HelpDeskMainViewState extends State<HelpDeskMainView> {
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +51,8 @@ class HelpDeskMainView extends StatelessWidget {
           ));
     }
     return TemplateDesktop(
-        helpdesk: !isAdmin,
-        helpdeskadmin: isAdmin,
+        helpdesk: !widget.isAdmin,
+        helpdeskadmin: widget.isAdmin,
         home: false,
         useTemplatescroll: false,
         content: Builder(
@@ -71,7 +78,7 @@ class HelpDeskMainView extends StatelessWidget {
                     return SingleChildScrollView(
                       child: Column(
                         children: [
-                          Header.widget(context, isAdmin),
+                          Header.widget(context, widget.isAdmin),
                           const Body(isAdmin: true,)
                         ],
                       ),
@@ -79,8 +86,8 @@ class HelpDeskMainView extends StatelessWidget {
                   }
                   return Column(
                     children: [
-                      Header.widget(context, isAdmin),
-                      Body(isAdmin: isAdmin,)
+                      Header.widget(context, widget.isAdmin),
+                      Body(isAdmin: widget.isAdmin,)
                     ],
                   );
                 }

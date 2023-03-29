@@ -81,7 +81,7 @@ class _MobileWidgetState extends State<MobileWidget> {
   void didChangeDependencies() {
     int tagBarSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
     String id = context.watch<AppViewModel>().app.getUser.getId;
-    context.read<HelpDeskViewModel>().cleanModel();
+    context.read<HelpDeskViewModel>().clearModel();
     _stream = query(id, tagBarSelected, widget.isAdmin);
     super.didChangeDependencies();
   }
@@ -278,7 +278,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                               },
                             );
                           } else {
-                            context.read<HelpDeskViewModel>().cleanModel();
+                            context.read<HelpDeskViewModel>().clearModel();
                             return const LoaderStatus(text: "No task in this section");
                           }      
                         } else {

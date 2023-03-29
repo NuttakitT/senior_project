@@ -50,7 +50,7 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
 
   @override
   void didChangeDependencies() {
-    context.read<HelpDeskViewModel>().cleanModel();
+    context.read<HelpDeskViewModel>().clearModel();
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     _stream = query(widget.id, widget.index, isAdmin);
     super.didChangeDependencies();
@@ -116,7 +116,7 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
                                 style: const TextStyle(color: ColorConstant.whiteBlack80),
                               );
                             }
-                            context.read<HelpDeskViewModel>().cleanModel();
+                            context.read<HelpDeskViewModel>().clearModel();
                             return Text(
                               oldAmount.toString(),
                               textAlign: TextAlign.center,

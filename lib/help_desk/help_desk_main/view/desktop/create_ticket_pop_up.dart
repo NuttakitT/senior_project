@@ -278,7 +278,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                         if (title.isNotEmpty && detail.isNotEmpty) {
                           int priorityIndex = priority.indexOf(priorityValue);
                           await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
-                          context.read<HelpDeskViewModel>().cleanModel();
+                          context.read<HelpDeskViewModel>().clearModel();
                           context.read<HelpDeskViewModel>().clearContentController();
                           Navigator.pop(context);
                         }

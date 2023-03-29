@@ -62,10 +62,11 @@ class _TicketListState extends State<TicketList> {
   Stream? _firestPageStream;
   Stream? _loadOlderStream;
   ScrollController controller = ScrollController();
+  int pageStateNumber = 1;
 
   @override
   void initState() {
-    context.read<HelpDeskViewModel>().cleanModel();
+    context.read<HelpDeskViewModel>().clearModel();
     super.initState();
   }
 
@@ -74,7 +75,6 @@ class _TicketListState extends State<TicketList> {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
     String uid = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
-    context.read<HelpDeskViewModel>().cleanModel();
     _firestPageStream = query(uid, tagBarSelected, isAdmin, limit: widget.limit);
     _loadOlderStream = query(
       uid, 
@@ -106,13 +106,14 @@ class _TicketListState extends State<TicketList> {
               if (searchText.isEmpty) {
                 return Builder(
                   builder: (context) {
-                    if (context.watch<HelpDeskViewModel>().getIsLoadMore) {
+                    int pageNumber = context.watch<HelpDeskViewModel>().getPageNumber;
+                    bool isReverse = context.watch<HelpDeskViewModel>().getIsReverse;
+                    if (pageNumber > 1 && !isReverse) {
                       return ContentLoader(
                         contentSize: contentSize, 
                         stream: _loadOlderStream, 
-                        isReverse: false,
                       );
-                    } else if (context.watch<HelpDeskViewModel>().getIsLoadLess) {
+                    } else if (pageNumber > 1 && isReverse) {
                       return FutureBuilder(
                         future: context.read<HelpDeskViewModel>().getPreviousFirst,
                         builder: (context, snapshot) {
@@ -129,7 +130,6 @@ class _TicketListState extends State<TicketList> {
                                 startDoc: snapshot.data, 
                                 isReverse: true
                               ), 
-                              isReverse: true
                             );
                           }
                           return Container(
@@ -150,7 +150,6 @@ class _TicketListState extends State<TicketList> {
                       return ContentLoader(
                       contentSize: contentSize, 
                       stream: _firestPageStream, 
-                      isReverse: false,
                     );
                   }
                 );

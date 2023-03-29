@@ -9,12 +9,10 @@ import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_vie
 class ContentLoader extends StatefulWidget {
   final double contentSize;
   final Stream? stream;
-  final bool isReverse;
   const ContentLoader({
     super.key, 
     required this.contentSize, 
     required this.stream,
-    required this.isReverse
   });
 
   @override
@@ -25,6 +23,7 @@ class _ContentLoaderState extends State<ContentLoader> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<HelpDeskViewModel>().clearModel();
     return StreamBuilder(
       stream: widget.stream,
       builder: (context, snapshot) {
@@ -33,10 +32,8 @@ class _ContentLoaderState extends State<ContentLoader> {
         } 
         if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.data!.docs.isNotEmpty) {
-            if (!widget.isReverse) {
-              context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
-            }
             context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
+            context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
             return FutureBuilder(
               future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
               builder: (context, futureSnapshot) {
@@ -69,7 +66,7 @@ class _ContentLoaderState extends State<ContentLoader> {
               },
             );
           } else {
-            context.read<HelpDeskViewModel>().cleanModel();
+            context.read<HelpDeskViewModel>().clearModel();
             return Container(
               height: widget.contentSize,
               width: double.infinity,

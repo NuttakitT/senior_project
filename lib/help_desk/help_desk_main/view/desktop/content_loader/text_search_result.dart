@@ -77,7 +77,7 @@ class _TextSearchResultState extends State<TextSearchResult> {
                 child: const LoaderStatus(text: "No result")
               );
             }
-            context.read<HelpDeskViewModel>().cleanModel();
+            context.read<HelpDeskViewModel>().clearModel();
             return FutureBuilder(
               future: context.read<HelpDeskViewModel>().reconstructSearchResult(docs),
               builder: ((context, futureSnapshot) {

@@ -24,61 +24,49 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? _startTicket;
   int? _endTicket;
   int? _selectedTicket; 
+  int _pageNumber = 1;
+  bool _isReverse = false;
   List<String> _previousFirst = [];
+  DocumentSnapshot? _firestDoc;
   DocumentSnapshot? _lastDoc;
-  bool _isLoadMore = false;
-  bool _isLoadLess = false;
 
+  DocumentSnapshot? get getFirstDoc => _firestDoc;
+  void setFirstDoc(DocumentSnapshot doc) {
+    _firestDoc = doc;
+  }
   DocumentSnapshot? get getLastDoc => _lastDoc;
   void setLastDoc(DocumentSnapshot doc) {
     _lastDoc = doc;
   }
   get getPreviousFirstList => _previousFirst;
-  set setPreviousFirstList(List<String> list) => _previousFirst = list;
   Future<DocumentSnapshot?> get getPreviousFirst async {
     if (_previousFirst.isNotEmpty) {
-      _previousFirst.removeLast();
       String docId = _previousFirst.removeLast();
       return await _serviceTicket.getDocumentById(docId);
     } 
     return null;
   } 
-  void setFirstDoc(DocumentSnapshot doc) {
-    _previousFirst.add(doc.id);
+
+  get getPageNumber => _pageNumber;
+  get getIsReverse => _isReverse;
+  set setPageNumber(bool isIncrease) {
+    if (isIncrease) {
+      _pageNumber += 1;
+      _previousFirst.add(_firestDoc!.id);
+    } else {
+      _pageNumber -= 1;
+    }
+    if (_pageNumber == 1) {
+      _previousFirst = [];
+    }
+    notifyListeners();
   }
 
   void clearContentController() {
     _lastDoc = null;
-    _isLoadLess = false;
-    _isLoadMore = false;
-    notifyListeners();
-  }
-
-  bool get getIsLoadMore => _isLoadMore;
-  bool get getIsLoadLess => _isLoadLess;
-  void setIsLoadMore(bool state, int limit) {
-    _isLoadMore = state;
-    if (state) {
-      _startTicket = _startTicket! + limit;
-      _endTicket = (_startTicket! + limit) > _allTicket! 
-        ? _allTicket
-        : _startTicket! + limit - 1;
-    }
-    notifyListeners();
-  }
-  void setIsLoadLess(bool state, int limit) {
-    _isLoadLess = state;
-    if (state) {
-      _startTicket = _startTicket! - limit;
-      _endTicket = (_startTicket! + limit) > _allTicket! 
-        ? _allTicket
-        : _startTicket! + limit - 1;
-      if (_startTicket == 1) {
-        _isLoadLess = false;
-        _isLoadMore = false;
-      }
-      notifyListeners();
-    }
+    _previousFirst = [];
+    _pageNumber = 1;
+    _isReverse = false;
     notifyListeners();
   }
 
@@ -86,18 +74,34 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? get getStartTicket => _startTicket;
   int? get getEndTicket => _endTicket;
   int? get getSelectedTicket => _selectedTicket;
+  void setLoader(bool state, int limit) {
+    if (state) {
+      _startTicket = _startTicket! + limit;
+      _endTicket = (_startTicket! + limit) > _allTicket! 
+        ? _allTicket
+        : _startTicket! + limit - 1;
+        notifyListeners();
+    } else {
+      _startTicket = _startTicket! - limit;
+      _endTicket = (_startTicket! + limit) > _allTicket! 
+        ? _allTicket
+        : _startTicket! + limit - 1;
+        notifyListeners();
+    }
+    _isReverse = !state;
+    notifyListeners();
+  }
+
   set setSelectedTicket(int index) {
     _selectedTicket = index;
     notifyListeners();
   } 
-  set setAllTicket(int number) {
-    _allTicket = number;
-  } 
 
   void initTicket(int all, int limit)  {
-    if (!_isLoadMore && !_isLoadLess) {
+    if (_pageNumber == 1) {
       _startTicket = 1;
       _allTicket = all;
+      _isReverse = false;
       if (_allTicket! < limit) {
         _endTicket = _allTicket; 
       } else {
@@ -226,7 +230,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     await _serviceTicket.setDocument(docId, taskDetail);
   }
 
-  void cleanModel() {
+  void clearModel() {
     _helpDeskModel = HelpDeskMainModel();
     _task = [];
   }

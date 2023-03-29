@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
@@ -7,26 +10,42 @@ import 'package:senior_project/core/template_desktop/view_model/template_desktop
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/admin_ticket_setting.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/ticket_list.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/body_reply_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
-Stream? query(String id, int type, bool isAdmin) {
+Stream? query(String id, int type, bool isAdmin, {
+  DocumentSnapshot? startDoc,
+  bool isReverse = false,
+  int? limit
+}) {
   final FirebaseServices service = FirebaseServices("ticket");
+  bool descending = true;
   if (type == 0) {
     return service.listenToDocumentByKeyValuePair(
       [isAdmin ? "adminId" : "ownerId"], 
       [id],
+      limit: limit, orderingField: 'dateCreate', descending: descending,
+      startDoc: startDoc,
+      isReverse: isReverse
     );
   } 
   if (type > 3){
     return service.listenToDocumentByKeyValuePair(
       [isAdmin ? "adminId" : "ownerId", "priority"], 
       [id, (type-7).abs()],
+      limit: limit, orderingField: 'dateCreate', descending: descending,
+      startDoc: startDoc,
+      isReverse: isReverse
     );
   }
   return service.listenToDocumentByKeyValuePair(
     [isAdmin ? "adminId" : "ownerId", "status"], 
     [id, type-1],
+    limit: limit, orderingField: 'dateCreate', descending: descending,
+    startDoc: startDoc,
+    isReverse: isReverse
   );
 }
 
@@ -43,8 +62,32 @@ class _BodyState extends State<Body> {
   ScrollController controller = ScrollController();
   int limit = 5;
 
+  void nextTicket(bool isNext) {
+    if (isNext) {
+      context.read<HelpDeskViewModel>().setSelectedTicket = context.read<HelpDeskViewModel>().getSelectedTicket! + 1;
+    } else {
+      context.read<HelpDeskViewModel>().setSelectedTicket = context.read<HelpDeskViewModel>().getSelectedTicket! - 1;
+    }
+    Map<String, dynamic> ticket = context.read<HelpDeskViewModel>().getTask[context.read<HelpDeskViewModel>().getSelectedTicket! - 1];
+    context.read<ReplyChannelViewModel>().setTaskData = {
+      "docId": ticket["docId"],
+      "id": ticket["id"],
+      "title": ticket["title"],
+      "detail": ticket["detail"],
+      "priority": ticket["priority"],
+      "status": ticket["status"],
+      "category": ticket["category"],
+      "time": ticket["time"]
+    };
+  }
+
   Widget _iconLoader(bool isShowMessagePage, int start, int end, int all, int limit) {
     String srearchText = context.watch<HelpDeskViewModel>().getSearchText;
+    int? msgIndex;
+
+    if (isShowMessagePage) {
+      msgIndex = context.watch<HelpDeskViewModel>().getSelectedTicket! + start - 1;
+    }
     if (all == 0) {
       return Container();
     }
@@ -55,24 +98,17 @@ class _BodyState extends State<Body> {
       children: [
         Builder(
           builder: (context) {
-            if (start != 1) {
+            if ((!isShowMessagePage && start != 1) || (isShowMessagePage && msgIndex != 1)) {
               return IconButton(
                 onPressed: () {
-                  // TODO go back
-                }, 
-                icon: const Icon(Icons.keyboard_double_arrow_left_rounded)
-              );
-            }
-            return Container();
-          },
-        ),
-        Builder(
-          builder: (context) {
-            if (start != 1) {
-              return IconButton(
-                onPressed: () {
-                  context.read<HelpDeskViewModel>().setIsLoadMore(false, limit);
-                  context.read<HelpDeskViewModel>().setIsLoadLess(true, limit);
+                  if (isShowMessagePage) {
+                    if (msgIndex! <= all && msgIndex > 1) {
+                      nextTicket(false);
+                    }
+                  } else {
+                    context.read<HelpDeskViewModel>().setLoader(false, limit);
+                    context.read<HelpDeskViewModel>().setPageNumber = false;
+                  }
                 }, 
                 icon: const Icon(Icons.keyboard_arrow_left_rounded)
               );
@@ -84,7 +120,7 @@ class _BodyState extends State<Body> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             isShowMessagePage 
-            ? "${context.read<HelpDeskViewModel>().getSelectedTicket} of $all"
+            ? "$msgIndex of $all"
             : "$start-$end of $all",
             style: const TextStyle(
               fontFamily: AppFontStyle.font,
@@ -96,11 +132,17 @@ class _BodyState extends State<Body> {
         ),
         Builder(
           builder: (context) {
-            if (end != all) {
+            if ((!isShowMessagePage && end != all) || (isShowMessagePage && msgIndex != all)) {
               return IconButton(
-                onPressed: () {
-                  context.read<HelpDeskViewModel>().setIsLoadMore(true, limit);
-                  context.read<HelpDeskViewModel>().setIsLoadLess(false, limit);
+                onPressed: () async {
+                  if (isShowMessagePage) {
+                    if (msgIndex! >= 1 && msgIndex < all) {
+                      nextTicket(true);
+                    }
+                  } else {
+                    context.read<HelpDeskViewModel>().setLoader(true, limit);
+                    context.read<HelpDeskViewModel>().setPageNumber = true;
+                  }
                 }, 
                 icon: const Icon(Icons.keyboard_arrow_right_rounded)
               );
@@ -108,20 +150,35 @@ class _BodyState extends State<Body> {
             return Container();
           },
         ),
-        Builder(
-          builder: (context) {
-            if (end != all) {
-              return IconButton(
-                onPressed: () {
-                  // TODO load more
-                }, 
-                icon: const Icon(Icons.keyboard_double_arrow_right_rounded)
-              );
-            }
-            return Container();
-          },
-        ),
       ],
+    );
+  }
+
+  Widget loadingWidget(double screenHeight) {
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: screenHeight < 500 ? 500 : screenHeight - 300
+      ),
+      color: Colors.white,
+      alignment: Alignment.center,
+      child: const LoaderStatus(text: "Loading..")
+    );
+  }
+
+  Widget bodyReply(double screenHeight) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: screenHeight < 500 ? 500 : screenHeight - 300
+      ),
+      child: Scrollbar(
+        controller: controller,
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          controller: controller,
+          scrollDirection: Axis.vertical,
+          child: const BodyReplyDesktop()
+        ),
+      )
     );
   }
 
@@ -205,20 +262,48 @@ class _BodyState extends State<Body> {
                   Builder(
                     builder: (context) {
                       if (isShowMesg) {
-                        return ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: screenHeight < 500 ? 500 : screenHeight - 300
-                          ),
-                          child: Scrollbar(
-                            controller: controller,
-                            thumbVisibility: true,
-                            child: SingleChildScrollView(
-                              controller: controller,
-                              scrollDirection: Axis.vertical,
-                              child: const BodyReplyDesktop()
-                            ),
-                          )
-                        );
+                        if (context.watch<HelpDeskViewModel>().getSelectedTicket! >= context.read<HelpDeskViewModel>().getTask.length) {
+                          return StreamBuilder(
+                            stream: query(
+                                uid, 
+                                tagBarSelected, 
+                                isAdmin, 
+                                startDoc: context.watch<HelpDeskViewModel>().getLastDoc,
+                                limit: limit
+                              ),
+                            builder: (context, streamSnapshot) {
+                              if (streamSnapshot.connectionState == ConnectionState.active) {
+                                if (streamSnapshot.data!.docs.isNotEmpty) {
+                                  context.read<HelpDeskViewModel>().setFirstDoc(streamSnapshot.data.docs.first);
+                                  context.read<HelpDeskViewModel>().setLastDoc(streamSnapshot.data.docs.last);
+                                  // if (context.watch<HelpDeskViewModel>().getSelectedTicket! % limit == 1) {
+                                  //   context.read<HelpDeskViewModel>().setPageNumber = true;
+                                  // }
+                                  return FutureBuilder(
+                                    future: context.read<HelpDeskViewModel>().reconstructQueryData(streamSnapshot.data as QuerySnapshot),
+                                    builder: (context, futureSnapshot) {
+                                      if (futureSnapshot.connectionState == ConnectionState.done) {
+                                        return FutureBuilder(
+                                          future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+                                          builder: (context, _) {
+                                            if (_.connectionState == ConnectionState.done) {
+                                              return bodyReply(screenHeight);
+                                            }
+                                            return loadingWidget(screenHeight);
+                                          },
+                                        );
+                                      }
+                                      return loadingWidget(screenHeight);
+                                    },
+                                  );
+                                }
+                                return bodyReply(screenHeight);
+                              }
+                              return loadingWidget(screenHeight);
+                            },
+                          );
+                        }
+                        return bodyReply(screenHeight);
                       }
                       return TicketList(limit: limit,);
                     }
