@@ -15,6 +15,7 @@ import 'firebase_options.dart';
 import 'help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -46,15 +47,10 @@ class MyApp extends StatelessWidget {
       ),
       home: FutureBuilder(
           future: context.read<AppViewModel>().initializeLoginState(context,
-              FirebaseAuth.instance.currentUser == null ? false : true),
+              !(FirebaseAuth.instance.currentUser == null)),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
-              return const RoleManagementView(isAdmin: true);
-              // return HelpDeskMainView(
-              //   isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0
-              //       ? true
-              //       : false,
-              // );
+              return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0);
             }
             return Container();
           }),

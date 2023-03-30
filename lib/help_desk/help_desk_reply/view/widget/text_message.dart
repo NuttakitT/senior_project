@@ -20,8 +20,19 @@ class TextMessage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
           color:
-              ColorConstant.orange30.withOpacity(isSender ? 1 : 0.4),
-          borderRadius: BorderRadius.circular(24)),
+              ColorConstant.whiteBlack15.withOpacity(!isSender ? 1 : 0.4),
+          borderRadius: isSender 
+          ? const BorderRadius.only(
+              topLeft: Radius.circular(24), 
+              topRight: Radius.circular(24),
+              bottomLeft: Radius.circular(24)
+            )
+          : const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+            bottomRight: Radius.circular(24)
+          )
+      ),
       child: RichText(
         text: TextSpan(
           children: [

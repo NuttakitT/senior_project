@@ -56,7 +56,7 @@ class _TagBarState extends State<TagBar> {
         onTap: () {
           context
               .read<TemplateDesktopViewModel>()
-              .changeState(widget.index, widget.type);
+              .changeState(context, widget.index, widget.type);
           // TODO tag bar logic
         },
       ),

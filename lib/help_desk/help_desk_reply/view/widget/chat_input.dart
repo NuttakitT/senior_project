@@ -4,10 +4,17 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
-class ChatInputDesktop extends StatelessWidget {
-  const ChatInputDesktop({
+class ChatInput extends StatefulWidget {
+  const ChatInput({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<ChatInput> createState() => _ChatInputState();
+}
+
+class _ChatInputState extends State<ChatInput> {
+  String text = "";
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +24,7 @@ class ChatInputDesktop extends StatelessWidget {
       constraints: const BoxConstraints(maxHeight: 64),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        alignment: Alignment.center,
         decoration: BoxDecoration(
             color: ColorConstant.white,
             boxShadow: [
@@ -33,13 +41,13 @@ class ChatInputDesktop extends StatelessWidget {
           children: [
             InkWell(
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 //Todo fill color
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(360)),
                 child: const Icon(
                   Icons.add,
-                  color: ColorConstant.orange40,
+                  color: ColorConstant.blue40,
                 ),
               ),
               //TODO Send image or video
@@ -51,7 +59,7 @@ class ChatInputDesktop extends StatelessWidget {
               decoration: BoxDecoration(
                   color: ColorConstant.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: ColorConstant.orange40)),
+                  border: Border.all(color: ColorConstant.whiteBlack40)),
               child: Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 16, right: 16),
@@ -60,26 +68,45 @@ class ChatInputDesktop extends StatelessWidget {
                       hintText: "Type message...", border: InputBorder.none),
                   style: const TextStyle(
                       color: ColorConstant.whiteBlack50, fontSize: 14),
-                  onSubmitted: (value) {
-                    context.read<ReplyChannelViewModel>().createMessage(
-                    context.read<ReplyChannelViewModel>().getTaskData["docId"], 
-                    {
-                      "ownerId": userId,
-                      "message": value,
-                      "time": DateTime.now(),
-                      "seen": false
-                    }
-                  );
+                  onChanged: (value) {
+                    text = value;
                   },
                 ),
               ),
             )),
-            const InkWell(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.sentiment_satisfied_alt_rounded),
+            InkWell(
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Icon(
+                  Icons.sentiment_satisfied_alt_rounded,
+                  color: ColorConstant.blue40,
+                ),
               ),
-              //Todo Emoji
+              onTap: () {
+                //Todo Emoji
+              },
+            ),
+            InkWell(
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Icon(
+                  Icons.send_rounded,
+                  color: ColorConstant.blue40,
+                ),
+              ),
+              onTap: () {
+                if (text.isNotEmpty) {
+                  context.read<ReplyChannelViewModel>().createMessage(
+                    context.read<ReplyChannelViewModel>().getTaskData["docId"], 
+                    {
+                      "ownerId": userId,
+                      "message": text,
+                      "time": DateTime.now(),
+                      "seen": false
+                    }
+                  );
+                }
+              },
             )
           ],
         ),

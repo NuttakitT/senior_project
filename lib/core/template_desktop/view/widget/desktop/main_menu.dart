@@ -8,7 +8,6 @@ import 'package:senior_project/core/template_desktop/view/widget/desktop/notific
 import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
-import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -49,7 +48,7 @@ class _MainMenuState extends State<MainMenu> {
                 padding: const EdgeInsets.only(right: 40),
                 child: InkWell(
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(0, 1);
+                    context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
                     // TODO link to home page
                   },
                   splashFactory: NoSplash.splashFactory,
@@ -68,7 +67,7 @@ class _MainMenuState extends State<MainMenu> {
                     style: _navbarTextStyle(isHelpDeskSelected),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(1, 1);
+                    context.read<TemplateDesktopViewModel>().changeState(context, 1, 1);
                     int? role =
                         context.read<AppViewModel>().app.getUser.getRole;
                     Navigator.pushAndRemoveUntil(
@@ -89,7 +88,7 @@ class _MainMenuState extends State<MainMenu> {
                     style: _navbarTextStyle(isTeacherContactSelected),
                   ),
                   onTap: () {
-                    context.read<TemplateDesktopViewModel>().changeState(2, 1);
+                    context.read<TemplateDesktopViewModel>().changeState(context, 2, 1);
                     // TODO link to teacher contact
                   },
                 ),
@@ -110,7 +109,7 @@ class _MainMenuState extends State<MainMenu> {
                         onTap: () {
                           context
                               .read<TemplateDesktopViewModel>()
-                              .changeState(3, 1);
+                              .changeState(context, 3, 1);
                           // TODO link to Role Management
                         },
                       ),
@@ -119,43 +118,52 @@ class _MainMenuState extends State<MainMenu> {
                   return Container();
                 }
                 return Container();
-              }),
-            ],
-          ),
-          Builder(builder: (context) {
-            if (!isLogin) {
-              return TextButton(
-                onPressed: () async {
-                  bool isSuccess =
-                      await context.read<AppViewModel>().login(context);
-                  if (isSuccess) {
-                    // TODO link to home
-                    // Navigator.pushAndRemoveUntil(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) {
-                    //     return MyProfileView(isAdmin: false,);
-                    //   }),
-                    // (route) => false);
-                  }
-                },
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(ColorConstant.orange70),
-                    padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10.5)),
-                    maximumSize: MaterialStateProperty.all(const Size(227, 40)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)))),
-                child: const Text(
-                  "Login with KMUTT account",
-                  style: TextStyle(
-                      fontFamily: AppFontStyle.font,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      color: Colors.white),
+              }
+            ),
+          ],
+        ),
+        Builder(builder: (context) {
+          if (!isLogin) {
+            return TextButton(
+              onPressed: () async {
+                bool isSuccess = await context.read<AppViewModel>().login(context);
+                if (isSuccess) {
+                  // TODO link to home
+                  Navigator.pushAndRemoveUntil(
+                    context, 
+                    MaterialPageRoute(builder: (context) {
+                      return HelpDeskMainView(
+                        isAdmin: context.read<AppViewModel>().app.getUser.getRole == 0 ? true : false,
+                      );
+                    }), 
+                  (route) => false);
+                }
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  ColorConstant.orange70
                 ),
-              );
+                padding: MaterialStateProperty.all(
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10.5)
+                ),
+                fixedSize: MaterialStateProperty.all(
+                  const Size(227, 40)
+                ),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)
+                  )
+                ) 
+              ),
+              child: const Text(
+                "Login with KMUTT account",
+                style: TextStyle(
+                  fontFamily: AppFontStyle.font,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  color: Colors.white
+                ),
+              ));
             }
             return Padding(
               padding: const EdgeInsets.only(right: 24),

@@ -1,5 +1,6 @@
-import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
   List<bool> _navBarState = [true, false, false, false];
@@ -62,7 +63,7 @@ class TemplateDesktopViewModel extends ChangeNotifier {
     } 
   }
 
-  void changeState(int index, int type) {
+  void changeState(BuildContext context, int index, int type) {
     List<bool> menuTemplate = _selectState(type);
     int trueStateIndex = menuTemplate.indexOf(true);
     if (index < menuTemplate.length && trueStateIndex != index && trueStateIndex != -1) {
@@ -70,6 +71,9 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       menuTemplate[index] = true;
       _copyValue(menuTemplate, type);
       notifyListeners();
+      if (type == 4) {
+        context.read<HelpDeskViewModel>().clearContentController();
+      }
     }
   }
 }

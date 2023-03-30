@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/main_menu.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_help_desk_admin.dart';
 import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_help_desk.dart';
@@ -57,7 +56,6 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height - 90;
 
     return Scaffold(
       appBar: AppBar(
@@ -104,11 +102,11 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                         child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           controller: childController,
-                          child: _content(widget.content, screenWidth, screenHeight),
+                          child: _content(widget.content, screenWidth, 879),
                         ),
                       );
                     }
-                    return _content(widget.content, screenWidth, screenHeight);
+                    return _content(widget.content, screenWidth, 879);
                   },
                 ),
               ],

@@ -1,26 +1,136 @@
-// ignore_for_file: depend_on_referenced_packages
-
+// ignore_for_file: depend_on_referenced_packages, prefer_final_fields
 import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/content.dart';
 import 'package:senior_project/core/model/help_desk/task.dart';
-import 'package:senior_project/core/view_model/cryptor.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
 
 class HelpDeskViewModel extends ChangeNotifier {
   HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
-  final FirebaseServices _serviceTask = FirebaseServices("task");
+  final FirebaseServices _serviceTicket = FirebaseServices("ticket");
   final FirebaseServices _serviceUser = FirebaseServices("user");
-  final AlgoliaServices _algolia = AlgoliaServices("task");
+  final AlgoliaServices _algolia = AlgoliaServices("ticket");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
   final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
-  final int seed = 100;
+  bool _isShowMessagePage = false;
+  int? _allTicket;
+  int? _startTicket;
+  int? _endTicket;
+  int? _selectedTicket; 
+  int _pageNumber = 1;
+  bool _isReverse = false;
+  List<String> _previousFirst = [];
+  DocumentSnapshot? _firestDoc;
+  DocumentSnapshot? _lastDoc;
+  bool _isSafeClick = true;
+  bool _isSafeLoad = true;
+
+  set setIsSafeClick(bool state) => _isSafeClick = state;
+  get getIsSafeClick => _isSafeClick;
+
+  set setIsSafeLoad(bool state) => _isSafeLoad = state;
+  get getIsSafeLoad => _isSafeLoad;
+
+  DocumentSnapshot? get getFirstDoc => _firestDoc;
+  void setFirstDoc(DocumentSnapshot doc) {
+    _firestDoc = doc;
+  }
+  DocumentSnapshot? get getLastDoc => _lastDoc;
+  void setLastDoc(DocumentSnapshot doc) {
+    _lastDoc = doc;
+  }
+  List<String> get getPreviousFirstList => _previousFirst;
+  Future<DocumentSnapshot?> get getPreviousFirst async {
+    if (_previousFirst.isNotEmpty) {
+      String docId = _previousFirst.removeAt(_pageNumber-1);
+      if (_pageNumber >= _previousFirst.length) {
+        _previousFirst.removeRange(_pageNumber-1, _previousFirst.length);
+      }
+      return await _serviceTicket.getDocumentById(docId);
+    } 
+    return null;
+  } 
+
+  get getPageNumber => _pageNumber;
+  get getIsReverse => _isReverse;
+  set setPageNumber(int index) {
+    if (index > 1) {
+      _pageNumber = index;
+    }
+    if (_pageNumber == 1) {
+      _previousFirst = [];
+    }
+  }
+  set addPreviousFirst(String docId) {
+    if (!_previousFirst.contains(docId)) {
+      _previousFirst.add(_firestDoc!.id);
+    }
+  }
+
+  void clearContentController() {
+    _lastDoc = null;
+    _previousFirst = [];
+    _pageNumber = 1;
+    _isReverse = false;
+    _isSafeClick = true;
+    notifyListeners();
+  }
+
+  int? get getAllTicket => _allTicket;
+  int? get getStartTicket => _startTicket;
+  int? get getEndTicket => _endTicket;
+  int? get getSelectedTicket => _selectedTicket;
+  set setIsReverse(bool state) {
+    _isReverse = state;
+  }
+  void setLIndicator(bool state, int limit) {
+    if (state) {
+      _startTicket = _startTicket! + limit;
+      _endTicket = (_startTicket! + limit) > _allTicket! 
+        ? _allTicket
+        : _startTicket! + limit - 1;
+    } else {
+      _startTicket = _startTicket! - limit;
+      _endTicket = (_startTicket! + limit) > _allTicket! 
+        ? _allTicket
+        : _startTicket! + limit - 1;
+    }
+    if (!_isShowMessagePage) {
+      notifyListeners();
+    }
+  }
+
+  set setSelectedTicket(int index) {
+    _selectedTicket = index;
+    notifyListeners();
+  } 
+
+  void initTicket(int all, int limit)  {
+    if (_pageNumber == 1) {
+      _startTicket = 1;
+      _allTicket = all;
+      _isReverse = false;
+      _isSafeClick = true;
+      if (_allTicket! < limit) {
+        _endTicket = _allTicket; 
+      } else {
+        _endTicket = _startTicket! + limit - 1;
+      }
+    }
+  }
+
+  get getIsShowMessagePage => _isShowMessagePage;
+  void setShowMessagePageState(bool state) {
+    _isShowMessagePage = state;
+    notifyListeners();
+  } 
 
   String convertToString(bool isStatus, int taskState) {
     if (isStatus) {
@@ -50,7 +160,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   get getCategory => _category;
-  get getTask => _task.reversed.toList();
+  List<Map<String, dynamic>>  get getTask => _task;
 
   bool? getMobileMenuState(int index) {
     if (index >= 0 && index < 4) {
@@ -75,14 +185,14 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<String> getTaskDocId(String taskId) async {
-    final snapshot = await _serviceTask.getDocumnetByKeyValuePair(["id"], [taskId]);
+    final snapshot = await _serviceTicket.getDocumnetByKeyValuePair(["id"], [taskId]);
     return snapshot!.docs.first.id;
   }
 
   Future<List<String>?> _getUserdetail(String uid) async {
     final doc = await _serviceUser.getDocumentById(uid);
-    if (doc != null) {
-      return [doc.get("username"), doc.get("email")];
+    if (doc!.exists) {
+      return [doc.get("name"), doc.get("email")];
     } else {
       return null;
     }
@@ -92,7 +202,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     for (int i = 0; i < _task.length; i++) {
       List<String>? list = await _getUserdetail(_task[i]["ownerId"]);
       _task[i].addEntries({
-        "username": list![0],
+        "name": list![0],
         "email": list[1],
       }.entries);
     }
@@ -110,30 +220,33 @@ class HelpDeskViewModel extends ChangeNotifier {
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
-      "username": list![0],
-      "email": Cryptor.encrypt(list[1], customSeed: seed)[0],
-      "dateCreate": Cryptor.encrypt(DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate), customSeed: seed)[0],
-      "category": Cryptor.encrypt(task.getCategory, customSeed: seed)[0],
-      "priority": Cryptor.encrypt(convertToString(false, task.getPriority), customSeed: seed)[0],
-      "status": Cryptor.encrypt(convertToString(true, task.getStatus), customSeed: seed)[0],
-      "title": Cryptor.encrypt(task.getTitle, customSeed: seed)[0],
-      "detail":Cryptor.encrypt(detail, customSeed: seed)[0] 
+      "name": list![0],
+      "email": list[1],
+      "ownerId": FirebaseAuth.instance.currentUser!.uid,
+      "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
+      "category": task.getCategory,
+      "priority": task.getPriority,
+      "status": task.getStatus,
+      "title": task.getTitle,
+      "detail": detail,
+      "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
     });
     Map<String, dynamic> taskDetail = {
       "id": task.getId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
-      "category": Cryptor.encrypt(task.getCategory, customSeed: seed)[0],
+      "category": task.getCategory,
       "priority": task.getPriority,
       "status": task.getStatus,
-      "title": Cryptor.encrypt(task.getTitle, customSeed: seed)[0],
-      "detail": Cryptor.encrypt(detail, customSeed: seed)[0]
+      "title": task.getTitle,
+      "detail": detail,
+      "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
     };
     taskDetail.addAll({"objectID": objectId!});
-    await _serviceTask.setDocument(docId, taskDetail);
+    await _serviceTicket.setDocument(docId, taskDetail);
   }
 
-  void cleanModel() {
+  void clearModel() {
     _helpDeskModel = HelpDeskMainModel();
     _task = [];
   }
@@ -147,18 +260,18 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task.firstWhere((element) {
     return element.containsValue(taskId);
     })[isStatus ? "status" : "priority"] = value;
-    await _serviceTask.editDocument(docId, {isStatus ? "status" : "priority": value});
+    await _serviceTicket.editDocument(docId, {isStatus ? "status" : "priority": value});
     await _algolia.updateObject(objectId, {
-      isStatus ? "status" : "priority": Cryptor.encrypt(convertToString(isStatus, value), customSeed: seed)[0]
+      isStatus ? "status" : "priority": convertToString(isStatus, value) // TODO change to int value
     });
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
-    QuerySnapshot? query = await _serviceTask.getDocumnetByKeyValuePair(["id"], [id]);
-    if (query!.docs.isNotEmpty) {
-      String docId = query.docs.first.id;
-      String taskId = query.docs.first.get("id");
-      String objectId = query.docs.first.get("objectID");
+    DocumentSnapshot? query = await _serviceTicket.getDocumentById(id);
+    if (query!.exists) {
+      String docId = query.id;
+      String taskId = query.get("id");
+      String objectId = query.get("objectID");
       if (isStatus) {
         _helpDeskModel.getTask.firstWhere((element) {
           return element.getId == taskId;
@@ -177,16 +290,17 @@ class HelpDeskViewModel extends ChangeNotifier {
   Future<void> _addQueryData(DocumentSnapshot snapshot) async {
     Task task = Task(
       snapshot.get("ownerId"),
-      Cryptor.decrypt(snapshot.get("title")),
-      Content(Cryptor.decrypt(snapshot.get("detail"))),
+      snapshot.get("title"),
+      Content(snapshot.get("detail")),
       snapshot.get("priority"),
-      Cryptor.decrypt(snapshot.get("category")),
+      snapshot.get("category"),
       id: snapshot.get("id"),
       dateCreate: snapshot.get("dateCreate").toDate(),
       status: snapshot.get("status")
     );
     _helpDeskModel.addTask(task);
     _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
+    _task[_helpDeskModel.getTask.length-1].addEntries({"docId": snapshot.id}.entries);
   }
 
   void _modifyQueryData(DocumentSnapshot snapshot, int index) {
@@ -216,8 +330,6 @@ class HelpDeskViewModel extends ChangeNotifier {
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.removed) {
         int index = snapshot.docChanges[i].oldIndex;
-        String docId = snapshot.docChanges[i].doc.get("objectID");
-        await _algolia.deleteObject(docId);
         _removeQueryData(index);
       }
     }
@@ -225,8 +337,8 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   Future<void> reconstructSearchResult(List<String> docIds) async {
     for (int i = 0; i < docIds.length; i++) {
-      DocumentSnapshot? doc = await _serviceTask.getDocumentById(docIds[i]);
-      if (doc != null) {
+      DocumentSnapshot? doc = await _serviceTicket.getDocumentById(docIds[i]);
+      if (doc!.exists) {
         _addQueryData(doc);
       }
     }
@@ -237,13 +349,13 @@ class HelpDeskViewModel extends ChangeNotifier {
   HitsSearcher _hitSearch = HitsSearcher(
     applicationID: "LEPUBBA9NX", 
     apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "task");
+    indexName: "ticket");
 
   void initHitSearcher() {
     _hitSearch = HitsSearcher(
     applicationID: "LEPUBBA9NX", 
     apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "task");
+    indexName: "ticket");
     notifyListeners();
   }
 
@@ -251,7 +363,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   HitsSearcher get getHitsSearcher => _hitSearch;
   void setSearchText(String text) {
     if (text.isNotEmpty) {
-      _searchText = Cryptor.encrypt(text, customSeed: seed)[0];
+      _searchText = text;
     } else {
       _searchText = "";
     }

@@ -7,43 +7,24 @@ import 'package:senior_project/core/template_desktop/view_model/template_desktop
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
-Stream? query(String id, int type) {
-  final FirebaseServices service = FirebaseServices("task");
-  if (id.isEmpty) {
-    switch (type) {
-      case 0:
-        return service.listenToDocument();
-      case 1:
-        return service.listenToDocumentByKeyValuePair(["status"], [0]);
-      case 2: 
-        return service.listenToDocumentByKeyValuePair(["status"], [1]);
-      case 3:
-        return service.listenToDocumentByKeyValuePair(["status"], [2]);
-      case 4:
-        return service.listenToDocumentByKeyValuePair(["priority"], [3]);
-      case 5:
-        return service.listenToDocumentByKeyValuePair(["priority"], [2]);
-      case 6:
-        return service.listenToDocumentByKeyValuePair(["priority"], [1]);
-      case 7:
-        return service.listenToDocumentByKeyValuePair(["priority"], [0]);
-      default:
-        return null;
-    }
-  } else {
-    switch (type) {
-      case 0:
-        return service.listenToDocumentByKeyValuePair(["ownerId"], [id]);
-      case 1:
-        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 0]);
-      case 2:
-        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 1]);
-      case 3:
-        return service.listenToDocumentByKeyValuePair(["ownerId", "status"], [id, 2]);
-      default:
-        return null;
-    }
+Stream? query(String id, int type, bool isAdmin) {
+  final FirebaseServices service = FirebaseServices("ticket");
+  if (type == 0) {
+    return service.listenToDocumentByKeyValuePair(
+      [isAdmin ? "adminId" : "ownerId"], 
+      [id],
+    );
+  } 
+  if (type > 3){
+    return service.listenToDocumentByKeyValuePair(
+      [isAdmin ? "adminId" : "ownerId", "priority"], 
+      [id, (type-7).abs()],
+    );
   }
+  return service.listenToDocumentByKeyValuePair(
+    [isAdmin ? "adminId" : "ownerId", "status"], 
+    [id, type-1],
+  );
 }
 
 class TagBarHelpDesk extends StatefulWidget {
@@ -69,8 +50,9 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
 
   @override
   void didChangeDependencies() {
-    context.read<HelpDeskViewModel>().cleanModel();
-    _stream = query(widget.id, widget.index);
+    context.read<HelpDeskViewModel>().clearModel();
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+    _stream = query(widget.id, widget.index, isAdmin);
     super.didChangeDependencies();
   }
 
@@ -134,7 +116,7 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
                                 style: const TextStyle(color: ColorConstant.whiteBlack80),
                               );
                             }
-                            context.read<HelpDeskViewModel>().cleanModel();
+                            context.read<HelpDeskViewModel>().clearModel();
                             return Text(
                               oldAmount.toString(),
                               textAlign: TextAlign.center,
@@ -156,7 +138,7 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
           ),
         ),
         onTap: () {
-          context.read<TemplateDesktopViewModel>().changeState(widget.index, 4);
+          context.read<TemplateDesktopViewModel>().changeState(context, widget.index, 4);
         },
       ),
     );
