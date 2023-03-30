@@ -280,6 +280,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                           await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
                           context.read<HelpDeskViewModel>().clearModel();
                           context.read<HelpDeskViewModel>().clearContentController();
+                          context.read<HelpDeskViewModel>().setIsSafeLoad = true;
                           Navigator.pop(context);
                         }
                       },
