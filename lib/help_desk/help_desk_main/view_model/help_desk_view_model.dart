@@ -29,6 +29,14 @@ class HelpDeskViewModel extends ChangeNotifier {
   List<String> _previousFirst = [];
   DocumentSnapshot? _firestDoc;
   DocumentSnapshot? _lastDoc;
+  bool _isSafeClick = true;
+  bool _isSafeLoad = true;
+
+  set setIsSafeClick(bool state) => _isSafeClick = state;
+  get getIsSafeClick => _isSafeClick;
+
+  set setIsSafeLoad(bool state) => _isSafeLoad = state;
+  get getIsSafeLoad => _isSafeLoad;
 
   DocumentSnapshot? get getFirstDoc => _firestDoc;
   void setFirstDoc(DocumentSnapshot doc) {
@@ -38,10 +46,13 @@ class HelpDeskViewModel extends ChangeNotifier {
   void setLastDoc(DocumentSnapshot doc) {
     _lastDoc = doc;
   }
-  get getPreviousFirstList => _previousFirst;
+  List<String> get getPreviousFirstList => _previousFirst;
   Future<DocumentSnapshot?> get getPreviousFirst async {
     if (_previousFirst.isNotEmpty) {
-      String docId = _previousFirst.removeLast();
+      String docId = _previousFirst.removeAt(_pageNumber-1);
+      if (_pageNumber >= _previousFirst.length) {
+        _previousFirst.removeRange(_pageNumber-1, _previousFirst.length);
+      }
       return await _serviceTicket.getDocumentById(docId);
     } 
     return null;
@@ -49,17 +60,18 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   get getPageNumber => _pageNumber;
   get getIsReverse => _isReverse;
-  set setPageNumber(bool isIncrease) {
-    if (isIncrease) {
-      _pageNumber += 1;
-      _previousFirst.add(_firestDoc!.id);
-    } else {
-      _pageNumber -= 1;
+  set setPageNumber(int index) {
+    if (index > 1) {
+      _pageNumber = index;
     }
     if (_pageNumber == 1) {
       _previousFirst = [];
     }
-    notifyListeners();
+  }
+  set addPreviousFirst(String docId) {
+    if (!_previousFirst.contains(docId)) {
+      _previousFirst.add(_firestDoc!.id);
+    }
   }
 
   void clearContentController() {
@@ -67,6 +79,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     _previousFirst = [];
     _pageNumber = 1;
     _isReverse = false;
+    _isSafeClick = true;
     notifyListeners();
   }
 
@@ -74,22 +87,24 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? get getStartTicket => _startTicket;
   int? get getEndTicket => _endTicket;
   int? get getSelectedTicket => _selectedTicket;
-  void setLoader(bool state, int limit) {
+  set setIsReverse(bool state) {
+    _isReverse = state;
+  }
+  void setLIndicator(bool state, int limit) {
     if (state) {
       _startTicket = _startTicket! + limit;
       _endTicket = (_startTicket! + limit) > _allTicket! 
         ? _allTicket
         : _startTicket! + limit - 1;
-        notifyListeners();
     } else {
       _startTicket = _startTicket! - limit;
       _endTicket = (_startTicket! + limit) > _allTicket! 
         ? _allTicket
         : _startTicket! + limit - 1;
-        notifyListeners();
     }
-    _isReverse = !state;
-    notifyListeners();
+    if (!_isShowMessagePage) {
+      notifyListeners();
+    }
   }
 
   set setSelectedTicket(int index) {
@@ -102,6 +117,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       _startTicket = 1;
       _allTicket = all;
       _isReverse = false;
+      _isSafeClick = true;
       if (_allTicket! < limit) {
         _endTicket = _allTicket; 
       } else {

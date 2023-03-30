@@ -35,7 +35,7 @@ class _ContentState extends State<Content> {
 
     return InkWell(
       onTap: () {
-        context.read<HelpDeskViewModel>().setSelectedTicket = widget.index + 1;
+        context.read<HelpDeskViewModel>().setSelectedTicket = widget.index;
         context.read<ReplyChannelViewModel>().setTaskData = {
           "docId": widget.detail["docId"],
           "id": widget.detail["id"],

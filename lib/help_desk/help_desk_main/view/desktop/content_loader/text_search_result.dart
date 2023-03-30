@@ -90,7 +90,7 @@ class _TextSearchResultState extends State<TextSearchResult> {
                         return SizedBox(
                         width: double.infinity,
                         child: Column(
-                          children: GenerateContent.generateContent(data, widget.contentSize),
+                          children: GenerateContent.generateContent(context, data, widget.contentSize),
                         )
                       );
                     }

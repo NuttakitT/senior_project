@@ -23,6 +23,14 @@ class _ContentLoaderState extends State<ContentLoader> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<HelpDeskViewModel>().setIsSafeClick = false;
+    if (!context.watch<HelpDeskViewModel>().getIsSafeLoad) {
+      context.read<HelpDeskViewModel>().setIsSafeClick = true;
+      List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
+      return Column(
+        children: GenerateContent.generateContent(context, content, widget.contentSize)
+      );
+    }
     context.read<HelpDeskViewModel>().clearModel();
     return StreamBuilder(
       stream: widget.stream,
@@ -34,6 +42,7 @@ class _ContentLoaderState extends State<ContentLoader> {
           if (snapshot.data!.docs.isNotEmpty) {
             context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
             context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
+            context.read<HelpDeskViewModel>().addPreviousFirst = context.read<HelpDeskViewModel>().getFirstDoc!.id;
             return FutureBuilder(
               future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
               builder: (context, futureSnapshot) {
@@ -43,8 +52,10 @@ class _ContentLoaderState extends State<ContentLoader> {
                     builder: (context, _) {
                       List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
                       if (_.connectionState == ConnectionState.done) {
+                        context.read<HelpDeskViewModel>().setIsSafeClick = true;
+                        context.read<HelpDeskViewModel>().setIsSafeLoad = false;
                         return Column(
-                          children: GenerateContent.generateContent(content, widget.contentSize)
+                          children: GenerateContent.generateContent(context, content, widget.contentSize)
                         );
                       }
                       return Container(
@@ -66,6 +77,8 @@ class _ContentLoaderState extends State<ContentLoader> {
               },
             );
           } else {
+            context.read<HelpDeskViewModel>().setIsSafeClick = false;
+            context.read<HelpDeskViewModel>().setIsSafeLoad = false;
             context.read<HelpDeskViewModel>().clearModel();
             return Container(
               height: widget.contentSize,
