@@ -40,11 +40,13 @@ class _RoleManagementViewState extends State<RoleManagementView> {
                 helpdeskadmin: false,
                 home: false,
                 useTemplatescroll: true,
-                content: Column(
-                  children: [
-                    RoleManagementTable(admins: admins),
-                    CategoryTable(categories: categories)
-                  ],
+                content: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      RoleManagementTable(admins: admins),
+                      CategoryTable(categories: categories)
+                    ],
+                  ),
                 ));
           }));
     }
