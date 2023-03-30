@@ -56,17 +56,11 @@ class CategoryDetailTable extends StatelessWidget {
             buildRow([Consts.number, Consts.categoryName, Consts.description],
                 true, false),
             for (int i = 0; i < widget.categories.length; i++) ...[
-              if (i != widget.categories.length - 1)
-                buildRow([
-                  widget.categories[i].number,
-                  widget.categories[i].categoryName,
-                  widget.categories[i].description,
-                ], false, false),
               buildRow([
                 widget.categories[i].number,
                 widget.categories[i].categoryName,
                 widget.categories[i].description,
-              ], false, true),
+              ], false, i == widget.categories.length - 1),
             ]
           ],
         ),
