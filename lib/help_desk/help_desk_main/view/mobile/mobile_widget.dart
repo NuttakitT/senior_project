@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +46,6 @@ class _MobileWidgetState extends State<MobileWidget> {
   final ScrollController _vContraoller = ScrollController();
   final ScrollController _menuController = ScrollController();
   int menuSelected = 0;
-  Stream? _stream;
 
   Widget menu(String name, bool state) {
     return Container(
@@ -85,14 +86,6 @@ class _MobileWidgetState extends State<MobileWidget> {
     context.read<HelpDeskViewModel>().clearSearchText();
     context.read<HelpDeskViewModel>().clearContentController();
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    int tagBarSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
-    String id = context.watch<AppViewModel>().app.getUser.getId;
-    _stream = query(id, tagBarSelected, widget.isAdmin);
-    super.didChangeDependencies();
   }
 
   @override
@@ -311,8 +304,10 @@ class _MobileWidgetState extends State<MobileWidget> {
                         String searchText = context.watch<HelpDeskViewModel>().getSearchText;
                         if (searchText.isEmpty) {
                           context.read<HelpDeskViewModel>().clearModel();
+                          int tagBarSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
+                          String id = context.watch<AppViewModel>().app.getUser.getId;   
                           return StreamBuilder(
-                            stream: _stream,
+                            stream: query(id, tagBarSelected, widget.isAdmin),
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
                                 return const LoaderStatus(text: "Error occurred");
@@ -355,12 +350,13 @@ class _MobileWidgetState extends State<MobileWidget> {
           padding: const EdgeInsets.only(right: 24, bottom: 74),
           child: InkWell(
             onTap: () {
-              Navigator.push(
+              Navigator.pushAndRemoveUntil(
                 context, 
                 MaterialPageRoute(builder: (context) {
                     return CreateTask(isAdmin: widget.isAdmin);
                   }
-                )
+                ), 
+                (route) => false
               );
             },
             child: Container(

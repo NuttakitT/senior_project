@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/mobile/mobile_widget.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
@@ -232,7 +234,16 @@ class _CreateTaskState extends State<CreateTask> {
                       if (title.isNotEmpty && detail.isNotEmpty) {
                         int priorityIndex = priority.indexOf(priorityValue);
                         await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
-                        Navigator.pop(context);
+                        context.read<HelpDeskViewModel>().clearModel();
+                        context.read<HelpDeskViewModel>().setIsSafeLoad = true;
+                        Navigator.pushAndRemoveUntil(
+                          context, 
+                          MaterialPageRoute(builder: (context) {
+                              return HelpDeskMainView(isAdmin: widget.isAdmin);
+                            }
+                          ), 
+                          (route) => false
+                        );
                       }
                     },
                     style: ButtonStyle(
