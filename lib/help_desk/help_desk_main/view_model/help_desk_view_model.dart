@@ -5,10 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/content.dart';
 import 'package:senior_project/core/model/help_desk/task.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
 
 class HelpDeskViewModel extends ChangeNotifier {
@@ -31,6 +33,10 @@ class HelpDeskViewModel extends ChangeNotifier {
   DocumentSnapshot? _lastDoc;
   bool _isSafeClick = true;
   bool _isSafeLoad = true;
+  bool _isMobile = false;
+
+  set setIsMobile(bool state) => _isMobile = state;
+  get getIsMobile => _isMobile;
 
   set setIsSafeClick(bool state) => _isSafeClick = state;
   get getIsSafeClick => _isSafeClick;
@@ -61,7 +67,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   get getPageNumber => _pageNumber;
   get getIsReverse => _isReverse;
   set setPageNumber(int index) {
-    if (index > 1) {
+    if (index >= 1) {
       _pageNumber = index;
     }
     if (_pageNumber == 1) {
@@ -80,7 +86,10 @@ class HelpDeskViewModel extends ChangeNotifier {
     _pageNumber = 1;
     _isReverse = false;
     _isSafeClick = true;
-    notifyListeners();
+    _isSafeLoad = true;
+    if (!_isMobile) {
+      notifyListeners();
+    }
   }
 
   int? get getAllTicket => _allTicket;
@@ -372,6 +381,5 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   void clearSearchText() {
     _searchText = "";
-    notifyListeners();
   }
 }

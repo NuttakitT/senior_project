@@ -26,6 +26,7 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
     double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole;
     bool isLogin = context.watch<AppViewModel>().isLogin;
+    context.read<HelpDeskViewModel>().setIsMobile = isMobileSite;
 
     if (isMobileSite) {
       return TemplateMenuMobile(

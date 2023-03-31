@@ -64,12 +64,6 @@ class _TicketListState extends State<TicketList> {
   ScrollController controller = ScrollController();
   int pageStateNumber = 1;
 
-  // @override
-  // void initState() {
-  //   context.read<HelpDeskViewModel>().clearModel();
-  //   super.initState();
-  // }
-
   @override
   void didChangeDependencies() {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
