@@ -102,6 +102,7 @@ TableRow buildRow(List<dynamic> cells, bool isHeader, bool isLastIndex,
             child: Text(
               cell,
               style: isHeader ? AppFontStyle.wb80B20 : AppFontStyle.wb80R20,
+              overflow: TextOverflow.ellipsis,
             ),
           );
         } else if (cell is List<TopicCategory>) {
