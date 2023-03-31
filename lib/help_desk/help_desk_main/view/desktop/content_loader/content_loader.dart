@@ -77,8 +77,8 @@ class _ContentLoaderState extends State<ContentLoader> {
               },
             );
           } else {
-            context.read<HelpDeskViewModel>().setIsSafeClick = false;
-            context.read<HelpDeskViewModel>().setIsSafeLoad = false;
+            context.read<HelpDeskViewModel>().setIsSafeClick = true;
+            context.read<HelpDeskViewModel>().setIsSafeLoad = true;
             context.read<HelpDeskViewModel>().clearModel();
             return Container(
               height: widget.contentSize,

@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
+import 'package:senior_project/core/template/widget/search_bar.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/mobile/text_search_result_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/mobile/create_task.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/mobile/setting_pop_up.dart';
@@ -18,14 +22,16 @@ Stream? query(String id, int type, bool isAdmin) {
     [isAdmin ? "adminId" : "ownerId"],
     [id], 
     orderingField: 'dateCreate',
-    descending: true
+    descending: true,
+    limit: 100
   );
   }
   return service.listenToDocumentByKeyValuePair(
     [isAdmin ? "adminId" : "ownerId", "status"],
     [id, type-1], 
     orderingField: 'dateCreate',
-    descending: true
+    descending: true,
+    limit: 100
   );
 }
 
@@ -41,7 +47,6 @@ class _MobileWidgetState extends State<MobileWidget> {
   final ScrollController _vContraoller = ScrollController();
   final ScrollController _menuController = ScrollController();
   int menuSelected = 0;
-  Stream? _stream;
 
   Widget menu(String name, bool state) {
     return Container(
@@ -78,12 +83,10 @@ class _MobileWidgetState extends State<MobileWidget> {
   }
 
   @override
-  void didChangeDependencies() {
-    int tagBarSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
-    String id = context.watch<AppViewModel>().app.getUser.getId;
-    context.read<HelpDeskViewModel>().clearModel();
-    _stream = query(id, tagBarSelected, widget.isAdmin);
-    super.didChangeDependencies();
+  void initState() {
+    context.read<HelpDeskViewModel>().clearSearchText();
+    context.read<HelpDeskViewModel>().clearContentController();
+    super.initState();
   }
 
   @override
@@ -96,8 +99,7 @@ class _MobileWidgetState extends State<MobileWidget> {
           Container(
             color: Colors.white,
             padding: EdgeInsets.only(
-                top: 24 + _scaleText(pixelWidth),
-                bottom: 30 + _scaleText(pixelWidth)),
+                top: 24 + _scaleText(pixelWidth)),
             alignment: Alignment.center,
             width: double.infinity,
             child: Stack(
@@ -110,7 +112,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                         ? AlignmentDirectional.centerStart
                         : AlignmentDirectional.center,
                     child: Text(
-                      "Help-desk List",
+                      "Help desk List",
                       style: TextStyle(
                           fontFamily: AppFontStyle.font,
                           fontWeight: FontWeight.w500,
@@ -142,6 +144,18 @@ class _MobileWidgetState extends State<MobileWidget> {
                   return Container();
                 })
               ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                border: Border.all(color: ColorConstant.whiteBlack30),
+                borderRadius: BorderRadius.circular(8)
+              ),
+              alignment: Alignment.center,
+              child: const SearchBar(isHelpDeskPage: true,)
             ),
           ),
           Container(
@@ -257,34 +271,46 @@ class _MobileWidgetState extends State<MobileWidget> {
                   thumbVisibility: true,
                   child: SingleChildScrollView(
                     controller: _vContraoller,
-                    child: StreamBuilder(
-                      stream: _stream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return const LoaderStatus(text: "Error occurred");
-                        } 
-                        if (snapshot.connectionState == ConnectionState.active) {
-                          if (snapshot.data!.docs.isNotEmpty) {
-                            return FutureBuilder(
-                              future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
-                              builder: (context, futureSnapshot) {
-                                if (futureSnapshot.connectionState == ConnectionState.done) {
-                                  List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-                                  return Column(
-                                  children: generateContent(content)
-                                );
-                                }
-                                return Container();
-                              },
-                            );
-                          } else {
-                            context.read<HelpDeskViewModel>().clearModel();
-                            return const LoaderStatus(text: "No task in this section");
-                          }      
-                        } else {
-                          return const LoaderStatus(text: "Loading...");
+                    child: Builder(
+                      builder: (context) {
+                        String searchText = context.watch<HelpDeskViewModel>().getSearchText;
+                        if (searchText.isEmpty) {
+                          context.read<HelpDeskViewModel>().clearModel();
+                          int tagBarSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
+                          String id = context.watch<AppViewModel>().app.getUser.getId;   
+                          return StreamBuilder(
+                            stream: query(id, tagBarSelected, widget.isAdmin),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return const LoaderStatus(text: "Error occurred");
+                              } 
+                              if (snapshot.connectionState == ConnectionState.active) {
+                                if (snapshot.data!.docs.isNotEmpty) {
+                                  return FutureBuilder(
+                                    future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
+                                    builder: (context, futureSnapshot) {
+                                      if (futureSnapshot.connectionState == ConnectionState.done) {
+                                        List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
+                                        return Column(
+                                        children: generateContent(content)
+                                      );
+                                      }
+                                      return Container();
+                                    },
+                                  );
+                                } else {
+                                  context.read<HelpDeskViewModel>().clearModel();
+                                  return const LoaderStatus(text: "No task in this section");
+                                }      
+                              } else {
+                                return const LoaderStatus(text: "Loading...");
+                              }
+                            },
+                          );
                         }
-                      },
+                        context.read<HelpDeskViewModel>().getHitsSearcher.query(searchText);
+                        return const TextSearcResultMobile();
+                      }
                     )
                   ),
                 ),
@@ -296,12 +322,13 @@ class _MobileWidgetState extends State<MobileWidget> {
           padding: const EdgeInsets.only(right: 24, bottom: 74),
           child: InkWell(
             onTap: () {
-              Navigator.push(
+              Navigator.pushAndRemoveUntil(
                 context, 
                 MaterialPageRoute(builder: (context) {
                     return CreateTask(isAdmin: widget.isAdmin);
                   }
-                )
+                ), 
+                (route) => false
               );
             },
             child: Container(

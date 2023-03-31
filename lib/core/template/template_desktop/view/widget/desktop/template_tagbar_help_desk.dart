@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar_helpdesk.dart';
+import 'package:senior_project/core/template/widget/search_bar.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/tagbar_helpdesk.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 //call function from tabtag_help.dart
 class TemplateTagBarHelpDesk extends StatefulWidget {
@@ -40,38 +40,7 @@ class _TemplateTagBarHelpDeskState extends State<TemplateTagBarHelpDesk> {
                     borderRadius: BorderRadius.circular(16)),
                 height: 50,
                 width: 280,
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(right: 4, left: 16),
-                      child: const Icon(
-                        Icons.search_rounded,
-                        color: ColorConstant.whiteBlack30,
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        maxLength: 512,
-                        decoration: const InputDecoration(
-                          hintText: "search...",
-                          hintStyle: TextStyle(
-                              color: ColorConstant.whiteBlack30,
-                              fontSize: 16
-                          ),
-                          counterText: "",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero,
-                            borderSide: BorderSide.none,
-                            gapPadding: 0
-                          )
-                        ),
-                        onChanged: (value) async {
-                          context.read<HelpDeskViewModel>().setSearchText(value);
-                        }, 
-                      ),
-                    ),
-                  ],
-                ),
+                child: const SearchBar(isHelpDeskPage: true,)
               ),
             ),
             Padding(

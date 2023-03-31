@@ -6,14 +6,15 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
-import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/admin_ticket_setting.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/reply_stream.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/set_reply.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/ticket_list.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/body_reply_desktop.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 Stream? query(String id, int type, bool isAdmin, {
   DocumentSnapshot? startDoc,
@@ -59,26 +60,25 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   double contentSize = 56;
-  ScrollController controller = ScrollController();
   int limit = 5;
-
-  void nextTicket(bool isNext) {
-    if (isNext) {
-      context.read<HelpDeskViewModel>().setSelectedTicket = context.read<HelpDeskViewModel>().getSelectedTicket! + 1;
-    } else {
-      context.read<HelpDeskViewModel>().setSelectedTicket = context.read<HelpDeskViewModel>().getSelectedTicket! - 1;
+  ScrollController controller = ScrollController();
+  
+  void nextTicket(bool ishowMesg, bool isNext) {
+    if (!ishowMesg) {
+      context.read<HelpDeskViewModel>().setIndicator(isNext, limit);
+      context.read<HelpDeskViewModel>().setIsReverse = !isNext;
+      context.read<HelpDeskViewModel>().setIsSafeLoad = true;
+      if (isNext) {
+        context.read<HelpDeskViewModel>().setPageNumber = context.read<HelpDeskViewModel>().getPageNumber + 1;
+      } else {
+        context.read<HelpDeskViewModel>().setPageNumber = context.read<HelpDeskViewModel>().getPageNumber - 1;
+      }
     }
-    Map<String, dynamic> ticket = context.read<HelpDeskViewModel>().getTask[context.read<HelpDeskViewModel>().getSelectedTicket! - 1];
-    context.read<ReplyChannelViewModel>().setTaskData = {
-      "docId": ticket["docId"],
-      "id": ticket["id"],
-      "title": ticket["title"],
-      "detail": ticket["detail"],
-      "priority": ticket["priority"],
-      "status": ticket["status"],
-      "category": ticket["category"],
-      "time": ticket["time"]
-    };
+    if (ishowMesg && isNext) {
+      context.read<HelpDeskViewModel>().setSelectedTicket = context.read<HelpDeskViewModel>().getSelectedTicket! + 1;
+    } else if (ishowMesg && !isNext) {
+      context.read<HelpDeskViewModel>().setSelectedTicket = context.read<HelpDeskViewModel>().getSelectedTicket! - 1;
+    } 
   }
 
   Widget _iconLoader(bool isShowMessagePage, int start, int end, int all, int limit) {
@@ -102,16 +102,7 @@ class _BodyState extends State<Body> {
               return IconButton(
                 onPressed: () {
                   if (context.read<HelpDeskViewModel>().getIsSafeClick) {
-                    if (isShowMessagePage) {
-                      if (msgIndex! <= all && msgIndex > 1) {
-                        nextTicket(false);
-                      }
-                    } else {
-                      context.read<HelpDeskViewModel>().setLIndicator(false, limit);
-                      context.read<HelpDeskViewModel>().setIsReverse = true;
-                      context.read<HelpDeskViewModel>().setPageNumber = context.read<HelpDeskViewModel>().getPageNumber - 1;
-                      context.read<HelpDeskViewModel>().setIsSafeLoad = true;
-                    }
+                    nextTicket(isShowMessagePage, false);
                   }
                 }, 
                 icon: const Icon(Icons.keyboard_arrow_left_rounded)
@@ -138,18 +129,9 @@ class _BodyState extends State<Body> {
           builder: (context) {
             if ((!isShowMessagePage && end != all) || (isShowMessagePage && msgIndex != all)) {
               return IconButton(
-                onPressed: () async {
+                onPressed: () {
                   if (context.read<HelpDeskViewModel>().getIsSafeClick) {
-                    if (isShowMessagePage) {
-                      if (msgIndex! >= 1 && msgIndex < all) {
-                        nextTicket(true);
-                      }
-                    } else {
-                      context.read<HelpDeskViewModel>().setLIndicator(true, limit);
-                      context.read<HelpDeskViewModel>().setIsReverse = false;
-                      context.read<HelpDeskViewModel>().setPageNumber = context.read<HelpDeskViewModel>().getPageNumber + 1;
-                      context.read<HelpDeskViewModel>().setIsSafeLoad = true;
-                    }
+                    nextTicket(isShowMessagePage, true);
                   }
                 }, 
                 icon: const Icon(Icons.keyboard_arrow_right_rounded)
@@ -159,17 +141,6 @@ class _BodyState extends State<Body> {
           },
         ),
       ],
-    );
-  }
-
-  Widget loadingWidget(double screenHeight) {
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: screenHeight < 500 ? 500 : screenHeight - 300
-      ),
-      color: Colors.white,
-      alignment: Alignment.center,
-      child: const LoaderStatus(text: "Loading..")
     );
   }
 
@@ -187,6 +158,17 @@ class _BodyState extends State<Body> {
           child: const BodyReplyDesktop()
         ),
       )
+    );
+  }
+
+  Widget loadingWidget(double screenHeight) {
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: screenHeight < 500 ? 500 : screenHeight - 300
+      ),
+      color: Colors.white,
+      alignment: Alignment.center,
+      child: const LoaderStatus(text: "Loading..")
     );
   }
 
@@ -240,6 +222,9 @@ class _BodyState extends State<Body> {
                                 onPressed: () {
                                   if (isShowMesg) {
                                     context.read<HelpDeskViewModel>().setShowMessagePageState(false);
+                                    context.read<HelpDeskViewModel>().clearModel();
+                                    context.read<HelpDeskViewModel>().setIsSafeClick = false;
+                                    context.read<HelpDeskViewModel>().setIsSafeLoad = true;
                                   } else {
                                     context.read<HelpDeskViewModel>().clearContentController();
                                   }
@@ -270,48 +255,58 @@ class _BodyState extends State<Body> {
                   Builder(
                     builder: (context) {
                       if (isShowMesg) {
-                        if (context.watch<HelpDeskViewModel>().getSelectedTicket != null) {
-                          int selectedTicket = context.watch<HelpDeskViewModel>().getSelectedTicket!;
-                          context.read<HelpDeskViewModel>().setPageNumber = (selectedTicket / (limit)).ceil();
-                          context.read<HelpDeskViewModel>().addPreviousFirst = context.watch<HelpDeskViewModel>().getFirstDoc!.id;
-                        }
+                        int selectedTicket = context.watch<HelpDeskViewModel>().getSelectedTicket!;
+                        int calculatedPage = (selectedTicket / (limit)).ceil();
+                        int pageNumber = context.read<HelpDeskViewModel>().getPageNumber;
+                        context.read<HelpDeskViewModel>().addPreviousFirst = context.read<HelpDeskViewModel>().getFirstDoc!.id;
                         context.read<HelpDeskViewModel>().setIsReverse = true;
-                        if (context.read<HelpDeskViewModel>().getSelectedTicket! >= context.read<HelpDeskViewModel>().getEndTicket!) {
-                          context.read<HelpDeskViewModel>().setIsSafeClick = false;
-                          return StreamBuilder(
+                        if (calculatedPage == pageNumber) {
+                          SetReply.setReplyPageData(context, limit);
+                        } 
+                        if (calculatedPage > pageNumber) {
+                          if (calculatedPage > pageNumber) {
+                            context.read<HelpDeskViewModel>().setIndicator(true, limit);
+                          } else if ((selectedTicket / (limit)).ceil() < pageNumber) {
+                            context.read<HelpDeskViewModel>().setIndicator(false, limit);
+                          }
+                          context.read<HelpDeskViewModel>().setPageNumber = calculatedPage;
+                          return ReplyStream(
                             stream: query(
-                                uid, 
-                                tagBarSelected, 
-                                isAdmin, 
-                                startDoc: context.read<HelpDeskViewModel>().getLastDoc,
-                                limit: limit
-                              ),
-                            builder: (context, streamSnapshot) {
-                              if (streamSnapshot.connectionState == ConnectionState.active) {
-                                if (streamSnapshot.data!.docs.isNotEmpty) {
-                                  context.read<HelpDeskViewModel>().setFirstDoc(streamSnapshot.data.docs.first);
-                                  context.read<HelpDeskViewModel>().setLastDoc(streamSnapshot.data.docs.last);
-                                  return FutureBuilder(
-                                    future: context.read<HelpDeskViewModel>().reconstructQueryData(streamSnapshot.data as QuerySnapshot),
-                                    builder: (context, futureSnapshot) {
-                                      if (futureSnapshot.connectionState == ConnectionState.done) {
-                                        return FutureBuilder(
-                                          future: context.read<HelpDeskViewModel>().formatTaskDetail(),
-                                          builder: (context, _) {
-                                            if (_.connectionState == ConnectionState.done) {
-                                              context.read<HelpDeskViewModel>().setIsSafeClick = true;
-                                              return bodyReply(screenHeight);
-                                            }
-                                            return loadingWidget(screenHeight);
-                                          },
-                                        );
-                                      }
-                                      return loadingWidget(screenHeight);
-                                    },
-                                  );
-                                }
-                                context.read<HelpDeskViewModel>().setIsSafeClick = true;
-                                return bodyReply(screenHeight);
+                              uid, 
+                              tagBarSelected, 
+                              isAdmin, 
+                              startDoc: context.watch<HelpDeskViewModel>().getLastDoc,
+                              limit: limit,
+                            ), 
+                            limit: limit,
+                            body: bodyReply(screenHeight),
+                            loder: loadingWidget(screenHeight),
+                          );
+                        } 
+                        else if (calculatedPage < pageNumber) {
+                          if (calculatedPage > pageNumber) {
+                            context.read<HelpDeskViewModel>().setIndicator(true, limit);
+                          } else if ((selectedTicket / (limit)).ceil() < pageNumber) {
+                            context.read<HelpDeskViewModel>().setIndicator(false, limit);
+                          }
+                          context.read<HelpDeskViewModel>().setPageNumber = calculatedPage;
+                          return FutureBuilder(
+                            future: context.read<HelpDeskViewModel>().getPreviousFirst,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done) {
+                                return ReplyStream(
+                                  stream: query(
+                                    uid, 
+                                    tagBarSelected, 
+                                    isAdmin, 
+                                    startDoc: snapshot.data,
+                                    limit: limit,
+                                    isReverse: true
+                                  ), 
+                                  limit: limit, 
+                                  body: bodyReply(screenHeight), 
+                                  loder: loadingWidget(screenHeight),
+                                );
                               }
                               return loadingWidget(screenHeight);
                             },

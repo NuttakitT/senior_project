@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
-import 'package:senior_project/core/template_mobile/view/template_menu_mobile.dart';
+import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/body.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/header.dart';
@@ -26,6 +26,7 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
     double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole;
     bool isLogin = context.watch<AppViewModel>().isLogin;
+    context.read<HelpDeskViewModel>().setIsMobile = isMobileSite;
 
     if (isMobileSite) {
       return TemplateMenuMobile(

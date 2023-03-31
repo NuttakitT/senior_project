@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/generate_content.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
@@ -17,10 +17,20 @@ class TextSearchResult extends StatefulWidget {
 
 class _TextSearchResultState extends State<TextSearchResult> {
   @override
+  void initState() {
+    context.read<HelpDeskViewModel>().initHitSearcher();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String id = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+    context.read<HelpDeskViewModel>().setIsSafeLoad = false;
+    context.read<HelpDeskViewModel>().getHitsSearcher.query(
+      context.watch<HelpDeskViewModel>().getSearchText
+    );
     
     return StreamBuilder(
       stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
@@ -64,6 +74,8 @@ class _TextSearchResultState extends State<TextSearchResult> {
               }
             }
             if (docs.isEmpty) {
+              context.read<HelpDeskViewModel>().setIsSafeLoad = true;
+              context.read<HelpDeskViewModel>().setPageNumber = 1;
               return Container(
                 height: widget.contentSize,
                 width: double.infinity,
@@ -78,41 +90,56 @@ class _TextSearchResultState extends State<TextSearchResult> {
               );
             }
             context.read<HelpDeskViewModel>().clearModel();
+            context.read<HelpDeskViewModel>().setIsSafeLoad = true;
+            context.read<HelpDeskViewModel>().setPageNumber = 1;
             return FutureBuilder(
               future: context.read<HelpDeskViewModel>().reconstructSearchResult(docs),
               builder: ((context, futureSnapshot) {
                 if (futureSnapshot.connectionState == ConnectionState.done) {
                   List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
                   return FutureBuilder(
-                  future: context.read<HelpDeskViewModel>().formatTaskDetail(),
-                  builder: (context, _) {
-                    if (_.connectionState == ConnectionState.done) {
-                        return SizedBox(
+                    future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+                    builder: (context, _) {
+                      if (_.connectionState == ConnectionState.done) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              children: GenerateContent.generateContent(context, data, widget.contentSize),
+                            )
+                          );
+                      }
+                      return Container(
+                        height: widget.contentSize,
                         width: double.infinity,
-                        child: Column(
-                          children: GenerateContent.generateContent(context, data, widget.contentSize),
-                        )
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            bottom: BorderSide(color: ColorConstant.whiteBlack30),
+                          )
+                        ),
+                        alignment: Alignment.center,
+                        child: const LoaderStatus(text: "Loading...")
                       );
-                    }
-                    return Container(
-                      height: widget.contentSize,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        border: Border(
-                          bottom: BorderSide(color: ColorConstant.whiteBlack30),
-                        )
-                      ),
-                      alignment: Alignment.center,
-                      child: const LoaderStatus(text: "Loading...")
-                    );
-                  },
-                );                         
+                    },
+                  );                         
                 }
-                return Container();
+                return Container(
+                  height: widget.contentSize,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      bottom: BorderSide(color: ColorConstant.whiteBlack30),
+                    )
+                  ),
+                  alignment: Alignment.center,
+                  child: const LoaderStatus(text: "Loading...")
+                );
               }),
             );
           }
+          context.read<HelpDeskViewModel>().setIsSafeLoad = true;
+          context.read<HelpDeskViewModel>().setPageNumber = 1;
           return Container(
             height: widget.contentSize,
             width: double.infinity,

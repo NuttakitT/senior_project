@@ -31,6 +31,10 @@ class HelpDeskViewModel extends ChangeNotifier {
   DocumentSnapshot? _lastDoc;
   bool _isSafeClick = true;
   bool _isSafeLoad = true;
+  bool _isMobile = false;
+
+  set setIsMobile(bool state) => _isMobile = state;
+  get getIsMobile => _isMobile;
 
   set setIsSafeClick(bool state) => _isSafeClick = state;
   get getIsSafeClick => _isSafeClick;
@@ -61,14 +65,14 @@ class HelpDeskViewModel extends ChangeNotifier {
   get getPageNumber => _pageNumber;
   get getIsReverse => _isReverse;
   set setPageNumber(int index) {
-    if (index > 1) {
+    if (index >= 1) {
       _pageNumber = index;
-    }
-    if (_pageNumber == 1) {
-      _previousFirst = [];
     }
   }
   set addPreviousFirst(String docId) {
+    if (_pageNumber == 1) {
+      _previousFirst = [];
+    }
     if (!_previousFirst.contains(docId)) {
       _previousFirst.add(_firestDoc!.id);
     }
@@ -80,7 +84,10 @@ class HelpDeskViewModel extends ChangeNotifier {
     _pageNumber = 1;
     _isReverse = false;
     _isSafeClick = true;
-    notifyListeners();
+    _isSafeLoad = true;
+    if (!_isMobile) {
+      notifyListeners();
+    }
   }
 
   int? get getAllTicket => _allTicket;
@@ -90,7 +97,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   set setIsReverse(bool state) {
     _isReverse = state;
   }
-  void setLIndicator(bool state, int limit) {
+  void setIndicator(bool state, int limit) {
     if (state) {
       _startTicket = _startTicket! + limit;
       _endTicket = (_startTicket! + limit) > _allTicket! 
@@ -262,7 +269,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     })[isStatus ? "status" : "priority"] = value;
     await _serviceTicket.editDocument(docId, {isStatus ? "status" : "priority": value});
     await _algolia.updateObject(objectId, {
-      isStatus ? "status" : "priority": convertToString(isStatus, value) // TODO change to int value
+      isStatus ? "status" : "priority": value
     });
   }
 
@@ -318,7 +325,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task.removeAt(index);
   }
 
-  Future<void> reconstructQueryData(QuerySnapshot snapshot) async {
+  Future<void> reconstructQueryData(dynamic snapshot) async {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.added) {
@@ -356,7 +363,6 @@ class HelpDeskViewModel extends ChangeNotifier {
     applicationID: "LEPUBBA9NX", 
     apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
     indexName: "ticket");
-    notifyListeners();
   }
 
   get getSearchText => _searchText;
@@ -372,6 +378,5 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   void clearSearchText() {
     _searchText = "";
-    notifyListeners();
   }
 }
