@@ -7,22 +7,43 @@ import '../model/role_management_model.dart';
 class RoleManagementViewModel extends ChangeNotifier {
   final List<Admin> _admins = [
     Admin(
+        userId: "32",
         firstName: "firstName",
         lastName: "lastName",
-        email: "email",
+        email: "emailemailemailemailemail",
         role: "role",
-        responsibility: ["นอน", "ปลูกผัก"]),
+        responsibility: [
+          TopicCategory(
+              number: "01", categoryName: "นอน", description: "bvjoevbwo"),
+          TopicCategory(
+              number: "02", categoryName: "ปลูกผัก", description: "bvjoevbwo")
+        ]),
     Admin(
+        userId: "33",
         firstName: "firstName",
         lastName: "lastName",
         email: "email",
         role: "role",
-        responsibility: ["ถูพื้น", "ล้างจาน"]),
+        responsibility: [
+          TopicCategory(
+              number: "03333333",
+              categoryName: "ถูพื้นถูพื้นถูพื้นถูพื้นถูพื้นถูพื้นถูพื้น",
+              description: "bvjoevbwo"),
+          TopicCategory(
+              number: "04", categoryName: "ล้างจาน", description: "bvjoevbwo")
+        ]),
   ];
 
   final List<TopicCategory> _categories = [
-    TopicCategory(number: "01", categoryName: "www", description: "bvjoevbwo")
+    TopicCategory(number: "01", categoryName: "นอน", description: "bvjoevbwo"),
+    TopicCategory(
+        number: "02", categoryName: "ปลูกผัก", description: "bvjoevbwo"),
+    TopicCategory(
+        number: "03", categoryName: "ถูพื้น", description: "bvjoevbwo"),
+    TopicCategory(
+        number: "04", categoryName: "ล้างจาน", description: "bvjoevbwo"),
   ];
+  get categories => _categories;
 
   // Role management
   Future<List<Admin>> getAdmins() async {
@@ -33,7 +54,8 @@ class RoleManagementViewModel extends ChangeNotifier {
     return false;
   }
 
-  Future<void> changeResponsibility() async {}
+  Future<void> changeResponsibility(
+      List<TopicCategory> newResponsibility) async {}
 
   void setSearchText(String text) {
     // TODO: make search text

@@ -26,25 +26,24 @@ class _RoleManagementViewState extends State<RoleManagementView> {
       return FutureBuilder(
           future: context.read<RoleManagementViewModel>().fetchPage(),
           builder: ((context, snapshot) {
-            print("snapshotdata: ${snapshot.data}");
             if (snapshot.hasError) {
               return Text('Has error ${snapshot.error}');
             }
             final admins = snapshot.data?.admins ?? [];
-            print(admins);
             final categories = snapshot.data?.categories ?? [];
-            print(categories);
 
             return TemplateDesktop(
                 helpdesk: false,
                 helpdeskadmin: false,
                 home: false,
                 useTemplatescroll: true,
-                content: Column(
-                  children: [
-                    RoleManagementTable(admins: admins),
-                    CategoryTable(categories: categories)
-                  ],
+                content: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      RoleManagementTable(admins: admins),
+                      CategoryTable(categories: categories)
+                    ],
+                  ),
                 ));
           }));
     }
