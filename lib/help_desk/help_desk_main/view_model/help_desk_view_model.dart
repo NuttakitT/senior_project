@@ -53,7 +53,6 @@ class HelpDeskViewModel extends ChangeNotifier {
   List<String> get getPreviousFirstList => _previousFirst;
   Future<DocumentSnapshot?> get getPreviousFirst async {
     if (_previousFirst.isNotEmpty) {
-      print(_pageNumber);
       String docId = _previousFirst.removeAt(_pageNumber-1);
       if (_pageNumber >= _previousFirst.length) {
         _previousFirst.removeRange(_pageNumber-1, _previousFirst.length);

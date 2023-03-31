@@ -15,7 +15,6 @@ import 'package:senior_project/help_desk/help_desk_main/view/desktop/ticket_list
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/body_reply_desktop.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 Stream? query(String id, int type, bool isAdmin, {
   DocumentSnapshot? startDoc,
@@ -261,7 +260,6 @@ class _BodyState extends State<Body> {
                         int pageNumber = context.read<HelpDeskViewModel>().getPageNumber;
                         context.read<HelpDeskViewModel>().addPreviousFirst = context.read<HelpDeskViewModel>().getFirstDoc!.id;
                         context.read<HelpDeskViewModel>().setIsReverse = true;
-                        print(context.watch<HelpDeskViewModel>().getFirstDoc!.id);
                         if (calculatedPage == pageNumber) {
                           SetReply.setReplyPageData(context, limit);
                         } 

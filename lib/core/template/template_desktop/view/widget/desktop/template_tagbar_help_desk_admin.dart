@@ -4,7 +4,6 @@ import 'package:senior_project/core/template/widget/search_bar.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/tagbar_helpdesk.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 //call function from tabtag_help.dart
 class TemplateTagBarHelpDeskAdmin extends StatefulWidget {
