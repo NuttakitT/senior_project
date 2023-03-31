@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/role_management/view/widgets/category_table.dart';
 import 'package:senior_project/role_management/view/widgets/role_management_table.dart';
 import 'package:senior_project/role_management/view_model/role_management_view_model.dart';

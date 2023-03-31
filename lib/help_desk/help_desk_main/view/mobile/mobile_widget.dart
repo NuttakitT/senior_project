@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
+import 'package:senior_project/core/template/widget/search_bar.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/mobile/text_search_result_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
@@ -148,42 +149,13 @@ class _MobileWidgetState extends State<MobileWidget> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: Container(
-              height: 40,
+              height: 50,
               decoration: BoxDecoration(
                 border: Border.all(color: ColorConstant.whiteBlack30),
                 borderRadius: BorderRadius.circular(8)
               ),
-              child: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 4, left: 16),
-                    child: Icon(
-                      Icons.search_rounded,
-                      color: ColorConstant.whiteBlack30,
-                    ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        hintText: "search...",
-                        hintStyle: TextStyle(
-                          color: ColorConstant.whiteBlack40,
-                          fontSize: 14
-                        ),
-                        counterText: "",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.zero,
-                          borderSide: BorderSide.none,
-                          gapPadding: 0
-                        )
-                      ),
-                      onChanged: (value) { 
-                        context.read<HelpDeskViewModel>().setSearchText(value);
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              alignment: Alignment.center,
+              child: const SearchBar(isHelpDeskPage: true,)
             ),
           ),
           Container(

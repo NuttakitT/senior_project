@@ -363,7 +363,6 @@ class HelpDeskViewModel extends ChangeNotifier {
     applicationID: "LEPUBBA9NX", 
     apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
     indexName: "ticket");
-    notifyListeners();
   }
 
   get getSearchText => _searchText;

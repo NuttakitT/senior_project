@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/core/template_desktop/view/widget/desktop/main_menu.dart';
-import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_help_desk_admin.dart';
-import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_help_desk.dart';
-import 'package:senior_project/core/template_desktop/view/widget/desktop/template_tagbar_home.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/main_menu.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/template_tagbar_help_desk_admin.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/template_tagbar_help_desk.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/template_tagbar_home.dart';
 
 class TemplateDesktop extends StatefulWidget {
   final bool helpdeskadmin;

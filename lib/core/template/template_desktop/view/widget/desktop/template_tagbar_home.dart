@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/core/template_desktop/view/widget/desktop/tagbar.dart';
+import 'package:senior_project/core/template/widget/search_bar.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/tagbar.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/core/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 
 //call function from tagbar.dart
 class TemplateTagBarHome extends StatefulWidget {
@@ -35,26 +36,7 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
                     borderRadius: BorderRadius.circular(16)),
                 height: 40,
                 width: 280,
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(right: 4, left: 16),
-                      child: const Icon(
-                        Icons.search_rounded,
-                        color: ColorConstant.whiteBlack30,
-                      ),
-                    ),
-                    const Expanded(
-                      child: TextField(
-                        decoration: InputDecoration.collapsed(
-                            hintText: "search...",
-                            hintStyle: TextStyle(
-                                color: ColorConstant.whiteBlack30,
-                                fontSize: 16)),
-                      ),
-                    ),
-                  ],
-                ),
+                child: const SearchBar(isHelpDeskPage: false,)
               ),
             ),
             Container(
