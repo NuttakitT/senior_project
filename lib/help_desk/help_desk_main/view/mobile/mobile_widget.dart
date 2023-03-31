@@ -18,14 +18,16 @@ Stream? query(String id, int type, bool isAdmin) {
     [isAdmin ? "adminId" : "ownerId"],
     [id], 
     orderingField: 'dateCreate',
-    descending: true
+    descending: true,
+    limit: 100
   );
   }
   return service.listenToDocumentByKeyValuePair(
     [isAdmin ? "adminId" : "ownerId", "status"],
     [id, type-1], 
     orderingField: 'dateCreate',
-    descending: true
+    descending: true,
+    limit: 100
   );
 }
 
