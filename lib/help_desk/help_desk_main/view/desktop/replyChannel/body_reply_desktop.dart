@@ -185,51 +185,71 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                   fontWeight: FontWeight.bold),
                             )),
                       ),
-                      Container(
-                        constraints: const BoxConstraints(minHeight: 300),
-                        height: screenHeight - 560,
-                        decoration: const BoxDecoration(color: ColorConstant.whiteBlack5),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: StreamBuilder(
-                          stream: query(docId),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.active) {
-                              if (snapshot.data.docs.isNotEmpty) {
-                                context.read<ReplyChannelViewModel>().reconstructData(snapshot.data);
-                                List<Map<String, dynamic>> data = context.watch<ReplyChannelViewModel>().getReply(userId);
-                                return ListView.builder(
-                                  itemCount: data.length,
-                                  itemBuilder: (context, index) => Message(
-                                    isSender:  data[index]["isSender"],
-                                    text: data[index]["text"],
-                                    isMobile: false,
-                                    time: data[index]["time"],
-                                  ),
+                      StreamBuilder(
+                        stream: FirebaseServices("ticket").listenToDocument(docId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState != ConnectionState.active) {
+                            return Container();
+                          }
+                          return Container(
+                            constraints: const BoxConstraints(minHeight: 300),
+                            height: snapshot.data!.get("status") != 2  
+                              ? screenHeight - 560
+                              : screenHeight - 496,
+                            decoration: const BoxDecoration(color: ColorConstant.whiteBlack5),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: StreamBuilder(
+                              stream: query(docId),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.active) {
+                                  if (snapshot.data.docs.isNotEmpty) {
+                                    context.read<ReplyChannelViewModel>().reconstructData(snapshot.data);
+                                    List<Map<String, dynamic>> data = context.watch<ReplyChannelViewModel>().getReply(userId);
+                                    return ListView.builder(
+                                      itemCount: data.length,
+                                      itemBuilder: (context, index) => Message(
+                                        isSender:  data[index]["isSender"],
+                                        text: data[index]["text"],
+                                        isMobile: false,
+                                        time: data[index]["time"],
+                                      ),
+                                    );
+                                  }
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 16),
+                                    child: Container(
+                                      width: double.infinity,
+                                      alignment: Alignment.topCenter,
+                                      child: const Text("No messages in this ticket")
+                                    ),
+                                  );
+                                }
+                                return Center(
+                                  child: Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle
+                                    ),
+                                    child: const CircularProgressIndicator()
+                                  )
                                 );
-                              }
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 16),
-                                child: Container(
-                                  width: double.infinity,
-                                  alignment: Alignment.topCenter,
-                                  child: const Text("No messages in this ticket")
-                                ),
-                              );
-                            }
-                            return Center(
-                              child: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle
-                                ),
-                                child: const CircularProgressIndicator()
-                              )
-                            );
-                          },
-                        )
+                              },
+                            )
+                          );
+                        }
                       ),
-                      const ChatInput(),
+                      StreamBuilder(
+                        stream: FirebaseServices("ticket").listenToDocument(docId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState != ConnectionState.active) {
+                            return Container();
+                          }
+                          if (snapshot.data!.get("status") != 2) {
+                            return const ChatInput();
+                          }
+                          return Container();
+                      })
                     ],
                   ),
                 ),
