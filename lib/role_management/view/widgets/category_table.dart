@@ -85,6 +85,7 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex) {
           child: Text(
             cell,
             style: isHeader ? AppFontStyle.wb80B20 : AppFontStyle.wb80R20,
+            overflow: TextOverflow.ellipsis,
           ),
         );
       }).toList());

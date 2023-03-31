@@ -10,7 +10,7 @@ class RoleManagementViewModel extends ChangeNotifier {
         userId: "32",
         firstName: "firstName",
         lastName: "lastName",
-        email: "email",
+        email: "emailemailemailemailemail",
         role: "role",
         responsibility: [
           TopicCategory(
@@ -26,7 +26,9 @@ class RoleManagementViewModel extends ChangeNotifier {
         role: "role",
         responsibility: [
           TopicCategory(
-              number: "03", categoryName: "ถูพื้น", description: "bvjoevbwo"),
+              number: "03333333",
+              categoryName: "ถูพื้นถูพื้นถูพื้นถูพื้นถูพื้นถูพื้นถูพื้น",
+              description: "bvjoevbwo"),
           TopicCategory(
               number: "04", categoryName: "ล้างจาน", description: "bvjoevbwo")
         ]),
