@@ -76,6 +76,7 @@ class _TextSearcResultMobileState extends State<TextSearcResultMobile> {
               }),
             );
           }
+          return const LoaderStatus(text: "No result");
         }
         return const LoaderStatus(text: "Loading...");
       },
