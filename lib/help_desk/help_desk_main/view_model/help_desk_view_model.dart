@@ -53,6 +53,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   List<String> get getPreviousFirstList => _previousFirst;
   Future<DocumentSnapshot?> get getPreviousFirst async {
     if (_previousFirst.isNotEmpty) {
+      print(_pageNumber);
       String docId = _previousFirst.removeAt(_pageNumber-1);
       if (_pageNumber >= _previousFirst.length) {
         _previousFirst.removeRange(_pageNumber-1, _previousFirst.length);
@@ -68,11 +69,11 @@ class HelpDeskViewModel extends ChangeNotifier {
     if (index >= 1) {
       _pageNumber = index;
     }
+  }
+  set addPreviousFirst(String docId) {
     if (_pageNumber == 1) {
       _previousFirst = [];
     }
-  }
-  set addPreviousFirst(String docId) {
     if (!_previousFirst.contains(docId)) {
       _previousFirst.add(_firestDoc!.id);
     }
@@ -97,7 +98,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   set setIsReverse(bool state) {
     _isReverse = state;
   }
-  void setLIndicator(bool state, int limit) {
+  void setIndicator(bool state, int limit) {
     if (state) {
       _startTicket = _startTicket! + limit;
       _endTicket = (_startTicket! + limit) > _allTicket! 
@@ -325,7 +326,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task.removeAt(index);
   }
 
-  Future<void> reconstructQueryData(QuerySnapshot snapshot) async {
+  Future<void> reconstructQueryData(dynamic snapshot) async {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.added) {
