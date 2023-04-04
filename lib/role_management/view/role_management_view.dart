@@ -4,9 +4,7 @@ import 'package:senior_project/core/template/template_desktop/view/page/template
 import 'package:senior_project/role_management/view/widgets/category_table.dart';
 import 'package:senior_project/role_management/view/widgets/role_management_table.dart';
 import 'package:senior_project/role_management/view_model/role_management_view_model.dart';
-
 import '../../core/view_model/app_view_model.dart';
-import '../model/role_management_model.dart';
 
 class RoleManagementView extends StatefulWidget {
   final bool isAdmin;

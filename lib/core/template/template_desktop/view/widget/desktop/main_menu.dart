@@ -235,7 +235,7 @@ class _MainMenuState extends State<MainMenu> {
       padding: const EdgeInsets.only(left: 80),
       child: Builder(
         builder: (context) {
-          if (screenWidth < 935) {
+          if (screenWidth < 1025) {
             return Scrollbar(
               controller: _controller,
               child: SingleChildScrollView(

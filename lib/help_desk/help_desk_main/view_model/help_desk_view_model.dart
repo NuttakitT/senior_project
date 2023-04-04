@@ -1,5 +1,4 @@
 // ignore_for_file: depend_on_referenced_packages, prefer_final_fields
-import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
