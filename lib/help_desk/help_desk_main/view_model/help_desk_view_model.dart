@@ -350,33 +350,4 @@ class HelpDeskViewModel extends ChangeNotifier {
       }
     }
   }
-
-  // ---------------------------------- Text Search ----------------------------
-  String _searchText = "";
-  HitsSearcher _hitSearch = HitsSearcher(
-    applicationID: "LEPUBBA9NX", 
-    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "ticket");
-
-  void initHitSearcher() {
-    _hitSearch = HitsSearcher(
-    applicationID: "LEPUBBA9NX", 
-    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "ticket");
-  }
-
-  get getSearchText => _searchText;
-  HitsSearcher get getHitsSearcher => _hitSearch;
-  void setSearchText(String text) {
-    if (text.isNotEmpty) {
-      _searchText = text;
-    } else {
-      _searchText = "";
-    }
-    notifyListeners();
-  } 
-
-  void clearSearchText() {
-    _searchText = "";
-  }
 }

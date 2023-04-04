@@ -8,6 +8,7 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/widget/search_bar.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/mobile/text_search_result_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/mobile/create_task.dart';
@@ -84,7 +85,7 @@ class _MobileWidgetState extends State<MobileWidget> {
 
   @override
   void initState() {
-    context.read<HelpDeskViewModel>().clearSearchText();
+    context.read<TextSearch>().clearSearchText();
     context.read<HelpDeskViewModel>().clearContentController();
     super.initState();
   }
@@ -273,7 +274,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                     controller: _vContraoller,
                     child: Builder(
                       builder: (context) {
-                        String searchText = context.watch<HelpDeskViewModel>().getSearchText;
+                        String searchText = context.watch<TextSearch>().getSearchText;
                         if (searchText.isEmpty) {
                           context.read<HelpDeskViewModel>().clearModel();
                           int tagBarSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
@@ -308,7 +309,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                             },
                           );
                         }
-                        context.read<HelpDeskViewModel>().getHitsSearcher.query(searchText);
+                        context.read<TextSearch>().getHitsSearcher.query(searchText);
                         return const TextSearcResultMobile();
                       }
                     )

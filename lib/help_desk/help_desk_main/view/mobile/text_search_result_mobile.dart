@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/mobile/ticket_card.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -28,7 +29,7 @@ class _TextSearcResultMobileState extends State<TextSearcResultMobile> {
     int menuSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
 
     return StreamBuilder(
-      stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
+      stream: context.watch<TextSearch>().getHitsSearcher.responses,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const LoaderStatus(text: "Error occurred");

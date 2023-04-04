@@ -37,6 +37,10 @@ class RoleManagementViewModel extends ChangeNotifier {
         ]),
   ];
 
+  void initModel() {
+    _model = RoleManagementModel();
+  }
+
   List<TopicCategory> get getCategories => _model.getCategory;
 
   // Role management

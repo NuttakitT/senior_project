@@ -5,6 +5,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/content_loader.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/text_search_result.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
@@ -96,7 +97,7 @@ class _TicketListState extends State<TicketList> {
           scrollDirection: Axis.vertical,
           child: Builder(
             builder: (context) {
-              String searchText = context.watch<HelpDeskViewModel>().getSearchText;
+              String searchText = context.watch<TextSearch>().getSearchText;
               if (searchText.isEmpty) {
                 return Builder(
                   builder: (context) {

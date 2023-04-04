@@ -18,6 +18,12 @@ class RoleManagementView extends StatefulWidget {
 
 class _RoleManagementViewState extends State<RoleManagementView> {
   @override
+  void initState() {
+    context.read<RoleManagementViewModel>().initModel();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isMobileSite = context
         .watch<AppViewModel>()

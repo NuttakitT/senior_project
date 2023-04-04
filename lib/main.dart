@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_mobile/view_model/template_mobile_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
@@ -29,6 +30,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ReplyChannelViewModel()),
         ChangeNotifierProvider(create: (context) => TeacherContactViewModel()),
         ChangeNotifierProvider(create: (context) => RoleManagementViewModel()),
+        ChangeNotifierProvider(create: (context) => TextSearch()),
       ],
       child: const MyApp(),
     ),
