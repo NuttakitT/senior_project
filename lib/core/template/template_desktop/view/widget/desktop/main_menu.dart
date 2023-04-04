@@ -8,6 +8,7 @@ import 'package:senior_project/core/template/template_desktop/view/widget/deskto
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
+import 'package:senior_project/role_management/view/role_management_view.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -110,7 +111,13 @@ class _MainMenuState extends State<MainMenu> {
                           context
                               .read<TemplateDesktopViewModel>()
                               .changeState(context, 3, 1);
-                          // TODO link to Role Management
+                          Navigator.pushAndRemoveUntil(
+                            context, 
+                            MaterialPageRoute(builder: (context) {
+                              return RoleManagementView(isAdmin: isAdmin);
+                            }), 
+                            (route) => false
+                          );
                         },
                       ),
                     );

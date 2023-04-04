@@ -9,7 +9,7 @@ import '../../core/view_model/app_view_model.dart';
 import '../model/role_management_model.dart';
 
 class RoleManagementView extends StatefulWidget {
-  final isAdmin;
+  final bool isAdmin;
   const RoleManagementView({super.key, required this.isAdmin});
 
   @override
