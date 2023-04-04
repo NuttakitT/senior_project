@@ -29,10 +29,10 @@ class _RoleManagementViewState extends State<RoleManagementView> {
             if (snapshot.hasError) {
               return Text('Has error ${snapshot.error}');
             }
-            final admins = snapshot.data?.admins ?? [];
-            final categories = snapshot.data?.categories ?? [];
-
-            return TemplateDesktop(
+            if (snapshot.connectionState == ConnectionState.done) {
+              final admins = snapshot.data?.admins ?? [];
+              final categories = snapshot.data?.categories ?? [];
+              return TemplateDesktop(
                 helpdesk: false,
                 helpdeskadmin: false,
                 home: false,
@@ -45,6 +45,14 @@ class _RoleManagementViewState extends State<RoleManagementView> {
                     ],
                   ),
                 ));
+            }
+            return const Center(
+              child: SizedBox(
+                width: 100,
+                height: 100,
+                child: CircularProgressIndicator(),
+              ),
+            );
           }));
     }
     return Container();

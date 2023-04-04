@@ -86,6 +86,7 @@ class RoleManagementDetailTable extends StatelessWidget {
 
 TableRow buildRow(List<dynamic> cells, bool isHeader, bool isLastIndex,
     BuildContext context) {
+  List<TopicCategory> topic = context.watch<RoleManagementViewModel>().getCategories;
   return TableRow(
       decoration: BoxDecoration(
         border: Border(
@@ -109,26 +110,20 @@ TableRow buildRow(List<dynamic> cells, bool isHeader, bool isLastIndex,
           return Padding(
             padding:
                 const EdgeInsets.only(left: 16, top: 18, bottom: 18, right: 16),
-            child: FutureBuilder(
-                future: context.read<RoleManagementViewModel>().getCategories(),
-                builder: (context, snapshot) {
-                  List<TopicCategory>? topics = snapshot.data;
-                  final items = topics
-                      ?.map((topic) => MultiSelectItem<TopicCategory>(
-                          topic, topic.categoryName))
-                      .toList();
-                  return MultiSelectDialogField(
+            child: MultiSelectDialogField(
                     initialValue: cell,
-                    items: items ?? [],
+                    items: topic
+                      .map((topic) => MultiSelectItem<TopicCategory>(
+                          topic, topic.categoryName))
+                      .toList(),
                     searchable: true,
                     onConfirm: (selectedList) {
                       context
                           .read<RoleManagementViewModel>()
                           .changeResponsibility(
-                              selectedList as List<TopicCategory>);
+                              selectedList);
                     },
-                  );
-                }),
+                  )
           );
         } else {
           return Container();
