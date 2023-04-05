@@ -25,7 +25,7 @@ class _RoleManagementTableState extends State<RoleManagementTable> {
             title: Consts.roleManagementHeader,
             isSearchEnabled: true,
             buttonLabel: Consts.addUser,
-            popup: const AddAdminPopup()),
+            popup: AddAdminPopup(user: "")),
         RoleManagementDetailTable(widget: widget)
       ],
     );
