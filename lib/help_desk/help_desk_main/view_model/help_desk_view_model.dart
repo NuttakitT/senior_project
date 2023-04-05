@@ -13,11 +13,12 @@ import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_mod
 class HelpDeskViewModel extends ChangeNotifier {
   HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
   final FirebaseServices _serviceTicket = FirebaseServices("ticket");
+  final FirebaseServices _serviceCategory = FirebaseServices("category");
   final FirebaseServices _serviceUser = FirebaseServices("user");
   final AlgoliaServices _algolia = AlgoliaServices("ticket");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
-  final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
+  List<String> _category = ["General"];
   bool _isShowMessagePage = false;
   int? _allTicket;
   int? _startTicket;
@@ -129,6 +130,14 @@ class HelpDeskViewModel extends ChangeNotifier {
       } else {
         _endTicket = _startTicket! + limit - 1;
       }
+    }
+  }
+
+  Future<void> initTicketCategory() async {
+    final snapshot = await _serviceCategory.getAllDocument();
+    _category = ["General"];
+    for (int i = 0; i < snapshot!.docs.length; i++) {
+      _category.add(snapshot.docs[i].get("name"));
     }
   }
 

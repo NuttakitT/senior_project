@@ -31,7 +31,6 @@ class _ContentLoaderState extends State<ContentLoader> {
         children: GenerateContent.generateContent(context, content, widget.contentSize)
       );
     }
-    context.read<HelpDeskViewModel>().clearModel();
     return StreamBuilder(
       stream: widget.stream,
       builder: (context, snapshot) {
@@ -43,6 +42,7 @@ class _ContentLoaderState extends State<ContentLoader> {
             context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
             context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
             context.read<HelpDeskViewModel>().addPreviousFirst = context.read<HelpDeskViewModel>().getFirstDoc!.id;
+            context.read<HelpDeskViewModel>().clearModel();
             return FutureBuilder(
               future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
               builder: (context, futureSnapshot) {

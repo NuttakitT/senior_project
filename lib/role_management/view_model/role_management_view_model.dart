@@ -62,7 +62,6 @@ class RoleManagementViewModel extends ChangeNotifier {
 
   Future<bool> addCategory(AddCategoryRequest request) async {
     bool isSuccess = await _serviesCategory.addDocument({
-      "id": const Uuid().v1(),
       "name": request.categoryName,
       "description": request.description
     });
