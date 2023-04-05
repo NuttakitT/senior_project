@@ -253,7 +253,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                     side: const BorderSide(
                                         color: ColorConstant.orange40)))),
                         child: const Text(
-                          "Cancle",
+                          "Cancel",
                           style: AppFontStyle.orange40B16,
                         ),
                       ),
