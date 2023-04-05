@@ -1,5 +1,4 @@
 // ignore_for_file: depend_on_referenced_packages, prefer_final_fields
-import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,11 +13,12 @@ import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_mod
 class HelpDeskViewModel extends ChangeNotifier {
   HelpDeskMainModel _helpDeskModel = HelpDeskMainModel();
   final FirebaseServices _serviceTicket = FirebaseServices("ticket");
+  final FirebaseServices _serviceCategory = FirebaseServices("category");
   final FirebaseServices _serviceUser = FirebaseServices("user");
   final AlgoliaServices _algolia = AlgoliaServices("ticket");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
-  final List<String> _category = ["General", "Activity", "Registration", "Hardware"]; // TODO add category
+  List<String> _category = ["General"];
   bool _isShowMessagePage = false;
   int? _allTicket;
   int? _startTicket;
@@ -130,6 +130,14 @@ class HelpDeskViewModel extends ChangeNotifier {
       } else {
         _endTicket = _startTicket! + limit - 1;
       }
+    }
+  }
+
+  Future<void> initTicketCategory() async {
+    final snapshot = await _serviceCategory.getAllDocument();
+    _category = ["General"];
+    for (int i = 0; i < snapshot!.docs.length; i++) {
+      _category.add(snapshot.docs[i].get("name"));
     }
   }
 
@@ -349,34 +357,5 @@ class HelpDeskViewModel extends ChangeNotifier {
         _addQueryData(doc);
       }
     }
-  }
-
-  // ---------------------------------- Text Search ----------------------------
-  String _searchText = "";
-  HitsSearcher _hitSearch = HitsSearcher(
-    applicationID: "LEPUBBA9NX", 
-    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "ticket");
-
-  void initHitSearcher() {
-    _hitSearch = HitsSearcher(
-    applicationID: "LEPUBBA9NX", 
-    apiKey: "558b4a129c0734cd6cc62f5d78e585d2", 
-    indexName: "ticket");
-  }
-
-  get getSearchText => _searchText;
-  HitsSearcher get getHitsSearcher => _hitSearch;
-  void setSearchText(String text) {
-    if (text.isNotEmpty) {
-      _searchText = text;
-    } else {
-      _searchText = "";
-    }
-    notifyListeners();
-  } 
-
-  void clearSearchText() {
-    _searchText = "";
   }
 }

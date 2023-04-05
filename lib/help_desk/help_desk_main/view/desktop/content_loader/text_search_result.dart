@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/generate_content.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -18,7 +19,7 @@ class TextSearchResult extends StatefulWidget {
 class _TextSearchResultState extends State<TextSearchResult> {
   @override
   void initState() {
-    context.read<HelpDeskViewModel>().initHitSearcher();
+    context.read<TextSearch>().initHitSearcher("ticket");
     super.initState();
   }
 
@@ -28,12 +29,12 @@ class _TextSearchResultState extends State<TextSearchResult> {
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
     context.read<HelpDeskViewModel>().setIsSafeLoad = false;
-    context.read<HelpDeskViewModel>().getHitsSearcher.query(
-      context.watch<HelpDeskViewModel>().getSearchText
+    context.read<TextSearch>().getHitsSearcher.query(
+      context.watch<TextSearch>().getSearchText
     );
     
     return StreamBuilder(
-      stream: context.watch<HelpDeskViewModel>().getHitsSearcher.responses,
+      stream: context.watch<TextSearch>().getHitsSearcher.responses,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container(

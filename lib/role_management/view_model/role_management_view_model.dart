@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:senior_project/core/view_model/cryptor.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
+import 'package:uuid/uuid.dart';
 
 import '../model/role_management_model.dart';
 
 class RoleManagementViewModel extends ChangeNotifier {
+  final FirebaseServices _serviesCategory = FirebaseServices("category");
+  RoleManagementModel _model = RoleManagementModel();
   final List<Admin> _admins = [
     Admin(
         userId: "32",
@@ -14,9 +17,9 @@ class RoleManagementViewModel extends ChangeNotifier {
         role: "role",
         responsibility: [
           TopicCategory(
-              number: "01", categoryName: "นอน", description: "bvjoevbwo"),
+              id: "01", categoryName: "นอน", description: "bvjoevbwo"),
           TopicCategory(
-              number: "02", categoryName: "ปลูกผัก", description: "bvjoevbwo")
+              id: "02", categoryName: "ปลูกผัก", description: "bvjoevbwo")
         ]),
     Admin(
         userId: "33",
@@ -26,24 +29,19 @@ class RoleManagementViewModel extends ChangeNotifier {
         role: "role",
         responsibility: [
           TopicCategory(
-              number: "03333333",
+              id: "03333333",
               categoryName: "ถูพื้นถูพื้นถูพื้นถูพื้นถูพื้นถูพื้นถูพื้น",
               description: "bvjoevbwo"),
           TopicCategory(
-              number: "04", categoryName: "ล้างจาน", description: "bvjoevbwo")
+              id: "04", categoryName: "ล้างจาน", description: "bvjoevbwo")
         ]),
   ];
 
-  final List<TopicCategory> _categories = [
-    TopicCategory(number: "01", categoryName: "นอน", description: "bvjoevbwo"),
-    TopicCategory(
-        number: "02", categoryName: "ปลูกผัก", description: "bvjoevbwo"),
-    TopicCategory(
-        number: "03", categoryName: "ถูพื้น", description: "bvjoevbwo"),
-    TopicCategory(
-        number: "04", categoryName: "ล้างจาน", description: "bvjoevbwo"),
-  ];
-  get categories => _categories;
+  void initModel() {
+    _model = RoleManagementModel();
+  }
+
+  List<TopicCategory> get getCategories => _model.getCategory;
 
   // Role management
   Future<List<Admin>> getAdmins() async {
@@ -62,20 +60,29 @@ class RoleManagementViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // List category
-  Future<List<TopicCategory>> getCategories() async {
-    return Future.value(_categories);
-  }
-
   Future<bool> addCategory(AddCategoryRequest request) async {
-    return false;
+    bool isSuccess = await _serviesCategory.addDocument({
+      "name": request.categoryName,
+      "description": request.description
+    });
+    return isSuccess;
   }
 
   Future<RoleManagementModel> fetchPage() async {
+    List<TopicCategory> category = [];
     final admins = await getAdmins();
-    final categories = await getCategories();
+    final cateogorySnapshot = await _serviesCategory.getAllDocument();
+    for(int i = 0; i < cateogorySnapshot!.docs.length; i++) {
+      category.add(
+        TopicCategory(
+          id: cateogorySnapshot.docs[i].id, 
+          categoryName: cateogorySnapshot.docs[i].get("name"), 
+          description: cateogorySnapshot.docs[i].get("description")
+        )
+      );
+    }
 
-    final model = RoleManagementModel(admins: admins, categories: categories);
-    return model;
+    _model = RoleManagementModel.overloaddedConstructor(admins, category);
+    return _model;
   }
 }

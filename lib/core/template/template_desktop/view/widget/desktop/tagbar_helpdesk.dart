@@ -50,7 +50,6 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
 
   @override
   void didChangeDependencies() {
-    context.read<HelpDeskViewModel>().clearModel();
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     _stream = query(widget.id, widget.index, isAdmin);
     super.didChangeDependencies();

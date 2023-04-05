@@ -28,73 +28,82 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
     bool isLogin = context.watch<AppViewModel>().isLogin;
     context.read<HelpDeskViewModel>().setIsMobile = isMobileSite;
 
-    if (isMobileSite) {
-      return TemplateMenuMobile(
-          content: Builder(
-            builder: (context) {
-              if (!isLogin) {
-                return const Center(
-                  child: Text(
-                    "Please login to use the services",
-                    style: TextStyle(
-                      color: ColorConstant.orange60,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: AppFontStyle.font,
-                      fontSize: 18
+    return FutureBuilder(
+      future: context.read<HelpDeskViewModel>().initTicketCategory(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (isMobileSite) {
+            return TemplateMenuMobile(
+                content: Builder(
+                  builder: (context) {
+                    if (!isLogin) {
+                      return const Center(
+                        child: Text(
+                          "Please login to use the services",
+                          style: TextStyle(
+                            color: ColorConstant.orange60,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: AppFontStyle.font,
+                            fontSize: 18
+                          ),
+                        ),
+                      );
+                    }
+                    return MobileWidget(
+              isAdmin: role == 0 ? true : false,
+            );
+                  }
+                ));
+          }
+          return TemplateDesktop(
+            helpdesk: !widget.isAdmin,
+            helpdeskadmin: widget.isAdmin,
+            home: false,
+            useTemplatescroll: false,
+            content: Builder(
+              builder: (context) {
+                if (!isLogin) {
+                  return const Center(
+                    child: Text(
+                      "Please login to use the services",
+                      style: TextStyle(
+                        color: ColorConstant.orange60,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: AppFontStyle.font,
+                        fontSize: 24
+                      ),
                     ),
+                  );
+                  }
+                return Container(
+                  alignment: AlignmentDirectional.topCenter,
+                  child: Builder(
+                    builder: (context) {
+                      if (screenHeight < 500) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Header.widget(context, widget.isAdmin),
+                              const Body(isAdmin: true,)
+                            ],
+                          ),
+                        );
+                      }
+                      return Column(
+                        children: [
+                          Header.widget(context, widget.isAdmin),
+                          Body(isAdmin: widget.isAdmin,)
+                        ],
+                      );
+                    }
                   ),
                 );
               }
-              return MobileWidget(
-        isAdmin: role == 0 ? true : false,
-      );
-            }
-          ));
-    }
-    return TemplateDesktop(
-        helpdesk: !widget.isAdmin,
-        helpdeskadmin: widget.isAdmin,
-        home: false,
-        useTemplatescroll: false,
-        content: Builder(
-          builder: (context) {
-            if (!isLogin) {
-              return const Center(
-                child: Text(
-                  "Please login to use the services",
-                  style: TextStyle(
-                    color: ColorConstant.orange60,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: AppFontStyle.font,
-                    fontSize: 24
-                  ),
-                ),
-              );
-              }
-            return Container(
-              alignment: AlignmentDirectional.topCenter,
-              child: Builder(
-                builder: (context) {
-                  if (screenHeight < 500) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Header.widget(context, widget.isAdmin),
-                          const Body(isAdmin: true,)
-                        ],
-                      ),
-                    );
-                  }
-                  return Column(
-                    children: [
-                      Header.widget(context, widget.isAdmin),
-                      Body(isAdmin: widget.isAdmin,)
-                    ],
-                  );
-                }
-              ),
-            );
-          }
-        ));
+            )
+          );
+        }
+        return Container();
+      },
+    );
   }
 }

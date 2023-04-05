@@ -29,13 +29,20 @@ class _CategoryTableState extends State<CategoryTable> {
   }
 }
 
-class CategoryDetailTable extends StatelessWidget {
+class CategoryDetailTable extends StatefulWidget {
   const CategoryDetailTable({
     Key? key,
     required this.widget,
   }) : super(key: key);
 
   final CategoryTable widget;
+
+  @override
+  State<CategoryDetailTable> createState() => _CategoryDetailTableState();
+}
+
+class _CategoryDetailTableState extends State<CategoryDetailTable> {
+  int number = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +62,12 @@ class CategoryDetailTable extends StatelessWidget {
           children: [
             buildRow([Consts.number, Consts.categoryName, Consts.description],
                 true, false),
-            for (int i = 0; i < widget.categories.length; i++) ...[
+            for (int i = 0; i < widget.widget.categories.length; i++) ...[
               buildRow([
-                widget.categories[i].number,
-                widget.categories[i].categoryName,
-                widget.categories[i].description,
-              ], false, i == widget.categories.length - 1),
+                (number++).toString(),
+                widget.widget.categories[i].categoryName,
+                widget.widget.categories[i].description,
+              ], false, i == widget.widget.categories.length - 1),
             ]
           ],
         ),

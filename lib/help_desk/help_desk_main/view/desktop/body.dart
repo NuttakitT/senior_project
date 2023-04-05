@@ -8,6 +8,7 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/admin_ticket_setting.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/reply_stream.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/set_reply.dart';
@@ -82,7 +83,7 @@ class _BodyState extends State<Body> {
   }
 
   Widget _iconLoader(bool isShowMessagePage, int start, int end, int all, int limit) {
-    String srearchText = context.watch<HelpDeskViewModel>().getSearchText;
+    String srearchText = context.watch<TextSearch>().getSearchText;
     int? msgIndex;
 
     if (isShowMessagePage) {

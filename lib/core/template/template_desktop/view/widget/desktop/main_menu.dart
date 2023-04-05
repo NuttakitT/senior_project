@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/edit_profile.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/notification_overlay.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
+import 'package:senior_project/role_management/view/role_management_view.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -110,7 +112,13 @@ class _MainMenuState extends State<MainMenu> {
                           context
                               .read<TemplateDesktopViewModel>()
                               .changeState(context, 3, 1);
-                          // TODO link to Role Management
+                          Navigator.pushAndRemoveUntil(
+                            context, 
+                            MaterialPageRoute(builder: (context) {
+                              return RoleManagementView(isAdmin: isAdmin);
+                            }), 
+                            (route) => false
+                          );
                         },
                       ),
                     );
@@ -186,7 +194,8 @@ class _MainMenuState extends State<MainMenu> {
                       },
                     ),
                   ),
-                  InkWell(
+                  PopupMenuButton(
+                    padding: const EdgeInsets.all(0),
                     child: Container(
                       width: 40,
                       height: 40,
@@ -197,10 +206,154 @@ class _MainMenuState extends State<MainMenu> {
                         color: Color(0xFF2196F3),
                       ),
                     ),
-                    onTap: () {
-                      // TODO pop-up
+                    itemBuilder: (context) {
+                      return [
+                        PopupMenuItem(
+                          enabled: false,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16
+                            ),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: ColorConstant.whiteBlack30
+                                )
+                              ),
+                              color: Colors.white
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 16),
+                                  child: Text(
+                                    "Account",
+                                    style: TextStyle(
+                                      fontFamily: AppFontStyle.font,
+                                      fontWeight: AppFontWeight.medium,
+                                      fontSize: 16,
+                                      color: ColorConstant.whiteBlack90
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle, 
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: ColorConstant.orange90
+                                        )
+                                      ),
+                                      child: const Icon(
+                                        Icons.person_rounded,
+                                        color: ColorConstant.orange80,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            context.read<AppViewModel>().app.getUser.getName,
+                                            style: const TextStyle(
+                                              fontFamily: AppFontStyle.font,
+                                              fontWeight: AppFontWeight.regular,
+                                              fontSize: 14,
+                                              color: ColorConstant.whiteBlack90
+                                            ),
+                                          ),
+                                          Text(
+                                            context.read<AppViewModel>().app.getUser.getEmail,
+                                            style: const TextStyle(
+                                              fontFamily: AppFontStyle.font,
+                                              fontWeight: AppFontWeight.regular,
+                                              fontSize: 12,
+                                              color: ColorConstant.whiteBlack70
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            Future.delayed(
+                              const Duration(seconds: 0),
+                              () => showDialog(
+                                context: context, 
+                                builder: (context) {
+                                  return const EditProfile();
+                                }
+                              )
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Row(
+                              children: const [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Icon(
+                                    Icons.create_rounded, 
+                                    color: ColorConstant.whiteBlack80,
+                                  ),
+                                ),
+                                Text(
+                                  "Edit Profile",
+                                  style: TextStyle(
+                                    fontFamily: AppFontStyle.font,
+                                    fontSize: 14,
+                                    fontWeight: AppFontWeight.regular,
+                                    color: ColorConstant.whiteBlack80
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () async {
+                            await context.read<AppViewModel>().logout();
+                            // TODO push to home
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Row(
+                              children: const [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Icon(
+                                    Icons.logout_rounded, 
+                                    color: ColorConstant.whiteBlack80,
+                                  ),
+                                ),
+                                Text(
+                                  "Log out",
+                                  style: TextStyle(
+                                    fontFamily: AppFontStyle.font,
+                                    fontSize: 14,
+                                    fontWeight: AppFontWeight.regular,
+                                    color: ColorConstant.whiteBlack80
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ];
                     },
-                  )
+                  ),
                 ],
               ),
             );
@@ -228,7 +381,7 @@ class _MainMenuState extends State<MainMenu> {
       padding: const EdgeInsets.only(left: 80),
       child: Builder(
         builder: (context) {
-          if (screenWidth < 935) {
+          if (screenWidth < 1025) {
             return Scrollbar(
               controller: _controller,
               child: SingleChildScrollView(

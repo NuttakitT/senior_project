@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/role_management/model/role_management_model.dart';
+import 'package:senior_project/role_management/view/role_management_view.dart';
 import 'package:senior_project/role_management/view_model/role_management_view_model.dart';
 
 class AddCategoryPopup extends StatefulWidget {
@@ -27,6 +31,8 @@ class _AddCategoryPopupState extends State<AddCategoryPopup> {
 
   @override
   Widget build(BuildContext context) {
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+
     return AlertDialog(
       backgroundColor: ColorConstant.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -165,12 +171,16 @@ class _AddCategoryPopupState extends State<AddCategoryPopup> {
                           final request = AddCategoryRequest(
                               categoryName: topicController.text,
                               description: descriptionController.text);
-
                           await context
                               .read<RoleManagementViewModel>()
                               .addCategory(request);
-
-                          Navigator.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context, 
+                            MaterialPageRoute(builder: (context) {
+                              return RoleManagementView(isAdmin: isAdmin);
+                            }), 
+                            (route) => false
+                          );
                         }
                       },
                       style: ButtonStyle(

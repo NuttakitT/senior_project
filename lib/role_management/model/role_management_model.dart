@@ -1,8 +1,20 @@
 class RoleManagementModel {
-  List<Admin> admins;
-  List<TopicCategory> categories;
+  // Default setting
+  List<Admin> admins = [];
+  List<TopicCategory> categories = [
+    TopicCategory(id: null, categoryName: "General", description: "General"),
+  ];
 
-  RoleManagementModel({required this.admins, required this.categories});
+  RoleManagementModel();
+  RoleManagementModel.overloaddedConstructor(List<Admin> admin, List<TopicCategory> category) {
+    admins = admin;
+    categories.addAll(category);
+  }
+
+  get getCategory => categories;
+  get getAdmin => admins;
+  void addCategory(TopicCategory category) => categories.add(category);
+  void addAdmin(Admin admin) => admins.add(admin);
 }
 
 class Admin {
@@ -24,12 +36,12 @@ class Admin {
 }
 
 class TopicCategory {
-  final String number;
+  final String? id;
   final String categoryName;
   final String description;
 
   TopicCategory(
-      {required this.number,
+      {required this.id,
       required this.categoryName,
       required this.description});
 }

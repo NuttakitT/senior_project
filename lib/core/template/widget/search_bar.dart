@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 
 class SearchBar extends StatefulWidget {
   final bool isHelpDeskPage;
@@ -76,7 +76,7 @@ class _SearchBarState extends State<SearchBar> {
               onChanged: (value) { 
                 text = value;
                 if (widget.isHelpDeskPage) {
-                  context.read<HelpDeskViewModel>().setSearchText(value);
+                  context.read<TextSearch>().setSearchText(value);
                 } else {
                   // TODO commu search
                 }
