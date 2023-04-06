@@ -61,7 +61,7 @@ class _MultiSelectTopicsState extends State<MultiSelectTopics> {
                   .map(
                     (selectedValue) => Text(
                       '${selectedValue.categoryName}, ',
-                      style: const TextStyle(color: Colors.black),
+                      style: const TextStyle(color: ColorConstant.whiteBlack60),
                     ),
                   )
                   .toList(),
