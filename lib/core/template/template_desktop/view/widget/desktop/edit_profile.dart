@@ -189,9 +189,7 @@ class EditProfile extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
-                  phone == "null"
-                  ? "-"
-                  : phone!,
+                  phone ?? "-",
                   style: const TextStyle(
                     fontFamily: AppFontStyle.font,
                     fontWeight: AppFontWeight.regular,
