@@ -10,7 +10,6 @@ class EditProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? phone = context.read<AppViewModel>().app.getUser.getPhone;
-    print(phone);
     return AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
