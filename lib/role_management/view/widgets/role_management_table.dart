@@ -5,6 +5,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/role_management/model/role_management_model.dart';
 import 'package:senior_project/role_management/view/widgets/add_admin_popup.dart';
+import 'package:senior_project/role_management/view/widgets/multi_select_topics.dart';
 import 'package:senior_project/role_management/view/widgets/role_management_header.dart';
 import 'package:senior_project/role_management/view_model/role_management_view_model.dart';
 
@@ -86,7 +87,8 @@ class RoleManagementDetailTable extends StatelessWidget {
 
 TableRow buildRow(List<dynamic> cells, bool isHeader, bool isLastIndex,
     BuildContext context) {
-  List<TopicCategory> topic = context.watch<RoleManagementViewModel>().getCategories;
+  List<TopicCategory> topic =
+      context.watch<RoleManagementViewModel>().getCategories;
   return TableRow(
       decoration: BoxDecoration(
         border: Border(
@@ -108,23 +110,24 @@ TableRow buildRow(List<dynamic> cells, bool isHeader, bool isLastIndex,
           );
         } else if (cell is List<TopicCategory>) {
           return Padding(
-            padding:
-                const EdgeInsets.only(left: 16, top: 18, bottom: 18, right: 16),
-            child: MultiSelectDialogField(
-                    initialValue: cell,
-                    items: topic
-                      .map((topic) => MultiSelectItem<TopicCategory>(
-                          topic, topic.categoryName))
-                      .toList(),
-                    searchable: true,
-                    onConfirm: (selectedList) {
-                      context
-                          .read<RoleManagementViewModel>()
-                          .changeResponsibility(
-                              selectedList);
-                    },
-                  )
-          );
+              padding: const EdgeInsets.only(
+                  left: 16, top: 18, bottom: 18, right: 16),
+              child: MultiSelectTopics(topics: topic)
+              // child: MultiSelectDialogField(
+              //         initialValue: cell,
+              //         items: topic
+              //           .map((topic) => MultiSelectItem<TopicCategory>(
+              //               topic, topic.categoryName))
+              //           .toList(),
+              //         searchable: true,
+              //         onConfirm: (selectedList) {
+              //           context
+              //               .read<RoleManagementViewModel>()
+              //               .changeResponsibility(
+              //                   selectedList);
+              //         },
+              //       )
+              );
         } else {
           return Container();
         }
