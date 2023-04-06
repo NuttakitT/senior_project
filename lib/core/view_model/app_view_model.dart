@@ -120,7 +120,7 @@ class AppViewModel extends ChangeNotifier {
       if (chunkData[0] == "role") {
         result[chunkData[0]] = int.parse(chunkData[1]);
       } else {
-        result[chunkData[0]] = chunkData[1];
+        result[chunkData[0]] = chunkData[1] == "null" ? null : chunkData[1];
       }
     }
     return result;
