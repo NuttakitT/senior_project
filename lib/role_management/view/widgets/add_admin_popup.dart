@@ -141,7 +141,7 @@ class FindUsersDelegate extends SearchDelegate {
 
   FindUsersDelegate({required this.onUserSelected});
 
-  // TODO: make this to all users
+  // TODO: list all users
   List<String> allSuggestions = ['1', '2', '3'];
 
   @override
