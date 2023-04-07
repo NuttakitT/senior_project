@@ -1,39 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/community_board/view/desktop/widget/comment_field.dart';
 
-class InDetailContent extends StatefulWidget {
+class InDetailMobile extends StatefulWidget {
   final Map<String, dynamic> info;
-  const InDetailContent({super.key, required this.info});
+  const InDetailMobile({super.key, required this.info});
 
   @override
-  State<InDetailContent> createState() => _InDetailContentState();
+  State<InDetailMobile> createState() => _InDetailMobileState();
 }
 
-class _InDetailContentState extends State<InDetailContent> {
+class _InDetailMobileState extends State<InDetailMobile> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 24, 0, 24),
+          child: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: ColorConstant.whiteBlack90,
+            size: 24,
+          ),
+        ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(40, 40, 40, 24),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
           child: Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
             decoration: BoxDecoration(
                 color: ColorConstant.whiteBlack5,
                 border: Border.all(color: ColorConstant.whiteBlack40),
-                borderRadius: BorderRadius.circular(16)),
+                borderRadius: BorderRadius.circular(8)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //TODO tittle
                 Padding(
-                  padding: EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 4),
                   child: Text(
                     widget.info["topic"],
                     style: const TextStyle(
                         color: ColorConstant.orange70,
-                        fontSize: 32,
+                        fontSize: 20,
                         fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -44,18 +51,18 @@ class _InDetailContentState extends State<InDetailContent> {
                     children: const [
                       //TODO user
                       Padding(
-                        padding: EdgeInsets.only(right: 24),
+                        padding: EdgeInsets.only(right: 16),
                         child: Text(
                           "Nayao",
                           style: TextStyle(
-                              color: ColorConstant.whiteBlack70, fontSize: 20),
+                              color: ColorConstant.whiteBlack70, fontSize: 14),
                         ),
                       ),
                       //TODO date time
                       Text(
                         "3 Mar.",
                         style: TextStyle(
-                            color: ColorConstant.whiteBlack50, fontSize: 16),
+                            color: ColorConstant.whiteBlack50, fontSize: 12),
                       )
                     ],
                   ),
@@ -64,7 +71,7 @@ class _InDetailContentState extends State<InDetailContent> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 40),
                   child: Container(
-                    width: 200,
+                    width: 100,
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     alignment: Alignment.center,
@@ -74,8 +81,8 @@ class _InDetailContentState extends State<InDetailContent> {
                         borderRadius: BorderRadius.circular(8)),
                     child: Text(
                       widget.info["topic"],
-                      style: TextStyle(
-                          color: ColorConstant.whiteBlack70, fontSize: 18),
+                      style: const TextStyle(
+                          color: ColorConstant.whiteBlack70, fontSize: 12),
                     ),
                   ),
                 ),
@@ -83,16 +90,12 @@ class _InDetailContentState extends State<InDetailContent> {
                 const Text(
                   "ปฏิทินการลงทะเบียน",
                   style: TextStyle(
-                      color: ColorConstant.whiteBlack90, fontSize: 20),
+                      color: ColorConstant.whiteBlack90, fontSize: 14),
                 )
               ],
             ),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(40, 0, 40, 24),
-          child: CommentField(),
-        )
       ],
     );
   }

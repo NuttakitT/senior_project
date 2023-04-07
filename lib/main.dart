@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/view/desktop/page/template_community_board.dart';
 import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
+import 'package:senior_project/community_board/view/mobile/page/template_community_board_mobile.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/view_model/cryptor.dart';
@@ -30,6 +32,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => TemplateMobileViewModel()),
         ChangeNotifierProvider(create: (context) => ReplyChannelViewModel()),
         ChangeNotifierProvider(create: (context) => TeacherContactViewModel()),
+        ChangeNotifierProvider(create: (context) => CommunityBoardViewModel()),
       ],
       child: const MyApp(),
     ),

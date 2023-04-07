@@ -19,6 +19,6 @@ class _TemplateCommunityBoardState extends State<TemplateCommunityBoard> {
         helpdeskadmin: false,
         home: true,
         useTemplatescroll: true,
-        content: InDetailContent());
+        content: CommunityBoardContent());
   }
 }

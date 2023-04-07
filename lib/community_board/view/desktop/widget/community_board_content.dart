@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/desktop/widget/content_card_template.dart';
+import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 
 class CommunityBoardContent extends StatefulWidget {
   const CommunityBoardContent({super.key});
@@ -11,6 +14,16 @@ class CommunityBoardContent extends StatefulWidget {
 }
 
 class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
+  List<Widget> generateCardCommunityBoard(List<Map<String, dynamic>> listPost) {
+    List<Widget> card = [];
+    for (int i = 0; i < listPost.length; i++) {
+      card.add(ContentCardTemplate(
+        info: listPost[i],
+      ));
+    }
+    return card;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,13 +39,14 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
                     fontSize: 32,
                     fontWeight: FontWeight.w500),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  decoration:
-                      const BoxDecoration(color: ColorConstant.whiteBlack30),
-                  height: 1,
-                  width: 853,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Container(
+                    decoration:
+                        const BoxDecoration(color: ColorConstant.whiteBlack30),
+                    height: 1,
+                  ),
                 ),
               ),
               InkWell(
@@ -62,7 +76,13 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
                   ),
                 ),
                 onTap: () {
-                  //TODO link to create post popup
+                  showDialog(
+                      context: context,
+                      builder: ((context) {
+                        return const AlertDialog(
+                          content: CreatePost(),
+                        );
+                      }));
                 },
               )
             ],
@@ -107,7 +127,19 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
                   ],
                 ),
               ),
-              const ContentCardTemplate(),
+              FutureBuilder(
+                future: context.read<CommunityBoardViewModel>().fetchAllPosts(),
+                builder: ((context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    List<Map<String, dynamic>> listPost =
+                        context.read<CommunityBoardViewModel>().getPost();
+                    return Column(
+                      children: generateCardCommunityBoard(listPost),
+                    );
+                  }
+                  return Text("กำลังโหลด");
+                }),
+              ),
               Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.only(top: 16, bottom: 16),

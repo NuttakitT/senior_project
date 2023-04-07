@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:provider/provider.dart';
 
-class ContentCardTemplate extends StatefulWidget {
+class CommunityBoardContentMobile extends StatefulWidget {
   final Map<String, dynamic> info;
-  const ContentCardTemplate({super.key, required this.info});
+  const CommunityBoardContentMobile({super.key, required this.info});
 
   @override
-  State<ContentCardTemplate> createState() => _ContentCardTemplateState();
+  State<CommunityBoardContentMobile> createState() =>
+      _CommunityBoardContentMobileState();
 }
 
-class _ContentCardTemplateState extends State<ContentCardTemplate> {
+class _CommunityBoardContentMobileState
+    extends State<CommunityBoardContentMobile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -18,10 +19,9 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
         decoration: const BoxDecoration(
             color: ColorConstant.whiteBlack5,
             border: Border(
-                left: BorderSide(width: 1, color: ColorConstant.whiteBlack40),
-                bottom: BorderSide(width: 1, color: ColorConstant.whiteBlack40),
-                right:
-                    BorderSide(width: 1, color: ColorConstant.whiteBlack40))),
+              // top: BorderSide(width: 1, color: ColorConstant.whiteBlack20),
+              bottom: BorderSide(width: 1, color: ColorConstant.whiteBlack20),
+            )),
         padding: const EdgeInsets.only(top: 8, bottom: 16, left: 16, right: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,49 +31,25 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
               child: Text(
                 widget.info["title"],
                 style: const TextStyle(
-                    color: ColorConstant.whiteBlack80, fontSize: 24),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 24),
-                    child: Text(
-                      "Topic : ",
-                      style: TextStyle(
-                          color: ColorConstant.whiteBlack50, fontSize: 20),
-                    ),
-                  ),
-                  //TODO loop topic
-                  Padding(
-                    padding: const EdgeInsets.only(right: 24),
-                    child: Text(
-                      widget.info["topic"],
-                      style: const TextStyle(
-                          color: ColorConstant.whiteBlack70, fontSize: 18),
-                    ),
-                  ),
-                ],
+                    color: ColorConstant.whiteBlack80, fontSize: 16),
               ),
             ),
             Row(
               children: [
                 //TODO user
                 const Padding(
-                  padding: EdgeInsets.only(right: 40),
+                  padding: EdgeInsets.only(right: 24),
                   child: Text(
                     "Nayao",
                     style: TextStyle(
-                        color: ColorConstant.whiteBlack70, fontSize: 18),
+                        color: ColorConstant.whiteBlack70, fontSize: 12),
                   ),
                 ),
                 //TODO datetime
                 const Text(
                   "25 Feb.",
                   style: TextStyle(
-                      color: ColorConstant.whiteBlack50, fontSize: 16),
+                      color: ColorConstant.whiteBlack50, fontSize: 12),
                 ),
                 const Spacer(),
                 Row(
@@ -83,13 +59,14 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
                       child: Icon(
                         Icons.chat_rounded,
                         color: ColorConstant.whiteBlack60,
+                        size: 14,
                       ),
                     ),
                     //TODO number comment
                     Text(
                       "14",
                       style: TextStyle(
-                          color: ColorConstant.whiteBlack80, fontSize: 18),
+                          color: ColorConstant.whiteBlack80, fontSize: 14),
                     ),
                   ],
                 )

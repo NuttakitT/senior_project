@@ -48,41 +48,29 @@ class _CommentFieldState extends State<CommentField> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Stack(children: <Widget>[
-                            Positioned.fill(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: ColorConstant.orange50,
-                                        width: 1,
-                                        strokeAlign: StrokeAlign.outside)),
+                        TextButton(
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              side: const BorderSide(
+                                  color: ColorConstant.orange50, width: 1),
+                              fixedSize: const Size(116, 28),
+                              foregroundColor: ColorConstant.orange50,
+                              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                              backgroundColor: ColorConstant.white,
+                              textStyle: const TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold)),
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.add_photo_alternate_rounded,
+                                color: ColorConstant.orange50,
+                                size: 16,
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              style: TextButton.styleFrom(
-                                  fixedSize: const Size.fromWidth(116),
-                                  foregroundColor: ColorConstant.white,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                                  backgroundColor: ColorConstant.orange50,
-                                  textStyle: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold)),
-                              child: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.add_photo_alternate_rounded,
-                                    color: ColorConstant.white,
-                                    size: 16,
-                                  ),
-                                  Text("Add Image"),
-                                ],
-                              ),
-                            ),
-                          ]),
+                              Text("Add Image"),
+                            ],
+                          ),
                         ),
                       ],
                     )),
