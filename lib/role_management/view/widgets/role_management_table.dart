@@ -113,20 +113,6 @@ TableRow buildRow(List<dynamic> cells, bool isHeader, bool isLastIndex,
               padding: const EdgeInsets.only(
                   left: 16, top: 18, bottom: 18, right: 16),
               child: MultiSelectTopics(topics: topic)
-              // child: MultiSelectDialogField(
-              //         initialValue: cell,
-              //         items: topic
-              //           .map((topic) => MultiSelectItem<TopicCategory>(
-              //               topic, topic.categoryName))
-              //           .toList(),
-              //         searchable: true,
-              //         onConfirm: (selectedList) {
-              //           context
-              //               .read<RoleManagementViewModel>()
-              //               .changeResponsibility(
-              //                   selectedList);
-              //         },
-              //       )
               );
         } else {
           return Container();

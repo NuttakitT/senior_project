@@ -10,6 +10,7 @@ import 'package:senior_project/core/template/template_desktop/view_model/templat
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/role_management/view/role_management_view.dart';
 import 'package:senior_project/role_management/view_model/role_management_view_model.dart';
+import 'package:senior_project/statistic/view_model/statistic_view_model.dart';
 import 'package:senior_project/teacher_contact/view/teacher_contact_view.dart';
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 import 'firebase_options.dart';
@@ -30,6 +31,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ReplyChannelViewModel()),
         ChangeNotifierProvider(create: (context) => TeacherContactViewModel()),
         ChangeNotifierProvider(create: (context) => RoleManagementViewModel()),
+        ChangeNotifierProvider(create: (context) => StatisticViewModel()),
         ChangeNotifierProvider(create: (context) => TextSearch()),
       ],
       child: const MyApp(),
@@ -48,11 +50,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder(
-          future: context.read<AppViewModel>().initializeLoginState(context,
-              !(FirebaseAuth.instance.currentUser == null)),
+          future: context.read<AppViewModel>().initializeLoginState(
+              context, !(FirebaseAuth.instance.currentUser == null)),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
-              return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0);
+              return HelpDeskMainView(
+                  isAdmin:
+                      context.watch<AppViewModel>().app.getUser.getRole == 0);
             }
             return Container();
           }),
