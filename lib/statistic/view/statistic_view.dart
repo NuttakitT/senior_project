@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/statistic/model/statistic_model.dart';
 import 'package:senior_project/statistic/view/widget/statistic_grid_view.dart';
 import 'package:senior_project/statistic/view_model/statistic_view_model.dart';
 

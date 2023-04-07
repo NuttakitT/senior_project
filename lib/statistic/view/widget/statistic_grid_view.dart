@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:senior_project/statistic/model/statistic_model.dart';
 
 class StatisticGridView extends StatefulWidget {
-  final List<dynamic> data;
+  final List<Chart> data;
   const StatisticGridView({super.key, required this.data});
 
   @override
