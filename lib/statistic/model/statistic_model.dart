@@ -13,15 +13,15 @@ class StatisticModel {
 class Chart {}
 
 class LineChartModel extends Chart {
-  String date;
-  double amount;
+  int x;
+  double y;
 
-  LineChartModel({required this.date, required this.amount});
+  LineChartModel({required this.x, required this.y});
 }
 
 class PieChartModel extends Chart {
   String title;
-  List<double> data;
+  double data;
 
   PieChartModel({required this.title, required this.data});
 }

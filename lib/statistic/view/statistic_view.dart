@@ -15,6 +15,21 @@ class StatisticView extends StatefulWidget {
 }
 
 class _StatisticViewState extends State<StatisticView> {
+  List<List<Chart>> data = [
+    // ticket volume
+    [
+      LineChartModel(x: 1, y: 2),
+      LineChartModel(x: 2, y: 2),
+      LineChartModel(x: 3, y: 7),
+      LineChartModel(x: 4, y: 20),
+    ],
+    [
+      PieChartModel(title: "A", data: 20),
+      PieChartModel(title: "B", data: 20),
+      PieChartModel(title: "C", data: 20),
+      PieChartModel(title: "D", data: 20),
+    ]
+  ];
   @override
   Widget build(BuildContext context) {
     bool isMobileSite = context
@@ -37,7 +52,7 @@ class _StatisticViewState extends State<StatisticView> {
                   useTemplatescroll: true,
                   content: SingleChildScrollView(
                     child: Column(
-                      children: [StatisticGridView(data: [])],
+                      children: [StatisticGridView(data: data)],
                     ),
                   ));
             }
