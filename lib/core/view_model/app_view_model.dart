@@ -2,13 +2,10 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/model/user/app_user.dart';
-import 'package:senior_project/core/view_model/cryptor.dart';
 
 class AppViewModel extends ChangeNotifier {
   App app = App();
@@ -114,51 +111,32 @@ class AppViewModel extends ChangeNotifier {
   }
 
   Map<String, dynamic> storeAppUser(DocumentSnapshot snapshot) {
-    List<String> list = [
-      "id",
-      "username",
-      "email",
-      "role",
-      "gender",
-      "secret",
-      "birthday",
-      "linkId"
-    ];
     Map<String, dynamic> result = {};
     String data = snapshot.data().toString();
     data = data.substring(1, data.length - 1);
     List<String> chunk = data.split(", ");
     for (int i = 0; i < chunk.length; i++) {
       List<String> chunkData = chunk[i].split(": ");
-      if (!list.contains(chunkData[0])) {
-        result[chunkData[0]] = Cryptor.decrypt(chunkData[1]);
+      if (chunkData[0] == "role") {
+        result[chunkData[0]] = int.parse(chunkData[1]);
       } else {
-        result[chunkData[0]] = chunkData[1];
+        result[chunkData[0]] = chunkData[1] == "null" ? null : chunkData[1];
       }
     }
     return result;
   }
 
   Future<void> initializeLoginState(BuildContext context, bool state) async {
-    if (state) {
-      // final snapshot = await FirebaseServices("user").getDocumentById(
-      //   FirebaseAuth.instance.currentUser!.uid
-      // );
-      // if (snapshot != null) {
-      //   Map<String, dynamic> detail = storeAppUser(snapshot);
-      //   setLoggedInUser(detail);
-      // }
-      // TODO manage role
-      final credential = FirebaseAuth.instance.currentUser;
-      setLoggedInUser({
-        "id": credential!.uid,
-        "email": credential.email,
-        "name": credential.displayName,
-        "phone": credential.phoneNumber,
-        "profileImageUrl": credential.photoURL,
-      });
-    }
     _isLogin = state;
+    if (state) {
+      final snapshot = await FirebaseServices("user").getDocumentById(
+        FirebaseAuth.instance.currentUser!.uid
+      );
+      if (snapshot!.exists) {
+        Map<String, dynamic> detail = storeAppUser(snapshot);
+        setLoggedInUser(detail);
+      }
+    } 
   }
 
   Future<bool> login(BuildContext context) async {
@@ -169,12 +147,26 @@ class AppViewModel extends ChangeNotifier {
     provider.addScope("User.read");
     try {
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
+      final snapshot = await FirebaseServices("user").getDocumentById(
+        credential.user!.uid
+      );
+      if (!snapshot!.exists) {
+        await FirebaseServices("user").setDocument(credential.user!.uid, {
+          "id": credential.user!.uid,
+          "email": credential.user!.email,
+          "name": credential.user!.displayName,
+          "phone": credential.user!.phoneNumber,
+          "profileImageUrl": credential.user!.photoURL,
+          "role": 1
+        });
+      }
       setLoggedInUser({
         "id": credential.user!.uid,
         "email": credential.user!.email,
         "name": credential.user!.displayName,
         "phone": credential.user!.phoneNumber,
-        "profileImageUrl": credential.user!.photoURL
+        "profileImageUrl": credential.user!.photoURL,
+        "role": snapshot.get("role")
       });
       return true;
     } catch (e) {

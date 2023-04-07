@@ -3,7 +3,7 @@ class HelpDeskReplyModel {
 
   void addReply(String ownerId, String text, DateTime time, bool seen) {
     _reply.add({
-      "time": DateTime,
+      "time": time,
       "text": text,
       "ownerId": ownerId,
       "seen": seen

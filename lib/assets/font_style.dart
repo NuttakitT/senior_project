@@ -5,6 +5,7 @@ import 'color_constant.dart';
 extension AppFontStyle on FontStyle {
   static const font = "Roboto";
   static const interFont = "Inter";
+  static const thaiFont = "Prompt";
 
   // white
   static const whiteR14 = TextStyle(
@@ -256,6 +257,11 @@ extension AppFontStyle on FontStyle {
       color: ColorConstant.whiteBlack90,
       fontWeight: AppFontWeight.light,
       fontSize: 18);
+  static const wb90Md32 = TextStyle(
+      fontFamily: font,
+      color: ColorConstant.whiteBlack90,
+      fontWeight: AppFontWeight.medium,
+      fontSize: 32);
 
   // orange
   static const orange40SemiB16 = TextStyle(

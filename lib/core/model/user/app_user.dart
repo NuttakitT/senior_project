@@ -14,7 +14,7 @@ class AppUser {
     _name = detail.keys.contains("name") ? detail["name"] : "";
     _email = detail.keys.contains("email") ? detail["email"] : "";
     _phone = detail.keys.contains("phone") ? detail["phone"] : null;
-    _role = detail.keys.contains("role") ? int.parse(detail["role"]) : null;
+    _role = detail.keys.contains("role") ? detail["role"] : null;
     _profileImageUrl = detail.keys.contains("profileImageUrl") ? detail["profileImageUrl"] : null;
   }
 

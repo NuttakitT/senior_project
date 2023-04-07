@@ -70,9 +70,19 @@ class FirebaseServices {
   // value: list of the value to query
   // key and value must have the same length and in th same index
   // refers to one pair of the key-value.
+  //
+  // Optional parameters
+  // limit: number of query result
+  // orderingField: ordering result by target string
+  // descending: ordering type
   Future<QuerySnapshot?> getDocumnetByKeyValuePair(
     List<String> key, 
-    List<String> value, 
+    List<dynamic> value, 
+    {
+      int? limit,
+      String? orderingField,
+      bool descending = false
+    }
   ) async {
     try {
       late Query query;
@@ -85,6 +95,12 @@ class FirebaseServices {
           }
         }
       }
+      if (orderingField != null) {
+        query = query.orderBy(orderingField, descending: descending);
+      }
+      if (limit != null) {
+        query = query.limit(limit);
+      } 
       return await query.get();
     } catch (e) {
       return null;
@@ -102,14 +118,27 @@ class FirebaseServices {
   }
 
   //---------------------- Read operation(Real-time) ---------------------------
-  // A stream listener used as a listener for a document queried by key-value.
+  // A stream listener use as a listener for a document queried by key-value.
   // key: list of the filed to query
   // value: list of the value to query
   // key and value must have the same length and in th same index
   // refers to one pair of the key-value.
+  //
+  // Optional parameters
+  // limit: number of query result
+  // orderingField: ordering result by target string
+  // descending: ordering type
+  // afterDoc: start query result after target document
   Stream<QuerySnapshot?> listenToDocumentByKeyValuePair(
     List<String> key, 
-    List<dynamic> value
+    List<dynamic> value,
+    {
+      int? limit,
+      String? orderingField,
+      bool descending = false,
+      DocumentSnapshot? startDoc,
+      bool isReverse = false
+    }
   ) {
     late Query query;
     if ((key.length == value.length) && key.isNotEmpty) {
@@ -121,12 +150,29 @@ class FirebaseServices {
         }
       }
     }
+    if (orderingField != null) {
+        query = query.orderBy(orderingField, descending: descending);
+    }
+    if (limit != null) {
+      query = query.limit(limit);
+    } 
+    if (startDoc != null) {
+      if (isReverse) {
+        query = query.startAtDocument(startDoc);
+      } else {
+        query = query.startAfterDocument(startDoc);
+      }
+    }
     return query.snapshots();
   }
 
   // Return a stream listener used as a listener in the collection
-  Stream<QuerySnapshot> listenToDocument() {
+  Stream<QuerySnapshot> listenToallDocument() {
     return _collection.snapshots();
+  }
+
+  Stream<DocumentSnapshot> listenToDocument(String docId) {
+    return _collection.doc(docId).snapshots();
   }
 
   //---------------------------- Delete operation ------------------------------
