@@ -31,10 +31,10 @@ class _TicketCategoryStackedState extends State<TicketCategoryStacked> {
                   padding: const EdgeInsets.all(8.0),
                   child: SfCartesianChart(
                     palette: const [
-                      ColorConstant.red40,
+                      ColorConstant.whiteBlack40,
                       ColorConstant.yellow40,
                       ColorConstant.green40,
-                      ColorConstant.whiteBlack40
+                      ColorConstant.red40
                     ],
                     title: ChartTitle(
                         text: "Ticket by Category",
@@ -49,32 +49,38 @@ class _TicketCategoryStackedState extends State<TicketCategoryStacked> {
                           dataSource: widget.chartData,
                           xValueMapper: (StackBarChartModel data, _) =>
                               data.xAxis,
-                          yValueMapper: (StackBarChartModel data, _) =>
-                              data.y1),
+                          yValueMapper: (StackBarChartModel data, _) => data.y1,
+                          name: "Not started"),
                       StackedColumnSeries<StackBarChartModel, String>(
                           dataLabelSettings: const DataLabelSettings(
                               isVisible: true, showCumulativeValues: false),
                           dataSource: widget.chartData,
                           xValueMapper: (StackBarChartModel data, _) =>
                               data.xAxis,
-                          yValueMapper: (StackBarChartModel data, _) =>
-                              data.y2),
+                          yValueMapper: (StackBarChartModel data, _) => data.y2,
+                          name: "In progress"),
                       StackedColumnSeries<StackBarChartModel, String>(
                           dataLabelSettings: const DataLabelSettings(
                               isVisible: true, showCumulativeValues: false),
                           dataSource: widget.chartData,
                           xValueMapper: (StackBarChartModel data, _) =>
                               data.xAxis,
-                          yValueMapper: (StackBarChartModel data, _) =>
-                              data.y3),
+                          yValueMapper: (StackBarChartModel data, _) => data.y3,
+                          name: "Done"),
                       StackedColumnSeries<StackBarChartModel, String>(
                           dataLabelSettings: const DataLabelSettings(
                               isVisible: true, showCumulativeValues: false),
                           dataSource: widget.chartData,
                           xValueMapper: (StackBarChartModel data, _) =>
                               data.xAxis,
-                          yValueMapper: (StackBarChartModel data, _) => data.y4)
+                          yValueMapper: (StackBarChartModel data, _) => data.y4,
+                          name: "Failed")
                     ],
+                    legend: Legend(
+                      isVisible: true,
+                      position: LegendPosition.right,
+                      overflowMode: LegendItemOverflowMode.wrap,
+                    ),
                   ),
                 ))));
   }

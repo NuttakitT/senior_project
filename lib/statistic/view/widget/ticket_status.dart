@@ -27,8 +27,8 @@ class _TicketStatusState extends State<TicketStatus> {
                   child: SfCircularChart(
                       palette: const [
                         ColorConstant.whiteBlack40,
-                        ColorConstant.green40,
                         ColorConstant.yellow40,
+                        ColorConstant.green40,
                         ColorConstant.red40,
                       ],
                       title: ChartTitle(

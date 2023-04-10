@@ -59,10 +59,10 @@ class _StatisticViewState extends State<StatisticView> {
       LineChartModel(x: 29, y: 22),
     ],
     [
-      PieChartModel(title: "Not started", data: 20),
+      PieChartModel(title: "Not started", data: 12),
       PieChartModel(title: "Pending", data: 20),
-      PieChartModel(title: "Done", data: 20),
-      PieChartModel(title: "Failed", data: 20),
+      PieChartModel(title: "Done", data: 35),
+      PieChartModel(title: "Failed", data: 2),
     ],
     [
       LineChartModel(x: 1, y: 2.1),
@@ -91,9 +91,9 @@ class _StatisticViewState extends State<StatisticView> {
     [
       StackBarChartModel(xAxis: "xAxis", y1: 3, y2: 4, y3: 2, y4: 1),
       StackBarChartModel(xAxis: "xAxis2", y1: 9, y2: 1, y3: 3, y4: 1),
-      StackBarChartModel(xAxis: "xAxis3", y1: 0, y2: 5, y3: 6, y4: 10),
-      StackBarChartModel(xAxis: "xAxis4", y1: 3, y2: 0, y3: 1, y4: 18),
-      StackBarChartModel(xAxis: "xAxis5", y1: 0, y2: 0, y3: 2, y4: 12),
+      StackBarChartModel(xAxis: "xAxis3", y1: 0, y2: 5, y3: 12, y4: 1),
+      StackBarChartModel(xAxis: "xAxis4", y1: 3, y2: 0, y3: 9, y4: 12),
+      StackBarChartModel(xAxis: "xAxis5", y1: 0, y2: 0, y3: 20, y4: 1),
     ],
 
     [SingleResultChart(data: 1.37, detail: "hours")],
