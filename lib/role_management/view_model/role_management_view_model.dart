@@ -33,8 +33,14 @@ class RoleManagementViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> changeResponsibility(
-      List<TopicCategory> newResponsibility) async {}
+  Future<bool> changeResponsibility(String uid, List<TopicCategory> newResponsibility) async {
+    List<String> responsibility = [];
+    for (int i = 0; i < newResponsibility.length; i++) {
+      responsibility.add(newResponsibility[i].id!);
+    }
+    bool isSuccess = await _servicesUser.editDocument(uid, {"responsibility": responsibility});
+    return isSuccess;
+  }
 
   Future<bool> addCategory(AddCategoryRequest request) async {
     bool isSuccess = await _serviesCategory.setDocument(
