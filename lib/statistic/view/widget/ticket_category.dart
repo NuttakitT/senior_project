@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/widget/chat_input.dart';
 import 'package:senior_project/statistic/model/statistic_model.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class TicketVolume extends StatefulWidget {
-  final List<LineChartModel> chartData;
-  const TicketVolume({super.key, required this.chartData});
+class TicketCategory extends StatefulWidget {
+  final List<BarChartModel> chartData;
+  const TicketCategory({super.key, required this.chartData});
 
   @override
-  State<TicketVolume> createState() => _TicketVolumeState();
+  State<TicketCategory> createState() => _TicketCategoryState();
 }
 
-class _TicketVolumeState extends State<TicketVolume> {
-  late TooltipBehavior _tooltipBehavior;
-
+class _TicketCategoryState extends State<TicketCategory> {
   @override
   void initState() {
-    _tooltipBehavior = TooltipBehavior(
-        enable: true, header: 'volume', format: 'point.y tickets');
     super.initState();
+    widget.chartData.sort((a, b) => a.amount.compareTo(b.amount));
   }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        flex: 2,
+        flex: widget.chartData.length >= 5 ? 2 : 1,
         child: Center(
             child: Container(
                 decoration: BoxDecoration(
@@ -36,18 +32,17 @@ class _TicketVolumeState extends State<TicketVolume> {
                   padding: const EdgeInsets.all(8.0),
                   child: SfCartesianChart(
                       title: ChartTitle(
-                          text: "Ticket Volume",
+                          text: "Ticket bt Category",
                           alignment: ChartAlignment.near,
                           textStyle: AppFontStyle.blackMd18),
-                      primaryXAxis: NumericAxis(interval: 1),
-                      tooltipBehavior: _tooltipBehavior,
-                      series: <ChartSeries>[
-                        // Renders line chart
-                        LineSeries<LineChartModel, int>(
+                      primaryXAxis: CategoryAxis(),
+                      isTransposed: true,
+                      series: <ChartSeries<BarChartModel, String>>[
+                        // Renders column chart
+                        ColumnSeries<BarChartModel, String>(
                           dataSource: widget.chartData,
-                          xValueMapper: (LineChartModel data, _) => data.x,
-                          yValueMapper: (LineChartModel data, _) => data.y,
-                          markerSettings: const MarkerSettings(isVisible: true),
+                          xValueMapper: (BarChartModel data, _) => data.xAxis,
+                          yValueMapper: (BarChartModel data, _) => data.amount,
                         )
                       ]),
                 ))));

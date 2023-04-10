@@ -237,6 +237,11 @@ extension AppFontStyle on FontStyle {
       color: ColorConstant.whiteBlack80,
       fontWeight: AppFontWeight.semiBold,
       fontSize: 20);
+  static const wb80B16 = TextStyle(
+      fontFamily: font,
+      color: ColorConstant.whiteBlack80,
+      fontWeight: AppFontWeight.bold,
+      fontSize: 16);
   static const wb80B20 = TextStyle(
       fontFamily: font,
       color: ColorConstant.whiteBlack80,

@@ -4,15 +4,15 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/statistic/model/statistic_model.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class TicketStatus extends StatefulWidget {
+class TicketPriority extends StatefulWidget {
   final List<PieChartModel> chartData;
-  const TicketStatus({super.key, required this.chartData});
+  const TicketPriority({super.key, required this.chartData});
 
   @override
-  State<TicketStatus> createState() => _TicketStatusState();
+  State<TicketPriority> createState() => _TicketPriorityState();
 }
 
-class _TicketStatusState extends State<TicketStatus> {
+class _TicketPriorityState extends State<TicketPriority> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -26,13 +26,13 @@ class _TicketStatusState extends State<TicketStatus> {
                   padding: const EdgeInsets.all(8.0),
                   child: SfCircularChart(
                       palette: const [
-                        ColorConstant.whiteBlack40,
                         ColorConstant.green40,
                         ColorConstant.yellow40,
                         ColorConstant.red40,
+                        ColorConstant.red70
                       ],
                       title: ChartTitle(
-                          text: "Ticket status",
+                          text: "Ticket Priority",
                           alignment: ChartAlignment.near,
                           textStyle: AppFontStyle.blackMd18),
                       series: <CircularSeries>[
