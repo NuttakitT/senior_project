@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/role_management/view_model/role_management_view_model.dart';
 
 class RoleManagementHeader extends StatelessWidget {
   final String title;
-  final bool isSearchEnabled;
   final String buttonLabel;
   final Widget popup;
   const RoleManagementHeader(
       {super.key,
       required this.title,
-      required this.isSearchEnabled,
       required this.buttonLabel,
       required this.popup});
 
@@ -24,29 +20,15 @@ class RoleManagementHeader extends StatelessWidget {
       child: Row(
         children: [
           DefaultTextStyle(style: AppFontStyle.wb90Md32, child: Text(title)),
-          const Spacer(),
-          if (isSearchEnabled)
-            Container(
-              width: 200,
-              height: 40,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: ColorConstant.white),
-              child: TextField(
-                decoration: const InputDecoration(
-                    hintText: "search...",
-                    hintStyle: TextStyle(
-                        color: ColorConstant.whiteBlack30, fontSize: 16),
-                    counterText: "",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.zero,
-                        borderSide: BorderSide.none,
-                        gapPadding: 0)),
-                onChanged: (value) {
-                  context.read<RoleManagementViewModel>().setSearchText(value);
-                },
+          const SizedBox(width: 16),
+          Expanded(
+            child: Container(
+              height: 1,
+              decoration: const BoxDecoration(
+                color: ColorConstant.whiteBlack30
               ),
             ),
+          ),
           const SizedBox(width: 16),
           SizedBox(
             width: 178,
