@@ -1,10 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/role_management/view/role_management_view.dart';
+import 'package:senior_project/role_management/view_model/role_management_view_model.dart';
 
 class AddAdminPopup extends StatefulWidget {
-  String user = "";
-  AddAdminPopup({super.key, required this.user});
+  const AddAdminPopup({super.key});
 
   @override
   State<AddAdminPopup> createState() => _AddAdminPopupState();
@@ -12,6 +17,7 @@ class AddAdminPopup extends StatefulWidget {
 
 class _AddAdminPopupState extends State<AddAdminPopup> {
   bool isUserEmpty = false;
+  String user = "";
 
   Color setColorOfTextField(bool emptyFlag) {
     if (!emptyFlag) {
@@ -27,7 +33,8 @@ class _AddAdminPopupState extends State<AddAdminPopup> {
 
   @override
   Widget build(BuildContext context) {
-    String userLabel = widget.user.isEmpty ? Consts.search : widget.user;
+    String userLabel = user.isEmpty ? Consts.search : user;
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
 
     return AlertDialog(
       backgroundColor: ColorConstant.white,
@@ -65,13 +72,16 @@ class _AddAdminPopupState extends State<AddAdminPopup> {
                       child: OutlinedButton(
                         onPressed: () {
                           showSearch(
-                              context: context,
-                              delegate: FindUsersDelegate(
-                                  onUserSelected: (selectedUser) {
+                            context: context,
+                            delegate: FindUsersDelegate(
+                              onUserSelected: (selectedUser) {
                                 setState(() {
-                                  widget.user = selectedUser;
+                                  user = selectedUser;
                                 });
-                              }));
+                              },
+                              allSuggestions: context.read<RoleManagementViewModel>().getAllUser
+                            )
+                          );
                           // open all user list view
                         },
                         style: ButtonStyle(
@@ -88,9 +98,18 @@ class _AddAdminPopupState extends State<AddAdminPopup> {
                             const Icon(Icons.search,
                                 color: ColorConstant.whiteBlack40),
                             const SizedBox(width: 8),
-                            Text(
-                              userLabel,
-                              style: AppFontStyle.wb40R14,
+                            Expanded(
+                              child: RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: userLabel,
+                                    style: AppFontStyle.wb40R14,
+                                  )
+                                ]
+                              )),
                             ),
                           ],
                         ),
@@ -102,10 +121,15 @@ class _AddAdminPopupState extends State<AddAdminPopup> {
                     width: 90,
                     height: 40,
                     child: TextButton(
-                      onPressed: () {
-                        // Chack if user OK?
-                        // Make the user -> Admin, then
-                        Navigator.pop(context);
+                      onPressed: () async {
+                        await context.read<RoleManagementViewModel>().addAdmin(user);
+                        Navigator.pushAndRemoveUntil(
+                          context, 
+                          MaterialPageRoute(builder: (context) {
+                            return RoleManagementView(isAdmin: isAdmin);
+                          }), 
+                          (route) => false
+                        );
                       },
                       style: ButtonStyle(
                           backgroundColor:
@@ -138,11 +162,10 @@ class _AddAdminPopupState extends State<AddAdminPopup> {
 
 class FindUsersDelegate extends SearchDelegate {
   final Function(String) onUserSelected;
+  List<String> allSuggestions = [];
 
-  FindUsersDelegate({required this.onUserSelected});
+  FindUsersDelegate({required this.onUserSelected, required this.allSuggestions});
 
-  // TODO: list all users
-  List<String> allSuggestions = ['1', '2', '3'];
 
   @override
   Widget? buildLeading(BuildContext context) {
