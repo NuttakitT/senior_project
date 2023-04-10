@@ -233,6 +233,12 @@ class HelpDeskViewModel extends ChangeNotifier {
       false
     );
     _helpDeskModel.addTask(task);
+    List<String> responsibilityAdmin = [];
+    await FirebaseServices("user").getDocumentByKeyList("responsibility", ["General"]).then((value) {
+      for (int i = 0; i < value!.docs.length; i++) {
+        responsibilityAdmin.add(value.docs[i].get("id"));
+      }
+    });
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
@@ -245,7 +251,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
-      "adminId": null
+      "adminId": responsibilityAdmin
     });
     Map<String, dynamic> taskDetail = {
       "id": task.getId,
@@ -256,7 +262,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
-      "adminId": null,
+      "adminId": responsibilityAdmin,
       "isSeen": false
     };
     taskDetail.addAll({"objectID": objectId!});
