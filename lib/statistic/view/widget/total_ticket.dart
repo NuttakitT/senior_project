@@ -3,8 +3,10 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 
 class TotalTicket extends StatefulWidget {
+  final String title;
   final int totalTickets;
-  const TotalTicket({super.key, required this.totalTickets});
+  const TotalTicket(
+      {super.key, required this.title, required this.totalTickets});
 
   @override
   State<TotalTicket> createState() => _TotalTicketState();
@@ -25,8 +27,8 @@ class _TotalTicketState extends State<TotalTicket> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Today incoming tickets",
+                  Text(
+                    widget.title,
                     style: AppFontStyle.blackMd18,
                   ),
                   Text(widget.totalTickets.toString(),

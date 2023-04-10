@@ -28,8 +28,6 @@ class _StatisticGridViewState extends State<StatisticGridView> {
     // casting here
     List<LineChartModel> ticketVolume = widget.data[0].cast<LineChartModel>();
     List<PieChartModel> ticketStatus = widget.data[1].cast<PieChartModel>();
-    List<LineChartModel> ticketHandlingTime =
-        widget.data[2].cast<LineChartModel>();
     List<PieChartModel> ticketPriority = widget.data[3].cast<PieChartModel>();
     List<StackBarChartModel> ticketCategoryStacked =
         widget.data[4].cast<StackBarChartModel>();
@@ -48,7 +46,13 @@ class _StatisticGridViewState extends State<StatisticGridView> {
           const DateFilter(),
           const SizedBox(height: 24),
           Row(children: [
-            const TotalTicket(totalTickets: 23),
+            const TotalTicket(title: "Total tickets today", totalTickets: 15),
+            const SizedBox(width: 16),
+            const TotalTicket(
+                title: "Total tickets this week", totalTickets: 42),
+            const SizedBox(width: 16),
+            const TotalTicket(
+                title: "Total tickets this Month", totalTickets: 230),
             const SizedBox(width: 16),
             ResponseTime(data: responseTime[0])
           ]),
@@ -56,11 +60,17 @@ class _StatisticGridViewState extends State<StatisticGridView> {
           Row(children: [
             TicketVolume(chartData: ticketVolume),
             const SizedBox(width: 16),
-            TicketStatus(chartData: ticketStatus),
-            const SizedBox(width: 16),
-            // TicketHandlingTime(chartData: ticketHandlingTime),
-            // const SizedBox(width: 16),
-            TicketPriority(chartData: ticketPriority)
+            Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    TicketStatus(chartData: ticketStatus),
+                    const SizedBox(width: 16),
+                    // TicketHandlingTime(chartData: ticketHandlingTime),
+                    // const SizedBox(width: 16),
+                    TicketPriority(chartData: ticketPriority)
+                  ],
+                )),
           ]),
           const SizedBox(height: 16),
           Row(children: [
