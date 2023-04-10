@@ -20,7 +20,6 @@ class _CategoryTableState extends State<CategoryTable> {
       children: [
         RoleManagementHeader(
             title: Consts.listCategoryLabel,
-            isSearchEnabled: false,
             buttonLabel: Consts.addCategory,
             popup: const AddCategoryPopup()),
         CategoryDetailTable(widget: widget),

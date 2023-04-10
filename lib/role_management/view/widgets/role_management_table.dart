@@ -24,9 +24,8 @@ class _RoleManagementTableState extends State<RoleManagementTable> {
       children: [
         RoleManagementHeader(
             title: Consts.roleManagementHeader,
-            isSearchEnabled: true,
             buttonLabel: Consts.addUser,
-            popup: AddAdminPopup(user: "")),
+            popup: const AddAdminPopup()),
         RoleManagementDetailTable(widget: widget)
       ],
     );
@@ -60,7 +59,9 @@ class RoleManagementDetailTable extends StatelessWidget {
             5: FlexColumnWidth()
           },
           children: [
-            buildRow([
+            buildRow(
+              "",
+              [
               Consts.userId,
               Consts.firstName,
               Consts.lastName,
@@ -69,7 +70,9 @@ class RoleManagementDetailTable extends StatelessWidget {
               Consts.responsibility
             ], true, false, context),
             for (int i = 0; i < widget.admins.length; i++) ...[
-              buildRow([
+              buildRow(
+                widget.admins[i].userId,
+                [
                 widget.admins[i].userId,
                 widget.admins[i].firstName,
                 widget.admins[i].lastName,
@@ -85,7 +88,7 @@ class RoleManagementDetailTable extends StatelessWidget {
   }
 }
 
-TableRow buildRow(List<dynamic> cells, bool isHeader, bool isLastIndex,
+TableRow buildRow(String uid, List<dynamic> cells, bool isHeader, bool isLastIndex,
     BuildContext context) {
   List<TopicCategory> topic =
       context.watch<RoleManagementViewModel>().getCategories;
@@ -112,7 +115,7 @@ TableRow buildRow(List<dynamic> cells, bool isHeader, bool isLastIndex,
           return Padding(
               padding: const EdgeInsets.only(
                   left: 16, top: 18, bottom: 18, right: 16),
-              child: MultiSelectTopics(topics: topic)
+              child: MultiSelectTopics(topics: topic, uid: uid,)
               );
         } else {
           return Container();

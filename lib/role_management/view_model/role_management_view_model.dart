@@ -1,63 +1,45 @@
+// ignore_for_file: prefer_final_fields
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
-import 'package:uuid/uuid.dart';
-
-import '../model/role_management_model.dart';
+import 'package:senior_project/role_management/model/role_management_model.dart';
 
 class RoleManagementViewModel extends ChangeNotifier {
   final FirebaseServices _serviesCategory = FirebaseServices("category");
+  final FirebaseServices _servicesUser = FirebaseServices("user");
+  List<String> _alluser = [];
   RoleManagementModel _model = RoleManagementModel();
-  final List<Admin> _admins = [
-    Admin(
-        userId: "32",
-        firstName: "firstName",
-        lastName: "lastName",
-        email: "emailemailemailemailemail",
-        role: "role",
-        responsibility: [
-          TopicCategory(
-              id: "01", categoryName: "นอน", description: "bvjoevbwo"),
-          TopicCategory(
-              id: "02", categoryName: "ปลูกผัก", description: "bvjoevbwo")
-        ]),
-    Admin(
-        userId: "33",
-        firstName: "firstName",
-        lastName: "lastName",
-        email: "email",
-        role: "role",
-        responsibility: [
-          TopicCategory(
-              id: "03333333",
-              categoryName: "ถูพื้นถูพื้นถูพื้นถูพื้นถูพื้นถูพื้นถูพื้น",
-              description: "bvjoevbwo"),
-          TopicCategory(
-              id: "04", categoryName: "ล้างจาน", description: "bvjoevbwo")
-        ]),
-  ];
 
   void initModel() {
     _model = RoleManagementModel();
+    _alluser = [];
   }
 
   List<TopicCategory> get getCategories => _model.getCategory;
+  List<Admin> get getAdmin => _model.getAdmin;
+  List<String> get getAllUser => _alluser;
 
-  // Role management
-  Future<List<Admin>> getAdmins() async {
-    return Future.value(_admins);
+  Future<bool> addAdmin(String email) async {
+    final snaopshot = await _servicesUser.getDocumnetByKeyValuePair(["email"], [email]);
+    if (snaopshot!.docs.isNotEmpty) {
+      bool isSuccess = await _servicesUser.editDocument(snaopshot.docs.first.id, {
+        "role": 0,
+      });
+      return isSuccess;
+    } else {
+      return false;
+    }
   }
 
-  Future<bool> addAdmin(AddAdminRequest request) async {
-    return false;
-  }
-
-  Future<void> changeResponsibility(
-      List<TopicCategory> newResponsibility) async {}
-
-  void setSearchText(String text) {
-    // TODO: make search text
-    notifyListeners();
+  Future<bool> changeResponsibility(String uid, List<TopicCategory> newResponsibility) async {
+    List<String> responsibility = [];
+    for (int i = 0; i < newResponsibility.length; i++) {
+      responsibility.add(newResponsibility[i].id!);
+    }
+    bool isSuccess = await _servicesUser.editDocument(uid, {"responsibility": responsibility});
+    return isSuccess;
   }
 
   Future<bool> addCategory(AddCategoryRequest request) async {
@@ -72,8 +54,9 @@ class RoleManagementViewModel extends ChangeNotifier {
 
   Future<RoleManagementModel> fetchPage() async {
     List<TopicCategory> category = [];
-    final admins = await getAdmins();
+    List<Admin> admin = [];
     final cateogorySnapshot = await _serviesCategory.getAllDocument();
+    final adminSnapshot = await _servicesUser.getAllDocument();
     for(int i = 0; i < cateogorySnapshot!.docs.length; i++) {
       category.add(
         TopicCategory(
@@ -83,8 +66,38 @@ class RoleManagementViewModel extends ChangeNotifier {
         )
       );
     }
+    for (int i = 0; i < adminSnapshot!.docs.length; i++) {
+      if (adminSnapshot.docs[i].get("id") != FirebaseAuth.instance.currentUser!.uid) {
+        _alluser.add(adminSnapshot.docs[i].get("email"));
+        if (adminSnapshot.docs[i].get("role") == 0) {
+          List<dynamic> resposibility = adminSnapshot.docs[i].get("responsibility"); 
+          List<TopicCategory> cat = [];
+          for(int j = 0; j < resposibility.length; j++) {
+            final categorySnapshot = await _serviesCategory.getDocumentById(resposibility[i]);
+            if (categorySnapshot!.exists) {
+              cat.add(TopicCategory(
+                id: categorySnapshot.id, 
+                categoryName: categorySnapshot.get("name"), 
+                description: categorySnapshot.get("description")
+                )
+              );
+            }
+          }
+          List<String> name = adminSnapshot.docs[i].get("name").toString().split(" ");
+          admin.add(Admin(
+            adminSnapshot.docs[i].id, 
+            name[0], 
+            name[1], 
+            adminSnapshot.docs[i].get("email"), 
+            "Admin", 
+            cat
+            )
+          );
+        }
+      }
+    }
 
-    _model = RoleManagementModel.overloaddedConstructor(admins, category);
+    _model = RoleManagementModel.overloaddedConstructor(admin, category);
     return _model;
   }
 }
