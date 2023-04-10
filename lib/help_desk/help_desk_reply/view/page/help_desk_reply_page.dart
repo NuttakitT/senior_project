@@ -13,6 +13,7 @@ class HelpDeskReplyPage extends StatefulWidget {
   final int status;
   final String category;
   final DateTime time;
+  final List<dynamic> admin;
   const HelpDeskReplyPage({
     super.key, 
     required this.docId,
@@ -22,7 +23,8 @@ class HelpDeskReplyPage extends StatefulWidget {
     required this.priority,
     required this.status,
     required this.category,
-    required this.time
+    required this.time,
+    required this.admin
   });
 
   @override
@@ -41,7 +43,8 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
       "priority": widget.priority,
       "status": widget.status,
       "category": widget.category,
-      "time": widget.time
+      "time": widget.time,
+      "admin": widget.admin
     };
 
     if (isMobile) {

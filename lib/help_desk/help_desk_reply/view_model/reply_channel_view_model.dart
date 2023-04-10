@@ -1,7 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/help_desk/help_desk_reply/model/help_desk_reply_model.dart';

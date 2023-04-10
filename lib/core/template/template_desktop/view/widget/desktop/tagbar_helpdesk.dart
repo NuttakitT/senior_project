@@ -138,6 +138,7 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
         ),
         onTap: () {
           context.read<TemplateDesktopViewModel>().changeState(context, widget.index, 4);
+          context.read<HelpDeskViewModel>().setShowMessagePageState(false);
         },
       ),
     );

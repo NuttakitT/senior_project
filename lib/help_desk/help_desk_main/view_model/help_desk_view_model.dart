@@ -224,21 +224,22 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> createTask(String title, String detail, int priority, String category) async {
+    List<String> responsibilityAdmin = [];
+    await FirebaseServices("user").getDocumentByKeyList("responsibility", [category]).then((value) {
+      for (int i = 0; i < value!.docs.length; i++) {
+        responsibilityAdmin.add(value.docs[i].get("id"));
+      }
+    });
     Task task = Task(
       FirebaseAuth.instance.currentUser!.uid,
       title,
       Content(detail),
       priority,
       category,
-      false
+      false,
+      responsibilityAdmin
     );
     _helpDeskModel.addTask(task);
-    List<String> responsibilityAdmin = [];
-    await FirebaseServices("user").getDocumentByKeyList("responsibility", ["General"]).then((value) {
-      for (int i = 0; i < value!.docs.length; i++) {
-        responsibilityAdmin.add(value.docs[i].get("id"));
-      }
-    });
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
@@ -272,6 +273,16 @@ class HelpDeskViewModel extends ChangeNotifier {
   void clearModel() {
     _helpDeskModel = HelpDeskMainModel();
     _task = [];
+  }
+
+  Future<void> setTicketResponsibility(String docId, String adminId) async {
+    final snapshot = await _serviceTicket.getDocumentById(docId);
+    await _serviceTicket.editDocument(docId, {
+      "adminId": [adminId]
+    });
+    await _algolia.updateObject(snapshot!.get("objectID"), {
+      "adminId": [adminId]
+    });
   }
 
   Future<void> _changeTaskState(
@@ -318,6 +329,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       snapshot.get("priority"),
       snapshot.get("category"),
       snapshot.get("isSeen"),
+      snapshot.get("adminId"),
       id: snapshot.get("id"),
       dateCreate: snapshot.get("dateCreate").toDate(),
       status: snapshot.get("status"),

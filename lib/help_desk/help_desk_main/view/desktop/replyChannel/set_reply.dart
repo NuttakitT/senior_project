@@ -8,7 +8,7 @@ class SetReply {
     int selectedTicket = context.watch<HelpDeskViewModel>().getSelectedTicket!;
     int calculatedPage = (selectedTicket / (limit)).ceil();
     int calculateSelected = selectedTicket - (calculatedPage-1) * limit;
-    List<Map<String, dynamic>> allTicket = context.read<HelpDeskViewModel>().getTask;
+    List<Map<String, dynamic>> allTicket = context.watch<HelpDeskViewModel>().getTask;
     Map<String, dynamic> ticket = allTicket[calculateSelected - 1];
     context.read<ReplyChannelViewModel>().setTaskData = {
       "docId": ticket["docId"],
@@ -19,7 +19,8 @@ class SetReply {
       "status": ticket["status"],
       "category": ticket["category"],
       "time": ticket["time"],
-      "name": ticket["name"]
+      "name": ticket["name"],
+      "admin": ticket["admin"],
     };
   }
 }

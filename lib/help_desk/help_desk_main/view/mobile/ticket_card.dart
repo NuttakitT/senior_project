@@ -55,6 +55,7 @@ class _TicketCardState extends State<TicketCard> {
                       status: widget.detail["status"],
                       category: widget.detail["category"],
                       time: widget.detail["time"],
+                      admin: widget.detail["admin"],
                     );
                   })
                 );

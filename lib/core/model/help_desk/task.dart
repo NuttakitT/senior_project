@@ -11,6 +11,7 @@ class Task {
   late String _title;
   late Content _content;
   late bool _isSeen;
+  late List<dynamic> _admin;
 
   Task(
     String ownerId,
@@ -19,6 +20,7 @@ class Task {
     int priority,
     String category,
     bool seen,
+    List<dynamic> admin,
     {String? id, DateTime? dateCreate, int? status}
   ) {
     if (id != null) {
@@ -42,6 +44,7 @@ class Task {
     _priority = priority;
     _category = category;
     _isSeen = seen;
+    _admin = admin;
   }
 
   String get getId => _id;
@@ -53,6 +56,7 @@ class Task {
   String get getTitle => _title;
   Content get getContent => _content;
   bool get getSeen => _isSeen;
+  List<dynamic> get getAdmin => _admin;
 
   bool changePriority(int newPriority) {
     if (newPriority >= 0 && newPriority < 4) {
