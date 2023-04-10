@@ -18,7 +18,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   final AlgoliaServices _algolia = AlgoliaServices("ticket");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
-  List<String> _category = ["General"];
+  List<String> _category = [];
   bool _isShowMessagePage = false;
   int? _allTicket;
   int? _startTicket;
@@ -135,7 +135,6 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   Future<void> initTicketCategory() async {
     final snapshot = await _serviceCategory.getAllDocument();
-    _category = ["General"];
     for (int i = 0; i < snapshot!.docs.length; i++) {
       _category.add(snapshot.docs[i].get("name"));
     }
@@ -229,7 +228,8 @@ class HelpDeskViewModel extends ChangeNotifier {
       title,
       Content(detail),
       priority,
-      category
+      category,
+      false
     );
     _helpDeskModel.addTask(task);
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
@@ -244,7 +244,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
-      "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
+      "adminId": null
     });
     Map<String, dynamic> taskDetail = {
       "id": task.getId,
@@ -255,7 +255,8 @@ class HelpDeskViewModel extends ChangeNotifier {
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
-      "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
+      "adminId": null,
+      "isSeen": false
     };
     taskDetail.addAll({"objectID": objectId!});
     await _serviceTicket.setDocument(docId, taskDetail);
@@ -309,9 +310,10 @@ class HelpDeskViewModel extends ChangeNotifier {
       Content(snapshot.get("detail")),
       snapshot.get("priority"),
       snapshot.get("category"),
+      snapshot.get("isSeen"),
       id: snapshot.get("id"),
       dateCreate: snapshot.get("dateCreate").toDate(),
-      status: snapshot.get("status")
+      status: snapshot.get("status"),
     );
     _helpDeskModel.addTask(task);
     _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));

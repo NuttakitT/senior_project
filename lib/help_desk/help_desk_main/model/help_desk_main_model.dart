@@ -29,7 +29,8 @@ class HelpDeskMainModel {
       "priority": _tasks[index].getPriority, 
       "status": _tasks[index].getStatus, 
       "category": _tasks[index].getCategory,
-      "time": _tasks[index].getDateCreate
+      "time": _tasks[index].getDateCreate,
+      "isSeen": _tasks[index].getSeen
     };
   }
 }

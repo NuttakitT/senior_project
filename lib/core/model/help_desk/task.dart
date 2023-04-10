@@ -10,6 +10,7 @@ class Task {
   late int _status;
   late String _title;
   late Content _content;
+  late bool _isSeen;
 
   Task(
     String ownerId,
@@ -17,6 +18,7 @@ class Task {
     Content content,
     int priority,
     String category,
+    bool seen,
     {String? id, DateTime? dateCreate, int? status}
   ) {
     if (id != null) {
@@ -39,6 +41,7 @@ class Task {
     _content = content;
     _priority = priority;
     _category = category;
+    _isSeen = seen;
   }
 
   String get getId => _id;
@@ -49,6 +52,7 @@ class Task {
   int get getPriority => _priority;
   String get getTitle => _title;
   Content get getContent => _content;
+  bool get getSeen => _isSeen;
 
   bool changePriority(int newPriority) {
     if (newPriority >= 0 && newPriority < 4) {
@@ -64,5 +68,9 @@ class Task {
       return true;
     } 
     return false;
+  }
+
+  void changeIsSeen(bool seen) {
+    _isSeen = seen;
   }
 }

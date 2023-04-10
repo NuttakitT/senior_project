@@ -1,10 +1,12 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -34,6 +36,7 @@ class _ContentState extends State<Content> {
     int priority = widget.detail["priority"];
     String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
     String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
+    bool isSeen = widget.detail["isSeen"] || FirebaseAuth.instance.currentUser!.uid == widget.detail["ownerId"];
 
     return InkWell(
       onTap: () {
@@ -52,10 +55,13 @@ class _ContentState extends State<Content> {
       },
       child: Container(
         height: widget.size,
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: isSeen ? ColorConstant.blue5 : Colors.white,
           border: Border(
-            bottom: BorderSide(color: ColorConstant.whiteBlack30),
+            bottom: BorderSide(color: isSeen 
+            ? ColorConstant.blue10 
+            : ColorConstant.whiteBlack30
+            ),
           )
         ),
         child: Row(
@@ -90,7 +96,7 @@ class _ContentState extends State<Content> {
                   children: [
                     TextSpan(
                       text: widget.detail["name"],
-                      style: textStyle(false, ColorConstant.whiteBlack90, AppFontStyle.font)
+                      style: textStyle(isSeen, ColorConstant.whiteBlack90, AppFontStyle.font)
                     )
                   ]
                 ),
@@ -163,11 +169,11 @@ class _ContentState extends State<Content> {
                   children: [
                     TextSpan(
                       text: widget.detail["title"],
-                      style: textStyle(false, ColorConstant.whiteBlack90, AppFontStyle.thaiFont)
+                      style: textStyle(isSeen, ColorConstant.whiteBlack90, AppFontStyle.thaiFont)
                     ),
                     TextSpan(
                       text: " - ${widget.detail["detail"]}",
-                      style: textStyle(false, ColorConstant.whiteBlack60, AppFontStyle.thaiFont)
+                      style: textStyle(isSeen, ColorConstant.whiteBlack60, AppFontStyle.thaiFont)
                     )
                   ]
                 ),
