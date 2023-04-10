@@ -119,7 +119,7 @@ class AppViewModel extends ChangeNotifier {
       List<String> chunkData = chunk[i].split(": ");
       if (chunkData[0] == "role") {
         result[chunkData[0]] = int.parse(chunkData[1]);
-      } else {
+      } else if(chunkData[0] != "responsibility") {
         result[chunkData[0]] = chunkData[1] == "null" ? null : chunkData[1];
       }
     }
@@ -147,7 +147,7 @@ class AppViewModel extends ChangeNotifier {
     provider.addScope("User.read");
     try {
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
-      final snapshot = await FirebaseServices("user").getDocumentById(
+      dynamic snapshot = await FirebaseServices("user").getDocumentById(
         credential.user!.uid
       );
       if (!snapshot!.exists) {
@@ -159,6 +159,9 @@ class AppViewModel extends ChangeNotifier {
           "profileImageUrl": credential.user!.photoURL,
           "role": 1
         });
+        snapshot = await FirebaseServices("user").getDocumentById(
+          credential.user!.uid
+        );
       }
       setLoggedInUser({
         "id": credential.user!.uid,

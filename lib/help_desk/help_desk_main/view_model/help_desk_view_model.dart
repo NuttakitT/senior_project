@@ -135,6 +135,7 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   Future<void> initTicketCategory() async {
     final snapshot = await _serviceCategory.getAllDocument();
+    _category = [];
     for (int i = 0; i < snapshot!.docs.length; i++) {
       _category.add(snapshot.docs[i].get("name"));
     }
@@ -173,7 +174,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  get getCategory => _category;
+  List<String> get getCategory => _category;
   List<Map<String, dynamic>>  get getTask => _task;
 
   bool? getMobileMenuState(int index) {
