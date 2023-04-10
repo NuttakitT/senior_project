@@ -64,6 +64,14 @@ class FirebaseServices {
     }   
   }
 
+  Future<QuerySnapshot?> getDocumentByKeyList(String key, List<dynamic> list) async {
+    try {
+      return await _collection.where(key, arrayContainsAny: list).get();
+    } catch (e) {
+      return null;
+    }
+  }
+
   // Query documnets in the collection, using key-value to query.
   // If there are no any documents, return null.
   // key: list of the filed to query
@@ -144,9 +152,17 @@ class FirebaseServices {
     if ((key.length == value.length) && key.isNotEmpty) {
       for (int i = 0; i < key.length; i++) {
         if (i != 0) {
-          query = query.where(key[i], isEqualTo: value[i]);
+          if (key[i] == "adminId") {
+            query = query.where(key[i], arrayContainsAny: [value[i]]);
+          } else {
+            query = query.where(key[i], isEqualTo: value[i]);
+          }
         } else {
-          query = _collection.where(key[i], isEqualTo: value[i]);
+          if (key[i] == "adminId") {
+            query = _collection.where(key[i], arrayContainsAny: [value[i]]);
+          } else {
+            query = _collection.where(key[i], isEqualTo: value[i]);
+          }
         }
       }
     }
