@@ -4,6 +4,7 @@ import 'package:senior_project/core/template/widget/search_bar.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/tagbar_helpdesk.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 
 //call function from tabtag_help.dart
 class TemplateTagBarHelpDeskAdmin extends StatefulWidget {
@@ -28,6 +29,7 @@ class _TemplateTagBarHelpDeskAdminState
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(6),
       context.watch<TemplateDesktopViewModel>().getHelpDeskAdminState(7),
     ];
+    String id = context.watch<AppViewModel>().app.getUser.getId;
 
     return Container(
       decoration: const BoxDecoration(color: ColorConstant.whiteBlack85),
@@ -51,7 +53,7 @@ class _TemplateTagBarHelpDeskAdminState
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "All Ticket", state: menuSelected[0], index: 0, id: "",),
+              child: TagBarHelpDesk(name: "All Ticket", state: menuSelected[0], index: 0, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.all(24),
@@ -64,15 +66,15 @@ class _TemplateTagBarHelpDeskAdminState
             const Divider(),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Not Start", state: menuSelected[1], index: 1, id: "",),
+              child: TagBarHelpDesk(name: "Not Start", state: menuSelected[1], index: 1, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "In Progress", state: menuSelected[2], index: 2, id: "",),
+              child: TagBarHelpDesk(name: "In Progress", state: menuSelected[2], index: 2, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Closed", state: menuSelected[3], index: 3, id: "",),
+              child: TagBarHelpDesk(name: "Closed", state: menuSelected[3], index: 3, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.all(24),
@@ -84,19 +86,19 @@ class _TemplateTagBarHelpDeskAdminState
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Urgent", state: menuSelected[4], index: 4, id: "",),
+              child: TagBarHelpDesk(name: "Urgent", state: menuSelected[4], index: 4, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "High", state: menuSelected[5], index: 5, id: "",),
+              child: TagBarHelpDesk(name: "High", state: menuSelected[5], index: 5, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Medium", state: menuSelected[6], index: 6, id: "",),
+              child: TagBarHelpDesk(name: "Medium", state: menuSelected[6], index: 6, id: id,),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBarHelpDesk(name: "Low", state: menuSelected[7], index: 7, id: "",),
+              child: TagBarHelpDesk(name: "Low", state: menuSelected[7], index: 7, id: id,),
             ),
           ],
         ),
