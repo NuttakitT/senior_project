@@ -18,7 +18,8 @@ class SetReply {
       "priority": ticket["priority"],
       "status": ticket["status"],
       "category": ticket["category"],
-      "time": ticket["time"]
+      "time": ticket["time"],
+      "name": ticket["name"]
     };
   }
 }

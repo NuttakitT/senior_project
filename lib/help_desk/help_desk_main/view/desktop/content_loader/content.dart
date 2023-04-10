@@ -49,7 +49,8 @@ class _ContentState extends State<Content> {
           "priority": widget.detail["priority"],
           "status": widget.detail["status"],
           "category": widget.detail["category"],
-          "time": widget.detail["time"]
+          "time": widget.detail["time"],
+          "name": widget.detail["name"],
         };
         context.read<HelpDeskViewModel>().setShowMessagePageState(true);
       },

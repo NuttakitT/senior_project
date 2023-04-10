@@ -36,7 +36,8 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
     String userId = context.watch<AppViewModel>().app.getUser.getId;
     DateTime dateCreated = context.watch<ReplyChannelViewModel>().getTaskData["time"];
     context.read<ReplyChannelViewModel>().clearModel();
-    String adminName = "NaYao";
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+    String adminName = isAdmin ? context.watch<ReplyChannelViewModel>().getTaskData["name"] : "NaYao";
 
     return Container(
       padding: const EdgeInsets.only(right: 20),
