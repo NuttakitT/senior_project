@@ -236,7 +236,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       Content(detail),
       priority,
       category,
-      false,
+      [],
       responsibilityAdmin
     );
     _helpDeskModel.addTask(task);
@@ -252,7 +252,8 @@ class HelpDeskViewModel extends ChangeNotifier {
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
-      "adminId": responsibilityAdmin
+      "adminId": responsibilityAdmin,
+      "isSeen": []
     });
     Map<String, dynamic> taskDetail = {
       "id": task.getId,
@@ -264,7 +265,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "title": task.getTitle,
       "detail": detail,
       "adminId": responsibilityAdmin,
-      "isSeen": false
+      "isSeen": []
     };
     taskDetail.addAll({"objectID": objectId!});
     await _serviceTicket.setDocument(docId, taskDetail);
@@ -275,13 +276,33 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task = [];
   }
 
-  Future<void> setTicketResponsibility(String docId, String adminId) async {
+  Future<void> setTicketResponsibility(String docId, String adminId, bool isAssignToOther) async {
     final snapshot = await _serviceTicket.getDocumentById(docId);
+    List<dynamic> seen = snapshot!.get("isSeen") as List<dynamic>;
+    if (isAssignToOther) {
+      seen.remove(adminId);
+    }
     await _serviceTicket.editDocument(docId, {
-      "adminId": [adminId]
+      "adminId": [adminId],
+      "isSeen": seen
     });
-    await _algolia.updateObject(snapshot!.get("objectID"), {
-      "adminId": [adminId]
+    await _algolia.updateObject(snapshot.get("objectID"), {
+      "adminId": [adminId],
+      "isSeen": seen
+    });
+  }
+
+  Future<void> changeSeenStatus(String docId, String adminId) async {
+    final snapshot = await _serviceTicket.getDocumentById(docId);
+    List<dynamic> seen = snapshot!.get("isSeen") as List<dynamic>;
+    if (!seen.contains(adminId)) {
+      seen.add(adminId);
+    }
+    await _algolia.updateObject(snapshot.get("objectID"), {
+      "isSeen": seen
+    });
+    await _serviceTicket.editDocument(docId, {
+      "isSeen": seen
     });
   }
 
@@ -345,8 +366,10 @@ class HelpDeskViewModel extends ChangeNotifier {
     });
     targetTask.changeStatus(snapshot.get("status"));
     targetTask.changeStatus(snapshot.get("priority"));
+    targetTask.changeIsSeen(snapshot.get("isSeen"));
     _task[index]["status"] = snapshot.get("status");
     _task[index]["priority"] = snapshot.get("priority");
+    _task[index]["isSeen"] = snapshot.get("isSeen");
   }
   
   void _removeQueryData(int index) {

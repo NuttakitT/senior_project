@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -244,11 +245,12 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                       ),
                       StreamBuilder(
                         stream: FirebaseServices("ticket").listenToDocument(docId),
-                        builder: (context, snapshot) {
+                        builder: (context, snapshot) {         
                           if (snapshot.connectionState != ConnectionState.active) {
                             return Container();
                           }
-                          if (snapshot.data!.get("status") != 2) {
+                          List<dynamic> adminList = snapshot.data!.get("adminId");
+                          if (snapshot.data!.get("status") != 2 && (adminList.length == 1 && adminList[0] == userId)) {
                             return const ChatInput();
                           }
                           return Container();

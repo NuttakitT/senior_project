@@ -1,10 +1,12 @@
 // ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
 
@@ -27,13 +29,15 @@ class _TicketCardState extends State<TicketCard> {
 
   @override
   Widget build(BuildContext context) {
-    bool isRead = false; // TODO is read?
     String status = context
         .watch<HelpDeskViewModel>()
         .convertToString(true, widget.detail["status"]);
     double cardWidth = 396;
     String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
     String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
+    String uid = context.watch<AppViewModel>().app.getUser.getId;
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+    bool isRead = widget.detail["isSeen"].contains(uid) || FirebaseAuth.instance.currentUser!.uid == widget.detail["ownerId"];
 
     return FutureBuilder(
       future: context.read<HelpDeskViewModel>().formatTaskDetail(),
@@ -43,6 +47,9 @@ class _TicketCardState extends State<TicketCard> {
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
             child: InkWell(
               onTap: () async {
+                if (isAdmin) {
+                  await context.read<HelpDeskViewModel>().changeSeenStatus(widget.detail["docId"], uid);
+                }
                 String docId = await context.read<HelpDeskViewModel>().getTaskDocId(widget.detail["id"]);
                 Navigator.push(context, 
                   MaterialPageRoute(builder: (context) {

@@ -161,7 +161,8 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
                             int index = admin.indexOf(adminValue!);
                             context.read<HelpDeskViewModel>().setTicketResponsibility(
                               docId, 
-                              snapshot.data!.admins[index].userId
+                              snapshot.data!.admins[index].userId,
+                              true
                             );
                           },
                           borderRadius: BorderRadius.circular(4),
@@ -177,7 +178,7 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
                             padding: const EdgeInsets.only(left: 8.0),
                             child: TextButton(
                               onPressed: () async {
-                                await context.read<HelpDeskViewModel>().setTicketResponsibility(docId, uid);
+                                await context.read<HelpDeskViewModel>().setTicketResponsibility(docId, uid, false);
                                 setState(() {
                                   adminValue = null;
                                 });

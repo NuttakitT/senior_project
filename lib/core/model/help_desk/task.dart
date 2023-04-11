@@ -10,7 +10,7 @@ class Task {
   late int _status;
   late String _title;
   late Content _content;
-  late bool _isSeen;
+  late List<dynamic>  _isSeen;
   late List<dynamic> _admin;
 
   Task(
@@ -19,7 +19,7 @@ class Task {
     Content content,
     int priority,
     String category,
-    bool seen,
+    List<dynamic> seen,
     List<dynamic> admin,
     {String? id, DateTime? dateCreate, int? status}
   ) {
@@ -55,7 +55,7 @@ class Task {
   int get getPriority => _priority;
   String get getTitle => _title;
   Content get getContent => _content;
-  bool get getSeen => _isSeen;
+  List<dynamic>  get getSeen => _isSeen;
   List<dynamic> get getAdmin => _admin;
 
   bool changePriority(int newPriority) {
@@ -74,7 +74,8 @@ class Task {
     return false;
   }
 
-  void changeIsSeen(bool seen) {
-    _isSeen = seen;
+  void changeIsSeen(List<dynamic> id) {
+    _isSeen = [];
+    _isSeen.addAll(id);
   }
 }

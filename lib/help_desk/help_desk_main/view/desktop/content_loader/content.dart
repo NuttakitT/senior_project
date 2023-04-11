@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -36,10 +36,15 @@ class _ContentState extends State<Content> {
     int priority = widget.detail["priority"];
     String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
     String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
-    bool isSeen = widget.detail["isSeen"] || FirebaseAuth.instance.currentUser!.uid == widget.detail["ownerId"];
+    String uid = context.watch<AppViewModel>().app.getUser.getId;
+    bool isSeen = widget.detail["isSeen"].contains(uid) || FirebaseAuth.instance.currentUser!.uid == widget.detail["ownerId"];
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
 
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        if (isAdmin) {
+          await context.read<HelpDeskViewModel>().changeSeenStatus(widget.detail["docId"], uid);
+        }
         context.read<HelpDeskViewModel>().setSelectedTicket = widget.index;
         context.read<ReplyChannelViewModel>().setTaskData = {
           "docId": widget.detail["docId"],

@@ -142,7 +142,7 @@ class _TicketListState extends State<TicketList> {
                         },
                       );
                     } 
-                      return ContentLoader(
+                    return ContentLoader(
                       contentSize: contentSize, 
                       stream: _firestPageStream, 
                     );
