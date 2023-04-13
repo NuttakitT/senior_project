@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/widget/mobile/help_desk_reply_mobile.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
@@ -35,6 +37,8 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
   @override
   Widget build(BuildContext context) {
     bool isMobile = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+    String uid = context.watch<AppViewModel>().app.getUser.getId;
     context.read<ReplyChannelViewModel>().setTaskData = {
       "docId": widget.docId,
       "id": widget.id,
@@ -48,8 +52,28 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
     };
 
     if (isMobile) {
-      return const HelpDeskReplyMobile();
+      return FutureBuilder(
+        future: context.read<HelpDeskViewModel>().changeSeenStatus(
+          widget.docId,
+          uid, 
+          isAdmin
+        ),
+        builder: (contex, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return const HelpDeskReplyMobile();
+          }
+          return const Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          );
+        }
+      );
     }
-    return Container();
+    return HelpDeskMainView(isAdmin: isAdmin,);
   }
 }

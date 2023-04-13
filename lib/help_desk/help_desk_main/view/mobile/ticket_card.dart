@@ -36,7 +36,6 @@ class _TicketCardState extends State<TicketCard> {
     String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
     String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
     String uid = context.watch<AppViewModel>().app.getUser.getId;
-    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     bool isRead = widget.detail["isSeen"].contains(uid) || FirebaseAuth.instance.currentUser!.uid == widget.detail["ownerId"];
 
     return FutureBuilder(
@@ -47,9 +46,6 @@ class _TicketCardState extends State<TicketCard> {
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
             child: InkWell(
               onTap: () async {
-                if (isAdmin) {
-                  await context.read<HelpDeskViewModel>().changeSeenStatus(widget.detail["docId"], uid);
-                }
                 String docId = await context.read<HelpDeskViewModel>().getTaskDocId(widget.detail["id"]);
                 Navigator.push(context, 
                   MaterialPageRoute(builder: (context) {

@@ -1,6 +1,4 @@
 // ignore_for_file: depend_on_referenced_packages
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -30,245 +28,257 @@ class BodyReplyDesktop extends StatefulWidget {
 class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole; 
+    String userId = context.watch<AppViewModel>().app.getUser.getId;
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+    double screenHeight = MediaQuery.of(context).size.height;
     String taskTitle = context.watch<ReplyChannelViewModel>().getTaskData["title"];
     String docId = context.watch<ReplyChannelViewModel>().getTaskData["docId"];
-    String userId = context.watch<AppViewModel>().app.getUser.getId;
     DateTime dateCreated = context.watch<ReplyChannelViewModel>().getTaskData["time"];
     context.read<ReplyChannelViewModel>().clearModel();
-    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     String adminName = isAdmin ? context.watch<ReplyChannelViewModel>().getTaskData["name"] : "Admin";
 
-    return Container(
-      padding: const EdgeInsets.only(right: 20),
-      decoration: const BoxDecoration(
-        color: ColorConstant.whiteBlack10,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        )
+    return FutureBuilder(
+      future: context.read<HelpDeskViewModel>().changeSeenStatus(
+        docId,
+        userId, 
+        isAdmin
       ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
-            child: Row(
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Container(
+            padding: const EdgeInsets.only(right: 20),
+            decoration: const BoxDecoration(
+              color: ColorConstant.whiteBlack10,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              )
+            ),
+            child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 24),
-                  child: Text(
-                    taskTitle,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w500,
-                      color: ColorConstant.whiteBlack90
-                    ),
-                  ),
-                ),
-                StreamBuilder(
-                  stream: FirebaseServices("ticket").listenToDocument(docId),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: Container(
-                          width: 90,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: StatusColor.statusColor(snapshot.data!.get("status"))![2]),
-                            color: StatusColor.statusColor(snapshot.data!.get("status"))![0],
-                            borderRadius: BorderRadius.circular(6)
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            context.watch<HelpDeskViewModel>().convertToString(true, snapshot.data!.get("status")),
-                            style: TextStyle(
-                              fontFamily: AppFontStyle.font,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: StatusColor.statusColor(snapshot.data!.get("status"))![1]
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    return Container();
-                  }
-                ),
-                StreamBuilder(
-                  stream: FirebaseServices("ticket").listenToDocument(docId),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      return Container(
-                        width: 100,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: ColorConstant.whiteBlack20),
-                          color: ColorConstant.whiteBlack40,
-                          borderRadius: BorderRadius.circular(6)
-                        ),
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: Icon(
-                                PriorityIcon.getIcon(snapshot.data!.get("priority")),
-                                color: ColorConstant.whiteBlack5,
-                              ),
-                            ),
-                            Text(
-                              context.watch<HelpDeskViewModel>().convertToString(false, snapshot.data!.get("priority")),
-                              style: const TextStyle(
-                                fontFamily: AppFontStyle.font,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: ColorConstant.whiteBlack5
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                    return Container();
-                  }
-                ),
-                const Spacer(),
-                Text(
-                  DateFormat("dd MMMM - hh:mm a").format(dateCreated),
-                  style: const TextStyle(
-                    fontFamily: AppFontStyle.font,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: ColorConstant.whiteBlack70
-                  ),
-                )
-              ],
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                flex: 2,
-                fit: FlexFit.tight,
-                child: Container(
-                  padding: const EdgeInsets.only(left: 24, right: 24, bottom: 25),
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(16)),
-                  child: Column(
+                  padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+                  child: Row(
                     children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: ColorConstant.whiteBlack15,
-                                    width: 1,
-                                    strokeAlign: StrokeAlign.inside))),
-                        child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: ColorConstant.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: const Offset(1, -2),
-                                      color: ColorConstant.black.withOpacity(0.05),
-                                      blurRadius: 4)
-                                ],
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16))),
-                            height: 80,
-                            child: Text(
-                              adminName,
-                              style: const TextStyle(
-                                  color: ColorConstant.whiteBlack80,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold),
-                            )),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 24),
+                        child: Text(
+                          taskTitle,
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w500,
+                            color: ColorConstant.whiteBlack90
+                          ),
+                        ),
                       ),
                       StreamBuilder(
                         stream: FirebaseServices("ticket").listenToDocument(docId),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState != ConnectionState.active) {
-                            return Container();
+                          if (snapshot.connectionState == ConnectionState.active) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 4),
+                              child: Container(
+                                width: 90,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: StatusColor.statusColor(snapshot.data!.get("status"))![2]),
+                                  color: StatusColor.statusColor(snapshot.data!.get("status"))![0],
+                                  borderRadius: BorderRadius.circular(6)
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  context.watch<HelpDeskViewModel>().convertToString(true, snapshot.data!.get("status")),
+                                  style: TextStyle(
+                                    fontFamily: AppFontStyle.font,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    color: StatusColor.statusColor(snapshot.data!.get("status"))![1]
+                                  ),
+                                ),
+                              ),
+                            );
                           }
-                          return Container(
-                            constraints: const BoxConstraints(minHeight: 300),
-                            height: snapshot.data!.get("status") != 2  
-                              ? screenHeight - 560
-                              : screenHeight - 496,
-                            decoration: const BoxDecoration(color: ColorConstant.whiteBlack5),
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: StreamBuilder(
-                              stream: query(docId),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.active) {
-                                  if (snapshot.data.docs.isNotEmpty) {
-                                    context.read<ReplyChannelViewModel>().reconstructData(snapshot.data);
-                                    List<Map<String, dynamic>> data = context.watch<ReplyChannelViewModel>().getReply(userId);
-                                    return ListView.builder(
-                                      itemCount: data.length,
-                                      itemBuilder: (context, index) => Message(
-                                        isSender:  data[index]["isSender"],
-                                        text: data[index]["text"],
-                                        isMobile: false,
-                                        time: data[index]["time"],
-                                      ),
-                                    );
-                                  }
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 16),
-                                    child: Container(
-                                      width: double.infinity,
-                                      alignment: Alignment.topCenter,
-                                      child: const Text("No messages in this ticket")
-                                    ),
-                                  );
-                                }
-                                return Center(
-                                  child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle
-                                    ),
-                                    child: const CircularProgressIndicator()
-                                  )
-                                );
-                              },
-                            )
-                          );
+                          return Container();
                         }
                       ),
                       StreamBuilder(
                         stream: FirebaseServices("ticket").listenToDocument(docId),
-                        builder: (context, snapshot) {         
-                          if (snapshot.connectionState != ConnectionState.active) {
-                            return Container();
-                          }
-                          List<dynamic> adminList = snapshot.data!.get("adminId");
-                          if (snapshot.data!.get("status") != 2 && (adminList.length == 1 && adminList[0] == userId)) {
-                            return const ChatInput();
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.active) {
+                            return Container(
+                              width: 100,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: ColorConstant.whiteBlack20),
+                                color: ColorConstant.whiteBlack40,
+                                borderRadius: BorderRadius.circular(6)
+                              ),
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Icon(
+                                      PriorityIcon.getIcon(snapshot.data!.get("priority")),
+                                      color: ColorConstant.whiteBlack5,
+                                    ),
+                                  ),
+                                  Text(
+                                    context.watch<HelpDeskViewModel>().convertToString(false, snapshot.data!.get("priority")),
+                                    style: const TextStyle(
+                                      fontFamily: AppFontStyle.font,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16,
+                                      color: ColorConstant.whiteBlack5
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
                           }
                           return Container();
-                      })
+                        }
+                      ),
+                      const Spacer(),
+                      Text(
+                        DateFormat("dd MMMM - hh:mm a").format(dateCreated),
+                        style: const TextStyle(
+                          fontFamily: AppFontStyle.font,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          color: ColorConstant.whiteBlack70
+                        ),
+                      )
                     ],
                   ),
                 ),
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                child: DescriptionDesktop(
-                  isAdmin: role == 0 ? true : false,
-                )
-              )
-            ],
-          ),
-        ],
-      ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      fit: FlexFit.tight,
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 24, right: 24, bottom: 25),
+                        decoration:
+                            BoxDecoration(borderRadius: BorderRadius.circular(16)),
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: const BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: ColorConstant.whiteBlack15,
+                                          width: 1,
+                                          strokeAlign: StrokeAlign.inside))),
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color: ColorConstant.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            offset: const Offset(1, -2),
+                                            color: ColorConstant.black.withOpacity(0.05),
+                                            blurRadius: 4)
+                                      ],
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16))),
+                                  height: 80,
+                                  child: Text(
+                                    adminName,
+                                    style: const TextStyle(
+                                        color: ColorConstant.whiteBlack80,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                            ),
+                            StreamBuilder(
+                              stream: FirebaseServices("ticket").listenToDocument(docId),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState != ConnectionState.active) {
+                                  return Container();
+                                }
+                                return Container(
+                                  constraints: const BoxConstraints(minHeight: 300),
+                                  height: snapshot.data!.get("status") != 2  
+                                    ? screenHeight - 560
+                                    : screenHeight - 496,
+                                  decoration: const BoxDecoration(color: ColorConstant.whiteBlack5),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: StreamBuilder(
+                                    stream: query(docId),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.active) {
+                                        if (snapshot.data.docs.isNotEmpty) {
+                                          context.read<ReplyChannelViewModel>().reconstructData(snapshot.data);
+                                          List<Map<String, dynamic>> data = context.watch<ReplyChannelViewModel>().getReply(userId);
+                                          return ListView.builder(
+                                            itemCount: data.length,
+                                            itemBuilder: (context, index) => Message(
+                                              isSender:  data[index]["isSender"],
+                                              text: data[index]["text"],
+                                              isMobile: false,
+                                              time: data[index]["time"],
+                                            ),
+                                          );
+                                        }
+                                        return Padding(
+                                          padding: const EdgeInsets.only(top: 16),
+                                          child: Container(
+                                            width: double.infinity,
+                                            alignment: Alignment.topCenter,
+                                            child: const Text("No messages in this ticket")
+                                          ),
+                                        );
+                                      }
+                                      return Center(
+                                        child: Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle
+                                          ),
+                                          child: const CircularProgressIndicator()
+                                        )
+                                      );
+                                    },
+                                  )
+                                );
+                              }
+                            ),
+                            StreamBuilder(
+                              stream: FirebaseServices("ticket").listenToDocument(docId),
+                              builder: (context, snapshot) {         
+                                if (snapshot.connectionState != ConnectionState.active) {
+                                  return Container();
+                                }
+                                List<dynamic> adminList = snapshot.data!.get("adminId");
+                                if (snapshot.data!.get("status") != 2 && (adminList.length == 1 && adminList[0] == userId)) {
+                                  return const ChatInput();
+                                }
+                                return Container();
+                            })
+                          ],
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      child: DescriptionDesktop(
+                        isAdmin: role == 0 ? true : false,
+                      )
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        }
+        return Container();
+      }
     );
   }
 }

@@ -38,13 +38,9 @@ class _ContentState extends State<Content> {
     String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
     String uid = context.watch<AppViewModel>().app.getUser.getId;
     bool isSeen = widget.detail["isSeen"].contains(uid) || FirebaseAuth.instance.currentUser!.uid == widget.detail["ownerId"];
-    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
 
     return InkWell(
-      onTap: () async {
-        if (isAdmin) {
-          await context.read<HelpDeskViewModel>().changeSeenStatus(widget.detail["docId"], uid);
-        }
+      onTap: () {
         context.read<HelpDeskViewModel>().setSelectedTicket = widget.index;
         context.read<ReplyChannelViewModel>().setTaskData = {
           "docId": widget.detail["docId"],

@@ -292,18 +292,20 @@ class HelpDeskViewModel extends ChangeNotifier {
     });
   }
 
-  Future<void> changeSeenStatus(String docId, String adminId) async {
-    final snapshot = await _serviceTicket.getDocumentById(docId);
-    List<dynamic> seen = snapshot!.get("isSeen") as List<dynamic>;
-    if (!seen.contains(adminId)) {
-      seen.add(adminId);
+  Future<void> changeSeenStatus(String docId, String adminId, bool isAdmin) async {
+    if (isAdmin) {
+      final snapshot = await _serviceTicket.getDocumentById(docId);
+      List<dynamic> seen = snapshot!.get("isSeen") as List<dynamic>;
+      if (!seen.contains(adminId)) {
+        seen.add(adminId);
+      }
+      await _algolia.updateObject(snapshot.get("objectID"), {
+        "isSeen": seen
+      });
+      await _serviceTicket.editDocument(docId, {
+        "isSeen": seen
+      });
     }
-    await _algolia.updateObject(snapshot.get("objectID"), {
-      "isSeen": seen
-    });
-    await _serviceTicket.editDocument(docId, {
-      "isSeen": seen
-    });
   }
 
   Future<void> _changeTaskState(
