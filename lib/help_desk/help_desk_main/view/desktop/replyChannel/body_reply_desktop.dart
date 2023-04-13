@@ -277,7 +277,15 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
             ),
           );
         }
-        return Container();
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: screenHeight < 500 ? 500 : screenHeight - 300,
+            maxWidth: double.infinity
+          ),
+          color: Colors.white,
+          alignment: Alignment.center,
+          child: const CircularProgressIndicator(),
+        );
       }
     );
   }
