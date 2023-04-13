@@ -31,7 +31,7 @@ class HelpDeskMainModel {
       "category": _tasks[index].getCategory,
       "time": _tasks[index].getDateCreate,
       "isSeen": _tasks[index].getSeen,
-      "admin": _tasks[index].getAdmin
+      "adminId": _tasks[index].getAdmin
     };
   }
 }

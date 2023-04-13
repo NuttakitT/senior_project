@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -15,7 +16,8 @@ class HelpDeskReplyPage extends StatefulWidget {
   final int status;
   final String category;
   final DateTime time;
-  final List<dynamic> admin;
+  final List<dynamic> adminId;
+  final String ownerId;
   const HelpDeskReplyPage({
     super.key, 
     required this.docId,
@@ -26,7 +28,8 @@ class HelpDeskReplyPage extends StatefulWidget {
     required this.status,
     required this.category,
     required this.time,
-    required this.admin
+    required this.adminId,
+    required this.ownerId
   });
 
   @override
@@ -48,28 +51,61 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
       "status": widget.status,
       "category": widget.category,
       "time": widget.time,
-      "admin": widget.admin
+      "adminId": widget.adminId,
     };
 
     if (isMobile) {
-      return FutureBuilder(
-        future: context.read<HelpDeskViewModel>().changeSeenStatus(
-          widget.docId,
-          uid, 
-          isAdmin
-        ),
-        builder: (contex, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return const HelpDeskReplyMobile();
-          }
-          return const Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 50,
-                height: 50,
-                child: CircularProgressIndicator(),
-              ),
+      return Builder(
+        builder: (context) {
+          return StreamBuilder(
+            stream: FirebaseServices("ticket").listenToSubDocumentByKeyValuePair(
+              widget.docId,
+              "replyChannel",
+              ["seen"],
+              [false],
             ),
+            builder: (context, stream) {
+              if (stream.connectionState == ConnectionState.active) {
+                context.read<HelpDeskViewModel>().clearReplyDocId();
+                for (var item in stream.data!.docs) {
+                  if (!isAdmin && item.get("ownerId") != widget.ownerId) {
+                    context.read<HelpDeskViewModel>().addReplyDocId(item.id);
+                  } else if(isAdmin && item.get("ownerId") == widget.ownerId) {
+                    context.read<HelpDeskViewModel>().addReplyDocId(item.id);
+                  }
+                }   
+                return FutureBuilder(
+                  future: context.read<HelpDeskViewModel>().changeSeenStatus(
+                    widget.docId,
+                    uid, 
+                    isAdmin
+                  ),
+                  builder: (contex, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return const HelpDeskReplyMobile();
+                    }
+                    return const Scaffold(
+                      body: Center(
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    );
+                  }
+                );
+              }
+              return const Scaffold(
+                body: Center(
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              );
+            }
           );
         }
       );

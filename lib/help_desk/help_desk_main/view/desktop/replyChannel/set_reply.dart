@@ -19,8 +19,9 @@ class SetReply {
       "status": ticket["status"],
       "category": ticket["category"],
       "time": ticket["time"],
+      "ownerId": ticket["ownerId"],
       "name": ticket["name"],
-      "admin": ticket["admin"],
+      "adminId": ticket["adminId"],
     };
   }
 }

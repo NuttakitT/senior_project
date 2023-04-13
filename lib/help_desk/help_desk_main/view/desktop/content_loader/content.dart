@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously, prefer_is_empty
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/status_color.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 class Content extends StatefulWidget {
   final double size;
@@ -37,23 +37,12 @@ class _ContentState extends State<Content> {
     String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
     String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
     String uid = context.watch<AppViewModel>().app.getUser.getId;
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     bool isSeen = widget.detail["isSeen"].contains(uid) || FirebaseAuth.instance.currentUser!.uid == widget.detail["ownerId"];
 
     return InkWell(
       onTap: () {
         context.read<HelpDeskViewModel>().setSelectedTicket = widget.index;
-        context.read<ReplyChannelViewModel>().setTaskData = {
-          "docId": widget.detail["docId"],
-          "id": widget.detail["id"],
-          "title": widget.detail["title"],
-          "detail": widget.detail["detail"],
-          "priority": widget.detail["priority"],
-          "status": widget.detail["status"],
-          "category": widget.detail["category"],
-          "time": widget.detail["time"],
-          "name": widget.detail["name"],
-          "admin": widget.detail["admin"]
-        };
         context.read<HelpDeskViewModel>().setShowMessagePageState(true);
       },
       child: Container(
@@ -71,23 +60,77 @@ class _ContentState extends State<Content> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                width: 22,
-                height: 22,
-                decoration: const BoxDecoration(
-                  color: ColorConstant.red50,
-                  shape: BoxShape.circle
+              child: StreamBuilder(
+                stream: FirebaseServices("ticket").listenToSubDocumentByKeyValuePair(
+                  widget.detail["docId"],
+                  "replyChannel",
+                  ["seen"],
+                  [false],
                 ),
-                alignment: Alignment.center,
-                child: const Text(
-                  "1", // TODO unread msg
-                  style: TextStyle(
-                    fontFamily: AppFontStyle.font,
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500
-                  ),
-                ),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    if (snapshot.data == null) {
+                      return Container(
+                        width: 22,
+                        height: 22,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle
+                        ),
+                      );
+                    }
+                    else if (snapshot.data!.docs.length != 0) {
+                      int unseen = 0;
+                      for(int i = 0; i < snapshot.data!.docs.length; i++) {
+                        if (!isAdmin && snapshot.data!.docs[i].get("ownerId") != widget.detail["ownerId"]) {
+                          unseen++;
+                        } else if(isAdmin && snapshot.data!.docs[i].get("ownerId") == widget.detail["ownerId"]) {
+                          unseen++;
+                        }
+                      }
+                      if (unseen > 0) {
+                        return Container(
+                          width: 22,
+                          height: 22,
+                          decoration: const BoxDecoration(
+                            color: ColorConstant.red50,
+                            shape: BoxShape.circle
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            unseen.toString(),
+                            style: const TextStyle(
+                              fontFamily: AppFontStyle.font,
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500
+                            ),
+                          ),
+                        );
+                      }
+                      return Container(
+                        width: 22,
+                        height: 22,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle
+                        ),
+                      );
+                    }
+                    return Container(
+                      width: 22,
+                      height: 22,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle
+                      ),
+                    );
+                  }
+                  return Container(
+                    width: 22,
+                    height: 22,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle
+                    ),
+                  );
+                }
               ),
             ),
             SizedBox(

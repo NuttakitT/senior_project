@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view/page/help_desk_reply_page.dart';
@@ -58,7 +59,8 @@ class _TicketCardState extends State<TicketCard> {
                       status: widget.detail["status"],
                       category: widget.detail["category"],
                       time: widget.detail["time"],
-                      admin: widget.detail["admin"],
+                      adminId: widget.detail["adminId"], 
+                      ownerId: widget.detail["ownerId"],
                     );
                   })
                 );

@@ -32,6 +32,13 @@ class HelpDeskViewModel extends ChangeNotifier {
   bool _isSafeClick = true;
   bool _isSafeLoad = true;
   bool _isMobile = false;
+  List<String> _replyDocId = [];
+
+  void addReplyDocId(String id) {
+    _replyDocId.add(id);
+  }
+  get getReplyDocId => _replyDocId;
+  void clearReplyDocId() => _replyDocId = [];
 
   set setIsMobile(bool state) => _isMobile = state;
   get getIsMobile => _isMobile;
@@ -304,6 +311,11 @@ class HelpDeskViewModel extends ChangeNotifier {
       });
       await _serviceTicket.editDocument(docId, {
         "isSeen": seen
+      });
+    }
+    for (int i = 0; i < _replyDocId.length; i++) {
+      await _serviceTicket.editSubDocument(docId, "replyChannel", _replyDocId[i], {
+        "seen": true
       });
     }
   }

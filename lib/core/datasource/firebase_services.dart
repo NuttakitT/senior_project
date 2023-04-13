@@ -125,6 +125,7 @@ class FirebaseServices {
     } 
   }
 
+  // TODO add change to report
   //---------------------- Read operation(Real-time) ---------------------------
   // A stream listener use as a listener for a document queried by key-value.
   // key: list of the filed to query
@@ -332,7 +333,7 @@ class FirebaseServices {
     String parentId,
     String subCollectionName,
     List<String> key, 
-    List<String> value, 
+    List<dynamic> value, 
   ) async {
     try {
       late Query query;
@@ -369,6 +370,7 @@ class FirebaseServices {
     } 
   }
 
+  // TODO add change to report
   //---------------------- Read operation(Real-time) ---------------------------
   // A stream listener used as a listener for a document in sub-collection 
   // queried by key-value.
@@ -382,22 +384,33 @@ class FirebaseServices {
     String parentId,
     String subCollectionName,
     List<String> key, 
-    List<dynamic> value
+    List<dynamic> value,
   ) {
-    late Query query;
+    Query? query;
     if ((key.length == value.length) && key.isNotEmpty) {
       for (int i = 0; i < key.length; i++) {
-        if (i != 0) {
-          query = query.where(key[i], isEqualTo: value[i]);
+        if (query != null) {
+          if (value[i] is List) {
+            query = query.where(key[i], arrayContainsAny: value[i]);
+          } else {
+            query = query.where(key[i], isEqualTo: value[i]);
+          }
         } else {
-          query = _collection
-            .doc(parentId)
-            .collection(subCollectionName)
-            .where(key[i], isEqualTo: value[i]);
+          if (value[i] is List) {
+            query = _collection
+              .doc(parentId)
+              .collection(subCollectionName)
+              .where(key[i], arrayContainsAny: value[i]);
+          } else {
+            query = _collection
+              .doc(parentId)
+              .collection(subCollectionName)
+              .where(key[i], isEqualTo: value[i]);
+          }
         }
       }
     }
-    return query.snapshots();
+    return query!.snapshots();
   }
 
   // Return a stream listener used as a listener in the sub-collection
