@@ -1,4 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages, prefer_final_fields
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -285,17 +287,13 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   Future<void> setTicketResponsibility(String docId, String adminId, bool isAssignToOther) async {
     final snapshot = await _serviceTicket.getDocumentById(docId);
-    List<dynamic> seen = snapshot!.get("isSeen") as List<dynamic>;
-    if (isAssignToOther) {
-      seen.remove(adminId);
-    }
     await _serviceTicket.editDocument(docId, {
       "adminId": [adminId],
-      "isSeen": seen
+      "isSeen": [adminId]
     });
-    await _algolia.updateObject(snapshot.get("objectID"), {
+    await _algolia.updateObject(snapshot!.get("objectID"), {
       "adminId": [adminId],
-      "isSeen": seen
+      "isSeen": [adminId]
     });
   }
 
