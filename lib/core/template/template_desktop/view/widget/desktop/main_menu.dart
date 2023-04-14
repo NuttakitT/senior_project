@@ -9,6 +9,7 @@ import 'package:senior_project/core/template/template_desktop/view/widget/deskto
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/role_management/view/role_management_view.dart';
 
 class MainMenu extends StatefulWidget {
@@ -69,6 +70,10 @@ class _MainMenuState extends State<MainMenu> {
                     style: _navbarTextStyle(isHelpDeskSelected),
                   ),
                   onTap: () {
+                    context.read<HelpDeskViewModel>().setShowMessagePageState(false);
+                    context.read<HelpDeskViewModel>().clearContentController();
+                    context.read<HelpDeskViewModel>().clearModel();
+                    context.read<HelpDeskViewModel>().clearReplyDocId();
                     context.read<TemplateDesktopViewModel>().changeState(context, 1, 1);
                     int? role =
                         context.read<AppViewModel>().app.getUser.getRole;
