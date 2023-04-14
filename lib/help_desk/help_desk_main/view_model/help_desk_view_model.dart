@@ -255,14 +255,15 @@ class HelpDeskViewModel extends ChangeNotifier {
       "name": list![0],
       "email": list[1],
       "ownerId": FirebaseAuth.instance.currentUser!.uid,
-      "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
+      "dateCreate": task.getDateCreate,
       "category": task.getCategory,
       "priority": task.getPriority,
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
       "adminId": responsibilityAdmin,
-      "isSeen": []
+      "isSeen": [],
+      "id": task.getId
     });
     Map<String, dynamic> taskDetail = {
       "id": task.getId,
@@ -406,12 +407,25 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> reconstructSearchResult(List<String> docIds) async {
-    for (int i = 0; i < docIds.length; i++) {
-      DocumentSnapshot? doc = await _serviceTicket.getDocumentById(docIds[i]);
-      if (doc!.exists) {
-        _addQueryData(doc);
-      }
+  void reconstructSearchResult(List<dynamic> hits) {
+    for (var item in hits) {
+      DateTime date = DateTime.parse(item["dateCreate"]);
+      _task.add({
+        "objectID": item["objectID"],
+        "email": item["email"],
+        "name": item["name"],
+        "detail": item["detail"],
+        "title": item["title"],
+        "ownerId": item["ownerId"],
+        "time": date,
+        "category": item["category"],
+        "priority": item["priority"],
+        "status": item["status"],
+        "adminId": item["adminId"],
+        "isSeen": item["isSeen"],
+        "docId": item["docId"],
+        "id": item["id"],
+      });
     }
   }
 }

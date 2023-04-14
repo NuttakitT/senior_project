@@ -228,6 +228,7 @@ class _BodyState extends State<Body> {
                                     context.read<HelpDeskViewModel>().setIsSafeLoad = true;
                                   } else {
                                     context.read<HelpDeskViewModel>().clearContentController();
+                                    context.read<TextSearch>().clearSearchText();
                                   }
                                 },
                                 icon: Icon(
