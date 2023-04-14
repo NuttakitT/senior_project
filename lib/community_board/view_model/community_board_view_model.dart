@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
@@ -5,26 +7,37 @@ import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
+import 'package:provider/provider.dart';
+
+class Topic {
+  final String name;
+
+  Topic({required this.name});
+}
 
 class CommunityBoardViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final _service = FirebaseServices("post");
+  final _topic = FirebaseServices("unapprovetopic");
 
   List<Map<String, dynamic>> _posts = [];
 
-  Future<void> createPost(CreatePostRequest request) async {
+  Future<void> createPost(
+      CreatePostRequest request, BuildContext context) async {
     final docId = getUuid();
-    final userId = ""; // need to get UserId from AppViewModel
+    final userId = "";
+    // final userId = context.watch<AppViewModel>().app.getUser.getId;
     // TODO: files are not yet prepared
     Map<String, dynamic> postDetail = {
       "id": docId,
       "ownerId": userId,
       "title": request.title,
       "detail": request.detail,
-      "files": request.files,
+      // "files": request.files,
       "topics": request.topics,
       "isApproved": false
     };
+    print("a");
     await _service.setDocument(docId, postDetail);
   }
 
@@ -36,15 +49,26 @@ class CommunityBoardViewModel extends ChangeNotifier {
       return false;
     }
 
-    List<Map<String, dynamic>> posts = [];
-
     for (QueryDocumentSnapshot doc in snapshot!.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      posts.add(data);
+      _posts.add(data);
     }
 
-    _posts = posts;
     return true;
+  }
+
+  List<Map<String, dynamic>> getPost() {
+    return _posts;
+  }
+
+  bool validateNameField(String input) {
+    if (input.isEmpty) {
+      return false;
+    }
+    if (input.contains(RegExp('^[a-zA-Z]+'))) {
+      return true;
+    }
+    return false;
   }
 
   List<Map<String, dynamic>> getPostFor(int amount) {
@@ -76,7 +100,9 @@ class CommunityBoardViewModel extends ChangeNotifier {
   Future<void> editComment(EditCommentRequest request) async {}
   Future<void> deleteComment(String docId) async {}
 
-  Future<void> createTags(CreateTagRequest request) async {}
+  Future<bool> createTopics(CreateTagRequest request) async {
+    return await _topic.addDocument({"id": request.id, "name": request.name});
+  }
 
   String getUuid() {
     return const Uuid().v1();

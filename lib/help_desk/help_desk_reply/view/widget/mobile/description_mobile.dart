@@ -8,7 +8,8 @@ class DescriptionMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String taskDetail = context.watch<ReplyChannelViewModel>().getTaskData["detail"];
+    String taskDetail =
+        context.watch<ReplyChannelViewModel>().getTaskData["detail"];
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -46,7 +47,8 @@ class DescriptionMobile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             child: Text(
               taskDetail,
-              style: const TextStyle(color: ColorConstant.whiteBlack70, fontSize: 16),
+              style: const TextStyle(
+                  color: ColorConstant.whiteBlack70, fontSize: 16),
             ),
           ),
         )

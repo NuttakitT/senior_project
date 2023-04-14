@@ -785,7 +785,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                             }
                             if (selectedSubjects.isEmpty) {
                               setState(() {
-                                isFacebookLinkEmpty = true;
+                                isSubjectEmpty = true;
                               });
                             }
                             final imageUrl = await context
