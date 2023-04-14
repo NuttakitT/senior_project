@@ -73,7 +73,7 @@ class RoleManagementViewModel extends ChangeNotifier {
           List<dynamic> resposibility = adminSnapshot.docs[i].get("responsibility"); 
           List<TopicCategory> cat = [];
           for(int j = 0; j < resposibility.length; j++) {
-            final categorySnapshot = await _serviesCategory.getDocumentById(resposibility[i]);
+            final categorySnapshot = await _serviesCategory.getDocumentById(resposibility[j]);
             if (categorySnapshot!.exists) {
               cat.add(TopicCategory(
                 id: categorySnapshot.id, 
@@ -96,7 +96,7 @@ class RoleManagementViewModel extends ChangeNotifier {
         }
       }
     }
-
+    
     _model = RoleManagementModel.overloaddedConstructor(admin, category);
     return _model;
   }

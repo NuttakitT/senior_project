@@ -309,6 +309,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                             },
                           );
                         }
+                        context.read<TextSearch>().initHitSearcher("ticket");
                         context.read<TextSearch>().getHitsSearcher.query(searchText);
                         return const TextSearcResultMobile();
                       }

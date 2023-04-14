@@ -111,19 +111,15 @@ class AppViewModel extends ChangeNotifier {
   }
 
   Map<String, dynamic> storeAppUser(DocumentSnapshot snapshot) {
-    Map<String, dynamic> result = {};
-    String data = snapshot.data().toString();
-    data = data.substring(1, data.length - 1);
-    List<String> chunk = data.split(", ");
-    for (int i = 0; i < chunk.length; i++) {
-      List<String> chunkData = chunk[i].split(": ");
-      if (chunkData[0] == "role") {
-        result[chunkData[0]] = int.parse(chunkData[1]);
-      } else {
-        result[chunkData[0]] = chunkData[1] == "null" ? null : chunkData[1];
-      }
-    }
-    return result;
+    return {
+      "id": snapshot.get("id"),
+      "name": snapshot.get("name"),
+      "email": snapshot.get("email"),
+      "phone": snapshot.get("phone"),
+      "role": snapshot.get("role"),
+      "profileImageUrl": snapshot.get("profileImageUrl"),
+      "responsibility": snapshot.get("responsibility"),
+    };
   }
 
   Future<void> initializeLoginState(BuildContext context, bool state) async {
@@ -147,7 +143,7 @@ class AppViewModel extends ChangeNotifier {
     provider.addScope("User.read");
     try {
       final credential = await FirebaseAuth.instance.signInWithPopup(provider);
-      final snapshot = await FirebaseServices("user").getDocumentById(
+      dynamic snapshot = await FirebaseServices("user").getDocumentById(
         credential.user!.uid
       );
       if (!snapshot!.exists) {
@@ -157,8 +153,12 @@ class AppViewModel extends ChangeNotifier {
           "name": credential.user!.displayName,
           "phone": credential.user!.phoneNumber,
           "profileImageUrl": credential.user!.photoURL,
-          "role": 1
+          "role": 1,
+          "responsibility": []
         });
+        snapshot = await FirebaseServices("user").getDocumentById(
+          credential.user!.uid
+        );
       }
       setLoggedInUser({
         "id": credential.user!.uid,
@@ -166,7 +166,8 @@ class AppViewModel extends ChangeNotifier {
         "name": credential.user!.displayName,
         "phone": credential.user!.phoneNumber,
         "profileImageUrl": credential.user!.photoURL,
-        "role": snapshot.get("role")
+        "role": snapshot.get("role"),
+        "responsibility": snapshot.get("responsibility")
       });
       return true;
     } catch (e) {

@@ -1,4 +1,6 @@
-// ignore_for_file: depend_on_referenced_packages, prefer_final_fields
+// ignore_for_file: depend_on_referenced_packages, prefer_final_fields, prefer_null_aware_operators
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,7 +20,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   final AlgoliaServices _algolia = AlgoliaServices("ticket");
   final List<bool> _mobileMenuState = [true, false, false, false];
   List<Map<String, dynamic>> _task = [];
-  List<String> _category = ["General"];
+  List<String> _category = [];
   bool _isShowMessagePage = false;
   int? _allTicket;
   int? _startTicket;
@@ -32,6 +34,13 @@ class HelpDeskViewModel extends ChangeNotifier {
   bool _isSafeClick = true;
   bool _isSafeLoad = true;
   bool _isMobile = false;
+  List<String> _replyDocId = [];
+
+  void addReplyDocId(String id) {
+    _replyDocId.add(id);
+  }
+  get getReplyDocId => _replyDocId;
+  void clearReplyDocId() => _replyDocId = [];
 
   set setIsMobile(bool state) => _isMobile = state;
   get getIsMobile => _isMobile;
@@ -135,7 +144,7 @@ class HelpDeskViewModel extends ChangeNotifier {
 
   Future<void> initTicketCategory() async {
     final snapshot = await _serviceCategory.getAllDocument();
-    _category = ["General"];
+    _category = [];
     for (int i = 0; i < snapshot!.docs.length; i++) {
       _category.add(snapshot.docs[i].get("name"));
     }
@@ -174,7 +183,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  get getCategory => _category;
+  List<String> get getCategory => _category;
   List<Map<String, dynamic>>  get getTask => _task;
 
   bool? getMobileMenuState(int index) {
@@ -224,12 +233,20 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> createTask(String title, String detail, int priority, String category) async {
+    List<String> responsibilityAdmin = [];
+    await FirebaseServices("user").getDocumentByKeyList("responsibility", [category]).then((value) {
+      for (int i = 0; i < value!.docs.length; i++) {
+        responsibilityAdmin.add(value.docs[i].get("id"));
+      }
+    });
     Task task = Task(
       FirebaseAuth.instance.currentUser!.uid,
       title,
       Content(detail),
       priority,
-      category
+      category,
+      [],
+      responsibilityAdmin
     );
     _helpDeskModel.addTask(task);
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
@@ -238,24 +255,29 @@ class HelpDeskViewModel extends ChangeNotifier {
       "name": list![0],
       "email": list[1],
       "ownerId": FirebaseAuth.instance.currentUser!.uid,
-      "dateCreate": DateFormat('dd/MMM/yyyy hh:mm a').format(task.getDateCreate),
+      "dateCreate": task.getDateCreate,
+      "dateComplete": null,
       "category": task.getCategory,
       "priority": task.getPriority,
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
-      "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
+      "adminId": responsibilityAdmin,
+      "isSeen": [],
+      "id": task.getId
     });
     Map<String, dynamic> taskDetail = {
       "id": task.getId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
+      "dateComplete": null,
       "category": task.getCategory,
       "priority": task.getPriority,
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
-      "adminId": "blUSeUMgajPQ1TRC8AEMsvembvm2" // TODO testing
+      "adminId": responsibilityAdmin,
+      "isSeen": []
     };
     taskDetail.addAll({"objectID": objectId!});
     await _serviceTicket.setDocument(docId, taskDetail);
@@ -266,19 +288,72 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task = [];
   }
 
-  Future<void> _changeTaskState(
-    String docId, 
-    String taskId, 
-    String objectId, 
-    int value,
-    bool isStatus) async {
-    _task.firstWhere((element) {
-    return element.containsValue(taskId);
-    })[isStatus ? "status" : "priority"] = value;
-    await _serviceTicket.editDocument(docId, {isStatus ? "status" : "priority": value});
-    await _algolia.updateObject(objectId, {
-      isStatus ? "status" : "priority": value
+  Future<void> setTicketResponsibility(String docId, String adminId, bool isAssignToOther) async {
+    final snapshot = await _serviceTicket.getDocumentById(docId);
+    await _serviceTicket.editDocument(docId, {
+      "adminId": [adminId],
+      "isSeen": isAssignToOther ? [] : [adminId]
     });
+    await _algolia.updateObject(snapshot!.get("objectID"), {
+      "adminId": [adminId],
+      "isSeen": isAssignToOther ? [] : [adminId]
+    });
+  }
+
+  Future<void> changeSeenStatus(String docId, String adminId, bool isAdmin) async {
+    if (isAdmin) {
+      final snapshot = await _serviceTicket.getDocumentById(docId);
+      List<dynamic> seen = snapshot!.get("isSeen") as List<dynamic>;
+      if (!seen.contains(adminId)) {
+        seen.add(adminId);
+      }
+      await _algolia.updateObject(snapshot.get("objectID"), {
+        "isSeen": seen
+      });
+      await _serviceTicket.editDocument(docId, {
+        "isSeen": seen
+      });
+    }
+    for (int i = 0; i < _replyDocId.length; i++) {
+      await _serviceTicket.editSubDocument(docId, "replyChannel", _replyDocId[i], {
+        "seen": true
+      });
+    }
+  }
+
+  Future<void> _changeTaskState(
+  String docId, 
+  String taskId, 
+  String objectId, 
+  int value,
+  bool isStatus,
+  {
+    DateTime? dateComplete
+  }) async {
+    _task.firstWhere((element) {
+      return element.containsValue(taskId);
+    })[isStatus ? "status" : "priority"] = value;
+    if (isStatus && value >= 2) {
+      _task.firstWhere((element) {
+        return element.containsValue(taskId);
+      })["timeComplete"] = dateComplete;
+    } else {
+      _task.firstWhere((element) {
+        return element.containsValue(taskId);
+      })["timeComplete"] = null;
+    }
+    await _algolia.updateObject(
+      objectId, 
+      isStatus && value >= 2 
+      ? {isStatus ? "status" : "priority": value, "dateComplete": dateComplete}
+      : {isStatus ? "status" : "priority": value, "dateComplete": null}
+    );
+    await _serviceTicket.editDocument(
+      docId, 
+      isStatus && value >= 2 
+      ? {isStatus ? "status" : "priority": value, "dateComplete": dateComplete}
+      : {isStatus ? "status" : "priority": value, "dateComplete": null}
+    );
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
@@ -286,17 +361,18 @@ class HelpDeskViewModel extends ChangeNotifier {
     if (query!.exists) {
       String docId = query.id;
       String taskId = query.get("id");
-      String objectId = query.get("objectID");
+      String objectId = query.get("objectID") as String;
+      DateTime dateComplete = DateTime.now();
       if (isStatus) {
         _helpDeskModel.getTask.firstWhere((element) {
           return element.getId == taskId;
-        }).changeStatus(value);
+        }).changeStatus(value, dateComplete: dateComplete);
       } else {
         _helpDeskModel.getTask.firstWhere((element) {
           return element.getId == taskId;
         }).changePriority(value);
       }
-      _changeTaskState(docId, taskId, objectId, value, isStatus);
+      await _changeTaskState(docId, taskId, objectId, value, isStatus, dateComplete: dateComplete);
       notifyListeners();
     }
   }
@@ -309,9 +385,12 @@ class HelpDeskViewModel extends ChangeNotifier {
       Content(snapshot.get("detail")),
       snapshot.get("priority"),
       snapshot.get("category"),
+      snapshot.get("isSeen"),
+      snapshot.get("adminId"),
       id: snapshot.get("id"),
       dateCreate: snapshot.get("dateCreate").toDate(),
-      status: snapshot.get("status")
+      status: snapshot.get("status"),
+      dateComplete: snapshot.get("dateComplete") != null ? snapshot.get("dateComplete").toDate() : null
     );
     _helpDeskModel.addTask(task);
     _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
@@ -324,8 +403,12 @@ class HelpDeskViewModel extends ChangeNotifier {
     });
     targetTask.changeStatus(snapshot.get("status"));
     targetTask.changeStatus(snapshot.get("priority"));
+    targetTask.changeStatus(snapshot.get("dateComplete"));
+    targetTask.changeIsSeen(snapshot.get("isSeen"));
     _task[index]["status"] = snapshot.get("status");
     _task[index]["priority"] = snapshot.get("priority");
+    _task[index]["timeComplete"] = snapshot.get("dateComplete");
+    _task[index]["isSeen"] = snapshot.get("isSeen");
   }
   
   void _removeQueryData(int index) {
@@ -350,11 +433,35 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> reconstructSearchResult(List<String> docIds) async {
-    for (int i = 0; i < docIds.length; i++) {
-      DocumentSnapshot? doc = await _serviceTicket.getDocumentById(docIds[i]);
-      if (doc!.exists) {
-        _addQueryData(doc);
+  void reconstructSearchResult(List<dynamic> hits, bool isAdmin, String uid) {
+    for (var item in hits) {
+      bool isTargetObject = false;
+      String ownerId = item["ownerId"] as String;
+      List<dynamic> adminId = item["adminId"] as List<dynamic>;
+      if (isAdmin && adminId.contains(uid)) {
+        isTargetObject = true;
+      } else if (!isAdmin && ownerId == uid) {
+        isTargetObject = true;
+      }
+      if (isTargetObject) {
+        DateTime date = DateTime.parse(item["dateCreate"]);
+        _task.add({
+          "objectID": item["objectID"],
+          "email": item["email"],
+          "name": item["name"],
+          "detail": item["detail"],
+          "title": item["title"],
+          "ownerId": item["ownerId"],
+          "time": date,
+          "completeTime": item["dateComplete"] != null ? DateTime.parse(item["dateComplete"]) : null,
+          "category": item["category"],
+          "priority": item["priority"],
+          "status": item["status"],
+          "adminId": item["adminId"],
+          "isSeen": item["isSeen"],
+          "docId": item["docId"],
+          "id": item["id"],
+        });
       }
     }
   }

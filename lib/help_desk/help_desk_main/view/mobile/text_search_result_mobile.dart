@@ -24,9 +24,8 @@ class _TextSearcResultMobileState extends State<TextSearcResultMobile> {
 
   @override
   Widget build(BuildContext context) {
-    String id = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
-    int menuSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
+    String uid = context.watch<AppViewModel>().app.getUser.getId;
 
     return StreamBuilder(
       stream: context.watch<TextSearch>().getHitsSearcher.responses,
@@ -37,44 +36,11 @@ class _TextSearcResultMobileState extends State<TextSearcResultMobile> {
         if (snapshot.connectionState == ConnectionState.active) {
           List hits = snapshot.data!.hits.toList();
           if (hits.isNotEmpty) {
-            List<String> docs = [];
-            for (var item in hits) {
-              if (menuSelected == 0) {
-                if (!docs.contains(item["docId"])
-                && item[isAdmin ? "adminId" : "ownerId"] == id) {
-                  docs.add(item["docId"]);
-                }
-              } else {
-                if (!docs.contains(item["docId"])
-                && item[isAdmin ? "adminId" : "ownerId"] == id
-                && item["status"] == menuSelected-1) {
-                  docs.add(item["docId"]);
-                }
-              }
-            }
-            if (docs.isEmpty) {
-              return const LoaderStatus(text: "No result");
-            }
             context.read<HelpDeskViewModel>().clearModel();
-            return FutureBuilder(
-              future: context.read<HelpDeskViewModel>().reconstructSearchResult(docs),
-              builder: ((context, futureSnapshot) {
-                if (futureSnapshot.connectionState == ConnectionState.done) {
-                  List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
-                  return FutureBuilder(
-                  future: context.read<HelpDeskViewModel>().formatTaskDetail(),
-                  builder: (context, _) {
-                    if (_.connectionState == ConnectionState.done) {
-                      return Column(
-                        children: generateContent(data)
-                      );
-                    }
-                    return const LoaderStatus(text: "Loading...");
-                  },
-                );                         
-                }
-                return Container();
-              }),
+            context.read<HelpDeskViewModel>().reconstructSearchResult(hits, isAdmin, uid);
+            List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+            return Column(
+              children: generateContent(data)
             );
           }
           return const LoaderStatus(text: "No result");
