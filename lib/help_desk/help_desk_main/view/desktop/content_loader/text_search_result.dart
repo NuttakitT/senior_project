@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/generate_content.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
@@ -27,6 +28,8 @@ class _TextSearchResultState extends State<TextSearchResult> {
     context.read<TextSearch>().getHitsSearcher.query(
       context.watch<TextSearch>().getSearchText
     );
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+    String uid = context.watch<AppViewModel>().app.getUser.getId;
     
     return StreamBuilder(
       stream: context.watch<TextSearch>().getHitsSearcher.responses,
@@ -50,7 +53,7 @@ class _TextSearchResultState extends State<TextSearchResult> {
           if (hits.isNotEmpty) {
             context.read<HelpDeskViewModel>().setPageNumber = 1;
             context.read<HelpDeskViewModel>().clearModel();
-            context.read<HelpDeskViewModel>().reconstructSearchResult(hits);
+            context.read<HelpDeskViewModel>().reconstructSearchResult(hits, isAdmin, uid);
             List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
             context.read<HelpDeskViewModel>().setIsSafeLoad = true;
             return SizedBox(

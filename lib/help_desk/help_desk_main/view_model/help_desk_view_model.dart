@@ -433,25 +433,36 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  void reconstructSearchResult(List<dynamic> hits) {
+  void reconstructSearchResult(List<dynamic> hits, bool isAdmin, String uid) {
     for (var item in hits) {
-      DateTime date = DateTime.parse(item["dateCreate"]);
-      _task.add({
-        "objectID": item["objectID"],
-        "email": item["email"],
-        "name": item["name"],
-        "detail": item["detail"],
-        "title": item["title"],
-        "ownerId": item["ownerId"],
-        "time": date,
-        "category": item["category"],
-        "priority": item["priority"],
-        "status": item["status"],
-        "adminId": item["adminId"],
-        "isSeen": item["isSeen"],
-        "docId": item["docId"],
-        "id": item["id"],
-      });
+      bool isTargetObject = false;
+      String ownerId = item["ownerId"] as String;
+      List<dynamic> adminId = item["adminId"] as List<dynamic>;
+      if (isAdmin && adminId.contains(uid)) {
+        isTargetObject = true;
+      } else if (!isAdmin && ownerId == uid) {
+        isTargetObject = true;
+      }
+      if (isTargetObject) {
+        DateTime date = DateTime.parse(item["dateCreate"]);
+        _task.add({
+          "objectID": item["objectID"],
+          "email": item["email"],
+          "name": item["name"],
+          "detail": item["detail"],
+          "title": item["title"],
+          "ownerId": item["ownerId"],
+          "time": date,
+          "completeTime": item["dateComplete"] != null ? DateTime.parse(item["dateComplete"]) : null,
+          "category": item["category"],
+          "priority": item["priority"],
+          "status": item["status"],
+          "adminId": item["adminId"],
+          "isSeen": item["isSeen"],
+          "docId": item["docId"],
+          "id": item["id"],
+        });
+      }
     }
   }
 }
