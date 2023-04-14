@@ -29,28 +29,23 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
   ScrollController childController = ScrollController();
 
   Widget _content(Widget content, double screenWidth, double height) {
-    bool hasMenu = widget.helpdesk 
-      || widget.helpdeskadmin 
-      || widget.home;
+    bool hasMenu = widget.helpdesk || widget.helpdeskadmin || widget.home;
     double contentSize = 1112;
 
     return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/desktop_background.png"),
-          fit: BoxFit.cover
-        )
-      ),
-      height: height,
-      width: hasMenu 
-        ? (screenWidth - 328) > contentSize
-          ? screenWidth - 328
-          : contentSize
-        : screenWidth > 1440
-          ? screenWidth
-          : 1440,
-      child: widget.content
-    );
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/desktop_background.png"),
+                fit: BoxFit.cover)),
+        height: height,
+        width: hasMenu
+            ? (screenWidth - 328) > contentSize
+                ? screenWidth - 328
+                : contentSize
+            : screenWidth > 1440
+                ? screenWidth
+                : 1440,
+        child: widget.content);
   }
 
   @override
@@ -63,10 +58,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
           child: Image.asset('assets/images/icon.png'),
         ),
         leadingWidth: 180,
-        title: const SizedBox(
-          height: 85,
-          child: MainMenu()
-        ),
+        title: const SizedBox(height: 85, child: MainMenu()),
         backgroundColor: ColorConstant.whiteBlack90,
         toolbarHeight: 90,
       ),
