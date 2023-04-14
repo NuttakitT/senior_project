@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
-import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/generate_content.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
