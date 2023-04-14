@@ -30,7 +30,7 @@ class _InDetailContentState extends State<InDetailContent> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 8),
                   child: Text(
-                    widget.info["topic"],
+                    widget.info["tittle"],
                     style: const TextStyle(
                         color: ColorConstant.orange70,
                         fontSize: 32,

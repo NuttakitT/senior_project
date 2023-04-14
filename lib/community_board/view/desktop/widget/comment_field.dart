@@ -48,6 +48,7 @@ class _CommentFieldState extends State<CommentField> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //TODO add image
                         TextButton(
                           onPressed: () {},
                           style: TextButton.styleFrom(
