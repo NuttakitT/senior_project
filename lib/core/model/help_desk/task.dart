@@ -5,6 +5,7 @@ class Task {
   late String _id;
   late String _ownerId;
   late DateTime _dateCreate;
+  DateTime? _dateComplete;
   late String _category;
   late int _priority;
   late int _status;
@@ -21,7 +22,7 @@ class Task {
     String category,
     List<dynamic> seen,
     List<dynamic> admin,
-    {String? id, DateTime? dateCreate, int? status}
+    {String? id, DateTime? dateCreate, int? status, DateTime? dateComplete}
   ) {
     if (id != null) {
       _id = id;
@@ -33,6 +34,9 @@ class Task {
     } else {
       _dateCreate = DateTime.now();
     } 
+    if (dateComplete != null) {
+      _dateComplete = dateComplete;
+    }
     if (status != null) {
       _status = status;
     } else {
@@ -47,9 +51,12 @@ class Task {
     _admin = admin;
   }
 
+  set setDateComplete(DateTime date) => _dateComplete = date;
+
   String get getId => _id;
   String get getOwnerId => _ownerId;
   DateTime get getDateCreate => _dateCreate;
+  DateTime? get getDateComplete => _dateComplete;
   String get getCategory => _category;
   int get getStatus => _status;
   int get getPriority => _priority;
@@ -66,8 +73,13 @@ class Task {
     return false;
   }
 
-  bool changeStatus(int newStatus) {
-    if (newStatus >= 0 && newStatus < 3) {
+  bool changeStatus(int newStatus, {DateTime? dateComplete}) {
+    if (newStatus >= 0) {
+      if (newStatus >= 2 && dateComplete != null) {
+        _dateComplete = dateComplete;
+      } else {
+        dateComplete = null;
+      }
       _status = newStatus;
       return true;
     } 

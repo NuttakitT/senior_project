@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, prefer_final_fields
+// ignore_for_file: depend_on_referenced_packages, prefer_final_fields, prefer_null_aware_operators
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -256,6 +256,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "email": list[1],
       "ownerId": FirebaseAuth.instance.currentUser!.uid,
       "dateCreate": task.getDateCreate,
+      "dateComplete": null,
       "category": task.getCategory,
       "priority": task.getPriority,
       "status": task.getStatus,
@@ -269,6 +270,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "id": task.getId,
       "ownerId": task.getOwnerId,
       "dateCreate": task.getDateCreate,
+      "dateComplete": null,
       "category": task.getCategory,
       "priority": task.getPriority,
       "status": task.getStatus,
@@ -290,11 +292,11 @@ class HelpDeskViewModel extends ChangeNotifier {
     final snapshot = await _serviceTicket.getDocumentById(docId);
     await _serviceTicket.editDocument(docId, {
       "adminId": [adminId],
-      "isSeen": [adminId]
+      "isSeen": isAssignToOther ? [] : [adminId]
     });
     await _algolia.updateObject(snapshot!.get("objectID"), {
       "adminId": [adminId],
-      "isSeen": [adminId]
+      "isSeen": isAssignToOther ? [] : [adminId]
     });
   }
 
@@ -320,18 +322,38 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> _changeTaskState(
-    String docId, 
-    String taskId, 
-    String objectId, 
-    int value,
-    bool isStatus) async {
+  String docId, 
+  String taskId, 
+  String objectId, 
+  int value,
+  bool isStatus,
+  {
+    DateTime? dateComplete
+  }) async {
     _task.firstWhere((element) {
-    return element.containsValue(taskId);
+      return element.containsValue(taskId);
     })[isStatus ? "status" : "priority"] = value;
-    await _serviceTicket.editDocument(docId, {isStatus ? "status" : "priority": value});
-    await _algolia.updateObject(objectId, {
-      isStatus ? "status" : "priority": value
-    });
+    if (isStatus && value >= 2) {
+      _task.firstWhere((element) {
+        return element.containsValue(taskId);
+      })["timeComplete"] = dateComplete;
+    } else {
+      _task.firstWhere((element) {
+        return element.containsValue(taskId);
+      })["timeComplete"] = null;
+    }
+    await _algolia.updateObject(
+      objectId, 
+      isStatus && value >= 2 
+      ? {isStatus ? "status" : "priority": value, "dateComplete": dateComplete}
+      : {isStatus ? "status" : "priority": value, "dateComplete": null}
+    );
+    await _serviceTicket.editDocument(
+      docId, 
+      isStatus && value >= 2 
+      ? {isStatus ? "status" : "priority": value, "dateComplete": dateComplete}
+      : {isStatus ? "status" : "priority": value, "dateComplete": null}
+    );
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
@@ -339,17 +361,18 @@ class HelpDeskViewModel extends ChangeNotifier {
     if (query!.exists) {
       String docId = query.id;
       String taskId = query.get("id");
-      String objectId = query.get("objectID");
+      String objectId = query.get("objectID") as String;
+      DateTime dateComplete = DateTime.now();
       if (isStatus) {
         _helpDeskModel.getTask.firstWhere((element) {
           return element.getId == taskId;
-        }).changeStatus(value);
+        }).changeStatus(value, dateComplete: dateComplete);
       } else {
         _helpDeskModel.getTask.firstWhere((element) {
           return element.getId == taskId;
         }).changePriority(value);
       }
-      _changeTaskState(docId, taskId, objectId, value, isStatus);
+      await _changeTaskState(docId, taskId, objectId, value, isStatus, dateComplete: dateComplete);
       notifyListeners();
     }
   }
@@ -367,6 +390,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       id: snapshot.get("id"),
       dateCreate: snapshot.get("dateCreate").toDate(),
       status: snapshot.get("status"),
+      dateComplete: snapshot.get("dateComplete") != null ? snapshot.get("dateComplete").toDate() : null
     );
     _helpDeskModel.addTask(task);
     _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
@@ -379,9 +403,11 @@ class HelpDeskViewModel extends ChangeNotifier {
     });
     targetTask.changeStatus(snapshot.get("status"));
     targetTask.changeStatus(snapshot.get("priority"));
+    targetTask.changeStatus(snapshot.get("dateComplete"));
     targetTask.changeIsSeen(snapshot.get("isSeen"));
     _task[index]["status"] = snapshot.get("status");
     _task[index]["priority"] = snapshot.get("priority");
+    _task[index]["timeComplete"] = snapshot.get("dateComplete");
     _task[index]["isSeen"] = snapshot.get("isSeen");
   }
   

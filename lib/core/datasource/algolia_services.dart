@@ -29,6 +29,7 @@ class AlgoliaServices {
   ) async {
     try {
       final object = await _algolia.object(objecId).getObject();
+      print(detail);
       Map<String, dynamic> updateData = Map<String, dynamic>.from(object.data);
       updateData.addAll(detail);
       await _algolia.object(objecId).updateData(updateData);

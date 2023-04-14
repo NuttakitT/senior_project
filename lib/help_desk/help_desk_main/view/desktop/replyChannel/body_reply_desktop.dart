@@ -273,7 +273,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                     builder: (context, snapshot) {         
                                       if (snapshot.connectionState == ConnectionState.active) {
                                         List<dynamic> adminList = snapshot.data!.get("adminId");
-                                        if ((!isAdmin && snapshot.data!.get("status") != 2) || (isAdmin && adminList.length == 1 && adminList[0] == userId)) {
+                                        if (snapshot.data!.get("status") < 2 || (isAdmin && adminList.length == 1 && adminList[0] == userId && snapshot.data!.get("status") < 2)) {
                                           return const ChatInput();
                                         }
                                       }
