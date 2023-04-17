@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/view/mobile/widget/community_board_content_card_mobile.dart';
+import 'package:senior_project/community_board/view/mobile/widget/create_post_mobile.dart';
+
+import '../../../view_model/community_board_view_model.dart';
 
 class CommunityBoardHomeMobile extends StatefulWidget {
   const CommunityBoardHomeMobile({super.key});
@@ -10,6 +15,16 @@ class CommunityBoardHomeMobile extends StatefulWidget {
 }
 
 class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
+  List<Widget> generateCardCommunityBoard(List<Map<String, dynamic>> listPost) {
+    List<Widget> card = [];
+    for (int i = 0; i < listPost.length; i++) {
+      card.add(CommunityBoardContentCardMobile(
+        info: listPost[i],
+      ));
+    }
+    return card;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,49 +55,44 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                   ),
                 ),
                 ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 428),
+                  constraints: const BoxConstraints(maxWidth: 430),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Container(
-                          width: 265,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 8),
-                          decoration: BoxDecoration(
-                              color: ColorConstant.white,
-                              border:
-                                  Border.all(color: ColorConstant.whiteBlack40),
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Row(
-                            children: const [
-                              Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: Icon(
-                                  Icons.search_rounded,
-                                  color: ColorConstant.whiteBlack40,
-                                  size: 16,
-                                ),
+                      const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: SizedBox(
+                            height: 38,
+                            child: TextField(
+                              maxLines: 1,
+                              decoration: InputDecoration(
+                                fillColor: ColorConstant.whiteBlack40,
+                                hintText: "Search",
+                                hintStyle: TextStyle(
+                                    color: ColorConstant.whiteBlack60,
+                                    fontSize: 14),
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
                               ),
-                              Text(
-                                "Search",
-                                style: TextStyle(
-                                    color: ColorConstant.whiteBlack40,
-                                    fontSize: 16),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const CreatePostMobile();
+                          }));
+                        },
                         style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             side: const BorderSide(
                                 color: ColorConstant.orange50, width: 1),
-                            fixedSize: const Size(95, 40),
+                            fixedSize: const Size(95, 38),
                             foregroundColor: ColorConstant.orange50,
                             padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
                             backgroundColor: ColorConstant.white,
@@ -93,7 +103,7 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                             Padding(
                               padding: EdgeInsets.only(right: 4.0),
                               child: Icon(
-                                Icons.add_photo_alternate_rounded,
+                                Icons.add_rounded,
                                 color: ColorConstant.orange50,
                                 size: 14,
                               ),
@@ -147,31 +157,48 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                 )
               ]),
         ),
-        //TODO list post
-        Container(
-          height: 40,
-          alignment: Alignment.center,
-          padding: const EdgeInsets.only(right: 8, left: 8),
-          decoration: const BoxDecoration(
-            color: ColorConstant.white,
-            border: Border(
-                bottom:
-                    BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
+        FutureBuilder(
+          future: context.read<CommunityBoardViewModel>().fetchAllPosts(),
+          builder: ((context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              List<Map<String, dynamic>> listPost =
+                  context.read<CommunityBoardViewModel>().getPost();
+              return Column(
+                children: generateCardCommunityBoard(listPost),
+              );
+            }
+            return Text("กำลังโหลด");
+          }),
+        ),
+        InkWell(
+          child: Container(
+            height: 40,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(right: 8, left: 8),
+            decoration: const BoxDecoration(
+              color: ColorConstant.white,
+              border: Border(
+                  bottom:
+                      BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "ดูเพิ่มเติม",
+                  style: TextStyle(color: ColorConstant.orange70, fontSize: 16),
+                ),
+                Icon(
+                  Icons.expand_more_rounded,
+                  color: ColorConstant.orange70,
+                  size: 24,
+                )
+              ],
+            ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                "ดูเพิ่มเติม",
-                style: TextStyle(color: ColorConstant.orange70, fontSize: 16),
-              ),
-              Icon(
-                Icons.expand_more_rounded,
-                color: ColorConstant.orange70,
-                size: 24,
-              )
-            ],
-          ),
+          onTap: () {
+            //TODO view more post
+          },
         ),
       ],
     );
