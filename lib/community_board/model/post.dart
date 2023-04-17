@@ -5,16 +5,18 @@ import 'package:senior_project/core/model/content.dart';
 import 'package:uuid/uuid.dart';
 
 class Post {
-  late  String _id;
+  late String _id;
   late String _ownerId;
+  late String _ownerName;
   late Content _content;
   late DateTime _dateCreate;
   List<dynamic> _topic = [];
   List<Comment> _comment = [];
   late bool isApproved;
 
-  Post(String ownerId, {String? id, DateTime? dateCreate}) {
+  Post(String ownerId, String ownerName, {String? id, DateTime? dateCreate}) {
     _ownerId = ownerId;
+    _ownerName = ownerName;
     if (id != null) {
       _id = id;
     } else {
@@ -36,8 +38,8 @@ class Post {
     _content.setOptionalString = detail;
   }
 
-  void addComment(String ownerId, String detail, {String? id}) {
-    Comment comment = Comment(ownerId, id: id);
+  void addComment(String ownerId, String ownerName, String detail, {String? id}) {
+    Comment comment = Comment(ownerId, ownerName, id: id);
     comment.createComment(detail);
     _comment.add(comment);
   }
@@ -47,5 +49,6 @@ class Post {
   get getTopic => _topic;
   get getContent => _content;
   get getOwnerId => _ownerId;
+  get getOwnerName => _ownerName;
   get getComment => _comment;
 }

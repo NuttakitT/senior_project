@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:provider/provider.dart';
 
 class ContentCardTemplate extends StatefulWidget {
   final Map<String, dynamic> info;

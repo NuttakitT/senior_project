@@ -4,10 +4,14 @@ import 'package:senior_project/community_board/model/post.dart';
 
 class CommunityBoardModel {
   List<Post> _post = [];
+
+  CommunityBoardModel() {
+    _post = [];
+  }
   
   get getPost => _post;
-  void addPost(String ownerId, {String? id, DateTime? dateCreate}) {
-    Post post = Post(ownerId, id: id, dateCreate: dateCreate);
+  void addPost(String ownerId, String ownerName, {String? id, DateTime? dateCreate}) {
+    Post post = Post(ownerId, ownerName, id: id, dateCreate: dateCreate);
     _post.add(post);
   }
 }

@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_is_empty, prefer_final_fields
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
@@ -15,9 +18,10 @@ class Topic {
 class CommunityBoardViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final _service = FirebaseServices("post");
-  final _topic = FirebaseServices("unapprovetopic");
-
+  final _serviceUser = FirebaseServices("user");
+  final _topic = FirebaseServices("topic");
   List<Map<String, dynamic>> _posts = [];
+  final int _limit = 10;
 
   Future<void> createPost(
       CreatePostRequest request, BuildContext context) async {
@@ -29,6 +33,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
       "ownerId": userId,
       "title": request.title,
       "detail": request.detail,
+      "dateCreate": DateTime.now(),
       // "files": request.files,
       "topics": request.topics,
       "isApproved": false
@@ -36,9 +41,43 @@ class CommunityBoardViewModel extends ChangeNotifier {
     await _service.setDocument(id, postDetail);
   }
 
+  Future<void> getPostByTopic(String topic, {DocumentSnapshot? startDoc}) async {
+    try {
+      final snapshot = await _service.getDocumnetByKeyValuePair(
+        ["topics"], 
+        [[topic]],
+        orderingField: "dateCreate",
+        limit: _limit,
+        startDoc: startDoc
+      );
+      if (snapshot!.size != 0) {
+        CommunityBoardModel model = CommunityBoardModel();
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          final userSnapshot = await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
+          model.addPost(
+            snapshot.docs[i].get("ownerId"),
+            userSnapshot!.get("name"),
+            id: snapshot.docs[i].id,
+            dateCreate: snapshot.docs[i].get("dateCreate").toDate(),
+          );
+        }
+        _posts.add({
+          "topic": topic,
+          "lastDoc": snapshot.docs.last,
+          "post": model
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
   // fetch all posts returns true when there is a snapshot else return false.
   Future<bool> fetchAllPosts() async {
     final snapshot = await _service.getAllDocument();
+    await getPostByTopic("General");
 
     if (snapshot?.size == 0) {
       return false;
@@ -83,7 +122,15 @@ class CommunityBoardViewModel extends ChangeNotifier {
   Future<void> deleteComment(String docId) async {}
 
   Future<bool> createTopics(CreateTagRequest request) async {
-    return await _topic.addDocument({"id": request.id, "name": request.name});
+    return await _topic.setDocument(
+      request.id, 
+      {
+        "id": request.id, 
+        "name": request.name,
+        "detail": null, 
+        "isApproved": false
+      }
+    );
   }
 
   String getUuid() {
