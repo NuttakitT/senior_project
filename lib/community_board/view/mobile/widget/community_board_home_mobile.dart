@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class CommunityBoardHomeMobile extends StatefulWidget {
   const CommunityBoardHomeMobile({super.key});
@@ -75,32 +77,40 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                           ),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            side: const BorderSide(
-                                color: ColorConstant.orange50, width: 1),
-                            fixedSize: const Size(95, 40),
-                            foregroundColor: ColorConstant.orange50,
-                            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                            backgroundColor: ColorConstant.white,
-                            textStyle: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500)),
-                        child: Row(
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.only(right: 4.0),
-                              child: Icon(
-                                Icons.add_photo_alternate_rounded,
-                                color: ColorConstant.orange50,
-                                size: 14,
-                              ),
+                      Builder(
+                        builder: (context) {
+                          bool isLogin = context.watch<AppViewModel>().isLogin;
+                          if (!isLogin) {
+                            return Container();
+                          }
+                          return TextButton(
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                side: const BorderSide(
+                                    color: ColorConstant.orange50, width: 1),
+                                fixedSize: const Size(95, 40),
+                                foregroundColor: ColorConstant.orange50,
+                                padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                                backgroundColor: ColorConstant.white,
+                                textStyle: const TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.w500)),
+                            child: Row(
+                              children: const [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 4.0),
+                                  child: Icon(
+                                    Icons.add_photo_alternate_rounded,
+                                    color: ColorConstant.orange50,
+                                    size: 14,
+                                  ),
+                                ),
+                                Text("Create Post"),
+                              ],
                             ),
-                            Text("Create Post"),
-                          ],
-                        ),
+                          );
+                        }
                       ),
                     ],
                   ),

@@ -4,6 +4,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/desktop/widget/content_card_template.dart';
 import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class CommunityBoardContent extends StatefulWidget {
   const CommunityBoardContent({super.key});
@@ -49,41 +50,49 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
                   ),
                 ),
               ),
-              InkWell(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                      color: ColorConstant.orange50,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.only(right: 4),
-                        child: Icon(
-                          Icons.add,
-                          color: ColorConstant.white,
-                        ),
+              Builder(
+                builder: (context) {
+                  bool isLogin = context.watch<AppViewModel>().isLogin;
+                  if (!isLogin) {
+                    return Container();
+                  }
+                  return InkWell(
+                    child: Container(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                          color: ColorConstant.orange50,
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Row(
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.only(right: 4),
+                            child: Icon(
+                              Icons.add,
+                              color: ColorConstant.white,
+                            ),
+                          ),
+                          Text(
+                            "Create Post",
+                            style: TextStyle(
+                                color: ColorConstant.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
                       ),
-                      Text(
-                        "Create Post",
-                        style: TextStyle(
-                            color: ColorConstant.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: ((context) {
-                        return const AlertDialog(
-                          content: CreatePost(),
-                        );
-                      }));
-                },
+                    ),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: ((context) {
+                            return const AlertDialog(
+                              content: CreatePost(),
+                            );
+                          }));
+                    },
+                  );
+                }
               )
             ],
           ),

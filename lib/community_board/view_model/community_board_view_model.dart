@@ -1,13 +1,10 @@
-import 'dart:js';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:uuid/uuid.dart';
-import 'dart:io';
-import 'package:provider/provider.dart';
 
 class Topic {
   final String name;
@@ -25,8 +22,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
   Future<void> createPost(
       CreatePostRequest request, BuildContext context) async {
     final docId = getUuid();
-    final userId = "";
-    // final userId = context.watch<AppViewModel>().app.getUser.getId;
+    final userId = context.watch<AppViewModel>().app.getUser.getId;
     // TODO: files are not yet prepared
     Map<String, dynamic> postDetail = {
       "id": docId,
@@ -37,7 +33,6 @@ class CommunityBoardViewModel extends ChangeNotifier {
       "topics": request.topics,
       "isApproved": false
     };
-    print("a");
     await _service.setDocument(docId, postDetail);
   }
 
@@ -69,19 +64,6 @@ class CommunityBoardViewModel extends ChangeNotifier {
       return true;
     }
     return false;
-  }
-
-  List<Map<String, dynamic>> getPostFor(int amount) {
-    Iterable<Map<String, dynamic>> iterable = _posts.take(amount);
-    return iterable.toList();
-  }
-
-  List<Map<String, dynamic>> getAllPostFromCategory(List<String> categories) {
-    List<Map<String, dynamic>> filteredPosts = _posts
-        .where((post) =>
-            post['categories'].any((category) => categories.contains(category)))
-        .toList();
-    return filteredPosts;
   }
 
   Future<Map<String, dynamic>?> getPostDetail(String docId) async {
