@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/community_board/view/desktop/widget/comment_template.dart';
 import 'package:senior_project/community_board/view/desktop/widget/community_board_content.dart';
-import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
-import 'package:senior_project/community_board/view/desktop/widget/in_detail_content.dart';
 
 import '../../../../core/template/template_desktop/view/page/template_desktop.dart';
 
@@ -21,6 +19,7 @@ class _TemplateCommunityBoardState extends State<TemplateCommunityBoard> {
         helpdeskadmin: false,
         home: true,
         useTemplatescroll: true,
-        content: CommunityBoardContent());
+        content: CommunityBoardContent()
+    );
   }
 }

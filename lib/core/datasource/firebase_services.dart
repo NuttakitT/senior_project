@@ -89,17 +89,27 @@ class FirebaseServices {
     {
       int? limit,
       String? orderingField,
+      DocumentSnapshot? startDoc,
       bool descending = false
     }
   ) async {
     try {
       late Query query;
+
       if ((key.length == value.length) && key.isNotEmpty) {
         for (int i = 0; i < key.length; i++) {
           if (i != 0) {
-            query = query.where(key[i], isEqualTo: value[i]);
+            if (value[i] is List) {
+              query = query.where(key[i], arrayContainsAny: value[i]);
+            } else {
+              query = query.where(key[i], isEqualTo: value[i]);
+            }
           } else {
-            query = _collection.where(key[i], isEqualTo: value[i]);
+            if (value[i] is List) {
+              query = _collection.where(key[i], arrayContainsAny: value[i]);
+            } else {
+              query = _collection.where(key[i], isEqualTo: value[i]);
+            }
           }
         }
       }
@@ -109,6 +119,9 @@ class FirebaseServices {
       if (limit != null) {
         query = query.limit(limit);
       } 
+      if (startDoc != null) {
+        query = query.startAfterDocument(startDoc);
+      }
       return await query.get();
     } catch (e) {
       return null;

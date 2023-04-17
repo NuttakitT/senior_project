@@ -1,13 +1,13 @@
-import 'dart:js';
+// ignore_for_file: prefer_is_empty, prefer_final_fields
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:uuid/uuid.dart';
-import 'dart:io';
-import 'package:provider/provider.dart';
 
 class Topic {
   final String name;
@@ -18,48 +18,84 @@ class Topic {
 class CommunityBoardViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final _service = FirebaseServices("post");
-  final _topic = FirebaseServices("unapprovetopic");
-
+  final _serviceUser = FirebaseServices("user");
+  final _topic = FirebaseServices("topic");
   List<Map<String, dynamic>> _posts = [];
+  final int _limit = 10;
+
+  get getPost => _posts;
 
   Future<void> createPost(
       CreatePostRequest request, BuildContext context) async {
-    final docId = getUuid();
-    final userId = "";
-    // final userId = context.watch<AppViewModel>().app.getUser.getId;
+    String id = getUuid();
+    String userId = context.read<AppViewModel>().app.getUser.getId;
     // TODO: files are not yet prepared
     Map<String, dynamic> postDetail = {
-      "id": docId,
+      "id": id,
       "ownerId": userId,
       "title": request.title,
       "detail": request.detail,
+      "dateCreate": DateTime.now(),
       // "files": request.files,
       "topics": request.topics,
       "isApproved": false
     };
-    print("a");
-    await _service.setDocument(docId, postDetail);
+    await _service.setDocument(id, postDetail);
+  }
+
+  Future<void> getPostByTopic(String topic, {DocumentSnapshot? startDoc}) async {
+    try {
+      final snapshot = await _service.getDocumnetByKeyValuePair(
+        ["topics"], 
+        [[topic]],
+        orderingField: "dateCreate",
+        limit: _limit,
+        startDoc: startDoc
+      );
+      if (snapshot!.size != 0) {
+        CommunityBoardModel model = CommunityBoardModel();
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          final userSnapshot = await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
+          model.addPost(
+            snapshot.docs[i].get("ownerId"),
+            userSnapshot!.get("name"),
+            snapshot.docs[i].get("title").toString(),
+            snapshot.docs[i].get("detail").toString(),
+            snapshot.docs[i].get("topics"),
+            postId: snapshot.docs[i].id,
+            postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
+          );
+
+        }
+        _posts.add({
+          "topic": topic,
+          "lastDoc": snapshot.docs.last,
+          "post": model
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   // fetch all posts returns true when there is a snapshot else return false.
-  Future<bool> fetchAllPosts() async {
-    final snapshot = await _service.getAllDocument();
+  // Future<bool> fetchAllPosts() async {
+  //   final snapshot = await _service.getAllDocument();
+  //   await getPostByTopic("General");
 
-    if (snapshot?.size == 0) {
-      return false;
-    }
+  //   if (snapshot?.size == 0) {
+  //     return false;
+  //   }
 
-    for (QueryDocumentSnapshot doc in snapshot!.docs) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      _posts.add(data);
-    }
+  //   for (QueryDocumentSnapshot doc in snapshot!.docs) {
+  //     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+  //     _posts.add(data);
+  //   }
 
-    return true;
-  }
-
-  List<Map<String, dynamic>> getPost() {
-    return _posts;
-  }
+  //   return true;
+  // }
 
   bool validateNameField(String input) {
     if (input.isEmpty) {
@@ -69,19 +105,6 @@ class CommunityBoardViewModel extends ChangeNotifier {
       return true;
     }
     return false;
-  }
-
-  List<Map<String, dynamic>> getPostFor(int amount) {
-    Iterable<Map<String, dynamic>> iterable = _posts.take(amount);
-    return iterable.toList();
-  }
-
-  List<Map<String, dynamic>> getAllPostFromCategory(List<String> categories) {
-    List<Map<String, dynamic>> filteredPosts = _posts
-        .where((post) =>
-            post['categories'].any((category) => categories.contains(category)))
-        .toList();
-    return filteredPosts;
   }
 
   Future<Map<String, dynamic>?> getPostDetail(String docId) async {
@@ -101,7 +124,15 @@ class CommunityBoardViewModel extends ChangeNotifier {
   Future<void> deleteComment(String docId) async {}
 
   Future<bool> createTopics(CreateTagRequest request) async {
-    return await _topic.addDocument({"id": request.id, "name": request.name});
+    return await _topic.setDocument(
+      request.id, 
+      {
+        "id": request.id, 
+        "name": request.name,
+        "detail": null, 
+        "isApproved": false
+      }
+    );
   }
 
   String getUuid() {
