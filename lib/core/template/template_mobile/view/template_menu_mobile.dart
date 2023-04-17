@@ -49,7 +49,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
         toolbarHeight: 90,
       ),
       backgroundColor: Colors.white,
-      body: widget.content,
+      body: SingleChildScrollView(child: widget.content),
       drawer: Drawer(
         child: SingleChildScrollView(
           child: Column(

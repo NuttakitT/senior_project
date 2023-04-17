@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/community_board/view/mobile/widget/comment_field_mobile.dart';
 import 'package:senior_project/community_board/view/mobile/widget/community_board_home_mobile.dart';
 import '../../../../core/template/template_mobile/view/template_menu_mobile.dart';
 
