@@ -10,8 +10,19 @@ class CommunityBoardModel {
   }
   
   get getPost => _post;
-  void addPost(String ownerId, String ownerName, {String? id, DateTime? dateCreate}) {
-    Post post = Post(ownerId, ownerName, id: id, dateCreate: dateCreate);
+  void addPost(
+    String ownerId, 
+    String ownerName, 
+    String title, 
+    String detail, 
+    List<dynamic> topic,
+    {String? postId, DateTime? postDateCreate}
+  ) {
+    Post post = Post(ownerId, ownerName, id: postId, dateCreate: postDateCreate);
+    post.addContent(title, detail);
+    for (int i = 0; i < topic.length; i++) {
+      post.addTopic(topic[i].toString());
+    }
     _post.add(post);
   }
 }

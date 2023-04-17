@@ -23,6 +23,8 @@ class CommunityBoardViewModel extends ChangeNotifier {
   List<Map<String, dynamic>> _posts = [];
   final int _limit = 10;
 
+  get getPost => _posts;
+
   Future<void> createPost(
       CreatePostRequest request, BuildContext context) async {
     String id = getUuid();
@@ -57,9 +59,13 @@ class CommunityBoardViewModel extends ChangeNotifier {
           model.addPost(
             snapshot.docs[i].get("ownerId"),
             userSnapshot!.get("name"),
-            id: snapshot.docs[i].id,
-            dateCreate: snapshot.docs[i].get("dateCreate").toDate(),
+            snapshot.docs[i].get("title").toString(),
+            snapshot.docs[i].get("detail").toString(),
+            snapshot.docs[i].get("topics"),
+            postId: snapshot.docs[i].id,
+            postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
           );
+
         }
         _posts.add({
           "topic": topic,
@@ -75,25 +81,21 @@ class CommunityBoardViewModel extends ChangeNotifier {
   }
 
   // fetch all posts returns true when there is a snapshot else return false.
-  Future<bool> fetchAllPosts() async {
-    final snapshot = await _service.getAllDocument();
-    await getPostByTopic("General");
+  // Future<bool> fetchAllPosts() async {
+  //   final snapshot = await _service.getAllDocument();
+  //   await getPostByTopic("General");
 
-    if (snapshot?.size == 0) {
-      return false;
-    }
+  //   if (snapshot?.size == 0) {
+  //     return false;
+  //   }
 
-    for (QueryDocumentSnapshot doc in snapshot!.docs) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      _posts.add(data);
-    }
+  //   for (QueryDocumentSnapshot doc in snapshot!.docs) {
+  //     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+  //     _posts.add(data);
+  //   }
 
-    return true;
-  }
-
-  List<Map<String, dynamic>> getPost() {
-    return _posts;
-  }
+  //   return true;
+  // }
 
   bool validateNameField(String input) {
     if (input.isEmpty) {

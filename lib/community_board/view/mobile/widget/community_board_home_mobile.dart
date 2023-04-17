@@ -25,6 +25,82 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
     return card;
   }
 
+  Widget getContent(String topicName, String? topicDescription, List<Map<String, dynamic>> listPost) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(0, -2),
+                  color: ColorConstant.black.withOpacity(0.10),
+                  blurRadius: 4,
+                )
+              ],
+              color: ColorConstant.white,
+              border: const Border(
+                  top: BorderSide(color: ColorConstant.whiteBlack20, width: 1),
+                  bottom:
+                      BorderSide(color: ColorConstant.whiteBlack20, width: 1))),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    topicName,
+                    style: const TextStyle(
+                        color: ColorConstant.orange70,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Text(
+                  topicDescription!,
+                  style: const TextStyle(
+                      color: ColorConstant.whiteBlack80, fontSize: 12),
+                )
+              ]),
+        ),
+        Column(
+          children: generateCardCommunityBoard(listPost),
+        ),
+        InkWell(
+          child: Container(
+            height: 40,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(right: 8, left: 8),
+            decoration: const BoxDecoration(
+              color: ColorConstant.white,
+              border: Border(
+                  bottom:
+                      BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "ดูเพิ่มเติม",
+                  style: TextStyle(color: ColorConstant.orange70, fontSize: 16),
+                ),
+                Icon(
+                  Icons.expand_more_rounded,
+                  color: ColorConstant.orange70,
+                  size: 24,
+                )
+              ],
+            ),
+          ),
+          onTap: () {
+            //TODO view more post
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -126,85 +202,28 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
             ),
           ),
         ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(0, -2),
-                  color: ColorConstant.black.withOpacity(0.10),
-                  blurRadius: 4,
-                )
-              ],
-              color: ColorConstant.white,
-              border: const Border(
-                  top: BorderSide(color: ColorConstant.whiteBlack20, width: 1),
-                  bottom:
-                      BorderSide(color: ColorConstant.whiteBlack20, width: 1))),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                //TODO topic
-                Padding(
-                  padding: EdgeInsets.only(bottom: 4),
-                  child: Text(
-                    "การลงทะเบียน",
-                    style: TextStyle(
-                        color: ColorConstant.orange70,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-                Text(
-                  //TODO description topic
-                  "คำถามเกี่ยวกับการลงทะเบียนเรียน",
-                  style: TextStyle(
-                      color: ColorConstant.whiteBlack80, fontSize: 12),
-                )
-              ]),
-        ),
         FutureBuilder(
-          future: context.read<CommunityBoardViewModel>().fetchAllPosts(),
-          builder: ((context, snapshot) {
+          future: context.read<CommunityBoardViewModel>().getPostByTopic("General"),
+          builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              List<Map<String, dynamic>> listPost =
-                  context.read<CommunityBoardViewModel>().getPost();
-              return Column(
-                children: generateCardCommunityBoard(listPost),
-              );
+              List<Map<String, dynamic>> post = context.read<CommunityBoardViewModel>().getPost;
+              List<Map<String, dynamic>> postDetail = [];
+              for (int i = 0; i < post.length; i++) {
+                int index = post[i]["post"].getPost.length;
+                for (int j = 0; j < index; j++) {
+                  String title = post[i]["post"].getPost[j].getContent.getText;
+                  String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
+                  List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
+                  postDetail.add({
+                    "title": title,
+                    "detail": detail,
+                    "topic": topic
+                  });
+                }
+              }
+              return getContent("การลงทะเบียน", "คำถามเกี่ยวกับการลงทะเบียนเรียน", postDetail);
             }
-            return const Text("Loading..");
-          }),
-        ),
-        InkWell(
-          child: Container(
-            height: 40,
-            alignment: Alignment.center,
-            padding: const EdgeInsets.only(right: 8, left: 8),
-            decoration: const BoxDecoration(
-              color: ColorConstant.white,
-              border: Border(
-                  bottom:
-                      BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  "ดูเพิ่มเติม",
-                  style: TextStyle(color: ColorConstant.orange70, fontSize: 16),
-                ),
-                Icon(
-                  Icons.expand_more_rounded,
-                  color: ColorConstant.orange70,
-                  size: 24,
-                )
-              ],
-            ),
-          ),
-          onTap: () {
-            //TODO view more post
+            return const Text("Loading...");
           },
         ),
       ],
