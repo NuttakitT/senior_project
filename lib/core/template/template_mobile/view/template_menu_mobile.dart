@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
@@ -266,6 +268,13 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                     } else {
                       await context.read<AppViewModel>().login(context);
                     }
+                    Navigator.pushAndRemoveUntil(
+                      context, 
+                      MaterialPageRoute(builder: (context) {
+                        return const CommunityBoardView();
+                      }), 
+                      (route) => false
+                    );
                   },
                 ),
               ),
