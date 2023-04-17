@@ -32,7 +32,6 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
         Padding(
           padding: const EdgeInsets.only(top: 16, bottom: 16),
           child: Container(
-            height: 126,
             alignment: Alignment.center,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(color: ColorConstant.white, boxShadow: [
@@ -100,7 +99,7 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                                     color: ColorConstant.orange50, width: 1),
                                 fixedSize: const Size(95, 40),
                                 foregroundColor: ColorConstant.orange50,
-                                padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                                padding: const EdgeInsets.fromLTRB(6, 8, 8, 8),
                                 backgroundColor: ColorConstant.white,
                                 textStyle: const TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.w500)),
@@ -175,7 +174,7 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                 children: generateCardCommunityBoard(listPost),
               );
             }
-            return Text("กำลังโหลด");
+            return const Text("Loading..");
           }),
         ),
         InkWell(
