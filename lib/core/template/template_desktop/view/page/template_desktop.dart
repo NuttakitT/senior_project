@@ -96,7 +96,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
                             controller: childController,
-                            child: _content(widget.content, screenWidth, height: null),
+                            child: _content(widget.content, screenWidth, height: 879),
                           ),
                         ),
                       );
