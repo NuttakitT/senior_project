@@ -146,7 +146,7 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
                       children: generateCardCommunityBoard(listPost),
                     );
                   }
-                  return Text("กำลังโหลด");
+                  return const Text("Loading...");
                 }),
               ),
               Container(

@@ -21,11 +21,11 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> createPost(
       CreatePostRequest request, BuildContext context) async {
-    final docId = getUuid();
-    final userId = context.watch<AppViewModel>().app.getUser.getId;
+    String id = getUuid();
+    String userId = context.read<AppViewModel>().app.getUser.getId;
     // TODO: files are not yet prepared
     Map<String, dynamic> postDetail = {
-      "id": docId,
+      "id": id,
       "ownerId": userId,
       "title": request.title,
       "detail": request.detail,
@@ -33,7 +33,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
       "topics": request.topics,
       "isApproved": false
     };
-    await _service.setDocument(docId, postDetail);
+    await _service.setDocument(id, postDetail);
   }
 
   // fetch all posts returns true when there is a snapshot else return false.

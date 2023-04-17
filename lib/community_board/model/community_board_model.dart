@@ -1,6 +1,16 @@
-import 'package:image_picker/image_picker.dart';
+// ignore_for_file: prefer_final_fields
 
-class CommunityBoardModel {}
+import 'package:senior_project/community_board/model/post.dart';
+
+class CommunityBoardModel {
+  List<Post> _post = [];
+  
+  get getPost => _post;
+  void addPost(String ownerId, {String? id, DateTime? dateCreate}) {
+    Post post = Post(ownerId, id: id, dateCreate: dateCreate);
+    _post.add(post);
+  }
+}
 
 class CreatePostRequest {
   String title;
