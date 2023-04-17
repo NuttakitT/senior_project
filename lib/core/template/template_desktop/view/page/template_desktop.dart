@@ -45,7 +45,23 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
             : screenWidth > 1440
                 ? screenWidth
                 : 1440,
-        child: widget.content);
+        child: Builder(
+          builder: (context) {
+            if (widget.useTemplatescroll) {
+              return Scrollbar(
+                controller: childController,
+                thumbVisibility: true,
+                child: SingleChildScrollView(
+                  controller: childController,
+                  scrollDirection: Axis.vertical,
+                  child: widget.content,
+                ),
+              );
+            }
+            return widget.content;
+          },
+        )
+      );
   }
 
   @override
@@ -87,20 +103,6 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                 }),
                 Builder(
                   builder: (context) {
-                    if (widget.useTemplatescroll) {
-                      return SizedBox(
-                        height: 879,
-                        child: Scrollbar(
-                          thumbVisibility: true,
-                          controller: childController,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            controller: childController,
-                            child: _content(widget.content, screenWidth, height: 879),
-                          ),
-                        ),
-                      );
-                    }
                     return _content(widget.content, screenWidth, height: 879);
                   },
                 ),
