@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/view/mobile/widget/comment_field_mobile.dart';
+import 'package:senior_project/community_board/view/mobile/widget/comment_template_mobile.dart';
 
 class InDetailMobile extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -96,6 +98,14 @@ class _InDetailMobileState extends State<InDetailMobile> {
             ),
           ),
         ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: CommentFieldMobile(),
+        ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: CommentTemplateMobile(),
+        )
       ],
     );
   }

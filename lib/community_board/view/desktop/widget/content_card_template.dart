@@ -68,7 +68,7 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
                         color: ColorConstant.whiteBlack70, fontSize: 18),
                   ),
                 ),
-                //TODO datetime
+                //TODO datetime of post
                 const Text(
                   "25 Feb.",
                   style: TextStyle(
@@ -84,7 +84,7 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
                         color: ColorConstant.whiteBlack60,
                       ),
                     ),
-                    //TODO number comment
+                    //TODO number comment in post
                     Text(
                       "14",
                       style: TextStyle(

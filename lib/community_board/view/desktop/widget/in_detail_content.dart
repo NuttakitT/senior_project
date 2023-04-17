@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/desktop/widget/comment_field.dart';
+import 'package:senior_project/community_board/view/desktop/widget/comment_template.dart';
 
 class InDetailContent extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -30,7 +31,7 @@ class _InDetailContentState extends State<InDetailContent> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 8),
                   child: Text(
-                    widget.info["tittle"],
+                    widget.info["title"],
                     style: const TextStyle(
                         color: ColorConstant.orange70,
                         fontSize: 32,
@@ -74,12 +75,12 @@ class _InDetailContentState extends State<InDetailContent> {
                         borderRadius: BorderRadius.circular(8)),
                     child: Text(
                       widget.info["topic"],
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: ColorConstant.whiteBlack70, fontSize: 18),
                     ),
                   ),
                 ),
-                //TODO detail
+                //TODO detail of post
                 const Text(
                   "ปฏิทินการลงทะเบียน",
                   style: TextStyle(
@@ -92,6 +93,19 @@ class _InDetailContentState extends State<InDetailContent> {
         const Padding(
           padding: EdgeInsets.fromLTRB(40, 0, 40, 24),
           child: CommentField(),
+        ),
+        //TODO loop comment
+        const Padding(
+          padding: EdgeInsets.fromLTRB(40, 0, 40, 24),
+          child: CommentTemplate(),
+        ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(40, 0, 40, 24),
+          child: CommentTemplate(),
+        ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(40, 0, 40, 24),
+          child: CommentTemplate(),
         )
       ],
     );

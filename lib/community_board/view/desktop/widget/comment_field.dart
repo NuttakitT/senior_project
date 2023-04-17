@@ -75,7 +75,9 @@ class _CommentFieldState extends State<CommentField> {
                         ),
                       ],
                     )),
+                //TODO comment field
                 const TextField(
+                  maxLines: 5,
                   decoration: InputDecoration(
                     fillColor: ColorConstant.whiteBlack10,
                     labelStyle: TextStyle(
@@ -95,40 +97,34 @@ class _CommentFieldState extends State<CommentField> {
           Row(
             children: [
               const Spacer(),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Stack(children: <Widget>[
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: ColorConstant.orange50,
-                              width: 1,
-                              strokeAlign: StrokeAlign.outside)),
+              //TODO send comment
+              TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    side: const BorderSide(
+                        color: ColorConstant.orange50, width: 1),
+                    alignment: Alignment.center,
+                    fixedSize: const Size(125, 40),
+                    foregroundColor: ColorConstant.white,
+                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                    backgroundColor: ColorConstant.orange50,
+                    textStyle: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold)),
+                child: Row(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(
+                        Icons.send_rounded,
+                        color: ColorConstant.white,
+                        size: 24,
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                        alignment: Alignment.center,
-                        fixedSize: const Size.fromWidth(120),
-                        foregroundColor: ColorConstant.white,
-                        padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                        backgroundColor: ColorConstant.orange50,
-                        textStyle: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.send_rounded,
-                          color: ColorConstant.white,
-                          size: 24,
-                        ),
-                        Text("Send"),
-                      ],
-                    ),
-                  ),
-                ]),
+                    Text("Send"),
+                  ],
+                ),
               ),
             ],
           ),
