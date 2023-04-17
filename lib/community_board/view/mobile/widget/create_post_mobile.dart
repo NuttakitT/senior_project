@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/community_board/view/mobile/page/template_community_board_mobile.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../../model/community_board_model.dart';
+import '../../../view_model/community_board_view_model.dart';
 
 class CreatePostMobile extends StatefulWidget {
   const CreatePostMobile({super.key});
@@ -13,39 +18,51 @@ class CreatePostMobile extends StatefulWidget {
 }
 
 class Topic {
-  final int id;
   final String name;
 
-  Topic({required this.id, required this.name});
+  Topic({required this.name});
 }
 
-late String title;
-late String detail;
-late List<String> topics;
-bool isTitleEmpty = false;
-bool isDetailEmpty = false;
-bool isTopicEmpty = false;
-List<Topic> _topic = [
-  Topic(id: 1, name: "ทุนการศึกษา"),
-  Topic(id: 2, name: "การฝึกงาน"),
-  Topic(id: 3, name: "การลงทะเบียน"),
-  Topic(id: 4, name: "การจบการศึกษา"),
-  Topic(id: 5, name: "รายวิชา"),
-  Topic(id: 6, name: "กิจกรรม"),
-];
-final _itemList =
-    _topic.map((topic) => MultiSelectItem<Topic>(topic, topic.name)).toList();
-List<Topic> _selectedTopic = [];
-TextEditingController titleTextController = TextEditingController();
-TextEditingController detailTextController = TextEditingController();
-
 class _CreatePostMobileState extends State<CreatePostMobile> {
+  String title = "";
+  String detail = "";
+  String addtopic = "";
+  List<String> topics = [];
+  bool isTitleNotEmpty = true;
+  bool isDetailNotEmpty = true;
+  bool isTopicEmpty = false;
+  bool checkAddTopic = false;
+  bool ifSuccession = true;
+  List<Topic> topic = [
+    Topic(name: "General"),
+    Topic(name: "ทุนการศึกษา"),
+    Topic(name: "การฝึกงาน"),
+    Topic(name: "การลงทะเบียน"),
+    Topic(name: "การจบการศึกษา"),
+    Topic(name: "รายวิชา"),
+    Topic(name: "กิจกรรม"),
+  ];
+
+  TextEditingController titleTextController = TextEditingController();
+  TextEditingController detailTextController = TextEditingController();
+  TextEditingController addtopicTextController = TextEditingController();
   @override
+  void initState() {
+    titleTextController.addListener(() {
+      title = titleTextController.text;
+    });
+    detailTextController.addListener(() {
+      detail = detailTextController.text;
+    });
+
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 40, bottom: 24),
+          padding: const EdgeInsets.only(top: 24, bottom: 24),
           child: Container(
             width: double.infinity,
             constraints: const BoxConstraints(maxHeight: 30),
@@ -93,11 +110,14 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
               ),
               TextField(
                 controller: titleTextController,
-                decoration: const InputDecoration(
-                  hintText: "หัวข้อ",
+                decoration: InputDecoration(
+                  hintText: !isTitleNotEmpty ? "กรุณากรอกหัวข้อ" : "หัวข้อ",
                   hintStyle: TextStyle(
-                      color: ColorConstant.whiteBlack60, fontSize: 14),
-                  border: OutlineInputBorder(
+                      color: !isTitleNotEmpty
+                          ? ColorConstant.red40
+                          : ColorConstant.whiteBlack60,
+                      fontSize: 14),
+                  border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                 ),
               ),
@@ -118,48 +138,98 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                 ),
               ),
               ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 428),
+                constraints: const BoxConstraints(maxWidth: 659),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //TODO
-                    SingleChildScrollView(
-                      child: Container(
-                        width: 272,
-                        alignment: Alignment.center,
-                        child: Column(children: <Widget>[
-                          MultiSelectDialogField(
-                              items: _itemList,
-                              title: Text("Topics"),
-                              selectedColor: ColorConstant.orange40,
-                              decoration: BoxDecoration(
-                                  color: ColorConstant.white,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8)),
-                                  border: Border.all(
-                                      color: ColorConstant.whiteBlack60,
-                                      width: 1)),
-                              buttonIcon: const Icon(
-                                Icons.arrow_drop_down_rounded,
-                                color: ColorConstant.whiteBlack90,
+                    Expanded(
+                      child: Builder(builder: ((context) {
+                        if (checkAddTopic) {
+                          return SizedBox(
+                            height: 40,
+                            child: TextField(
+                              controller: addtopicTextController,
+                              decoration: const InputDecoration(
+                                hintText: "เพิ่ม Topic ของคุณ",
+                                hintStyle: TextStyle(
+                                    color: ColorConstant.whiteBlack60,
+                                    fontSize: 12),
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
                               ),
-                              buttonText: const Text(
-                                "Select Topic",
-                                style: TextStyle(
+                            ),
+                          );
+                        }
+                        return SingleChildScrollView(
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Column(children: <Widget>[
+                              MultiSelectDialogField(
+                                  items: topic
+                                      .map((topic) => MultiSelectItem<Topic>(
+                                          topic, topic.name))
+                                      .toList(),
+                                  title: const Text("Topics"),
+                                  selectedColor: ColorConstant.orange40,
+                                  decoration: BoxDecoration(
+                                      color: ColorConstant.white,
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8)),
+                                      border: Border.all(
+                                          color: ColorConstant.whiteBlack60,
+                                          width: 1)),
+                                  buttonIcon: const Icon(
+                                    Icons.arrow_drop_down_rounded,
                                     color: ColorConstant.whiteBlack90,
-                                    fontSize: 16),
-                              ),
-                              onConfirm: (results) {
-                                _selectedTopic = results;
-                              })
-                        ]),
-                      ),
+                                  ),
+                                  buttonText: const Text(
+                                    "Select Topic",
+                                    style: TextStyle(
+                                        color: ColorConstant.whiteBlack90,
+                                        fontSize: 16),
+                                  ),
+                                  onConfirm: (results) {
+                                    for (int i = 0; i < results.length; i++) {
+                                      topics.add(results[i].name);
+                                    }
+                                  })
+                            ]),
+                          ),
+                        );
+                      })),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          if (checkAddTopic) {
+                            final request = CreateTagRequest(
+                              id: const Uuid().v1(),
+                              name: addtopic,
+                            );
+                            if (ifSuccession) {
+                              setState(() {
+                                ifSuccession = false;
+                              });
+                              bool ifSuccess = await context
+                                  .read<CommunityBoardViewModel>()
+                                  .createTopics(request);
+                              if (ifSuccess) {
+                                setState(() {
+                                  ifSuccession = true;
+                                  topic.add(Topic(name: addtopic));
+                                  checkAddTopic = false;
+                                });
+                              }
+                            }
+                          } else {
+                            setState(() {
+                              checkAddTopic = true;
+                            });
+                          }
+                        },
                         style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
@@ -183,6 +253,33 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                         ),
                       ),
                     ),
+                    Builder(builder: ((context) {
+                      if (checkAddTopic) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                checkAddTopic = false;
+                              });
+                            },
+                            style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                side: const BorderSide(
+                                    color: ColorConstant.orange50, width: 1),
+                                fixedSize: const Size(88, 40),
+                                foregroundColor: ColorConstant.orange50,
+                                padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                                backgroundColor: ColorConstant.white,
+                                textStyle: const TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.w500)),
+                            child: const Text("Cancle"),
+                          ),
+                        );
+                      }
+                      return Container();
+                    }))
                   ],
                 ),
               ),
@@ -193,8 +290,8 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
           padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Padding(
+            children: [
+              const Padding(
                 padding: EdgeInsets.only(bottom: 8),
                 child: Text(
                   "รายละเอียด",
@@ -203,11 +300,16 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                 ),
               ),
               TextField(
+                controller: detailTextController,
                 decoration: InputDecoration(
-                  hintText: "รายละเอียด",
+                  hintText:
+                      !isDetailNotEmpty ? "กรุณากรอกรายละเอียด" : "รายละเอียด",
                   hintStyle: TextStyle(
-                      color: ColorConstant.whiteBlack60, fontSize: 14),
-                  border: OutlineInputBorder(
+                      color: !isDetailNotEmpty
+                          ? ColorConstant.red40
+                          : ColorConstant.whiteBlack60,
+                      fontSize: 14),
+                  border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                 ),
               ),
@@ -228,6 +330,7 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                       color: ColorConstant.whiteBlack90, fontSize: 18),
                 ),
               ),
+              //TODO add image
               TextButton(
                 onPressed: () {},
                 style: TextButton.styleFrom(
@@ -275,6 +378,36 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                       fontWeight: FontWeight.bold),
                 )),
           ),
+          onTap: () async {
+            setState(() {
+              isTitleNotEmpty = context
+                  .read<CommunityBoardViewModel>()
+                  .validateNameField(title);
+            });
+            setState(() {
+              isDetailNotEmpty = context
+                  .read<CommunityBoardViewModel>()
+                  .validateNameField(detail);
+            });
+            if (topics.isEmpty) {
+              topics.add("General");
+            }
+            if ((isTitleNotEmpty && isDetailNotEmpty)) {
+              final request = CreatePostRequest(
+                title: title,
+                detail: detail,
+                topics: topics,
+              );
+              await context
+                  .read<CommunityBoardViewModel>()
+                  .createPost(request, context);
+
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                return const TemplateCommunityBoardMobile();
+              }), (route) => false);
+            }
+          },
         ),
       ],
     );

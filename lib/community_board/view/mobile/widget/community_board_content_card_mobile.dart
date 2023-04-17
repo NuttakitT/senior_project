@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 
-class CommunityBoardContentMobile extends StatefulWidget {
+class CommunityBoardContentCardMobile extends StatefulWidget {
   final Map<String, dynamic> info;
-  const CommunityBoardContentMobile({super.key, required this.info});
+  const CommunityBoardContentCardMobile({super.key, required this.info});
 
   @override
-  State<CommunityBoardContentMobile> createState() =>
-      _CommunityBoardContentMobileState();
+  State<CommunityBoardContentCardMobile> createState() =>
+      _CommunityBoardContentCardMobileState();
 }
 
-class _CommunityBoardContentMobileState
-    extends State<CommunityBoardContentMobile> {
+class _CommunityBoardContentCardMobileState
+    extends State<CommunityBoardContentCardMobile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(

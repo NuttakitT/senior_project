@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senior_project/community_board/view/mobile/widget/comment_field_mobile.dart';
 import 'package:senior_project/community_board/view/mobile/widget/community_board_home_mobile.dart';
 import 'package:senior_project/community_board/view/mobile/widget/create_post_mobile.dart';
 
@@ -19,6 +20,6 @@ class _TemplateCommunityBoardMobileState
     return const TemplateMenuMobile(
         content:
             // CommunityBoardHomeMobile()
-            CreatePostMobile());
+            CommunityBoardHomeMobile());
   }
 }

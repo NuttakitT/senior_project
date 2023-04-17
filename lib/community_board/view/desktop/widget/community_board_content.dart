@@ -117,6 +117,7 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
                             fontWeight: FontWeight.w500),
                       ),
                     ),
+                    //TODO description topic
                     Text(
                       "คำถามเกี่ยวกับการลงทะเบียนเรียน",
                       style: TextStyle(
@@ -140,31 +141,36 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
                   return Text("กำลังโหลด");
                 }),
               ),
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(top: 16, bottom: 16),
-                decoration: BoxDecoration(
-                    color: ColorConstant.white,
-                    border:
-                        Border.all(color: ColorConstant.whiteBlack40, width: 1),
-                    borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "ดูเพิ่มเติม",
-                      style: TextStyle(
-                          color: ColorConstant.orange60, fontSize: 20),
-                    ),
-                    Icon(
-                      Icons.expand_more_rounded,
-                      color: ColorConstant.orange60,
-                      size: 24,
-                    )
-                  ],
+              InkWell(
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  decoration: BoxDecoration(
+                      color: ColorConstant.white,
+                      border: Border.all(
+                          color: ColorConstant.whiteBlack40, width: 1),
+                      borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(16),
+                          bottomRight: Radius.circular(16))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "ดูเพิ่มเติม",
+                        style: TextStyle(
+                            color: ColorConstant.orange60, fontSize: 20),
+                      ),
+                      Icon(
+                        Icons.expand_more_rounded,
+                        color: ColorConstant.orange60,
+                        size: 24,
+                      )
+                    ],
+                  ),
                 ),
+                onTap: () {
+                  //TODO view more post
+                },
               ),
             ],
           ),
