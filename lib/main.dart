@@ -6,6 +6,7 @@ import 'package:senior_project/approval/page/template_approval.dart';
 import 'package:senior_project/community_board/view/desktop/page/template_community_board.dart';
 import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
 import 'package:senior_project/community_board/view/mobile/page/template_community_board_mobile.dart';
+import 'package:senior_project/community_board/view/page/community_board_view.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/view_model/cryptor.dart';
@@ -62,10 +63,7 @@ class MyApp extends StatelessWidget {
               context, !(FirebaseAuth.instance.currentUser == null)),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
-              return TemplateApproval();
-              // HelpDeskMainView(
-              //     isAdmin:
-              //         context.watch<AppViewModel>().app.getUser.getRole == 0);
+              return const CommunityBoardView();
             }
             return Container();
           }),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/view/page/community_board_view.dart';
 import 'package:senior_project/core/template/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
@@ -102,7 +103,13 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(0);
-                        //TODO when click link to home page
+                        Navigator.pushAndRemoveUntil(
+                          context, 
+                          MaterialPageRoute(builder: (context) {
+                            return const CommunityBoardView();
+                          }), 
+                          (route) => false
+                        );
                       },
                     ),
                   ),
