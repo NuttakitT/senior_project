@@ -148,15 +148,13 @@ class _MainMenuState extends State<MainMenu> {
               onPressed: () async {
                 bool isSuccess = await context.read<AppViewModel>().login(context);
                 if (isSuccess) {
-                  // TODO link to home
                   Navigator.pushAndRemoveUntil(
                     context, 
                     MaterialPageRoute(builder: (context) {
-                      return HelpDeskMainView(
-                        isAdmin: context.read<AppViewModel>().app.getUser.getRole == 0 ? true : false,
-                      );
+                      return const CommunityBoardView();
                     }), 
-                  (route) => false);
+                    (route) => false
+                  );
                 }
               },
               style: ButtonStyle(
@@ -337,7 +335,13 @@ class _MainMenuState extends State<MainMenu> {
                         PopupMenuItem(
                           onTap: () async {
                             await context.read<AppViewModel>().logout();
-                            // TODO push to home
+                            Navigator.pushAndRemoveUntil(
+                              context, 
+                              MaterialPageRoute(builder: (context) {
+                                return const CommunityBoardView();
+                              }), 
+                              (route) => false
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 16),
