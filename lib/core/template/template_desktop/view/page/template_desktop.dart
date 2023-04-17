@@ -28,7 +28,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
   ScrollController vertical = ScrollController();
   ScrollController childController = ScrollController();
 
-  Widget _content(Widget content, double screenWidth, double height) {
+  Widget _content(Widget content, double screenWidth, {double? height}) {
     bool hasMenu = widget.helpdesk || widget.helpdeskadmin || widget.home;
     double contentSize = 1112;
 
@@ -88,17 +88,20 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                 Builder(
                   builder: (context) {
                     if (widget.useTemplatescroll) {
-                      return Scrollbar(
-                        thumbVisibility: true,
-                        controller: childController,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
+                      return SizedBox(
+                        height: 879,
+                        child: Scrollbar(
+                          thumbVisibility: true,
                           controller: childController,
-                          child: _content(widget.content, screenWidth, 879),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            controller: childController,
+                            child: _content(widget.content, screenWidth, height: null),
+                          ),
                         ),
                       );
                     }
-                    return _content(widget.content, screenWidth, 879);
+                    return _content(widget.content, screenWidth, height: 879);
                   },
                 ),
               ],
