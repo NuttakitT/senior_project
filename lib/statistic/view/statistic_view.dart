@@ -172,8 +172,11 @@ class _StatisticViewState extends State<StatisticView> {
             }
             if (snapshot.connectionState == ConnectionState.done) {
               final ticketVolume = snapshot.data?.ticketVolume ?? [];
-              // final categories = snapshot.data?.categories ?? [];
+              final ticketStatus = snapshot.data?.ticketStatus ?? [];
+              final ticketPriority = snapshot.data?.ticketPriority ?? [];
               data[0] = ticketVolume;
+              data[1] = ticketStatus;
+              data[2] = ticketPriority;
 
               return TemplateDesktop(
                   helpdesk: false,

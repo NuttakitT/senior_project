@@ -22,8 +22,13 @@ import 'package:senior_project/statistic/view/widget/ticket_category.dart';
 
 class StatisticModel {
   List<LineChartModel> ticketVolume = [];
+  List<PieChartModel> ticketStatus = [];
+  List<PieChartModel> ticketPriority = [];
 
-  StatisticModel({required this.ticketVolume});
+  StatisticModel(
+      {required this.ticketVolume,
+      required this.ticketStatus,
+      required this.ticketPriority});
 }
 
 class TicketCommentModel {
