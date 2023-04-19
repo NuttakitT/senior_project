@@ -158,12 +158,76 @@ class StatisticViewModel extends ChangeNotifier {
     return averageTime;
   }
 
+  Future<Map<String, List<int>>> fetchTicketCategory() async {
+    final snapshot = await _service.getAllDocument();
+    Map<String, Map<String, int>> dataMap = {};
+
+    snapshot?.docs.forEach((doc) {
+      String? category = doc['category'];
+      int? status = doc['status'];
+
+      if (category == null || status == null) {
+        return;
+      }
+
+      if (dataMap[category] == null) {
+        dataMap[category] = {
+          'Not Started': 0,
+          'Pending': 0,
+          'Complete': 0,
+        };
+      }
+
+      if (status == 0) {
+        dataMap[category]!['Not Started'] ??= 0;
+        dataMap[category]!['Not Started'] =
+            dataMap[category]!['Not Started']! + 1;
+      } else if (status == 1) {
+        dataMap[category]!['Pending'] ??= 0;
+        dataMap[category]!['Pending'] = dataMap[category]!['Pending']! + 1;
+      } else if (status == 2) {
+        dataMap[category]!['Complete'] ??= 0;
+        dataMap[category]!['Complete'] = dataMap[category]!['Complete']! + 1;
+      }
+    });
+    Map<String, List<int>> dataList = {};
+    // List<List<int>> dataList = [];
+    dataMap.forEach((category, statusMap) {
+      List<int> categoryData = [];
+      statusMap.forEach((status, count) {
+        categoryData.add(count);
+      });
+      dataList[category] = categoryData;
+      // dataList.add(categoryData);
+    });
+    return dataList;
+  }
+
+  Future<List<StackBarChartModel>> fetchTicketCategoryData() async {
+    Map<String, List<int>> dataList = await fetchTicketCategory();
+
+    List<StackBarChartModel> chartData = [];
+    dataList.forEach((category, categoryData) {
+      StackBarChartModel model = StackBarChartModel(
+        xAxis: category,
+        y1: categoryData[0].toDouble(),
+        y2: categoryData[1].toDouble(),
+        y3: categoryData[2].toDouble(),
+        y4: 0.0, // set y4 to 0.0 since it's not used in the data list
+      );
+      chartData.add(model);
+    });
+
+    return chartData;
+  }
+
   Future<StatisticModel> fetchPage() async {
     final model = StatisticModel(
         ticketVolume: await fetchTicketVolume(),
         ticketStatus: await fetchTicketStatus(),
         ticketPriority: await fetchTicketPriority(),
-        defaultStatistics: await fetchDefaultStatistics());
+        defaultStatistics: await fetchDefaultStatistics(),
+        ticketByCategories: await fetchTicketCategoryData());
     return model;
   }
 }
