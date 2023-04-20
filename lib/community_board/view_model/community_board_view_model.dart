@@ -45,6 +45,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> getPostByTopic(String topic, {DocumentSnapshot? startDoc}) async {
     try {
+      _posts = [];
       final snapshot = await _service.getDocumnetByKeyValuePair(
         ["topics"], 
         [[topic]],
@@ -79,23 +80,6 @@ class CommunityBoardViewModel extends ChangeNotifier {
       }
     }
   }
-
-  // fetch all posts returns true when there is a snapshot else return false.
-  // Future<bool> fetchAllPosts() async {
-  //   final snapshot = await _service.getAllDocument();
-  //   await getPostByTopic("General");
-
-  //   if (snapshot?.size == 0) {
-  //     return false;
-  //   }
-
-  //   for (QueryDocumentSnapshot doc in snapshot!.docs) {
-  //     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-  //     _posts.add(data);
-  //   }
-
-  //   return true;
-  // }
 
   bool validateNameField(String input) {
     if (input.isEmpty) {
