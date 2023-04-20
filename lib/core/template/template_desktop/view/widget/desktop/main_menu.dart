@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view/page/community_board_view.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/edit_profile.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/notification_overlay.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
@@ -52,6 +53,7 @@ class _MainMenuState extends State<MainMenu> {
                 padding: const EdgeInsets.only(right: 40),
                 child: InkWell(
                   onTap: () {
+                    context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
                     context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
                     Navigator.pushAndRemoveUntil(
                       context, 

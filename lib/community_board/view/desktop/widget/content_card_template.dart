@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 
 class ContentCardTemplate extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -110,7 +112,7 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
         ),
       ),
       onTap: () {
-        //TODO link to detail page
+        context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, true, widget.info);
       },
     );
   }

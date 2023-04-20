@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class CommentFieldMobile extends StatefulWidget {
   const CommentFieldMobile({super.key});
@@ -12,6 +13,9 @@ class CommentFieldMobile extends StatefulWidget {
 class _CommentFieldMobileState extends State<CommentFieldMobile> {
   @override
   Widget build(BuildContext context) {
+    String commentText = context.watch<AppViewModel>().isLogin 
+    ? "ช่องแสดงความคิดเห็น" 
+    : "กรุณาลงชื่อเข้าสู่ระบบ";
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Container(
@@ -26,8 +30,8 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
             padding: const EdgeInsets.only(bottom: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Padding(
+              children: [
+                const Padding(
                   padding: EdgeInsets.only(bottom: 8),
                   child: Text(
                     "ช่องแสดงความคิดเห็น",
@@ -41,10 +45,10 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
                   maxLines: 5,
                   decoration: InputDecoration(
                     fillColor: ColorConstant.whiteBlack40,
-                    hintText: "แสดงความคิดเห็น",
-                    hintStyle: TextStyle(
+                    hintText: commentText,
+                    hintStyle: const TextStyle(
                         color: ColorConstant.whiteBlack60, fontSize: 14),
-                    border: OutlineInputBorder(
+                    border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                   ),
                 ),
@@ -65,9 +69,12 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
                           color: ColorConstant.whiteBlack90, fontSize: 16),
                     ),
                   ),
-                  //TODO add image
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if(!context.watch<AppViewModel>().isLogin) {
+                        //TODO add image
+                      }
+                    },
                     style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
@@ -93,31 +100,35 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
                 ],
               )),
           //TODO send comment in post
-          TextButton(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                side: const BorderSide(color: ColorConstant.orange50, width: 1),
-                alignment: Alignment.center,
-                fixedSize: Size(105, 40),
-                foregroundColor: ColorConstant.white,
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                backgroundColor: ColorConstant.orange50,
-                textStyle:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-            child: Row(
-              children: const [
-                Padding(
-                  padding: EdgeInsets.only(right: 8),
-                  child: Icon(
-                    Icons.send_rounded,
-                    color: ColorConstant.white,
-                    size: 16,
+          SizedBox(
+            width: double.infinity,
+            child: TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  side: const BorderSide(color: ColorConstant.orange50, width: 1),
+                  alignment: Alignment.center,
+                  fixedSize: const Size(105, 40),
+                  foregroundColor: ColorConstant.white,
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                  backgroundColor: ColorConstant.orange50,
+                  textStyle:
+                      const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: Icon(
+                      Icons.send_rounded,
+                      color: ColorConstant.white,
+                      size: 16,
+                    ),
                   ),
-                ),
-                Text("Send"),
-              ],
+                  Text("Send"),
+                ],
+              ),
             ),
           ),
         ]),

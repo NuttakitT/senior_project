@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/view/mobile/widget/in_detail_mobile.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 
 class CommunityBoardContentCardMobile extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -19,7 +22,6 @@ class _CommunityBoardContentCardMobileState
         decoration: const BoxDecoration(
             color: ColorConstant.whiteBlack5,
             border: Border(
-              // top: BorderSide(width: 1, color: ColorConstant.whiteBlack20),
               bottom: BorderSide(width: 1, color: ColorConstant.whiteBlack20),
             )),
         padding: const EdgeInsets.only(top: 8, bottom: 16, left: 16, right: 16),
@@ -80,7 +82,9 @@ class _CommunityBoardContentCardMobileState
         ),
       ),
       onTap: () {
-        //TODO link to detail page
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return InDetailMobile(info: widget.info);
+        }));
       },
     );
   }

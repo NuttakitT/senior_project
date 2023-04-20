@@ -21,9 +21,24 @@ class CommunityBoardViewModel extends ChangeNotifier {
   final _serviceUser = FirebaseServices("user");
   final _topic = FirebaseServices("topic");
   List<Map<String, dynamic>> _posts = [];
+  Map<String, dynamic> _detail = {};
   final int _limit = 10;
+  bool _isShowPostDetail = false;
+
+  get getIsShowPostDetail => _isShowPostDetail;
+  get getPostDetail => _detail;
+  void setIsShowPostDetail(bool isMobile, bool state, Map<String, dynamic> detail) {
+    _isShowPostDetail = state;
+    _detail = detail;
+    if (!isMobile) {
+      notifyListeners();
+    }
+  } 
 
   get getPost => _posts;
+  void clearPost() {
+    _posts = [];
+  }
 
   Future<void> createPost(
       CreatePostRequest request, BuildContext context) async {
@@ -43,9 +58,8 @@ class CommunityBoardViewModel extends ChangeNotifier {
     await _service.setDocument(id, postDetail);
   }
 
-  Future<void> getPostByTopic(String topic, {DocumentSnapshot? startDoc}) async {
+  Future<void> getPostByTopic(String topic, {DocumentSnapshot? startDoc, bool isLoadMore = false}) async {
     try {
-      _posts = [];
       final snapshot = await _service.getDocumnetByKeyValuePair(
         ["topics"], 
         [[topic]],
@@ -68,6 +82,9 @@ class CommunityBoardViewModel extends ChangeNotifier {
           );
 
         }
+        if (!isLoadMore) {
+          clearPost();
+        }
         _posts.add({
           "topic": topic,
           "lastDoc": snapshot.docs.last,
@@ -89,16 +106,6 @@ class CommunityBoardViewModel extends ChangeNotifier {
       return true;
     }
     return false;
-  }
-
-  Future<Map<String, dynamic>?> getPostDetail(String docId) async {
-    final snapshot = await _service.getDocumentById(docId);
-
-    if (snapshot != null) {
-      final data = snapshot.data() as Map<String, dynamic>;
-      return data;
-    }
-    return null;
   }
 
   Future<void> approvePost(String docId) async {}

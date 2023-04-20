@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -200,14 +202,14 @@ class _PostLoaderState extends State<PostLoader> {
             future: context.read<CommunityBoardViewModel>().getPostByTopic("General"),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                List<Map<String, dynamic>> post = context.read<CommunityBoardViewModel>().getPost;
+                List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
                 List<Map<String, dynamic>> postDetail = [];
                 for (int i = 0; i < post.length; i++) {
                   int index = post[i]["post"].getPost.length;
                   for (int j = 0; j < index; j++) {
                     String title = post[i]["post"].getPost[j].getContent.getText;
                     String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
-                    String ownerNmae = post[i]["post"].getPost[j].getOwnerName;
+                    String ownerName = post[i]["post"].getPost[j].getOwnerName;
                     String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
                     int comments = post[i]["post"].getPost[j].getComment.length;
                     List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
@@ -215,7 +217,7 @@ class _PostLoaderState extends State<PostLoader> {
                       "title": title,
                       "detail": detail,
                       "topic": topic,
-                      "ownerName": ownerNmae.split(" ")[0],
+                      "ownerName": ownerName.split(" ")[0],
                       "dateCreate": dateCreate,
                       "comments": comments 
                     });
