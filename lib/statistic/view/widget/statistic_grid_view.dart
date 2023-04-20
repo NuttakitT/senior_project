@@ -28,12 +28,12 @@ class _StatisticGridViewState extends State<StatisticGridView> {
     // casting here
     List<LineChartModel> ticketVolume = widget.data[0].cast<LineChartModel>();
     List<PieChartModel> ticketStatus = widget.data[1].cast<PieChartModel>();
-    List<PieChartModel> ticketPriority = widget.data[3].cast<PieChartModel>();
+    List<PieChartModel> ticketPriority = widget.data[2].cast<PieChartModel>();
     List<StackBarChartModel> ticketCategoryStacked =
-        widget.data[4].cast<StackBarChartModel>();
+        widget.data[3].cast<StackBarChartModel>();
     List<SingleResultChart> responseTime =
-        widget.data[5].cast<SingleResultChart>();
-    List<BarChartModel> ticketRating = widget.data[6].cast<BarChartModel>();
+        widget.data[4].cast<SingleResultChart>();
+    List<BarChartModel> ticketRating = widget.data[5].cast<BarChartModel>();
     List<TicketCommentModel> comments = widget.commentData;
     // end casting
     return Padding(

@@ -30,10 +30,10 @@ class _TicketHandlingTimeState extends State<TicketHandlingTime> {
                           text: "Ticket Handling Time",
                           alignment: ChartAlignment.near,
                           textStyle: AppFontStyle.blackMd18),
-                      primaryXAxis: NumericAxis(interval: 1),
+                      primaryXAxis: CategoryAxis(labelRotation: 90),
                       series: <ChartSeries>[
                         // Renders line chart
-                        LineSeries<LineChartModel, int>(
+                        LineSeries<LineChartModel, String>(
                             dataSource: widget.chartData,
                             xValueMapper: (LineChartModel data, _) => data.x,
                             yValueMapper: (LineChartModel data, _) => data.y)
