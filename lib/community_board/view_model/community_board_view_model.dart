@@ -78,6 +78,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
             snapshot.docs[i].get("detail").toString(),
             snapshot.docs[i].get("topics"),
             postId: snapshot.docs[i].id,
+            docId: snapshot.docs[i].id,
             postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
           );
 
@@ -110,8 +111,18 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> approvePost(String docId) async {}
 
-  Future<void> createComment(CreateCommentRequest request) async {}
+  Future<void> createComment(CreateCommentRequest request) async {
+    String id = getUuid();
+    await _service.setDocument(id, {
+      "id": id,
+      "ownerId": request.ownerId,
+      "detail": request.text,
+      "dateCreate": DateTime.now()
+    });
+  }
+
   Future<void> editComment(EditCommentRequest request) async {}
+
   Future<void> deleteComment(String docId) async {}
 
   Future<bool> createTopics(CreateTagRequest request) async {

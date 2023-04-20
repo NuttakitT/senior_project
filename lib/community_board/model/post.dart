@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 class Post {
   late String _id;
+  late String _docId;
   late String _ownerId;
   late String _ownerName;
   late Content _content;
@@ -14,7 +15,7 @@ class Post {
   List<Comment> _comment = [];
   late bool isApproved;
 
-  Post(String ownerId, String ownerName, {String? id, DateTime? dateCreate}) {
+  Post(String ownerId, String ownerName, {String? id, String? docId, DateTime? dateCreate}) {
     _ownerId = ownerId;
     _ownerName = ownerName;
     if (id != null) {
@@ -26,6 +27,9 @@ class Post {
       _dateCreate = dateCreate;
     } else {
       _dateCreate = DateTime.now();
+    }
+    if (docId != null) {
+      _docId = docId;
     }
   }
 
@@ -44,6 +48,7 @@ class Post {
     _comment.add(comment);
   }
 
+  get getDocId => _docId;
   get getId => _id;
   get getDateCreate => _dateCreate;
   get getTopic => _topic;

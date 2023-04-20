@@ -207,6 +207,7 @@ class _PostLoaderState extends State<PostLoader> {
                 for (int i = 0; i < post.length; i++) {
                   int index = post[i]["post"].getPost.length;
                   for (int j = 0; j < index; j++) {
+                    String docId = post[i]["post"].getPost[j].getDocId;
                     String title = post[i]["post"].getPost[j].getContent.getText;
                     String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
                     String ownerName = post[i]["post"].getPost[j].getOwnerName;
@@ -219,7 +220,8 @@ class _PostLoaderState extends State<PostLoader> {
                       "topic": topic,
                       "ownerName": ownerName.split(" ")[0],
                       "dateCreate": dateCreate,
-                      "comments": comments 
+                      "comments": comments,
+                      "docId": docId
                     });
                   }
                 }
