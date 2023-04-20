@@ -230,7 +230,7 @@ class _PostLoaderState extends State<PostLoader> {
                 }
                 return desktopContent("การลงทะเบียน", "คำถามเกี่ยวกับการลงทะเบียนเรียน", postDetail);
               }
-              return const Text("Loading...");
+              return const CircularProgressIndicator();
             },
           ),
         ],
