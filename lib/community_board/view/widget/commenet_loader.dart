@@ -43,9 +43,11 @@ class _CommentLoaderState extends State<CommentLoader> {
           for (int i = 0; i < streamSnapshot.data!.docs.length; i++) {
             data.add({
               "dateCreate": streamSnapshot.data!.docs[i].get("dateCreate").toDate(),
+              "dateEdit": streamSnapshot.data!.docs[i].get("dateEdit"),
               "detail": streamSnapshot.data!.docs[i].get("detail"),
               "ownerId": streamSnapshot.data!.docs[i].get("ownerId"),
-              "id": streamSnapshot.data!.docs[i].get("id")
+              "id": streamSnapshot.data!.docs[i].get("id"),
+              "parentId": widget.docId
             });
           }
           return Column(

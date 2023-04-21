@@ -10,12 +10,14 @@ class Post {
   late String _ownerName;
   late Content _content;
   late DateTime _dateCreate;
+  late int _comment;
   List<dynamic> _topic = [];
   late bool isApproved;
 
-  Post(String ownerId, String ownerName, {String? id, String? docId, DateTime? dateCreate}) {
+  Post(String ownerId, String ownerName, int comment, {String? id, String? docId, DateTime? dateCreate}) {
     _ownerId = ownerId;
     _ownerName = ownerName;
+    _comment = comment;
     if (id != null) {
       _id = id;
     } else {
@@ -40,6 +42,7 @@ class Post {
     _content.setOptionalString = detail;
   }
 
+  get getComment => _comment;
   get getDocId => _docId;
   get getId => _id;
   get getDateCreate => _dateCreate;

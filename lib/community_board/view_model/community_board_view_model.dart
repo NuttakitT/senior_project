@@ -71,17 +71,18 @@ class CommunityBoardViewModel extends ChangeNotifier {
         CommunityBoardModel model = CommunityBoardModel();
         for (int i = 0; i < snapshot.docs.length; i++) {
           final userSnapshot = await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
+          final commentSnapshot = await _service.getAllSubDocument(snapshot.docs[i].id, "comment");
           model.addPost(
             snapshot.docs[i].get("ownerId"),
             userSnapshot!.get("name"),
             snapshot.docs[i].get("title").toString(),
             snapshot.docs[i].get("detail").toString(),
+            commentSnapshot!.size,
             snapshot.docs[i].get("topics"),
             postId: snapshot.docs[i].id,
             docId: snapshot.docs[i].id,
             postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
           );
-
         }
         if (!isLoadMore) {
           clearPost();
@@ -122,7 +123,8 @@ class CommunityBoardViewModel extends ChangeNotifier {
           "id": id,
           "ownerId": request.ownerId,
           "detail": request.text,
-          "dateCreate": DateTime.now()
+          "dateCreate": DateTime.now(),
+          "dateEdit": null
         } 
       );
     } catch (e) {
@@ -132,7 +134,23 @@ class CommunityBoardViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> editComment(EditCommentRequest request) async {}
+  Future<void> editComment(EditCommentRequest request) async {
+    try {
+      await _service.editSubDocument(
+        request.parentId, 
+        "comment", 
+        request.docId, 
+        {
+          "detail": request.text,
+          "dateEdit": DateTime.now()
+        }
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
 
   Future<void> deleteComment(String parentId, String subId) async {
     await _service.deleteSubDocument(parentId, "comment", subId);

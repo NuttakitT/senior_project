@@ -1,9 +1,10 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/model/community_board_model.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -19,6 +20,19 @@ class CommentTemplate extends StatefulWidget {
 }
 
 class _CommentTemplateState extends State<CommentTemplate> {
+  bool isEditiing = false;
+  String editText = "";
+  TextEditingController controller = TextEditingController();
+
+  @override
+  void setState(VoidCallback fn) {
+    controller.text = widget.info["detail"];
+    controller.addListener(() {
+      editText = controller.text;
+    });
+    super.setState(fn);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -57,65 +71,100 @@ class _CommentTemplateState extends State<CommentTemplate> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                showDialog(context: context, builder: (context) {
-                                  // TODO confirm design?
-                                  return AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Text("Confirm delete?"),
-                                        TextButton(
-                                          onPressed: () {
-                                            context.read<CommunityBoardViewModel>().deleteComment(widget.parentId, widget.info["id"]);
-                                            Navigator.pop(context);
-                                          }, 
-                                          child: const Text("OK")
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          }, 
-                                          child: const Text("Cancel")
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                });
+                                if (!(!editText.isNotEmpty && isEditiing) && editText != widget.info["detail"]) {
+                                  showDialog(context: context, builder: (context) {
+                                    // TODO confirm design?
+                                    return AlertDialog(
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text("Confirm delete?"),
+                                          TextButton(
+                                            onPressed: () async {
+                                              if (!isEditiing) {
+                                                await context.read<CommunityBoardViewModel>().deleteComment(widget.parentId, widget.info["id"]);
+                                              } else {
+                                                EditCommentRequest request = EditCommentRequest(
+                                                  widget.info["parentId"], 
+                                                  widget.info["id"], 
+                                                  editText
+                                                );
+                                                await context.read<CommunityBoardViewModel>().editComment(request);
+                                                setState(() {isEditiing = false;});
+                                                
+                                              }
+                                              Navigator.pop(context);
+                                            }, 
+                                            child: const Text("OK")
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            }, 
+                                            child: const Text("Cancel")
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  });
+                                }
                               },
                               style: TextButton.styleFrom(
                                   padding: const EdgeInsets.fromLTRB(0, 0, 24, 0),
                                   foregroundColor: ColorConstant.whiteBlack80,
                                   textStyle: const TextStyle(fontSize: 16)),
                               child: Row(
-                                children: const [
+                                children: [
                                   Padding(
-                                    padding: EdgeInsets.only(right: 8.0),
+                                    padding: const EdgeInsets.only(right: 8.0),
                                     child: Icon(
-                                      Icons.delete_rounded,
+                                      isEditiing 
+                                      ? Icons.done_rounded 
+                                      : Icons.delete_rounded,
                                       color: ColorConstant.whiteBlack80,
                                       size: 24,
                                     ),
                                   ),
-                                  Text("ลบข้อความ"),
+                                  Builder(
+                                    builder: (context) {
+                                      if (!isEditiing) {
+                                        return const Text("ลบข้อความ");
+                                      }
+                                      return Container();
+                                    }
+                                  ),
                                 ],
                               ),
                             ),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  isEditiing = !isEditiing;
+                                });
+                              },
                               style: TextButton.styleFrom(
                                   foregroundColor: ColorConstant.whiteBlack80,
                                   textStyle: const TextStyle(fontSize: 16)),
                               child: Row(
-                                children: const [
+                                children: [
                                   Padding(
-                                    padding: EdgeInsets.only(right: 8.0),
+                                    padding: const EdgeInsets.only(right: 8.0),
                                     child: Icon(
-                                      Icons.border_color_rounded,
+                                      isEditiing 
+                                      ? Icons.close_rounded 
+                                      : Icons.border_color_rounded,
                                       color: ColorConstant.whiteBlack80,
                                       size: 24,
                                     ),
                                   ),
-                                  Text("แก้ไขข้อความ"),
+                                  Builder(
+                                    builder: (context) {
+                                      if (!isEditiing) {
+                                        return const Text("แก้ไขข้อความ");
+                                      }
+                                      return Container();
+                                    }
+                                  ),
                                 ],
                               ),
                             ),
@@ -153,18 +202,43 @@ class _CommentTemplateState extends State<CommentTemplate> {
                               color: ColorConstant.whiteBlack70, fontSize: 24),
                         ),
                       ),
-                      Text(
-                        DateFormat("d MMMM.").format(widget.info["dateCreate"]).toString(),
-                        style: const TextStyle(
-                            color: ColorConstant.whiteBlack50, fontSize: 16),
-                      ),
+                      Builder(
+                        builder: (context) {
+                          String text = widget.info["dateEdit"] != null
+                          ? "Edited at ${DateFormat("d MMMM h:mm a.").format(widget.info["dateEdit"].toDate()).toString()}"
+                          : "Created at ${DateFormat("d MMMM h:mm a.").format(widget.info["dateCreate"]).toString()}";
+                          return Text(
+                            text,
+                            style: const TextStyle(
+                                color: ColorConstant.whiteBlack50, fontSize: 16),
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),
-                Text(
-                  widget.info["detail"],
-                  style: const TextStyle(color: ColorConstant.whiteBlack90, fontSize: 20),
-                )
+                Builder(
+                  builder: (context) {
+                    if (isEditiing) {
+                      return TextField(
+                        maxLines: 5,
+                        controller: controller,
+                        style: const TextStyle(
+                          color: ColorConstant.whiteBlack90, fontSize: 20),
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8),
+                                  bottomRight: Radius.circular(8))),
+                        ),
+                      );
+                    }
+                    return Text(
+                      widget.info["detail"],
+                      style: const TextStyle(color: ColorConstant.whiteBlack90, fontSize: 20),
+                    );
+                  },
+                ),
                 // TODO picture
               ],
             ),

@@ -24,7 +24,6 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Container(
-        height: 344,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
             color: ColorConstant.whiteBlack5,
@@ -109,6 +108,7 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
               )),
           SizedBox(
             width: double.infinity,
+            height: 40,
             child: TextButton(
               onPressed: () async {
                 if (context.read<AppViewModel>().isLogin && comment.isNotEmpty) {
@@ -122,7 +122,6 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
                       borderRadius: BorderRadius.circular(8)),
                   side: const BorderSide(color: ColorConstant.orange50, width: 1),
                   alignment: Alignment.center,
-                  fixedSize: const Size(105, 40),
                   foregroundColor: ColorConstant.white,
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   backgroundColor: ColorConstant.orange50,
