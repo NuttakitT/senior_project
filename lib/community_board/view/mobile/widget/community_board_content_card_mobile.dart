@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/view/mobile/widget/in_detail_mobile.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 
 class CommunityBoardContentCardMobile extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -19,7 +22,6 @@ class _CommunityBoardContentCardMobileState
         decoration: const BoxDecoration(
             color: ColorConstant.whiteBlack5,
             border: Border(
-              // top: BorderSide(width: 1, color: ColorConstant.whiteBlack20),
               bottom: BorderSide(width: 1, color: ColorConstant.whiteBlack20),
             )),
         padding: const EdgeInsets.only(top: 8, bottom: 16, left: 16, right: 16),
@@ -36,39 +38,43 @@ class _CommunityBoardContentCardMobileState
             ),
             Row(
               children: [
-                //TODO user
-                const Padding(
-                  padding: EdgeInsets.only(right: 24),
+                Padding(
+                  padding: const EdgeInsets.only(right: 24),
                   child: Text(
-                    "Nayao",
-                    style: TextStyle(
+                    widget.info["ownerName"],
+                    style: const TextStyle(
                         color: ColorConstant.whiteBlack70, fontSize: 12),
                   ),
                 ),
-                //TODO datetime
-                const Text(
-                  "25 Feb.",
-                  style: TextStyle(
+                Text(
+                  widget.info["dateCreate"],
+                  style: const TextStyle(
                       color: ColorConstant.whiteBlack50, fontSize: 12),
                 ),
                 const Spacer(),
-                Row(
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Icon(
-                        Icons.chat_rounded,
-                        color: ColorConstant.whiteBlack60,
-                        size: 14,
-                      ),
-                    ),
-                    //TODO number comment
-                    Text(
-                      "14",
-                      style: TextStyle(
-                          color: ColorConstant.whiteBlack80, fontSize: 14),
-                    ),
-                  ],
+                Builder(
+                  builder: (context) {
+                    if (widget.info["comments"] == 0) {
+                      return Container();
+                    }
+                    return Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: Icon(
+                            Icons.chat_rounded,
+                            color: ColorConstant.whiteBlack60,
+                            size: 14,
+                          ),
+                        ),
+                        Text(
+                          widget.info["comments"].toString(),
+                          style: const TextStyle(
+                              color: ColorConstant.whiteBlack80, fontSize: 14),
+                        ),
+                      ],
+                    );
+                  }
                 )
               ],
             )
@@ -76,7 +82,9 @@ class _CommunityBoardContentCardMobileState
         ),
       ),
       onTap: () {
-        //TODO link to detail page
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return InDetailMobile(info: widget.info);
+        }));
       },
     );
   }

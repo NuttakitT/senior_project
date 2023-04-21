@@ -15,10 +15,12 @@ class CommunityBoardModel {
     String ownerName, 
     String title, 
     String detail, 
+    int? comment,
     List<dynamic> topic,
-    {String? postId, DateTime? postDateCreate}
+    {String? postId, String? docId, DateTime? postDateCreate}
   ) {
-    Post post = Post(ownerId, ownerName, id: postId, dateCreate: postDateCreate);
+    comment ??= 0;
+    Post post = Post(ownerId, ownerName, comment, id: postId, docId: docId, dateCreate: postDateCreate);
     post.addContent(title, detail);
     for (int i = 0; i < topic.length; i++) {
       post.addTopic(topic[i].toString());
@@ -41,9 +43,21 @@ class CreatePostRequest {
       required this.topics});
 }
 
-class CreateCommentRequest {}
+class CreateCommentRequest {
+  dynamic docId;
+  dynamic ownerId;
+  dynamic text;
 
-class EditCommentRequest {}
+  CreateCommentRequest(this.docId, this.ownerId, this.text);
+}
+
+class EditCommentRequest {
+  dynamic parentId;
+  dynamic docId;
+  dynamic text;
+
+  EditCommentRequest(this.parentId, this.docId, this.text);
+}
 
 class CreateTagRequest {
   String id;
