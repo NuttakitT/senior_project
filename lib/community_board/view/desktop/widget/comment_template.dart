@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class CommentTemplate extends StatefulWidget {
   final Map<String, dynamic> info;
   final int index;
-  const CommentTemplate({super.key, required this.info, required this.index});
+  final String parentId;
+  const CommentTemplate({super.key, required this.info, required this.index, required this.parentId});
 
   @override
   State<CommentTemplate> createState() => _CommentTemplateState();
@@ -54,7 +56,32 @@ class _CommentTemplateState extends State<CommentTemplate> {
                         return Row(
                           children: [
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(context: context, builder: (context) {
+                                  // TODO confirm design?
+                                  return AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Text("Confirm delete?"),
+                                        TextButton(
+                                          onPressed: () {
+                                            context.read<CommunityBoardViewModel>().deleteComment(widget.parentId, widget.info["id"]);
+                                            Navigator.pop(context);
+                                          }, 
+                                          child: const Text("OK")
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          }, 
+                                          child: const Text("Cancel")
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                });
+                              },
                               style: TextButton.styleFrom(
                                   padding: const EdgeInsets.fromLTRB(0, 0, 24, 0),
                                   foregroundColor: ColorConstant.whiteBlack80,
@@ -91,7 +118,7 @@ class _CommentTemplateState extends State<CommentTemplate> {
                                   Text("แก้ไขข้อความ"),
                                 ],
                               ),
-                    ),
+                            ),
                           ],
                         );
                       }
@@ -138,6 +165,7 @@ class _CommentTemplateState extends State<CommentTemplate> {
                   widget.info["detail"],
                   style: const TextStyle(color: ColorConstant.whiteBlack90, fontSize: 20),
                 )
+                // TODO picture
               ],
             ),
           );

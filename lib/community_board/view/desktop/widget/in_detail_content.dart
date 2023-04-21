@@ -96,6 +96,7 @@ class _InDetailContentState extends State<InDetailContent> {
                   style: const TextStyle(
                       color: ColorConstant.whiteBlack90, fontSize: 20),
                 )
+                // TODO picture
               ],
             ),
           ),
@@ -104,7 +105,7 @@ class _InDetailContentState extends State<InDetailContent> {
           padding: const EdgeInsets.fromLTRB(40, 0, 40, 24),
           child: CommentField(docId: info["docId"],),
         ),
-        CommentLoader(docId: info["docId"], isMobile: true)
+        CommentLoader(docId: info["docId"], isMobile: false)
       ],
     );
   }

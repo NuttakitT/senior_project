@@ -122,10 +122,12 @@ class _InDetailMobileState extends State<InDetailMobile> {
                     style: const TextStyle(
                         color: ColorConstant.whiteBlack90, fontSize: 14),
                   )
+                  // TODO picture
                 ],
               ),
             ),
           ),
+          CommentFieldMobile(docId: widget.info["docId"],),
           CommentLoader(docId: widget.info["docId"], isMobile: true)
         ],
       ),

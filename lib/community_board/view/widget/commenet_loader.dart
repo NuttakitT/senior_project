@@ -19,7 +19,9 @@ class _CommentLoaderState extends State<CommentLoader> {
       list.add(
         Padding(
           padding: EdgeInsets.fromLTRB(isMobile ? 16 : 40, 0, isMobile ? 16 : 40, isMobile ? 16 : 24),
-          child: isMobile ? CommentTemplateMobile(index: i+1, info: data[i],) : CommentTemplate(index: i+1, info: data[i],),
+          child: isMobile 
+          ? CommentTemplateMobile(index: i+1, info: data[i], parentId: widget.docId,) 
+          : CommentTemplate(index: i+1, info: data[i], parentId: widget.docId,),
         ),
       );
     }

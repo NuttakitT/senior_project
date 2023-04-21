@@ -134,7 +134,9 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> editComment(EditCommentRequest request) async {}
 
-  Future<void> deleteComment(String docId) async {}
+  Future<void> deleteComment(String parentId, String subId) async {
+    await _service.deleteSubDocument(parentId, "comment", subId);
+  }
 
   Future<bool> createTopics(CreateTagRequest request) async {
     return await _topic.setDocument(
