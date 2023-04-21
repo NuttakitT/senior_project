@@ -25,10 +25,16 @@ class StatisticModel {
   List<PieChartModel> ticketStatus = [];
   List<PieChartModel> ticketPriority = [];
 
+  List<SingleResultChart> defaultStatistics = [];
+
+  List<StackBarChartModel> ticketByCategories = [];
+
   StatisticModel(
       {required this.ticketVolume,
       required this.ticketStatus,
-      required this.ticketPriority});
+      required this.ticketPriority,
+      required this.defaultStatistics,
+      required this.ticketByCategories});
 }
 
 class TicketCommentModel {
