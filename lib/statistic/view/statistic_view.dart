@@ -5,6 +5,7 @@ import 'package:senior_project/core/template/template_desktop/view/page/template
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/statistic/model/statistic_model.dart';
 import 'package:senior_project/statistic/view/widget/statistic_grid_view.dart';
+import 'package:senior_project/statistic/view/widget/ticket_category.dart';
 import 'package:senior_project/statistic/view_model/statistic_view_model.dart';
 
 class StatisticView extends StatefulWidget {
@@ -174,9 +175,13 @@ class _StatisticViewState extends State<StatisticView> {
               final ticketVolume = snapshot.data?.ticketVolume ?? [];
               final ticketStatus = snapshot.data?.ticketStatus ?? [];
               final ticketPriority = snapshot.data?.ticketPriority ?? [];
+              final ticketCategory = snapshot.data?.ticketByCategories ?? [];
+              final defaultStatistics = snapshot.data?.defaultStatistics ?? [];
               data[0] = ticketVolume;
               data[1] = ticketStatus;
               data[2] = ticketPriority;
+              data[3] = ticketCategory;
+              data[4] = defaultStatistics;
 
               return TemplateDesktop(
                   helpdesk: false,

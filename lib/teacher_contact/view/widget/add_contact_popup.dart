@@ -57,6 +57,14 @@ class _AddContactPopupState extends State<AddContactPopup> {
   final picker = ImagePicker();
   String uploadResult = "Upload image by pressing upload button.";
 
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
+  late TextEditingController firstNameThaiController;
+  late TextEditingController lastNameThaiController;
+  late TextEditingController emailTextController;
+  late TextEditingController phoneController;
+  late TextEditingController facebookController;
+
   bool get allFieldNotError =>
       !isFirstNameEmpty &&
       !isLastNameEmpty &&
@@ -78,24 +86,19 @@ class _AddContactPopupState extends State<AddContactPopup> {
   @override
   void initState() {
     super.initState();
+    firstNameController = TextEditingController(text: widget.data?.firstName);
+    lastNameController = TextEditingController(text: widget.data?.lastName);
+    firstNameThaiController =
+        TextEditingController(text: widget.data?.thaiName);
+    lastNameThaiController =
+        TextEditingController(text: widget.data?.thaiLastName);
+    emailTextController = TextEditingController(text: widget.data?.email);
+    phoneController = TextEditingController(text: widget.data?.phone);
+    facebookController = TextEditingController(text: widget.data?.facebookLink);
   }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController firstNameController =
-        TextEditingController(text: widget.data?.firstName);
-    TextEditingController lastNameController =
-        TextEditingController(text: widget.data?.firstName);
-    TextEditingController firstNameThaiController =
-        TextEditingController(text: widget.data?.thaiName);
-    TextEditingController lastNameThaiController =
-        TextEditingController(text: widget.data?.thaiLastName);
-    TextEditingController emailTextController =
-        TextEditingController(text: widget.data?.email);
-    TextEditingController phoneController =
-        TextEditingController(text: widget.data?.phone);
-    TextEditingController facebookController =
-        TextEditingController(text: widget.data?.facebookLink);
     final startTimeHour = startTime.hour.toString().padLeft(2, '0');
     final startTimeMinute = startTime.minute.toString().padLeft(2, '0');
 
@@ -160,7 +163,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                     decoration: const InputDecoration.collapsed(
                                         hintText: "First Name eg. Nick"),
                                     onChanged: (value) {
-                                      firstName = value;
+                                      setState(() {
+                                        firstName = value;
+                                      });
                                     },
                                     onTap: () {
                                       setState(() {
