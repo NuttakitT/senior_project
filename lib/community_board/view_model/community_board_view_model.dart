@@ -112,13 +112,24 @@ class CommunityBoardViewModel extends ChangeNotifier {
   Future<void> approvePost(String docId) async {}
 
   Future<void> createComment(CreateCommentRequest request) async {
-    String id = getUuid();
-    await _service.setDocument(id, {
-      "id": id,
-      "ownerId": request.ownerId,
-      "detail": request.text,
-      "dateCreate": DateTime.now()
-    });
+    try {
+      String id = getUuid();
+      await _service.setSubDocument(
+        request.docId, 
+        "comment", 
+        id, 
+        {
+          "id": id,
+          "ownerId": request.ownerId,
+          "detail": request.text,
+          "dateCreate": DateTime.now()
+        } 
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   Future<void> editComment(EditCommentRequest request) async {}

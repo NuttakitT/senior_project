@@ -42,9 +42,9 @@ class CreatePostRequest {
 }
 
 class CreateCommentRequest {
-  String docId;
-  String ownerId;
-  String text;
+  dynamic docId;
+  dynamic ownerId;
+  dynamic text;
 
   CreateCommentRequest(this.docId, this.ownerId, this.text);
 }

@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/model/community_board_model.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class CommentFieldMobile extends StatefulWidget {
-  const CommentFieldMobile({super.key});
+  final String docId;
+  const CommentFieldMobile({super.key, required this.docId});
 
   @override
   State<CommentFieldMobile> createState() => _CommentFieldMobileState();
 }
 
 class _CommentFieldMobileState extends State<CommentFieldMobile> {
+  String comment = "";
+
   @override
   Widget build(BuildContext context) {
     String commentText = context.watch<AppViewModel>().isLogin 
@@ -43,6 +48,9 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
                 ),
                 TextField(
                   maxLines: 5,
+                  onChanged: (value) {
+                    comment = value;
+                  },
                   decoration: InputDecoration(
                     fillColor: ColorConstant.whiteBlack40,
                     hintText: commentText,
@@ -99,11 +107,16 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
                   ),
                 ],
               )),
-          //TODO send comment in post
           SizedBox(
             width: double.infinity,
             child: TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                if (context.read<AppViewModel>().isLogin && comment.isNotEmpty) {
+                  String ownerId = context.read<AppViewModel>().app.getUser.getId;
+                  CreateCommentRequest request = CreateCommentRequest(widget.docId, ownerId, comment);
+                  await context.read<CommunityBoardViewModel>().createComment(request);
+                }
+              },
               style: TextButton.styleFrom(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),

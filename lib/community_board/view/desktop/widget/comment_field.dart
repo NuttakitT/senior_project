@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/model/community_board_model.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class CommentField extends StatefulWidget {
-  const CommentField({super.key});
+  final String docId;
+  const CommentField({super.key, required this.docId});
 
   @override
   State<CommentField> createState() => _CommentFieldState();
 }
 
 class _CommentFieldState extends State<CommentField> {
+  String comment = "";
+
   @override
   Widget build(BuildContext context) {
     String commentText = context.watch<AppViewModel>().isLogin 
@@ -83,10 +88,12 @@ class _CommentFieldState extends State<CommentField> {
                         ),
                       ],
                     )),
-                //TODO comment field
                 TextField(
                   maxLines: 5,
                   readOnly: !context.watch<AppViewModel>().isLogin,
+                  onChanged: (value) {
+                    comment = value;
+                  },
                   decoration: InputDecoration(
                     fillColor: ColorConstant.whiteBlack10,
                     labelStyle: const TextStyle(
@@ -106,14 +113,19 @@ class _CommentFieldState extends State<CommentField> {
           Row(
             children: [
               const Spacer(),
-              //TODO send comment
               Builder(
                 builder: (context) {
                   if (!context.watch<AppViewModel>().isLogin) {
                     return Container();
                   }
                   return TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      if (context.read<AppViewModel>().isLogin && comment.isNotEmpty) {
+                        String ownerId = context.read<AppViewModel>().app.getUser.getId;
+                        CreateCommentRequest request = CreateCommentRequest(widget.docId, ownerId, comment);
+                        await context.read<CommunityBoardViewModel>().createComment(request);
+                      }
+                    },
                     style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),

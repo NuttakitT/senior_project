@@ -4,6 +4,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/mobile/widget/comment_field_mobile.dart';
 import 'package:senior_project/community_board/view/mobile/widget/comment_template_mobile.dart';
 import 'package:senior_project/community_board/view/page/community_board_view.dart';
+import 'package:senior_project/community_board/view/widget/commenet_loader.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -125,21 +126,7 @@ class _InDetailMobileState extends State<InDetailMobile> {
               ),
             ),
           ),
-          const CommentFieldMobile(),
-          Builder(builder: (context) {
-            if (widget.info["comments"] == 0) {
-              return Container();
-            }
-            // TODO loop comments
-            return Column(
-              children: const [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  child: CommentTemplateMobile(),
-                )
-              ],
-            );
-          }),
+          CommentLoader(docId: widget.info["docId"], isMobile: true)
         ],
       ),
     );

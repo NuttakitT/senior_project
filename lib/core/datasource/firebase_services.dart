@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 // The FirebaseServices containts CRUD operations and
 // database listener for using with real-time change.
@@ -430,7 +431,22 @@ class FirebaseServices {
   Stream<QuerySnapshot> listenToSubDocument(
     String parentId,
     String subCollectionName,
+    {
+      String? orderingField,
+      bool descending = false
+    }
   ) {
-    return _collection.doc(parentId).collection(subCollectionName).snapshots();
+    Query? query;
+    try {
+      query = _collection.doc(parentId).collection(subCollectionName);
+      if (orderingField != null) {
+        query = query.orderBy(orderingField, descending: descending);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    return query!.snapshots();
   }
 }

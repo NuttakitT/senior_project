@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/desktop/widget/comment_field.dart';
-import 'package:senior_project/community_board/view/desktop/widget/comment_template.dart';
+import 'package:senior_project/community_board/view/widget/commenet_loader.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 
 class InDetailContent extends StatefulWidget {
@@ -100,32 +100,11 @@ class _InDetailContentState extends State<InDetailContent> {
             ),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(40, 0, 40, 24),
-          child: CommentField(),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(40, 0, 40, 24),
+          child: CommentField(docId: info["docId"],),
         ),
-        Builder(builder: (context) {
-          if (info["comments"] == 0) {
-            return Container();
-          }
-          // TODO loop comments
-          return Column(
-            children: const [
-              Padding(
-                padding: EdgeInsets.fromLTRB(40, 0, 40, 24),
-                child: CommentTemplate(),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(40, 0, 40, 24),
-                child: CommentTemplate(),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(40, 0, 40, 24),
-                child: CommentTemplate(),
-              )
-            ],
-          );
-        }),
+        CommentLoader(docId: info["docId"], isMobile: true)
       ],
     );
   }

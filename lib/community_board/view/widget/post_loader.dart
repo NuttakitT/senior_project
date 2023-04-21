@@ -212,7 +212,6 @@ class _PostLoaderState extends State<PostLoader> {
                     String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
                     String ownerName = post[i]["post"].getPost[j].getOwnerName;
                     String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
-                    int comments = post[i]["post"].getPost[j].getComment.length;
                     List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
                     postDetail.add({
                       "title": title,
@@ -220,7 +219,6 @@ class _PostLoaderState extends State<PostLoader> {
                       "topic": topic,
                       "ownerName": ownerName.split(" ")[0],
                       "dateCreate": dateCreate,
-                      "comments": comments,
                       "docId": docId
                     });
                   }
