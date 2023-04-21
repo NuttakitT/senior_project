@@ -48,101 +48,102 @@ class _CommentTemplateMobileState extends State<CommentTemplateMobile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 24),
-                      child: Text(
+                SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    children: [
+                      Text(
                         "ความคิดเห็นที่ ${widget.index}",
                         style: const TextStyle(
                             color: ColorConstant.orange70,
                             fontSize: 20,
                             fontWeight: FontWeight.w500),
                       ),
-                    ),
-                    const Spacer(),
-                    Builder(
-                      builder: (context) {
-                        String uid = context.read<AppViewModel>().app.getUser.getId;
-                        if (widget.info["ownerId"] != uid) {
-                          return Container();
-                        }
-                        return Row(
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                if (!(!editText.isNotEmpty && isEditiing) && editText != widget.info["detail"]) {
-                                  showDialog(context: context, builder: (context) {
-                                    // TODO confirm design?
-                                    return AlertDialog(
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Text("Confirm delete?"),
-                                          TextButton(
-                                            onPressed: () async {
-                                              if (!isEditiing) {
-                                                await context.read<CommunityBoardViewModel>().deleteComment(widget.parentId, widget.info["id"]);
-                                              } else {
-                                                EditCommentRequest request = EditCommentRequest(
-                                                  widget.info["parentId"], 
-                                                  widget.info["id"], 
-                                                  editText
-                                                );
-                                                await context.read<CommunityBoardViewModel>().editComment(request);
-                                                setState(() {isEditiing = false;});
-                                                
-                                              }
-                                              Navigator.pop(context);
-                                            }, 
-                                            child: const Text("OK")
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            }, 
-                                            child: const Text("Cancel")
-                                          )
-                                        ],
-                                      ),
-                                    );
+                      Builder(
+                        builder: (context) {
+                          String uid = context.read<AppViewModel>().app.getUser.getId;
+                          if (widget.info["ownerId"] != uid) {
+                            return Container();
+                          }
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  if (!(!editText.isNotEmpty && isEditiing) && editText != widget.info["detail"]) {
+                                    showDialog(context: context, builder: (context) {
+                                      // TODO confirm design?
+                                      return AlertDialog(
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text("Confirm delete?"),
+                                            TextButton(
+                                              onPressed: () async {
+                                                if (!isEditiing) {
+                                                  await context.read<CommunityBoardViewModel>().deleteComment(widget.parentId, widget.info["id"]);
+                                                } else {
+                                                  EditCommentRequest request = EditCommentRequest(
+                                                    widget.info["parentId"], 
+                                                    widget.info["id"], 
+                                                    editText
+                                                  );
+                                                  await context.read<CommunityBoardViewModel>().editComment(request);
+                                                  setState(() {isEditiing = false;});
+                                                  
+                                                }
+                                                Navigator.pop(context);
+                                              }, 
+                                              child: const Text("OK")
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              }, 
+                                              child: const Text("Cancel")
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    });
+                                  }
+                                },
+                                style: TextButton.styleFrom(
+                                    foregroundColor: ColorConstant.whiteBlack80),
+                                child: Icon(
+                                  isEditiing 
+                                  ? Icons.done_rounded 
+                                  : Icons.delete_rounded,
+                                  color: ColorConstant.whiteBlack80,
+                                  size: 20,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isEditiing = !isEditiing;
                                   });
-                                }
-                              },
-                              style: TextButton.styleFrom(
-                                  foregroundColor: ColorConstant.whiteBlack80),
-                              child: Icon(
-                                isEditiing 
-                                ? Icons.done_rounded 
-                                : Icons.delete_rounded,
-                                color: ColorConstant.whiteBlack80,
-                                size: 20,
+                                },
+                                style: TextButton.styleFrom(
+                                    foregroundColor: ColorConstant.whiteBlack80),
+                                child: Icon(
+                                  isEditiing 
+                                  ? Icons.close_rounded 
+                                  : Icons.border_color_rounded,
+                                  color: ColorConstant.whiteBlack80,
+                                  size: 20,
+                                ),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  isEditiing = !isEditiing;
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                  foregroundColor: ColorConstant.whiteBlack80),
-                              child: Icon(
-                                isEditiing 
-                                ? Icons.close_rounded 
-                                : Icons.border_color_rounded,
-                                color: ColorConstant.whiteBlack80,
-                                size: 20,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
+                  padding: const EdgeInsets.only(bottom: 24, top: 24),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
