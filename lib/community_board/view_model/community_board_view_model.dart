@@ -37,7 +37,6 @@ class CommunityBoardViewModel extends ChangeNotifier {
       "topics": request.topics,
       "isApproved": false
     };
-    print("a");
     await _service.setDocument(docId, postDetail);
   }
 

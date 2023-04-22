@@ -69,17 +69,25 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
             decoration: const BoxDecoration(color: ColorConstant.white),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
+              children: [
                 Padding(
                   padding: EdgeInsets.only(right: 100),
                   child: Padding(
                     padding: EdgeInsets.only(left: 16),
                     child: Align(
                       alignment: Alignment.bottomLeft,
-                      child: Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: ColorConstant.whiteBlack90,
-                        size: 24,
+                      child: InkWell(
+                        child: const Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: ColorConstant.whiteBlack90,
+                          size: 24,
+                        ),
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const TemplateCommunityBoardMobile();
+                          }), (route) => false);
+                        },
                       ),
                     ),
                   ),

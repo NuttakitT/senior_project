@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/approval/page/template_approval.dart';
+import 'package:senior_project/approval/view/page/template_approval.dart';
 import 'package:senior_project/community_board/view/desktop/page/template_community_board.dart';
 import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
 import 'package:senior_project/community_board/view/mobile/page/template_community_board_mobile.dart';
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
               context, !(FirebaseAuth.instance.currentUser == null)),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
-              return const TemplateCommunityBoard();
+              return const TemplateApproval();
               // HelpDeskMainView(
               //     isAdmin:
               //         context.watch<AppViewModel>().app.getUser.getRole == 0);

@@ -1,7 +1,8 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:senior_project/approval/widget/card_approval.dart';
+import 'package:senior_project/approval/view/widget/card_approval.dart';
+import 'package:senior_project/approval/view_model/approval_view_model.dart';
 import 'package:senior_project/assets/color_constant.dart';
 
 class ApprovalList extends StatefulWidget {
@@ -12,6 +13,14 @@ class ApprovalList extends StatefulWidget {
 }
 
 class _ApprovalListState extends State<ApprovalList> {
+  List<Widget> generateCardApproval(List<Map<String, dynamic>> listPost) {
+    List<Widget> card = [];
+    for (int i = 0; i < listPost.length; i++) {
+      card.add(CardApproval(info: listPost[i]));
+    }
+    return card;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,7 +78,7 @@ class _ApprovalListState extends State<ApprovalList> {
                 ),
               ),
               //TODO loop card
-              const CardApproval(),
+              // FutureBuilder(future: future, builder: builder),
               Container(
                 padding: const EdgeInsets.fromLTRB(0, 24, 16, 24),
                 decoration: const BoxDecoration(
