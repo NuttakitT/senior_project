@@ -53,7 +53,8 @@ class CommunityBoardViewModel extends ChangeNotifier {
       "dateCreate": DateTime.now(),
       // "files": request.files,
       "topics": request.topics,
-      "isApproved": false
+      "isApproved": false,
+      "approvedTime": ""
     };
     await _service.setDocument(id, postDetail);
   }
