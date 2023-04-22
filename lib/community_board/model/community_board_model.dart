@@ -1,6 +1,33 @@
-import 'package:image_picker/image_picker.dart';
+// ignore_for_file: prefer_final_fields
 
-class CommunityBoardModel {}
+import 'package:senior_project/community_board/model/post.dart';
+
+class CommunityBoardModel {
+  List<Post> _post = [];
+
+  CommunityBoardModel() {
+    _post = [];
+  }
+  
+  get getPost => _post;
+  void addPost(
+    String ownerId, 
+    String ownerName, 
+    String title, 
+    String detail, 
+    int? comment,
+    List<dynamic> topic,
+    {String? postId, String? docId, DateTime? postDateCreate}
+  ) {
+    comment ??= 0;
+    Post post = Post(ownerId, ownerName, comment, id: postId, docId: docId, dateCreate: postDateCreate);
+    post.addContent(title, detail);
+    for (int i = 0; i < topic.length; i++) {
+      post.addTopic(topic[i].toString());
+    }
+    _post.add(post);
+  }
+}
 
 class CreatePostRequest {
   String title;
@@ -16,9 +43,21 @@ class CreatePostRequest {
       required this.topics});
 }
 
-class CreateCommentRequest {}
+class CreateCommentRequest {
+  dynamic docId;
+  dynamic ownerId;
+  dynamic text;
 
-class EditCommentRequest {}
+  CreateCommentRequest(this.docId, this.ownerId, this.text);
+}
+
+class EditCommentRequest {
+  dynamic parentId;
+  dynamic docId;
+  dynamic text;
+
+  EditCommentRequest(this.parentId, this.docId, this.text);
+}
 
 class CreateTagRequest {
   String id;

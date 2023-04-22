@@ -34,7 +34,7 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
                 decoration: BoxDecoration(
                     color: ColorConstant.white,
                     borderRadius: BorderRadius.circular(16)),
-                height: 40,
+                height: 50,
                 width: 280,
                 child: const SearchBar(isHelpDeskPage: false,)
               ),

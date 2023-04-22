@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
-// The FirebaseServices containts CRUD operations and 
+// The FirebaseServices containts CRUD operations and
 // database listener for using with real-time change.
 // To use: create an FirebaseServices object and
 // send collectionName as pareameter.
@@ -12,10 +13,10 @@ class FirebaseServices {
   }
 
   //------------------------ Create orperation ---------------------------------
-  // Create a document to the target collection, using docId as 
+  // Create a document to the target collection, using docId as
   // a document's id. If has error, return false, otherwise true.
   // docId: String to use as document's id.
-  // detail: data, in Map structre, to store in database. 
+  // detail: data, in Map structre, to store in database.
   Future<bool> setDocument(String docId, Map<String, dynamic> detail) async {
     try {
       await _collection.doc(docId).set(detail);
@@ -26,9 +27,9 @@ class FirebaseServices {
   }
 
   // Create a document to the target collection, using firebase
-  // auto-generated as a document's id. If has error, return false, 
+  // auto-generated as a document's id. If has error, return false,
   // otherwise true.
-  // detail: data, in Map structre, to store in database. 
+  // detail: data, in Map structre, to store in database.
   Future<bool> addDocument(Map<String, dynamic> detail) async {
     try {
       await _collection.add(detail);
@@ -39,7 +40,7 @@ class FirebaseServices {
   }
 
   //---------------------------- Update operation ------------------------------
-  // Update data in the document that has a matching ID. If has error, 
+  // Update data in the document that has a matching ID. If has error,
   // return false, otherwise true.
   // docId: ID of the document to update data.
   // detail: data, in Map structure, to update(send only updated filed).
@@ -61,10 +62,11 @@ class FirebaseServices {
       return await _collection.doc(id).get();
     } catch (e) {
       return null;
-    }   
+    }
   }
 
-  Future<QuerySnapshot?> getDocumentByKeyList(String key, List<dynamic> list) async {
+  Future<QuerySnapshot?> getDocumentByKeyList(
+      String key, List<dynamic> list) async {
     try {
       return await _collection.where(key, arrayContainsAny: list).get();
     } catch (e) {
@@ -84,22 +86,28 @@ class FirebaseServices {
   // orderingField: ordering result by target string
   // descending: ordering type
   Future<QuerySnapshot?> getDocumnetByKeyValuePair(
-    List<String> key, 
-    List<dynamic> value, 
-    {
-      int? limit,
+      List<String> key, List<dynamic> value,
+      {int? limit,
       String? orderingField,
-      bool descending = false
-    }
-  ) async {
+      DocumentSnapshot? startDoc,
+      bool descending = false}) async {
     try {
       late Query query;
+
       if ((key.length == value.length) && key.isNotEmpty) {
         for (int i = 0; i < key.length; i++) {
           if (i != 0) {
-            query = query.where(key[i], isEqualTo: value[i]);
+            if (value[i] is List) {
+              query = query.where(key[i], arrayContainsAny: value[i]);
+            } else {
+              query = query.where(key[i], isEqualTo: value[i]);
+            }
           } else {
-            query = _collection.where(key[i], isEqualTo: value[i]);
+            if (value[i] is List) {
+              query = _collection.where(key[i], arrayContainsAny: value[i]);
+            } else {
+              query = _collection.where(key[i], isEqualTo: value[i]);
+            }
           }
         }
       }
@@ -108,7 +116,10 @@ class FirebaseServices {
       }
       if (limit != null) {
         query = query.limit(limit);
-      } 
+      }
+      if (startDoc != null) {
+        query = query.startAfterDocument(startDoc);
+      }
       return await query.get();
     } catch (e) {
       return null;
@@ -122,7 +133,7 @@ class FirebaseServices {
       return await _collection.get();
     } catch (e) {
       return null;
-    } 
+    }
   }
 
   // TODO add change to report
@@ -139,16 +150,12 @@ class FirebaseServices {
   // descending: ordering type
   // afterDoc: start query result after target document
   Stream<QuerySnapshot?> listenToDocumentByKeyValuePair(
-    List<String> key, 
-    List<dynamic> value,
-    {
-      int? limit,
+      List<String> key, List<dynamic> value,
+      {int? limit,
       String? orderingField,
       bool descending = false,
       DocumentSnapshot? startDoc,
-      bool isReverse = false
-    }
-  ) {
+      bool isReverse = false}) {
     late Query query;
     if ((key.length == value.length) && key.isNotEmpty) {
       for (int i = 0; i < key.length; i++) {
@@ -168,11 +175,11 @@ class FirebaseServices {
       }
     }
     if (orderingField != null) {
-        query = query.orderBy(orderingField, descending: descending);
+      query = query.orderBy(orderingField, descending: descending);
     }
     if (limit != null) {
       query = query.limit(limit);
-    } 
+    }
     if (startDoc != null) {
       if (isReverse) {
         query = query.startAtDocument(startDoc);
@@ -181,6 +188,19 @@ class FirebaseServices {
       }
     }
     return query.snapshots();
+  }
+
+  Future<QuerySnapshot?> getDocumentByDateInterval(
+      DateTime from, DateTime to) async {
+    try {
+      return await _collection
+          .where('dateCreate', isGreaterThanOrEqualTo: from)
+          .where('dateCreate', isLessThanOrEqualTo: to)
+          .orderBy('dateCreate')
+          .get();
+    } catch (e) {
+      return null;
+    }
   }
 
   // Return a stream listener used as a listener in the collection
@@ -209,16 +229,13 @@ class FirebaseServices {
 
   //------------------------ Create orperation ---------------------------------
   // Create a document to the sub-collection of target document, using firebase
-  // auto-generated as a document's id. If has error, return false, 
+  // auto-generated as a document's id. If has error, return false,
   // otherwise true.
   // parentId: String of the parent(top-level) document
   // subCollectionName: name of the collection
-  // detail: data, in Map structre, to store in database. 
-  Future<bool> addSubDocument(
-    String parentId,
-    String subCollectionName,
-    Map<String, dynamic> detail
-  ) async {
+  // detail: data, in Map structre, to store in database.
+  Future<bool> addSubDocument(String parentId, String subCollectionName,
+      Map<String, dynamic> detail) async {
     try {
       _collection.doc(parentId).collection(subCollectionName).add(detail);
       return true;
@@ -227,24 +244,20 @@ class FirebaseServices {
     }
   }
 
-  // Create a document to the sub-collection of target document, using sunId as 
+  // Create a document to the sub-collection of target document, using sunId as
   // a document's id. If has error, return false, otherwise true.
   // parentId: String of the parent(top-level) document
   // subCollectionName: name of the collection
   // subId: String to use as document's id.
-  // detail: data, in Map structre, to store in database. 
-  Future<bool> setSubDocument(
-    String parentId, 
-    String subCollectionName,
-    String subId, 
-    Map<String, dynamic> detail
-  ) async {
+  // detail: data, in Map structre, to store in database.
+  Future<bool> setSubDocument(String parentId, String subCollectionName,
+      String subId, Map<String, dynamic> detail) async {
     try {
       await _collection
-        .doc(parentId)
-        .collection(subCollectionName)
-        .doc(subId)
-        .set(detail);
+          .doc(parentId)
+          .collection(subCollectionName)
+          .doc(subId)
+          .set(detail);
       return true;
     } catch (e) {
       return false;
@@ -252,24 +265,20 @@ class FirebaseServices {
   }
 
   //--------------------------- Update Operation -------------------------------
-  // Update data in the document of the sub-collection 
+  // Update data in the document of the sub-collection
   // that has a matching ID. If has error, return false, otherwise true.
   // parentId: String of the parent(top-level) document
   // subCollectionName: name of the collection
   // subId: ID of the target document.
   // detail: data, in Map structure, to update(send only updated filed).
-  Future<bool> editSubDocument(
-    String parentId,
-    String subCollectionName,
-    String subId,  
-    Map<String, dynamic> detail
-  ) async {
+  Future<bool> editSubDocument(String parentId, String subCollectionName,
+      String subId, Map<String, dynamic> detail) async {
     try {
       await _collection
-        .doc(parentId)
-        .collection(subCollectionName)
-        .doc(subId)
-        .update(detail);
+          .doc(parentId)
+          .collection(subCollectionName)
+          .doc(subId)
+          .update(detail);
       return true;
     } catch (e) {
       return false;
@@ -277,7 +286,7 @@ class FirebaseServices {
   }
 
   //---------------------------- Delete operation ------------------------------
-  // Delete the document in the sub-collection that has a matching ID. 
+  // Delete the document in the sub-collection that has a matching ID.
   // If has error, return false, otherwise true.
   // parentId: String of the parent(top-level) document
   // subCollectionName: name of the collection
@@ -289,10 +298,10 @@ class FirebaseServices {
   ) async {
     try {
       await _collection
-        .doc(parentId)
-        .collection(subCollectionName)
-        .doc(subId)
-        .delete();
+          .doc(parentId)
+          .collection(subCollectionName)
+          .doc(subId)
+          .delete();
       return true;
     } catch (e) {
       return false;
@@ -312,13 +321,13 @@ class FirebaseServices {
   ) async {
     try {
       return await _collection
-        .doc(parentId)
-        .collection(subCollectionName)
-        .doc(subId)
-        .get();
+          .doc(parentId)
+          .collection(subCollectionName)
+          .doc(subId)
+          .get();
     } catch (e) {
       return null;
-    }   
+    }
   }
 
   // Query documnets in the collection, using key-value to query.
@@ -332,8 +341,8 @@ class FirebaseServices {
   Future<QuerySnapshot?> getSubDocumnetByKeyValuePair(
     String parentId,
     String subCollectionName,
-    List<String> key, 
-    List<dynamic> value, 
+    List<String> key,
+    List<dynamic> value,
   ) async {
     try {
       late Query query;
@@ -343,9 +352,9 @@ class FirebaseServices {
             query = query.where(key[i], isEqualTo: value[i]);
           } else {
             query = _collection
-              .doc(parentId)
-              .collection(subCollectionName)
-              .where(key[i], isEqualTo: value[i]);
+                .doc(parentId)
+                .collection(subCollectionName)
+                .where(key[i], isEqualTo: value[i]);
           }
         }
       }
@@ -364,15 +373,18 @@ class FirebaseServices {
     String subCollectionName,
   ) async {
     try {
-      return await _collection.doc(parentId).collection(subCollectionName).get();
+      return await _collection
+          .doc(parentId)
+          .collection(subCollectionName)
+          .get();
     } catch (e) {
       return null;
-    } 
+    }
   }
 
   // TODO add change to report
   //---------------------- Read operation(Real-time) ---------------------------
-  // A stream listener used as a listener for a document in sub-collection 
+  // A stream listener used as a listener for a document in sub-collection
   // queried by key-value.
   // parentId: String of the parent(top-level) document
   // subCollectionName: name of the collection
@@ -383,7 +395,7 @@ class FirebaseServices {
   Stream<QuerySnapshot?> listenToSubDocumentByKeyValuePair(
     String parentId,
     String subCollectionName,
-    List<String> key, 
+    List<String> key,
     List<dynamic> value,
   ) {
     Query? query;
@@ -398,14 +410,14 @@ class FirebaseServices {
         } else {
           if (value[i] is List) {
             query = _collection
-              .doc(parentId)
-              .collection(subCollectionName)
-              .where(key[i], arrayContainsAny: value[i]);
+                .doc(parentId)
+                .collection(subCollectionName)
+                .where(key[i], arrayContainsAny: value[i]);
           } else {
             query = _collection
-              .doc(parentId)
-              .collection(subCollectionName)
-              .where(key[i], isEqualTo: value[i]);
+                .doc(parentId)
+                .collection(subCollectionName)
+                .where(key[i], isEqualTo: value[i]);
           }
         }
       }
@@ -419,7 +431,22 @@ class FirebaseServices {
   Stream<QuerySnapshot> listenToSubDocument(
     String parentId,
     String subCollectionName,
+    {
+      String? orderingField,
+      bool descending = false
+    }
   ) {
-    return _collection.doc(parentId).collection(subCollectionName).snapshots();
+    Query? query;
+    try {
+      query = _collection.doc(parentId).collection(subCollectionName);
+      if (orderingField != null) {
+        query = query.orderBy(orderingField, descending: descending);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    return query!.snapshots();
   }
 }

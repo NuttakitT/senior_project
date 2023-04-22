@@ -28,12 +28,12 @@ class _StatisticGridViewState extends State<StatisticGridView> {
     // casting here
     List<LineChartModel> ticketVolume = widget.data[0].cast<LineChartModel>();
     List<PieChartModel> ticketStatus = widget.data[1].cast<PieChartModel>();
-    List<PieChartModel> ticketPriority = widget.data[3].cast<PieChartModel>();
+    List<PieChartModel> ticketPriority = widget.data[2].cast<PieChartModel>();
     List<StackBarChartModel> ticketCategoryStacked =
-        widget.data[4].cast<StackBarChartModel>();
-    List<SingleResultChart> responseTime =
-        widget.data[5].cast<SingleResultChart>();
-    List<BarChartModel> ticketRating = widget.data[6].cast<BarChartModel>();
+        widget.data[3].cast<StackBarChartModel>();
+    List<SingleResultChart> defaultStatistic =
+        widget.data[4].cast<SingleResultChart>();
+    List<BarChartModel> ticketRating = widget.data[5].cast<BarChartModel>();
     List<TicketCommentModel> comments = widget.commentData;
     // end casting
     return Padding(
@@ -46,15 +46,19 @@ class _StatisticGridViewState extends State<StatisticGridView> {
           const DateFilter(),
           const SizedBox(height: 24),
           Row(children: [
-            const TotalTicket(title: "Total tickets today", totalTickets: 15),
+            TotalTicket(
+                title: "Total tickets today",
+                totalTickets: defaultStatistic[0].data.toInt()),
             const SizedBox(width: 16),
-            const TotalTicket(
-                title: "Total tickets this week", totalTickets: 42),
+            TotalTicket(
+                title: "Total tickets this week",
+                totalTickets: defaultStatistic[1].data.toInt()),
             const SizedBox(width: 16),
-            const TotalTicket(
-                title: "Total tickets this Month", totalTickets: 230),
+            TotalTicket(
+                title: "Total tickets this Month",
+                totalTickets: defaultStatistic[2].data.toInt()),
             const SizedBox(width: 16),
-            ResponseTime(data: responseTime[0])
+            ResponseTime(data: defaultStatistic[3])
           ]),
           const SizedBox(height: 16),
           Row(children: [

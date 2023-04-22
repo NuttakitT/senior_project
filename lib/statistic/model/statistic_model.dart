@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/statistic/view/widget/ticket_category.dart';
 
+// class StatisticModel {
+//   int totalTicket;
+//   List<LineChartModel>? ticketVolume;
+//   List<PieChartModel>? ticketStatus;
+//   List<PieChartModel>? ticketPriority;
+//   List<BarChartModel>? ticketCategory;
+//   List<SingleResultChart>? responseTime;
+//   List<BarChartModel>? ticketStar;
+
+//   StatisticModel(
+//       {required this.totalTicket,
+//       required this.ticketVolume,
+//       required this.ticketStatus,
+//       required this.ticketPriority,
+//       required this.ticketCategory,
+//       required this.responseTime,
+//       required this.ticketStar});
+// }
+
 class StatisticModel {
-  int totalTicket;
-  List<LineChartModel>? ticketVolume;
-  List<PieChartModel>? ticketStatus;
-  List<PieChartModel>? ticketPriority;
-  List<BarChartModel>? ticketCategory;
-  List<SingleResultChart>? responseTime;
-  List<BarChartModel>? ticketStar;
+  List<LineChartModel> ticketVolume = [];
+  List<PieChartModel> ticketStatus = [];
+  List<PieChartModel> ticketPriority = [];
+
+  List<SingleResultChart> defaultStatistics = [];
+
+  List<StackBarChartModel> ticketByCategories = [];
 
   StatisticModel(
-      {required this.totalTicket,
-      required this.ticketVolume,
+      {required this.ticketVolume,
       required this.ticketStatus,
       required this.ticketPriority,
-      required this.ticketCategory,
-      required this.responseTime,
-      required this.ticketStar});
+      required this.defaultStatistics,
+      required this.ticketByCategories});
 }
 
 class TicketCommentModel {
@@ -38,7 +55,7 @@ class TicketCommentModel {
 class Chart {}
 
 class LineChartModel extends Chart {
-  int x;
+  String x;
   double y;
 
   LineChartModel({required this.x, required this.y});

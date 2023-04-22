@@ -6,6 +6,7 @@ import 'package:senior_project/approval/view/page/template_approval.dart';
 import 'package:senior_project/community_board/view/desktop/page/template_community_board.dart';
 import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
 import 'package:senior_project/community_board/view/mobile/page/template_community_board_mobile.dart';
+import 'package:senior_project/community_board/view/page/community_board_view.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/model/app.dart';
 import 'package:senior_project/core/view_model/cryptor.dart';

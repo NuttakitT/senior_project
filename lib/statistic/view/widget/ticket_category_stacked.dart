@@ -74,7 +74,7 @@ class _TicketCategoryStackedState extends State<TicketCategoryStacked> {
                           xValueMapper: (StackBarChartModel data, _) =>
                               data.xAxis,
                           yValueMapper: (StackBarChartModel data, _) => data.y4,
-                          name: "Failed")
+                          name: "Failed"),
                     ],
                     legend: Legend(
                       isVisible: true,

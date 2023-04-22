@@ -39,11 +39,11 @@ class _TicketVolumeState extends State<TicketVolume> {
                           text: "Ticket Volume",
                           alignment: ChartAlignment.near,
                           textStyle: AppFontStyle.blackMd18),
-                      primaryXAxis: NumericAxis(interval: 1),
+                      primaryXAxis: CategoryAxis(labelRotation: 90),
                       tooltipBehavior: _tooltipBehavior,
                       series: <ChartSeries>[
                         // Renders line chart
-                        LineSeries<LineChartModel, int>(
+                        LineSeries<LineChartModel, String>(
                           dataSource: widget.chartData,
                           xValueMapper: (LineChartModel data, _) => data.x,
                           yValueMapper: (LineChartModel data, _) => data.y,

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/community_board/view/page/community_board_view.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/edit_profile.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/notification_overlay.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
@@ -51,8 +53,15 @@ class _MainMenuState extends State<MainMenu> {
                 padding: const EdgeInsets.only(right: 40),
                 child: InkWell(
                   onTap: () {
+                    context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
                     context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
-                    // TODO link to home page
+                    Navigator.pushAndRemoveUntil(
+                      context, 
+                      MaterialPageRoute(builder: (context) {
+                        return const CommunityBoardView();
+                      }), 
+                      (route) => false
+                    );
                   },
                   splashFactory: NoSplash.splashFactory,
                   child: Text(
@@ -141,15 +150,13 @@ class _MainMenuState extends State<MainMenu> {
               onPressed: () async {
                 bool isSuccess = await context.read<AppViewModel>().login(context);
                 if (isSuccess) {
-                  // TODO link to home
                   Navigator.pushAndRemoveUntil(
                     context, 
                     MaterialPageRoute(builder: (context) {
-                      return HelpDeskMainView(
-                        isAdmin: context.read<AppViewModel>().app.getUser.getRole == 0 ? true : false,
-                      );
+                      return const CommunityBoardView();
                     }), 
-                  (route) => false);
+                    (route) => false
+                  );
                 }
               },
               style: ButtonStyle(
@@ -330,7 +337,13 @@ class _MainMenuState extends State<MainMenu> {
                         PopupMenuItem(
                           onTap: () async {
                             await context.read<AppViewModel>().logout();
-                            // TODO push to home
+                            Navigator.pushAndRemoveUntil(
+                              context, 
+                              MaterialPageRoute(builder: (context) {
+                                return const CommunityBoardView();
+                              }), 
+                              (route) => false
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 16),

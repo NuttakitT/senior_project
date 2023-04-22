@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/model/community_board_model.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class CommentField extends StatefulWidget {
-  const CommentField({super.key});
+  final String docId;
+  const CommentField({super.key, required this.docId});
 
   @override
   State<CommentField> createState() => _CommentFieldState();
 }
 
 class _CommentFieldState extends State<CommentField> {
+  String comment = "";
+
   @override
   Widget build(BuildContext context) {
+    String commentText = context.watch<AppViewModel>().isLogin 
+    ? "ช่องแสดงความคิดเห็น" 
+    : "กรุณาลงชื่อเข้าสู่ระบบ";
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -48,9 +58,12 @@ class _CommentFieldState extends State<CommentField> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //TODO add image
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            if(!context.watch<AppViewModel>().isLogin) {
+                              //TODO add image
+                            }
+                          },
                           style: TextButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
@@ -75,17 +88,20 @@ class _CommentFieldState extends State<CommentField> {
                         ),
                       ],
                     )),
-                //TODO comment field
-                const TextField(
+                TextField(
                   maxLines: 5,
+                  readOnly: !context.watch<AppViewModel>().isLogin,
+                  onChanged: (value) {
+                    comment = value;
+                  },
                   decoration: InputDecoration(
                     fillColor: ColorConstant.whiteBlack10,
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                         color: ColorConstant.whiteBlack90, fontSize: 16),
-                    hintText: "แสดงความคิดเห็น",
-                    hintStyle: TextStyle(
+                    hintText: commentText,
+                    hintStyle: const TextStyle(
                         color: ColorConstant.whiteBlack50, fontSize: 16),
-                    border: OutlineInputBorder(
+                    border: const OutlineInputBorder(
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(8),
                             bottomRight: Radius.circular(8))),
@@ -97,34 +113,46 @@ class _CommentFieldState extends State<CommentField> {
           Row(
             children: [
               const Spacer(),
-              //TODO send comment
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    side: const BorderSide(
-                        color: ColorConstant.orange50, width: 1),
-                    alignment: Alignment.center,
-                    fixedSize: const Size(125, 40),
-                    foregroundColor: ColorConstant.white,
-                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                    backgroundColor: ColorConstant.orange50,
-                    textStyle: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
-                child: Row(
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.only(right: 8.0),
-                      child: Icon(
-                        Icons.send_rounded,
-                        color: ColorConstant.white,
-                        size: 24,
-                      ),
+              Builder(
+                builder: (context) {
+                  if (!context.watch<AppViewModel>().isLogin) {
+                    return Container();
+                  }
+                  return TextButton(
+                    onPressed: () async {
+                      if (context.read<AppViewModel>().isLogin && comment.isNotEmpty) {
+                        String ownerId = context.read<AppViewModel>().app.getUser.getId;
+                        CreateCommentRequest request = CreateCommentRequest(widget.docId, ownerId, comment);
+                        await context.read<CommunityBoardViewModel>().createComment(request);
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        side: const BorderSide(
+                            color: ColorConstant.orange50, width: 1),
+                        alignment: Alignment.center,
+                        fixedSize: const Size(125, 40),
+                        foregroundColor: ColorConstant.white,
+                        padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                        backgroundColor: ColorConstant.orange50,
+                        textStyle: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    child: Row(
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.only(right: 8.0),
+                          child: Icon(
+                            Icons.send_rounded,
+                            color: ColorConstant.white,
+                            size: 24,
+                          ),
+                        ),
+                        Text("Send"),
+                      ],
                     ),
-                    Text("Send"),
-                  ],
-                ),
+                  );
+                }
               ),
             ],
           ),

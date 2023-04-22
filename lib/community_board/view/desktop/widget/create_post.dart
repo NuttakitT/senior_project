@@ -1,14 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
 import 'package:senior_project/community_board/view/desktop/page/template_community_board.dart';
-import 'package:senior_project/community_board/view/mobile/widget/create_post_mobile.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:uuid/uuid.dart';
 

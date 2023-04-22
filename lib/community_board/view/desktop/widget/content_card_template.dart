@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/assets/color_constant.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 
 class ContentCardTemplate extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -11,6 +12,32 @@ class ContentCardTemplate extends StatefulWidget {
 }
 
 class _ContentCardTemplateState extends State<ContentCardTemplate> {
+  List<Widget> getTopic(List<dynamic> topic) {
+    List<Widget> topicWidget = [
+      const Padding(
+        padding: EdgeInsets.only(right: 24),
+        child: Text(
+          "Topic : ",
+          style: TextStyle(
+              color: ColorConstant.whiteBlack50, fontSize: 20),
+        ),
+      ),
+    ];
+    for (int i = 0; i < topic.length; i++) {
+      topicWidget.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 24),
+          child: Text(
+            topic[i].toString(),
+            style: const TextStyle(
+                color: ColorConstant.whiteBlack70, fontSize: 18),
+          ),
+        ),
+      );
+    }
+    return topicWidget;
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -37,61 +64,47 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 24),
-                    child: Text(
-                      "Topic : ",
-                      style: TextStyle(
-                          color: ColorConstant.whiteBlack50, fontSize: 20),
-                    ),
-                  ),
-                  //TODO loop topic
-                  Padding(
-                    padding: const EdgeInsets.only(right: 24),
-                    child: Text(
-                      widget.info["topic"],
-                      style: const TextStyle(
-                          color: ColorConstant.whiteBlack70, fontSize: 18),
-                    ),
-                  ),
-                ],
+                children: getTopic(widget.info["topic"])
               ),
             ),
             Row(
               children: [
-                //TODO user
-                const Padding(
-                  padding: EdgeInsets.only(right: 40),
+                Padding(
+                  padding: const EdgeInsets.only(right: 40),
                   child: Text(
-                    "Nayao",
-                    style: TextStyle(
+                    widget.info["ownerName"],
+                    style: const TextStyle(
                         color: ColorConstant.whiteBlack70, fontSize: 18),
                   ),
                 ),
-                //TODO datetime of post
-                const Text(
-                  "25 Feb.",
-                  style: TextStyle(
+                Text(
+                  widget.info["dateCreate"],
+                  style: const TextStyle(
                       color: ColorConstant.whiteBlack50, fontSize: 16),
                 ),
                 const Spacer(),
-                Row(
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Icon(
-                        Icons.chat_rounded,
-                        color: ColorConstant.whiteBlack60,
-                      ),
-                    ),
-                    //TODO number comment in post
-                    Text(
-                      "14",
-                      style: TextStyle(
-                          color: ColorConstant.whiteBlack80, fontSize: 18),
-                    ),
-                  ],
+                Builder(
+                  builder: (context) {
+                    if (widget.info["comments"] == 0) {
+                      return Container();
+                    }
+                    return Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: Icon(
+                            Icons.chat_rounded,
+                            color: ColorConstant.whiteBlack60,
+                          ),
+                        ),
+                        Text(
+                          widget.info["comments"].toString(),
+                          style: const TextStyle(
+                              color: ColorConstant.whiteBlack80, fontSize: 18),
+                        ),
+                      ],
+                    );
+                  }
                 )
               ],
             )
@@ -99,7 +112,7 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
         ),
       ),
       onTap: () {
-        //TODO link to detail page
+        context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, true, widget.info);
       },
     );
   }
