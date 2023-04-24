@@ -6,13 +6,11 @@ import 'package:senior_project/core/template/template_desktop/view_model/templat
 
 class TagBar extends StatefulWidget {
   final String name;
-  final bool state;
   final int index;
   final int type;
   const TagBar(
       {super.key,
       required this.name,
-      required this.state,
       required this.index,
       required this.type});
 
@@ -23,12 +21,14 @@ class TagBar extends StatefulWidget {
 class _TagBarState extends State<TagBar> {
   @override
   Widget build(BuildContext context) {
+    bool state = context.watch<TemplateDesktopViewModel>().getHomeState(widget.index);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: InkWell(
         child: Container(
           decoration: BoxDecoration(
-              color: widget.state == true
+              color: state == true
                   ? ColorConstant.orange80
                   : ColorConstant.whiteBlack85,
               borderRadius: BorderRadius.circular(8)),

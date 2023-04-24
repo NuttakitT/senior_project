@@ -274,7 +274,7 @@ class _CreatePostState extends State<CreatePost> {
                                       textStyle: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500)),
-                                  child: const Text("Cancle"),
+                                  child: const Text("Cancel"),
                                 ),
                               );
                             }
@@ -381,7 +381,7 @@ class _CreatePostState extends State<CreatePost> {
                 children: [
                   InkWell(
                     child: Container(
-                        constraints: BoxConstraints(maxWidth: 300),
+                        constraints: const BoxConstraints(maxWidth: 300),
                         width: double.infinity,
                         alignment: Alignment.center,
                         height: 40,
@@ -400,10 +400,7 @@ class _CreatePostState extends State<CreatePost> {
                               fontWeight: FontWeight.bold),
                         )),
                     onTap: () {
-                      Navigator.pushAndRemoveUntil(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const TemplateCommunityBoard();
-                      }), (route) => false);
+                      Navigator.pop(context);
                     },
                   ),
                   InkWell(
