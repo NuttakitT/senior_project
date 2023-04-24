@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class ConfirmationPopup extends StatefulWidget {
   final String title;
@@ -64,19 +62,15 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.orange,
+                        color: ColorConstant.orange40,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: TextButton(
                         onPressed: () {
                           widget.onConfirm;
                         },
-                        child: Text(
-                          Consts.confirm,
-                          style: TextStyle(
-                            color: ColorConstant.white,
-                          ),
-                        ),
+                        child:
+                            Text(Consts.confirm, style: AppFontStyle.whiteB16),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -90,12 +84,8 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                         onPressed: () {
                           widget.onCancel;
                         },
-                        child: Text(
-                          Consts.cancel,
-                          style: TextStyle(
-                            color: ColorConstant.orange40,
-                          ),
-                        ),
+                        child: Text(Consts.cancel,
+                            style: AppFontStyle.orange40B16),
                       ),
                     ),
                   ],
