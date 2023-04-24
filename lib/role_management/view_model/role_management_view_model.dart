@@ -47,7 +47,10 @@ class RoleManagementViewModel extends ChangeNotifier {
     request.categoryName,
     {
       "name": request.categoryName,
-      "description": request.description
+      "description": request.description,
+      "isHelpDesk": true,
+      "isCommunity": false,
+      "isApproved": false
     });
     return isSuccess;
   }
@@ -55,7 +58,7 @@ class RoleManagementViewModel extends ChangeNotifier {
   Future<RoleManagementModel> fetchPage() async {
     List<TopicCategory> category = [];
     List<Admin> admin = [];
-    final cateogorySnapshot = await _serviesCategory.getAllDocument();
+    final cateogorySnapshot = await _serviesCategory.getDocumnetByKeyValuePair(["isHelpDesk"], [true]);
     final adminSnapshot = await _servicesUser.getAllDocument();
     for(int i = 0; i < cateogorySnapshot!.docs.length; i++) {
       category.add(

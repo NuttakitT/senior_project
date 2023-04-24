@@ -20,11 +20,30 @@ class CommunityBoardViewModel extends ChangeNotifier {
   final _service = FirebaseServices("post");
   final _serviceCategory = FirebaseServices("category");
   final _serviceUser = FirebaseServices("user");
-  final _topic = FirebaseServices("topic");
   List<Map<String, dynamic>> _posts = [];
   Map<String, dynamic> _detail = {};
   final int _limit = 10;
   bool _isShowPostDetail = false;
+  bool _isDetailNotEmpty = true;
+  bool _isTitleNotEmpty = true;
+  List<Topic> _alltopic = [];
+
+  get getIsDetailNotEmpty => _isDetailNotEmpty;
+  set setIsDetailNotEmpty(bool state) {
+    _isDetailNotEmpty = state;
+    notifyListeners();
+  } 
+
+  get getIsTitleNotEmpty => _isTitleNotEmpty;
+  set setIsTitleNotEmpty(bool state) {
+    _isTitleNotEmpty = state;
+    notifyListeners();
+  } 
+
+  get getAllTopic => _alltopic;
+  void addAllTopic(String text) {
+    _alltopic.add(Topic(name: text));
+  }
 
   get getIsShowPostDetail => _isShowPostDetail;
   get getPostDetail => _detail;
@@ -241,13 +260,14 @@ class CommunityBoardViewModel extends ChangeNotifier {
   }
 
   Future<bool> createTopics(CreateTagRequest request) async {
-    return await _topic.setDocument(
-      request.id, 
+    return await _serviceCategory.setDocument(
+      request.name, 
       {
-        "id": request.id, 
         "name": request.name,
-        "detail": null, 
-        "isApproved": false
+        "description": null, 
+        "isApproved": false,
+        "isHelpDesk": false,
+        "isCommunity": true,
       }
     );
   }

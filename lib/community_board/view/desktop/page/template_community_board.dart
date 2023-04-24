@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:senior_project/community_board/view/desktop/widget/comment_template.dart';
 import 'package:senior_project/community_board/view/desktop/widget/community_board_content.dart';
 import 'package:senior_project/community_board/view/desktop/widget/in_detail_content.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
