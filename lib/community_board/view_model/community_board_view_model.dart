@@ -18,6 +18,7 @@ class Topic {
 class CommunityBoardViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final _service = FirebaseServices("post");
+  final _serviceCategory = FirebaseServices("category");
   final _serviceUser = FirebaseServices("user");
   final _topic = FirebaseServices("topic");
   List<Map<String, dynamic>> _posts = [];
@@ -53,45 +54,128 @@ class CommunityBoardViewModel extends ChangeNotifier {
       "dateCreate": DateTime.now(),
       // "files": request.files,
       "topics": request.topics,
-      "isApproved": false
+      "isApproved": false,
+      "approvedTime": ""
     };
     await _service.setDocument(id, postDetail);
   }
 
-  Future<void> getPostByTopic(String topic, {DocumentSnapshot? startDoc, bool isLoadMore = false}) async {
+  Future<void> getNextPost(String topic, DocumentSnapshot startDoc) async {
+    final snapshot = await _service.getDocumnetByKeyValuePair(
+      ["topics", "isApproved"], 
+      [[topic], true],
+      orderingField: "dateCreate",
+      descending: true,
+      limit: _limit,
+      startDoc: startDoc
+    );
+    if (snapshot!.docs.isNotEmpty) {
+      List<dynamic> postList = _posts.where((element) => element["topic"] == topic).toList();
+      for (int i = 0; i < snapshot.docs.length; i++) {
+        final userSnapshot = await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
+        final commentSnapshot = await _service.getAllSubDocument(snapshot.docs[i].id, "comment");
+        postList[0]["post"].addPost(
+          snapshot.docs[i].get("ownerId"),
+          userSnapshot!.get("name"),
+          snapshot.docs[i].get("title").toString(),
+          snapshot.docs[i].get("detail").toString(),
+          commentSnapshot!.size,
+          snapshot.docs[i].get("topics"),
+          postId: snapshot.docs[i].id,
+          docId: snapshot.docs[i].id,
+          postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
+        );
+      }
+    }
+  }
+
+  Future<void> getPostByTopic(String topic, {bool isLoadAll = false}) async {
     try {
-      final snapshot = await _service.getDocumnetByKeyValuePair(
-        ["topics"], 
-        [[topic]],
-        orderingField: "dateCreate",
-        limit: _limit,
-        startDoc: startDoc
-      );
+      dynamic snapshot ;
+      if (isLoadAll) {
+        snapshot = await _service.getDocumnetByKeyValuePair(
+          ["isApproved"], 
+          [true],
+          orderingField: "dateCreate",
+          descending: true,
+          limit: 50
+        );
+      } else {
+        snapshot = await _service.getDocumnetByKeyValuePair(
+          ["topics", "isApproved"], 
+          [[topic], true],
+          orderingField: "dateCreate",
+          descending: true,
+          limit: _limit,
+        );
+      }
       if (snapshot!.size != 0) {
+        clearPost();
         CommunityBoardModel model = CommunityBoardModel();
         for (int i = 0; i < snapshot.docs.length; i++) {
           final userSnapshot = await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
           final commentSnapshot = await _service.getAllSubDocument(snapshot.docs[i].id, "comment");
-          model.addPost(
-            snapshot.docs[i].get("ownerId"),
-            userSnapshot!.get("name"),
-            snapshot.docs[i].get("title").toString(),
-            snapshot.docs[i].get("detail").toString(),
-            commentSnapshot!.size,
-            snapshot.docs[i].get("topics"),
-            postId: snapshot.docs[i].id,
-            docId: snapshot.docs[i].id,
-            postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
-          );
+          if (isLoadAll) {
+            List<dynamic> topic = snapshot.docs[i].get("topics");
+            for (int j = 0; j < topic.length; j++) {
+              List<dynamic> postList = _posts.where((element) => element["topic"] == topic[j]).toList();
+              if (postList.isEmpty) {
+                CommunityBoardModel post = CommunityBoardModel();
+                final categorySnapshot = await _serviceCategory.getDocumentById(topic[j]);
+                post.addPost(
+                  snapshot.docs[i].get("ownerId"),
+                  userSnapshot!.get("name"),
+                  snapshot.docs[i].get("title").toString(),
+                  snapshot.docs[i].get("detail").toString(),
+                  commentSnapshot!.size,
+                  snapshot.docs[i].get("topics"),
+                  postId: snapshot.docs[i].id,
+                  docId: snapshot.docs[i].id,
+                  postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
+                );
+                _posts.add({
+                  "topic": topic[j],
+                  "description": categorySnapshot!.get("description"),
+                  "lastDoc": snapshot.docs[i],
+                  "post": post
+                });
+              } else if (postList.length < 10) {
+                postList[0]["post"].addPost(
+                  snapshot.docs[i].get("ownerId"),
+                  userSnapshot!.get("name"),
+                  snapshot.docs[i].get("title").toString(),
+                  snapshot.docs[i].get("detail").toString(),
+                  commentSnapshot!.size,
+                  snapshot.docs[i].get("topics"),
+                  postId: snapshot.docs[i].id,
+                  docId: snapshot.docs[i].id,
+                  postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
+                );
+              }
+            }
+          } else {
+            model.addPost(
+              snapshot.docs[i].get("ownerId"),
+              userSnapshot!.get("name"),
+              snapshot.docs[i].get("title").toString(),
+              snapshot.docs[i].get("detail").toString(),
+              commentSnapshot!.size,
+              snapshot.docs[i].get("topics"),
+              postId: snapshot.docs[i].id,
+              docId: snapshot.docs[i].id,
+              postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
+            );
+          }
         }
-        if (!isLoadMore) {
-          clearPost();
+        if (!isLoadAll) {
+          final categorySnapshot = await _serviceCategory.getDocumentById(topic);
+          _posts.add({
+            "topic": topic,
+            "description": categorySnapshot!.get("description"),
+            "lastDoc": snapshot.docs.last,
+            "post": model
+          });
         }
-        _posts.add({
-          "topic": topic,
-          "lastDoc": snapshot.docs.last,
-          "post": model
-        });
       }
     } catch (e) {
       if (kDebugMode) {

@@ -14,12 +14,25 @@ class TemplateTagBarHome extends StatefulWidget {
 }
 
 class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
+  List<Widget> generateTopic(List<dynamic> name) {
+    List<Widget> list = [];
+    for (int i = 0; i < name.length; i++) {
+      list.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8),
+          child: TagBar(
+            name: name[i]["name"].toString(),
+            index: i,
+            type: 2,
+          ),
+        ),
+      );
+    }
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO query menu from db
-    bool menu1 = context.watch<TemplateDesktopViewModel>().getHomeState(0);
-    bool menu2 = context.watch<TemplateDesktopViewModel>().getHomeState(1);
-
     return Container(
       decoration: const BoxDecoration(color: ColorConstant.whiteBlack85),
       height: double.infinity,
@@ -66,23 +79,17 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBar(
-                name: "All tag post",
-                state: menu1,
-                index: 0,
-                type: 2,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TagBar(
-                name: "Test tag",
-                state: menu2,
-                index: 1,
-                type: 2,
-              ),
+            FutureBuilder(
+              future: context.read<TemplateDesktopViewModel>().getCategory(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  List<Map<String, dynamic>> category = context.watch<TemplateDesktopViewModel>().getHomeTagBarName;
+                  return Column(
+                    children: generateTopic(category)
+                  );
+                }
+                return Container();
+              },
             ),
           ],
         ),

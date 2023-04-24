@@ -7,6 +7,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/desktop/widget/content_card_template.dart';
 import 'package:senior_project/community_board/view/mobile/widget/community_board_content_card_mobile.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
+import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 
 class PostLoader extends StatefulWidget {
   final bool isMobile;
@@ -104,7 +105,7 @@ class _PostLoaderState extends State<PostLoader> {
               ),
             ),
             onTap: () {
-              //TODO view more post
+              print(context.watch<CommunityBoardViewModel>().getPost);
             },
           ),
         ],
@@ -191,21 +192,53 @@ class _PostLoaderState extends State<PostLoader> {
     );
   }
 
+  List<Widget> generateContent(List<Map<String, dynamic>> detail, bool isMobile) {
+    List<Widget> content = [];
+    for (int i = 0; i < detail.length; i++) {
+      if (isMobile) {
+        content.add(mobileContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"]));
+      } else {
+        content.add(desktopContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"]));
+      }
+    }
+    return content;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO add future loader topic
+    int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(2);
+    Map<String, dynamic> tagBarName = context.watch<TemplateDesktopViewModel>().getHomeTagBarNameSelected(tagBarSelected);
     return Padding(
       padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
       child: Column(
         children: [
           FutureBuilder(
-            future: context.read<CommunityBoardViewModel>().getPostByTopic("General"),
+            future: context.read<CommunityBoardViewModel>().getPostByTopic(
+              tagBarSelected == 0 ? "" : tagBarName["name"].toString(),
+              isLoadAll: tagBarSelected == 0 ? true : false
+            ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
-                List<Map<String, dynamic>> postDetail = [];
+                List<Map<String, dynamic>> allPost = [];
                 for (int i = 0; i < post.length; i++) {
                   int index = post[i]["post"].getPost.length;
+                  int allPostIndex = i;
+                  if (post[i]["topic"] == "General") {
+                    allPostIndex = 0;
+                    allPost.insert(0, {
+                      "topic": post[i]["topic"],
+                      "description": post[i]["description"],
+                      "post": <Map<String, dynamic>>[]
+                    });
+                  } else {
+                    allPost.add({
+                      "topic": post[i]["topic"],
+                      "description": post[i]["description"],
+                      "post": <Map<String, dynamic>>[]
+                    });
+                  }
+                  
                   for (int j = 0; j < index; j++) {
                     String docId = post[i]["post"].getPost[j].getDocId;
                     String title = post[i]["post"].getPost[j].getContent.getText;
@@ -214,6 +247,7 @@ class _PostLoaderState extends State<PostLoader> {
                     String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
                     int comments = post[i]["post"].getPost[j].getComment;
                     List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
+                    List<Map<String, dynamic>>  postDetail = allPost[allPostIndex]["post"];
                     postDetail.add({
                       "title": title,
                       "detail": detail,
@@ -223,12 +257,16 @@ class _PostLoaderState extends State<PostLoader> {
                       "comments": comments,
                       "docId": docId
                     });
+                    allPost[allPostIndex]["post"] = postDetail;
                   }
                 }
-                if (widget.isMobile) {
-                  return mobileContent("การลงทะเบียน", "คำถามเกี่ยวกับการลงทะเบียนเรียน", postDetail);
-                }
-                return desktopContent("การลงทะเบียน", "คำถามเกี่ยวกับการลงทะเบียนเรียน", postDetail);
+                return Builder(
+                  builder: (context) {
+                    return Column(
+                      children: generateContent(allPost, widget.isMobile),
+                    );
+                  },
+                );
               }
               return const CircularProgressIndicator();
             },
