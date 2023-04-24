@@ -1,14 +1,21 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
   List<bool> _navBarState = [true, false, false, false];
   List<bool> _helpDeskTagBar = [true, false, false, false, false, false, false, false]; 
-  // TODO query amount from db
-  List<bool> _homeTagBar = [true, false]; 
+  List<bool> _homeTagBar = [true]; 
+  List<Map<String, dynamic>> _home = [{
+    "name": "All tag post",
+    "description": ""
+  }];
   List<bool> _faqTagBar = [true, false];
 
+  get getHomeTagBarName => _home;
+  Map<String, dynamic> getHomeTagBarNameSelected(int index) => _home[index];
   bool getNavBarState(int index) => _navBarState[index];
   bool getHomeState(int index) => _homeTagBar[index];
   bool getFaqState(int index) => _faqTagBar[index];
@@ -73,6 +80,33 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       notifyListeners();
       if (type == 4) {
         context.read<HelpDeskViewModel>().clearContentController();
+      }
+      if (type == 2) {
+        context.read<CommunityBoardViewModel>().clearPost();
+      }
+    }
+  }
+
+  Future<void> getCategory() async {
+    _home = [
+      {
+        "name": "All tag post",
+        "description": ""
+      }
+    ];
+    _homeTagBar = [true];
+    final category = await FirebaseServices("category").getAllDocument();
+    for (int i = 0; i < category!.docs.length; i++) {
+      final post = await FirebaseServices("post").getDocumnetByKeyValuePair(
+        ["topics", "isApproved"], 
+        [[category.docs[i].id], true]
+      );
+      if (post!.docs.isNotEmpty) {
+        _home.add({
+          "name": category.docs[i].id,
+          "description": category.docs[i].get("description")
+        });
+        _homeTagBar.add(false);
       }
     }
   }

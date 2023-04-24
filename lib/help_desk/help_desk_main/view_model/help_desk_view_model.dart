@@ -143,7 +143,10 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> initTicketCategory() async {
-    final snapshot = await _serviceCategory.getAllDocument();
+    final snapshot = await _serviceCategory.getDocumnetByKeyValuePair(
+      ["isHelpDesk"],
+      [true]
+    );
     _category = [];
     for (int i = 0; i < snapshot!.docs.length; i++) {
       _category.add(snapshot.docs[i].get("name"));

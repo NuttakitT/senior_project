@@ -6,6 +6,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
 import 'package:senior_project/community_board/view/desktop/page/template_community_board.dart';
+import 'package:senior_project/community_board/view/page/community_board_view.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,31 +17,15 @@ class CreatePost extends StatefulWidget {
   State<CreatePost> createState() => _CreatePostState();
 }
 
-class Topic {
-  final String name;
-
-  Topic({required this.name});
-}
-
 class _CreatePostState extends State<CreatePost> {
   String title = "";
   String detail = "";
   String addtopic = "";
-  List<String> topics = [];
-  bool isTitleNotEmpty = true;
-  bool isDetailNotEmpty = true;
   bool isTopicEmpty = false;
   bool checkAddTopic = false;
   bool ifSuccession = true;
-  List<Topic> topic = [
-    Topic(name: "General"),
-    Topic(name: "ทุนการศึกษา"),
-    Topic(name: "การฝึกงาน"),
-    Topic(name: "การลงทะเบียน"),
-    Topic(name: "การจบการศึกษา"),
-    Topic(name: "รายวิชา"),
-    Topic(name: "กิจกรรม"),
-  ];
+  List<Topic> topic = [];
+  List<String> topics = [];
 
   TextEditingController titleTextController = TextEditingController();
   TextEditingController detailTextController = TextEditingController();
@@ -59,6 +44,10 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDetailNotEmpty = context.watch<CommunityBoardViewModel>().getIsDetailNotEmpty;
+    bool isTitleNotEmpty = context.watch<CommunityBoardViewModel>().getIsTitleNotEmpty;
+    topic = context.watch<CommunityBoardViewModel>().getAllTopic;
+
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 644),
@@ -98,6 +87,9 @@ class _CreatePostState extends State<CreatePost> {
                     ),
                     TextField(
                       controller: titleTextController,
+                      onTap: () {
+                        context.read<CommunityBoardViewModel>().setIsTitleNotEmpty = true;
+                      },
                       decoration: InputDecoration(
                         hintText:
                             !isTitleNotEmpty ? "กรุณากรอกหัวข้อ" : "หัวข้อ",
@@ -109,7 +101,7 @@ class _CreatePostState extends State<CreatePost> {
                         border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8))),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -156,39 +148,39 @@ class _CreatePostState extends State<CreatePost> {
                                   alignment: Alignment.center,
                                   child: Column(children: <Widget>[
                                     MultiSelectDialogField(
-                                        items: topic
-                                            .map((topic) =>
-                                                MultiSelectItem<Topic>(
-                                                    topic, topic.name))
-                                            .toList(),
-                                        title: const Text("Topics"),
-                                        selectedColor: ColorConstant.orange40,
-                                        decoration: BoxDecoration(
-                                            color: ColorConstant.white,
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(8)),
-                                            border: Border.all(
-                                                color:
-                                                    ColorConstant.whiteBlack60,
-                                                width: 1)),
-                                        buttonIcon: const Icon(
-                                          Icons.arrow_drop_down_rounded,
-                                          color: ColorConstant.whiteBlack90,
-                                        ),
-                                        buttonText: const Text(
-                                          "Select Topic",
-                                          style: TextStyle(
-                                              color: ColorConstant.whiteBlack90,
-                                              fontSize: 16),
-                                        ),
-                                        onConfirm: (results) {
-                                          for (int i = 0;
-                                              i < results.length;
-                                              i++) {
-                                            topics.add(results[i].name);
-                                          }
-                                        })
+                                      items: topic
+                                          .map((topic) =>
+                                              MultiSelectItem<Topic>(
+                                                  topic, topic.name))
+                                          .toList(),
+                                      title: const Text("Topics"),
+                                      selectedColor: ColorConstant.orange40,
+                                      decoration: BoxDecoration(
+                                          color: ColorConstant.white,
+                                          borderRadius:
+                                              const BorderRadius.all(
+                                                  Radius.circular(8)),
+                                          border: Border.all(
+                                              color:
+                                                  ColorConstant.whiteBlack60,
+                                              width: 1)),
+                                      buttonIcon: const Icon(
+                                        Icons.arrow_drop_down_rounded,
+                                        color: ColorConstant.whiteBlack90,
+                                      ),
+                                      buttonText: const Text(
+                                        "Select Topic",
+                                        style: TextStyle(
+                                            color: ColorConstant.whiteBlack90,
+                                            fontSize: 16),
+                                      ),
+                                      onConfirm: (results) {
+                                        for (int i = 0;
+                                            i < results.length;
+                                            i++) {
+                                              topics.add(results[i].name);
+                                        }
+                                      })
                                   ]),
                                 ),
                               );
@@ -274,7 +266,7 @@ class _CreatePostState extends State<CreatePost> {
                                       textStyle: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500)),
-                                  child: const Text("Cancle"),
+                                  child: const Text("Cancel"),
                                 ),
                               );
                             }
@@ -349,9 +341,7 @@ class _CreatePostState extends State<CreatePost> {
                             )),
                         TextField(
                           onTap: () {
-                            setState(() {
-                              isDetailNotEmpty = true;
-                            });
+                            context.read<CommunityBoardViewModel>().setIsDetailNotEmpty = true;
                           },
                           maxLines: 7,
                           controller: detailTextController,
@@ -381,7 +371,7 @@ class _CreatePostState extends State<CreatePost> {
                 children: [
                   InkWell(
                     child: Container(
-                        constraints: BoxConstraints(maxWidth: 300),
+                        constraints: const BoxConstraints(maxWidth: 300),
                         width: double.infinity,
                         alignment: Alignment.center,
                         height: 40,
@@ -400,10 +390,7 @@ class _CreatePostState extends State<CreatePost> {
                               fontWeight: FontWeight.bold),
                         )),
                     onTap: () {
-                      Navigator.pushAndRemoveUntil(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const TemplateCommunityBoard();
-                      }), (route) => false);
+                      Navigator.pop(context);
                     },
                   ),
                   InkWell(
@@ -424,19 +411,17 @@ class _CreatePostState extends State<CreatePost> {
                               fontWeight: FontWeight.bold),
                         )),
                     onTap: () async {
-                      setState(() {
-                        isTitleNotEmpty = context
-                            .read<CommunityBoardViewModel>()
-                            .validateNameField(title);
-                      });
-                      setState(() {
-                        isDetailNotEmpty = context
-                            .read<CommunityBoardViewModel>()
-                            .validateNameField(detail);
-                      });
+                      context.read<CommunityBoardViewModel>().setIsTitleNotEmpty = context
+                        .read<CommunityBoardViewModel>()
+                        .validateNameField(title);
+                      context.read<CommunityBoardViewModel>().setIsDetailNotEmpty = context
+                        .read<CommunityBoardViewModel>()
+                        .validateNameField(detail);
                       if (topics.isEmpty) {
                         topics.add("General");
                       }
+                      isDetailNotEmpty = context.read<CommunityBoardViewModel>().getIsDetailNotEmpty;
+                      isTitleNotEmpty = context.read<CommunityBoardViewModel>().getIsTitleNotEmpty; 
                       if ((isTitleNotEmpty && isDetailNotEmpty)) {
                         final request = CreatePostRequest(
                           title: title,
@@ -449,7 +434,7 @@ class _CreatePostState extends State<CreatePost> {
 
                         Navigator.pushAndRemoveUntil(context,
                             MaterialPageRoute(builder: (context) {
-                          return const TemplateCommunityBoard();
+                          return const CommunityBoardView();
                         }), (route) => false);
                       }
                     },

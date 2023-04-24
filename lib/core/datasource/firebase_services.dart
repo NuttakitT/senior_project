@@ -122,16 +122,26 @@ class FirebaseServices {
       }
       return await query.get();
     } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
 
+  // TODO add change to report
   // Get all documents in the collection, return null there are no
   // document or collection in the database.
-  Future<QuerySnapshot?> getAllDocument() async {
+  Future<QuerySnapshot?> getAllDocument({String? orderingField, bool descending = false}) async {
     try {
+      if (orderingField != null) {
+        return await _collection.orderBy(orderingField, descending: descending).get();
+      }
       return await _collection.get();
     } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
