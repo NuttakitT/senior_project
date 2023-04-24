@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/approval/view/widget/card_approval.dart';
 import 'package:senior_project/approval/view_model/approval_view_model.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/generate_content.dart';
 
 class ApprovalList extends StatefulWidget {
   const ApprovalList({super.key});

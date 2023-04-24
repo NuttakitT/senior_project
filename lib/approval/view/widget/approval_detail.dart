@@ -5,7 +5,6 @@ import 'package:senior_project/approval/view_model/approval_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import '../../../assets/color_constant.dart';
-import '../../model/approval_model.dart';
 import '../page/template_approval.dart';
 import 'package:intl/intl.dart';
 
@@ -191,8 +190,13 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                               ],
                             );
                           } else {
-                            //TODO Style
-                            return const Text("verified");
+                            return const Text(
+                              "verified",
+                              style: TextStyle(
+                                  color: ColorConstant.green50,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14),
+                            );
                           }
                         })),
                         const Spacer(),
