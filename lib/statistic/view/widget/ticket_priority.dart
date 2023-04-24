@@ -26,10 +26,10 @@ class _TicketPriorityState extends State<TicketPriority> {
                   padding: const EdgeInsets.all(8.0),
                   child: SfCircularChart(
                       palette: const [
+                        ColorConstant.blue40,
                         ColorConstant.green40,
                         ColorConstant.yellow40,
-                        ColorConstant.red40,
-                        ColorConstant.red70
+                        ColorConstant.red40
                       ],
                       title: ChartTitle(
                           text: "Ticket Priority",
