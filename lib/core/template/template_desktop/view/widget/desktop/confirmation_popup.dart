@@ -5,7 +5,7 @@ import 'package:senior_project/assets/font_style.dart';
 class ConfirmationPopup extends StatefulWidget {
   final String title;
   final String detail;
-  final Widget widget;
+  final Widget? widget;
   final Function(dynamic) onCancel;
   final Function(dynamic) onConfirm;
 
@@ -33,12 +33,12 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
         backgroundColor: ColorConstant.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         content: SizedBox(
-          width: 420,
-          height: 250,
+          width: 450,
+          height: 320,
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
                   children: [
@@ -57,10 +57,25 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                   style: AppFontStyle.wb60L18,
                   child: Text(widget.detail),
                 ),
-                widget.widget,
+                widget.widget ?? Container(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: ColorConstant.whiteBlack60),
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          widget.onCancel;
+                        },
+                        child: Text(Consts.cancel,
+                            style: AppFontStyle.wb60SemiB16),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
                     Container(
                       decoration: BoxDecoration(
                         color: ColorConstant.red40,
@@ -72,21 +87,6 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                         },
                         child:
                             Text(Consts.confirm, style: AppFontStyle.whiteB16),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: Colors.orange),
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          widget.onCancel;
-                        },
-                        child: Text(Consts.cancel,
-                            style: AppFontStyle.orange40B16),
                       ),
                     ),
                   ],
