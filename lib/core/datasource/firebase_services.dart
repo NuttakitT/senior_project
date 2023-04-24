@@ -429,13 +429,8 @@ class FirebaseServices {
   // parentId: String of the parent(top-level) document
   // subCollectionName: name of the collection
   Stream<QuerySnapshot> listenToSubDocument(
-    String parentId,
-    String subCollectionName,
-    {
-      String? orderingField,
-      bool descending = false
-    }
-  ) {
+      String parentId, String subCollectionName,
+      {String? orderingField, bool descending = false}) {
     Query? query;
     try {
       query = _collection.doc(parentId).collection(subCollectionName);

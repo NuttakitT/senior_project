@@ -1,29 +1,51 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:senior_project/approval/model/approval_model.dart';
 import 'package:uuid/uuid.dart';
-import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
-import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class ApprovalViewModel extends ChangeNotifier {
   final _service = FirebaseServices("post");
+  final _name = FirebaseServices("user");
+  final ApprovalModel _model = ApprovalModel();
 
-  // Future<void> approvalPost(
-  //     ApprovalRequset requset, BuildContext context) async {
-  //   Map<String, dynamic> postApprove = {
-  //     "isApproved": false,
-  //     };
-  //   await _service.editDocument(postApprove);
-  // }
-
-  Future<Map<String, dynamic>?> getPostDetail(String docId) async {
-    final snapshot = await _service.getDocumentById(docId);
-
-    if (snapshot != null) {
-      final data = snapshot.data() as Map<String, dynamic>;
-      return data;
+  Future<void> getPostAll() async {
+    try {
+      _model.clearModel();
+      final snapshot = await _service.getDocumnetByKeyValuePair(
+          ["approvedTime"], [""],
+          orderingField: "dateCreate");
+      if (snapshot!.docs.isNotEmpty) {
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          final snapshotname =
+              await _name.getDocumentById(snapshot.docs[i].get("ownerId"));
+          _model.setPostDetail = {
+            "id": snapshot.docs[i].get("id"),
+            "ownerId": snapshot.docs[i].get("ownerId"),
+            "ownerName": snapshotname!.get("name"),
+            "detail": snapshot.docs[i].get("detail"),
+            "title": snapshot.docs[i].get("title"),
+            "topics": snapshot.docs[i].get("topics"),
+            "dateCreate": snapshot.docs[i].get("dateCreate").toDate(),
+            "approvedTime": "",
+          };
+        }
+      } else {
+        _model.clearModel();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
-    return null;
+  }
+
+  get getPost {
+    return _model.getPostDeatail;
+  }
+
+  Future<void> approvePost(bool isApproved, String docId) async {
+    await _service.editDocument(
+        docId, {"isApproved": isApproved, "approvedTime": DateTime.now()});
   }
 
   String getUuid() {

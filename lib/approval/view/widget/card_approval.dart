@@ -1,5 +1,9 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
+import 'package:senior_project/approval/view/widget/approval_detail.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:intl/intl.dart';
 
 class CardApproval extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -10,6 +14,30 @@ class CardApproval extends StatefulWidget {
 }
 
 class _CardApprovalState extends State<CardApproval> {
+  List<Widget> generateCardTopics(List<dynamic> listPost) {
+    List<Widget> card = [];
+    for (int i = 0; i < listPost.length; i++) {
+      card.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+            decoration: BoxDecoration(
+                color: ColorConstant.white,
+                border: Border.all(color: ColorConstant.whiteBlack30),
+                borderRadius: const BorderRadius.all(Radius.circular(8))),
+            child: Text(
+              listPost[i].toString(),
+              style: const TextStyle(
+                  color: ColorConstant.whiteBlack70, fontSize: 12),
+            ),
+          ),
+        ),
+      );
+    }
+    return card;
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -24,61 +52,32 @@ class _CardApprovalState extends State<CardApproval> {
                 bottom: BorderSide(color: ColorConstant.whiteBlack30))),
         child: Row(
           children: [
-            //TODO name
             Padding(
               padding: const EdgeInsets.only(right: 16),
               child: SizedBox(
-                width: 180,
-                child: Text(
-                  widget.info["name"],
-                  style: const TextStyle(
-                      color: ColorConstant.whiteBlack90,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
+                  width: 180,
+                  child: RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                              text: widget.info["ownerName"],
+                              style: const TextStyle(
+                                  color: ColorConstant.whiteBlack90,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600))
+                        ],
+                      ))),
             ),
-            //TODO topic
             Padding(
               padding: const EdgeInsets.only(right: 16),
               child: SizedBox(
                 width: 186,
-                child: Row(
-                  children: [
-                    //TODO loop topic
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Container(
-                        width: 50,
-                        padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                        decoration: BoxDecoration(
-                            color: ColorConstant.white,
-                            border:
-                                Border.all(color: ColorConstant.whiteBlack30),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(8))),
-                        child: Text(
-                          widget.info["topic"],
-                          style: const TextStyle(
-                              color: ColorConstant.whiteBlack70, fontSize: 12),
-                        ),
-                      ),
-                    ),
-                    // Container(
-                    //   width: 50,
-                    //   padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                    //   decoration: BoxDecoration(
-                    //       color: ColorConstant.white,
-                    //       border: Border.all(color: ColorConstant.whiteBlack30),
-                    //       borderRadius:
-                    //           const BorderRadius.all(Radius.circular(8))),
-                    //   child: const Text(
-                    //     "Topic",
-                    //     style: TextStyle(
-                    //         color: ColorConstant.whiteBlack70, fontSize: 12),
-                    //   ),
-                    // ),
-                  ],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child:
+                      Row(children: generateCardTopics(widget.info["topics"])),
                 ),
               ),
             ),
@@ -88,7 +87,6 @@ class _CardApprovalState extends State<CardApproval> {
                 width: 612,
                 child: RichText(
                     text: TextSpan(children: [
-                  //TODO tittle
                   TextSpan(
                       text: widget.info["title"],
                       style: const TextStyle(
@@ -99,7 +97,6 @@ class _CardApprovalState extends State<CardApproval> {
                       text: "- ",
                       style: TextStyle(
                           color: ColorConstant.whiteBlack60, fontSize: 16)),
-                  //TODO detail of post
                   TextSpan(
                       text: widget.info["detail"],
                       style: const TextStyle(
@@ -111,7 +108,7 @@ class _CardApprovalState extends State<CardApproval> {
             SizedBox(
                 width: 70,
                 child: Text(
-                  widget.info["dateCreate"],
+                  DateFormat('dd MMM').format(widget.info["dateCreate"]),
                   style: const TextStyle(
                       color: ColorConstant.whiteBlack60, fontSize: 16),
                 ))
@@ -119,7 +116,11 @@ class _CardApprovalState extends State<CardApproval> {
         ),
       ),
       onTap: () {
-        //TODO link to detailpost
+        Navigator.push(context, MaterialPageRoute(builder: ((context) {
+          return ApprovalDetail(
+            info: widget.info,
+          );
+        })));
       },
     );
   }

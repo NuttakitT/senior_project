@@ -1,9 +1,11 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/approval/view/widget/card_approval.dart';
 import 'package:senior_project/approval/view_model/approval_view_model.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/desktop/content_loader/generate_content.dart';
 
 class ApprovalList extends StatefulWidget {
   const ApprovalList({super.key});
@@ -61,15 +63,20 @@ class _ApprovalListState extends State<ApprovalList> {
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16))),
                 child: Row(
-                  children: const [
-                    Icon(
-                      Icons.refresh_rounded,
-                      color: ColorConstant.whiteBlack70,
-                      size: 24,
+                  children: [
+                    InkWell(
+                      child: const Icon(
+                        Icons.refresh_rounded,
+                        color: ColorConstant.whiteBlack70,
+                        size: 24,
+                      ),
+                      onTap: () {
+                        setState(() {});
+                      },
                     ),
-                    Spacer(),
+                    const Spacer(),
                     //TODO number of list
-                    Text(
+                    const Text(
                       "1 of 95",
                       style: TextStyle(
                           color: ColorConstant.whiteBlack70, fontSize: 16),
@@ -77,8 +84,16 @@ class _ApprovalListState extends State<ApprovalList> {
                   ],
                 ),
               ),
-              //TODO loop card
-              // FutureBuilder(future: future, builder: builder),
+              FutureBuilder(
+                  future: context.read<ApprovalViewModel>().getPostAll(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Column(
+                          children: generateCardApproval(
+                              context.watch<ApprovalViewModel>().getPost));
+                    }
+                    return Container();
+                  })),
               Container(
                 padding: const EdgeInsets.fromLTRB(0, 24, 16, 24),
                 decoration: const BoxDecoration(

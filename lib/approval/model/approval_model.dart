@@ -1,5 +1,15 @@
-class ApprovalRequset {
-  bool isApproval = false;
+class ApprovalModel {
+  List<Map<String, dynamic>> allField = [];
 
-  ApprovalRequset({required this.isApproval});
+  set setPostDetail(Map<String, dynamic> alldetail) {
+    allField.add(alldetail);
+  }
+
+  get getPostDeatail {
+    return allField;
+  }
+
+  void clearModel() {
+    allField = [];
+  }
 }
