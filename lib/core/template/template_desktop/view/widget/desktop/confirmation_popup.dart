@@ -59,10 +59,11 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                 ),
                 widget.widget,
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: ColorConstant.orange40,
+                        color: ColorConstant.red40,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: TextButton(
