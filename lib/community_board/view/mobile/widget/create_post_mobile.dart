@@ -7,6 +7,8 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/view/mobile/page/template_community_board_mobile.dart';
+import 'package:senior_project/community_board/view/page/community_board_view.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,31 +22,15 @@ class CreatePostMobile extends StatefulWidget {
   State<CreatePostMobile> createState() => _CreatePostMobileState();
 }
 
-class Topic {
-  final String name;
-
-  Topic({required this.name});
-}
-
 class _CreatePostMobileState extends State<CreatePostMobile> {
   String title = "";
   String detail = "";
   String addtopic = "";
   List<String> topics = [];
-  bool isTitleNotEmpty = true;
-  bool isDetailNotEmpty = true;
   bool isTopicEmpty = false;
   bool checkAddTopic = false;
   bool ifSuccession = true;
-  List<Topic> topic = [
-    Topic(name: "General"),
-    Topic(name: "ทุนการศึกษา"),
-    Topic(name: "การฝึกงาน"),
-    Topic(name: "การลงทะเบียน"),
-    Topic(name: "การจบการศึกษา"),
-    Topic(name: "รายวิชา"),
-    Topic(name: "กิจกรรม"),
-  ];
+  List<Topic> topic = [];
 
   TextEditingController titleTextController = TextEditingController();
   TextEditingController detailTextController = TextEditingController();
@@ -63,6 +49,10 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDetailNotEmpty = context.watch<CommunityBoardViewModel>().getIsDetailNotEmpty;
+    bool isTitleNotEmpty = context.watch<CommunityBoardViewModel>().getIsTitleNotEmpty;
+    topic = context.watch<CommunityBoardViewModel>().getAllTopic;
+
     return TemplateMenuMobile(
       content: Column(
         children: [
@@ -120,6 +110,9 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                 ),
                 TextField(
                   controller: titleTextController,
+                  onTap: () {
+                    context.read<CommunityBoardViewModel>().setIsTitleNotEmpty = true;
+                  },
                   decoration: InputDecoration(
                     hintText: !isTitleNotEmpty ? "กรุณากรอกหัวข้อ" : "หัวข้อ",
                     hintStyle: TextStyle(
@@ -311,6 +304,9 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                 ),
                 TextField(
                   controller: detailTextController,
+                  onTap: () {
+                    context.read<CommunityBoardViewModel>().setIsDetailNotEmpty = true;
+                  },
                   decoration: InputDecoration(
                     hintText:
                         !isDetailNotEmpty ? "กรุณากรอกรายละเอียด" : "รายละเอียด",
@@ -389,19 +385,17 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                   )),
             ),
             onTap: () async {
-              setState(() {
-                isTitleNotEmpty = context
-                    .read<CommunityBoardViewModel>()
-                    .validateNameField(title);
-              });
-              setState(() {
-                isDetailNotEmpty = context
-                    .read<CommunityBoardViewModel>()
-                    .validateNameField(detail);
-              });
+              context.read<CommunityBoardViewModel>().setIsTitleNotEmpty = context
+                .read<CommunityBoardViewModel>()
+                .validateNameField(title);
+              context.read<CommunityBoardViewModel>().setIsDetailNotEmpty = context
+                .read<CommunityBoardViewModel>()
+                .validateNameField(detail);
               if (topics.isEmpty) {
                 topics.add("General");
               }
+              isDetailNotEmpty = context.read<CommunityBoardViewModel>().getIsDetailNotEmpty;
+              isTitleNotEmpty = context.read<CommunityBoardViewModel>().getIsTitleNotEmpty;
               if ((isTitleNotEmpty && isDetailNotEmpty)) {
                 final request = CreatePostRequest(
                   title: title,
@@ -414,7 +408,7 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
 
                 Navigator.pushAndRemoveUntil(context,
                     MaterialPageRoute(builder: (context) {
-                  return const TemplateCommunityBoardMobile();
+                  return const CommunityBoardView();
                 }), (route) => false);
               }
             },
