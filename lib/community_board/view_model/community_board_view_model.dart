@@ -32,13 +32,13 @@ class CommunityBoardViewModel extends ChangeNotifier {
   set setIsDetailNotEmpty(bool state) {
     _isDetailNotEmpty = state;
     notifyListeners();
-  } 
+  }
 
   get getIsTitleNotEmpty => _isTitleNotEmpty;
   set setIsTitleNotEmpty(bool state) {
     _isTitleNotEmpty = state;
     notifyListeners();
-  } 
+  }
 
   get getAllTopic => _alltopic;
   void addAllTopic(String text) {
@@ -47,13 +47,14 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   get getIsShowPostDetail => _isShowPostDetail;
   get getPostDetail => _detail;
-  void setIsShowPostDetail(bool isMobile, bool state, Map<String, dynamic> detail) {
+  void setIsShowPostDetail(
+      bool isMobile, bool state, Map<String, dynamic> detail) {
     _isShowPostDetail = state;
     _detail = detail;
     if (!isMobile) {
       notifyListeners();
     }
-  } 
+  }
 
   get getPost => _posts;
   void clearPost() {
@@ -80,19 +81,25 @@ class CommunityBoardViewModel extends ChangeNotifier {
   }
 
   Future<void> getNextPost(String topic, DocumentSnapshot startDoc) async {
-    final snapshot = await _service.getDocumnetByKeyValuePair(
-      ["topics", "isApproved"], 
-      [[topic], true],
-      orderingField: "dateCreate",
-      descending: true,
-      limit: _limit,
-      startDoc: startDoc
-    );
+    final snapshot = await _service.getDocumnetByKeyValuePair([
+      "topics",
+      "isApproved"
+    ], [
+      [topic],
+      true
+    ],
+        orderingField: "dateCreate",
+        descending: true,
+        limit: _limit,
+        startDoc: startDoc);
     if (snapshot!.docs.isNotEmpty) {
-      List<dynamic> postList = _posts.where((element) => element["topic"] == topic).toList();
+      List<dynamic> postList =
+          _posts.where((element) => element["topic"] == topic).toList();
       for (int i = 0; i < snapshot.docs.length; i++) {
-        final userSnapshot = await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
-        final commentSnapshot = await _service.getAllSubDocument(snapshot.docs[i].id, "comment");
+        final userSnapshot =
+            await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
+        final commentSnapshot =
+            await _service.getAllSubDocument(snapshot.docs[i].id, "comment");
         postList[0]["post"].addPost(
           snapshot.docs[i].get("ownerId"),
           userSnapshot!.get("name"),
@@ -110,19 +117,18 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> getPostByTopic(String topic, {bool isLoadAll = false}) async {
     try {
-      dynamic snapshot ;
+      dynamic snapshot;
       if (isLoadAll) {
         snapshot = await _service.getDocumnetByKeyValuePair(
-          ["isApproved"], 
-          [true],
-          orderingField: "dateCreate",
-          descending: true,
-          limit: 50
-        );
+            ["isApproved"], [true],
+            orderingField: "dateCreate", descending: true, limit: 50);
       } else {
         snapshot = await _service.getDocumnetByKeyValuePair(
-          ["topics", "isApproved"], 
-          [[topic], true],
+          ["topics", "isApproved"],
+          [
+            [topic],
+            true
+          ],
           orderingField: "dateCreate",
           descending: true,
           limit: _limit,
@@ -132,15 +138,20 @@ class CommunityBoardViewModel extends ChangeNotifier {
         clearPost();
         CommunityBoardModel model = CommunityBoardModel();
         for (int i = 0; i < snapshot.docs.length; i++) {
-          final userSnapshot = await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
-          final commentSnapshot = await _service.getAllSubDocument(snapshot.docs[i].id, "comment");
+          final userSnapshot = await _serviceUser
+              .getDocumentById(snapshot.docs[i].get("ownerId"));
+          final commentSnapshot =
+              await _service.getAllSubDocument(snapshot.docs[i].id, "comment");
           if (isLoadAll) {
             List<dynamic> topic = snapshot.docs[i].get("topics");
             for (int j = 0; j < topic.length; j++) {
-              List<dynamic> postList = _posts.where((element) => element["topic"] == topic[j]).toList();
+              List<dynamic> postList = _posts
+                  .where((element) => element["topic"] == topic[j])
+                  .toList();
               if (postList.isEmpty) {
                 CommunityBoardModel post = CommunityBoardModel();
-                final categorySnapshot = await _serviceCategory.getDocumentById(topic[j]);
+                final categorySnapshot =
+                    await _serviceCategory.getDocumentById(topic[j]);
                 post.addPost(
                   snapshot.docs[i].get("ownerId"),
                   userSnapshot!.get("name"),
@@ -187,7 +198,8 @@ class CommunityBoardViewModel extends ChangeNotifier {
           }
         }
         if (!isLoadAll) {
-          final categorySnapshot = await _serviceCategory.getDocumentById(topic);
+          final categorySnapshot =
+              await _serviceCategory.getDocumentById(topic);
           _posts.add({
             "topic": topic,
             "description": categorySnapshot!.get("description"),
@@ -207,7 +219,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
     if (input.isEmpty) {
       return false;
     }
-    if (input.contains(RegExp('^[a-zA-Z]+'))) {
+    if (input.contains(RegExp(r'^[\s\S]+$'))) {
       return true;
     }
     return false;
@@ -218,18 +230,13 @@ class CommunityBoardViewModel extends ChangeNotifier {
   Future<void> createComment(CreateCommentRequest request) async {
     try {
       String id = getUuid();
-      await _service.setSubDocument(
-        request.docId, 
-        "comment", 
-        id, 
-        {
-          "id": id,
-          "ownerId": request.ownerId,
-          "detail": request.text,
-          "dateCreate": DateTime.now(),
-          "dateEdit": null
-        } 
-      );
+      await _service.setSubDocument(request.docId, "comment", id, {
+        "id": id,
+        "ownerId": request.ownerId,
+        "detail": request.text,
+        "dateCreate": DateTime.now(),
+        "dateEdit": null
+      });
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -239,15 +246,8 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> editComment(EditCommentRequest request) async {
     try {
-      await _service.editSubDocument(
-        request.parentId, 
-        "comment", 
-        request.docId, 
-        {
-          "detail": request.text,
-          "dateEdit": DateTime.now()
-        }
-      );
+      await _service.editSubDocument(request.parentId, "comment", request.docId,
+          {"detail": request.text, "dateEdit": DateTime.now()});
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -260,16 +260,13 @@ class CommunityBoardViewModel extends ChangeNotifier {
   }
 
   Future<bool> createTopics(CreateTagRequest request) async {
-    return await _serviceCategory.setDocument(
-      request.name, 
-      {
-        "name": request.name,
-        "description": null, 
-        "isApproved": false,
-        "isHelpDesk": false,
-        "isCommunity": true,
-      }
-    );
+    return await _serviceCategory.setDocument(request.name, {
+      "name": request.name,
+      "description": null,
+      "isApproved": false,
+      "isHelpDesk": false,
+      "isCommunity": true,
+    });
   }
 
   String getUuid() {
