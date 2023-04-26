@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/mobile/widget/comment_field_mobile.dart';
-import 'package:senior_project/community_board/view/mobile/widget/comment_template_mobile.dart';
 import 'package:senior_project/community_board/view/page/community_board_view.dart';
 import 'package:senior_project/community_board/view/widget/commenet_loader.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';

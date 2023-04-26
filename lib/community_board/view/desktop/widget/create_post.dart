@@ -44,8 +44,10 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDetailNotEmpty = context.watch<CommunityBoardViewModel>().getIsDetailNotEmpty;
-    bool isTitleNotEmpty = context.watch<CommunityBoardViewModel>().getIsTitleNotEmpty;
+    bool isDetailNotEmpty =
+        context.watch<CommunityBoardViewModel>().getIsDetailNotEmpty;
+    bool isTitleNotEmpty =
+        context.watch<CommunityBoardViewModel>().getIsTitleNotEmpty;
     topic = context.watch<CommunityBoardViewModel>().getAllTopic;
 
     return SingleChildScrollView(
@@ -88,7 +90,9 @@ class _CreatePostState extends State<CreatePost> {
                     TextField(
                       controller: titleTextController,
                       onTap: () {
-                        context.read<CommunityBoardViewModel>().setIsTitleNotEmpty = true;
+                        context
+                            .read<CommunityBoardViewModel>()
+                            .setIsTitleNotEmpty = true;
                       },
                       decoration: InputDecoration(
                         hintText:
@@ -148,39 +152,39 @@ class _CreatePostState extends State<CreatePost> {
                                   alignment: Alignment.center,
                                   child: Column(children: <Widget>[
                                     MultiSelectDialogField(
-                                      items: topic
-                                          .map((topic) =>
-                                              MultiSelectItem<Topic>(
-                                                  topic, topic.name))
-                                          .toList(),
-                                      title: const Text("Topics"),
-                                      selectedColor: ColorConstant.orange40,
-                                      decoration: BoxDecoration(
-                                          color: ColorConstant.white,
-                                          borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(8)),
-                                          border: Border.all(
-                                              color:
-                                                  ColorConstant.whiteBlack60,
-                                              width: 1)),
-                                      buttonIcon: const Icon(
-                                        Icons.arrow_drop_down_rounded,
-                                        color: ColorConstant.whiteBlack90,
-                                      ),
-                                      buttonText: const Text(
-                                        "Select Topic",
-                                        style: TextStyle(
-                                            color: ColorConstant.whiteBlack90,
-                                            fontSize: 16),
-                                      ),
-                                      onConfirm: (results) {
-                                        for (int i = 0;
-                                            i < results.length;
-                                            i++) {
-                                              topics.add(results[i].name);
-                                        }
-                                      })
+                                        items: topic
+                                            .map((topic) =>
+                                                MultiSelectItem<Topic>(
+                                                    topic, topic.name))
+                                            .toList(),
+                                        title: const Text("Topics"),
+                                        selectedColor: ColorConstant.orange40,
+                                        decoration: BoxDecoration(
+                                            color: ColorConstant.white,
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(8)),
+                                            border: Border.all(
+                                                color:
+                                                    ColorConstant.whiteBlack60,
+                                                width: 1)),
+                                        buttonIcon: const Icon(
+                                          Icons.arrow_drop_down_rounded,
+                                          color: ColorConstant.whiteBlack90,
+                                        ),
+                                        buttonText: const Text(
+                                          "Select Topic",
+                                          style: TextStyle(
+                                              color: ColorConstant.whiteBlack90,
+                                              fontSize: 16),
+                                        ),
+                                        onConfirm: (results) {
+                                          for (int i = 0;
+                                              i < results.length;
+                                              i++) {
+                                            topics.add(results[i].name);
+                                          }
+                                        })
                                   ]),
                                 ),
                               );
@@ -341,7 +345,9 @@ class _CreatePostState extends State<CreatePost> {
                             )),
                         TextField(
                           onTap: () {
-                            context.read<CommunityBoardViewModel>().setIsDetailNotEmpty = true;
+                            context
+                                .read<CommunityBoardViewModel>()
+                                .setIsDetailNotEmpty = true;
                           },
                           maxLines: 7,
                           controller: detailTextController,
@@ -383,7 +389,7 @@ class _CreatePostState extends State<CreatePost> {
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(color: ColorConstant.orange50)),
                         child: const Text(
-                          "Cancle",
+                          "Cancel",
                           style: TextStyle(
                               color: ColorConstant.orange50,
                               fontSize: 16,
@@ -411,17 +417,27 @@ class _CreatePostState extends State<CreatePost> {
                               fontWeight: FontWeight.bold),
                         )),
                     onTap: () async {
-                      context.read<CommunityBoardViewModel>().setIsTitleNotEmpty = context
-                        .read<CommunityBoardViewModel>()
-                        .validateNameField(title);
-                      context.read<CommunityBoardViewModel>().setIsDetailNotEmpty = context
-                        .read<CommunityBoardViewModel>()
-                        .validateNameField(detail);
+                      context
+                              .read<CommunityBoardViewModel>()
+                              .setIsTitleNotEmpty =
+                          context
+                              .read<CommunityBoardViewModel>()
+                              .validateNameField(title);
+                      context
+                              .read<CommunityBoardViewModel>()
+                              .setIsDetailNotEmpty =
+                          context
+                              .read<CommunityBoardViewModel>()
+                              .validateNameField(detail);
                       if (topics.isEmpty) {
                         topics.add("General");
                       }
-                      isDetailNotEmpty = context.read<CommunityBoardViewModel>().getIsDetailNotEmpty;
-                      isTitleNotEmpty = context.read<CommunityBoardViewModel>().getIsTitleNotEmpty; 
+                      isDetailNotEmpty = context
+                          .read<CommunityBoardViewModel>()
+                          .getIsDetailNotEmpty;
+                      isTitleNotEmpty = context
+                          .read<CommunityBoardViewModel>()
+                          .getIsTitleNotEmpty;
                       if ((isTitleNotEmpty && isDetailNotEmpty)) {
                         final request = CreatePostRequest(
                           title: title,

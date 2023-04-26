@@ -219,7 +219,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
     if (input.isEmpty) {
       return false;
     }
-    if (input.contains(RegExp('^[a-zA-Z]+'))) {
+    if (input.contains(RegExp(r'^[\s\S]+$'))) {
       return true;
     }
     return false;
