@@ -1,7 +1,9 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:senior_project/approval/widget/card_approval.dart';
+import 'package:provider/provider.dart';
+import 'package:senior_project/approval/view/widget/card_approval.dart';
+import 'package:senior_project/approval/view_model/approval_view_model.dart';
 import 'package:senior_project/assets/color_constant.dart';
 
 class ApprovalList extends StatefulWidget {
@@ -12,6 +14,14 @@ class ApprovalList extends StatefulWidget {
 }
 
 class _ApprovalListState extends State<ApprovalList> {
+  List<Widget> generateCardApproval(List<Map<String, dynamic>> listPost) {
+    List<Widget> card = [];
+    for (int i = 0; i < listPost.length; i++) {
+      card.add(CardApproval(info: listPost[i]));
+    }
+    return card;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -52,15 +62,20 @@ class _ApprovalListState extends State<ApprovalList> {
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16))),
                 child: Row(
-                  children: const [
-                    Icon(
-                      Icons.refresh_rounded,
-                      color: ColorConstant.whiteBlack70,
-                      size: 24,
+                  children: [
+                    InkWell(
+                      child: const Icon(
+                        Icons.refresh_rounded,
+                        color: ColorConstant.whiteBlack70,
+                        size: 24,
+                      ),
+                      onTap: () {
+                        setState(() {});
+                      },
                     ),
-                    Spacer(),
+                    const Spacer(),
                     //TODO number of list
-                    Text(
+                    const Text(
                       "1 of 95",
                       style: TextStyle(
                           color: ColorConstant.whiteBlack70, fontSize: 16),
@@ -68,8 +83,16 @@ class _ApprovalListState extends State<ApprovalList> {
                   ],
                 ),
               ),
-              //TODO loop card
-              const CardApproval(),
+              FutureBuilder(
+                  future: context.read<ApprovalViewModel>().getPostAll(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Column(
+                          children: generateCardApproval(
+                              context.watch<ApprovalViewModel>().getPost));
+                    }
+                    return Container();
+                  })),
               Container(
                 padding: const EdgeInsets.fromLTRB(0, 24, 16, 24),
                 decoration: const BoxDecoration(
