@@ -383,7 +383,7 @@ class _CreatePostState extends State<CreatePost> {
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(color: ColorConstant.orange50)),
                         child: const Text(
-                          "Cancel",
+                          "Cancle",
                           style: TextStyle(
                               color: ColorConstant.orange50,
                               fontSize: 16,

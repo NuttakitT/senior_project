@@ -148,16 +148,7 @@ class _MainMenuState extends State<MainMenu> {
           if (!isLogin) {
             return TextButton(
               onPressed: () async {
-                bool isSuccess = await context.read<AppViewModel>().login(context);
-                if (isSuccess) {
-                  Navigator.pushAndRemoveUntil(
-                    context, 
-                    MaterialPageRoute(builder: (context) {
-                      return const CommunityBoardView();
-                    }), 
-                    (route) => false
-                  );
-                }
+                await context.read<AppViewModel>().login(context);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
@@ -337,13 +328,6 @@ class _MainMenuState extends State<MainMenu> {
                         PopupMenuItem(
                           onTap: () async {
                             await context.read<AppViewModel>().logout();
-                            Navigator.pushAndRemoveUntil(
-                              context, 
-                              MaterialPageRoute(builder: (context) {
-                                return const CommunityBoardView();
-                              }), 
-                              (route) => false
-                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 16),
