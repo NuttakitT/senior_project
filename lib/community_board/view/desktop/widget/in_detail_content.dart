@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view/desktop/widget/comment_field.dart';
 import 'package:senior_project/community_board/view/widget/commenet_loader.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
@@ -57,6 +58,38 @@ class _InDetailContentState extends State<InDetailContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: TextButton(
+                    onPressed: () {
+                      context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
+                    }, 
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(ColorConstant.orange70),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)
+                        )
+                      ),
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.all(16)
+                      )
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.arrow_back_rounded, color: Colors.white,),
+                        Text("Back", style: TextStyle(
+                          fontFamily: AppFontStyle.font,
+                          fontSize: 20,
+                          fontWeight: AppFontWeight.medium,
+                          color: Colors.white
+                        ),),
+                      ],
+                    )
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(

@@ -95,7 +95,10 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       }
     ];
     _homeTagBar = [true];
-    final category = await FirebaseServices("category").getAllDocument();
+    final category = await FirebaseServices("category").getDocumnetByKeyValuePair(
+      ["isCommunity", "isApproved"], 
+      [true, true]
+    );
     for (int i = 0; i < category!.docs.length; i++) {
       final post = await FirebaseServices("post").getDocumnetByKeyValuePair(
         ["topics", "isApproved"], 

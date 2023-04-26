@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 
 class TagBar extends StatefulWidget {
@@ -57,7 +58,7 @@ class _TagBarState extends State<TagBar> {
           context
               .read<TemplateDesktopViewModel>()
               .changeState(context, widget.index, widget.type);
-          // TODO tag bar logic
+          context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
         },
       ),
     );
