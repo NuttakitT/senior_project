@@ -117,6 +117,10 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                                             .read<ApprovalViewModel>()
                                             .approvePost(
                                                 true, widget.info["id"]);
+                                        // await context
+                                        //     .read<ApprovalViewModel>()
+                                        //     .approveTopic(
+                                        //         true, widget.info["id"]);
                                         setState(() {
                                           checkApprove = true;
                                         });

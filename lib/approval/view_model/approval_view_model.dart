@@ -6,6 +6,7 @@ import 'package:senior_project/core/datasource/firebase_services.dart';
 class ApprovalViewModel extends ChangeNotifier {
   final _service = FirebaseServices("post");
   final _name = FirebaseServices("user");
+  final _apptopic = FirebaseServices("category");
   final ApprovalModel _model = ApprovalModel();
 
   Future<void> getPostAll() async {
@@ -46,6 +47,10 @@ class ApprovalViewModel extends ChangeNotifier {
   Future<void> approvePost(bool isApproved, String docId) async {
     await _service.editDocument(
         docId, {"isApproved": isApproved, "approvedTime": DateTime.now()});
+  }
+
+  Future<void> approveTopic(bool isApproved, String docId) async {
+    await _apptopic.editDocument(docId, {"isApproved": isApproved});
   }
 
   String getUuid() {
