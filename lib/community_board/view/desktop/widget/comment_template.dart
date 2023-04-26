@@ -25,12 +25,12 @@ class _CommentTemplateState extends State<CommentTemplate> {
   TextEditingController controller = TextEditingController();
 
   @override
-  void setState(VoidCallback fn) {
+  void initState() {
     controller.text = widget.info["detail"];
     controller.addListener(() {
       editText = controller.text;
     });
-    super.setState(fn);
+    super.initState();
   }
 
   @override
@@ -78,7 +78,7 @@ class _CommentTemplateState extends State<CommentTemplate> {
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const Text("Confirm delete?"),
+                                          Text("Confirm ${isEditiing ? "edit" : "delete"}?"),
                                           TextButton(
                                             onPressed: () async {
                                               if (!isEditiing) {
@@ -91,7 +91,7 @@ class _CommentTemplateState extends State<CommentTemplate> {
                                                 );
                                                 await context.read<CommunityBoardViewModel>().editComment(request);
                                                 setState(() {isEditiing = false;});
-                                                
+                                                editText = "";
                                               }
                                               Navigator.pop(context);
                                             }, 
@@ -99,6 +99,9 @@ class _CommentTemplateState extends State<CommentTemplate> {
                                           ),
                                           TextButton(
                                             onPressed: () {
+                                              setState(() {isEditiing = false;});
+                                              controller.text = widget.info["detail"];
+                                              editText = "";
                                               Navigator.pop(context);
                                             }, 
                                             child: const Text("Cancel")

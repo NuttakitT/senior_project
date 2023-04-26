@@ -78,7 +78,7 @@ class _CommentTemplateMobileState extends State<CommentTemplateMobile> {
                                         content: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Text("Confirm delete?"),
+                                            Text("Confirm ${isEditiing ? "edit" : "delete"}?"),
                                             TextButton(
                                               onPressed: () async {
                                                 if (!isEditiing) {
@@ -91,7 +91,7 @@ class _CommentTemplateMobileState extends State<CommentTemplateMobile> {
                                                   );
                                                   await context.read<CommunityBoardViewModel>().editComment(request);
                                                   setState(() {isEditiing = false;});
-                                                  
+                                                  editText = "";
                                                 }
                                                 Navigator.pop(context);
                                               }, 
@@ -99,6 +99,9 @@ class _CommentTemplateMobileState extends State<CommentTemplateMobile> {
                                             ),
                                             TextButton(
                                               onPressed: () {
+                                                setState(() {isEditiing = false;});
+                                                controller.text = widget.info["detail"];
+                                                editText = "";
                                                 Navigator.pop(context);
                                               }, 
                                               child: const Text("Cancel")
