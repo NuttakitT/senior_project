@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:senior_project/approval/view_model/approval_view_model.dart';
@@ -117,10 +117,16 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                                             .read<ApprovalViewModel>()
                                             .approvePost(
                                                 true, widget.info["id"]);
-                                        // await context
-                                        //     .read<ApprovalViewModel>()
-                                        //     .approveTopic(
-                                        //         true, widget.info["id"]);
+                                        for (int i = 0;
+                                            i < widget.info["topics"].length;
+                                            i++) {
+                                          await context
+                                              .read<ApprovalViewModel>()
+                                              .approveTopic(
+                                                  true,
+                                                  widget.info["topics"][i]
+                                                      .toString());
+                                        }
                                         setState(() {
                                           checkApprove = true;
                                         });

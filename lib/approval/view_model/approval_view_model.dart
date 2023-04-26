@@ -50,7 +50,11 @@ class ApprovalViewModel extends ChangeNotifier {
   }
 
   Future<void> approveTopic(bool isApproved, String docId) async {
-    await _apptopic.editDocument(docId, {"isApproved": isApproved});
+    try {
+      await _apptopic.editDocument(docId, {"isApproved": isApproved});
+    } catch (e) {
+      print(e);
+    }
   }
 
   String getUuid() {
