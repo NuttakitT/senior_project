@@ -9,8 +9,8 @@ import '../page/template_approval.dart';
 import 'package:intl/intl.dart';
 
 class ApprovalDetail extends StatefulWidget {
-  final Map<String, dynamic> info;
-  const ApprovalDetail({super.key, required this.info});
+  final int checknumcard;
+  const ApprovalDetail({super.key, required this.checknumcard});
 
   @override
   State<ApprovalDetail> createState() => _ApprovalDetailState();
@@ -18,6 +18,13 @@ class ApprovalDetail extends StatefulWidget {
 
 class _ApprovalDetailState extends State<ApprovalDetail> {
   bool checkApprove = false;
+  int checknum = 0;
+  @override
+  void initState() {
+    super.initState();
+    checknum = widget.checknumcard;
+  }
+
   List<Widget> generateCardTopics(List<dynamic> listPost) {
     List<Widget> card = [];
     for (int i = 0; i < listPost.length; i++) {
@@ -45,6 +52,9 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
 
   @override
   Widget build(BuildContext context) {
+    int paginate = context.read<ApprovalViewModel>().getPost.length;
+    Map<String, dynamic> info =
+        context.read<ApprovalViewModel>().getPost[checknum];
     return TemplateDesktop(
         helpdesk: false,
         helpdeskadmin: false,
@@ -81,9 +91,6 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                     decoration: const BoxDecoration(
                         color: ColorConstant.white,
-                        // border: Border(
-                        //     bottom: BorderSide(
-                        //         color: ColorConstant.whiteBlack30, width: 1)),
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(16),
                             topRight: Radius.circular(16))),
@@ -115,17 +122,14 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                                       onPressed: () async {
                                         await context
                                             .read<ApprovalViewModel>()
-                                            .approvePost(
-                                                true, widget.info["id"]);
+                                            .approvePost(true, info["id"]);
                                         for (int i = 0;
-                                            i < widget.info["topics"].length;
+                                            i < info["topics"].length;
                                             i++) {
                                           await context
                                               .read<ApprovalViewModel>()
-                                              .approveTopic(
-                                                  true,
-                                                  widget.info["topics"][i]
-                                                      .toString());
+                                              .approveTopic(true,
+                                                  info["topics"][i].toString());
                                         }
                                         setState(() {
                                           checkApprove = true;
@@ -164,8 +168,7 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                                     onPressed: () async {
                                       await context
                                           .read<ApprovalViewModel>()
-                                          .approvePost(
-                                              false, widget.info["id"]);
+                                          .approvePost(false, info["id"]);
                                       setState(() {
                                         checkApprove = true;
                                       });
@@ -210,26 +213,49 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                           }
                         })),
                         const Spacer(),
-                        const Icon(
-                          Icons.keyboard_arrow_left_rounded,
-                          color: ColorConstant.whiteBlack60,
-                          size: 24,
-                        ),
-                        //TODO number of list
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                        Builder(builder: (context) {
+                          if (checknum == 0) {
+                            return Container();
+                          }
+                          return InkWell(
+                            child: const Icon(
+                              Icons.keyboard_arrow_left_rounded,
+                              color: ColorConstant.whiteBlack60,
+                              size: 24,
+                            ),
+                            onTap: () {
+                              setState(() {
+                                checknum--;
+                              });
+                            },
+                          );
+                        }),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                           child: Text(
-                            "1 of 95",
-                            style: TextStyle(
+                            "${checknum + 1} of $paginate",
+                            style: const TextStyle(
                                 color: ColorConstant.whiteBlack70,
                                 fontSize: 16),
                           ),
                         ),
-                        const Icon(
-                          Icons.keyboard_arrow_right_rounded,
-                          color: ColorConstant.whiteBlack60,
-                          size: 24,
-                        )
+                        Builder(builder: (context) {
+                          if (checknum == paginate - 1) {
+                            return Container();
+                          }
+                          return InkWell(
+                            child: const Icon(
+                              Icons.keyboard_arrow_right_rounded,
+                              color: ColorConstant.whiteBlack60,
+                              size: 24,
+                            ),
+                            onTap: () {
+                              setState(() {
+                                checknum++;
+                              });
+                            },
+                          );
+                        })
                       ],
                     ),
                   ),
@@ -243,7 +269,7 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: Text(
-                            widget.info["title"],
+                            info["title"],
                             style: const TextStyle(
                                 color: ColorConstant.orange70,
                                 fontSize: 32,
@@ -258,15 +284,14 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                               Padding(
                                 padding: const EdgeInsets.only(right: 24),
                                 child: Text(
-                                  widget.info["ownerName"],
+                                  info["ownerName"],
                                   style: const TextStyle(
                                       color: ColorConstant.whiteBlack70,
                                       fontSize: 18),
                                 ),
                               ),
                               Text(
-                                DateFormat('dd MMM')
-                                    .format(widget.info["dateCreate"]),
+                                DateFormat('dd MMM').format(info["dateCreate"]),
                                 style: const TextStyle(
                                     color: ColorConstant.whiteBlack50,
                                     fontSize: 14),
@@ -275,10 +300,10 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                           ),
                         ),
                         Row(
-                          children: generateCardTopics(widget.info["topics"]),
+                          children: generateCardTopics(info["topics"]),
                         ),
                         Text(
-                          widget.info["detail"],
+                          info["detail"],
                           style: const TextStyle(
                               color: ColorConstant.whiteBlack90, fontSize: 20),
                         )

@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 
 class CardApproval extends StatefulWidget {
   final Map<String, dynamic> info;
-  const CardApproval({super.key, required this.info});
+  final int checknumcard;
+  const CardApproval(
+      {super.key, required this.info, required this.checknumcard});
 
   @override
   State<CardApproval> createState() => _CardApprovalState();
@@ -83,7 +85,6 @@ class _CardApprovalState extends State<CardApproval> {
             ),
             Padding(
               padding: const EdgeInsets.only(right: 16),
-              //width = 612
               child: RichText(
                   text: TextSpan(children: [
                 TextSpan(
@@ -103,7 +104,6 @@ class _CardApprovalState extends State<CardApproval> {
               ])),
             ),
             const Spacer(),
-            //width = 70
             Text(
               DateFormat('dd MMM').format(widget.info["dateCreate"]),
               style: const TextStyle(
@@ -114,9 +114,7 @@ class _CardApprovalState extends State<CardApproval> {
       ),
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: ((context) {
-          return ApprovalDetail(
-            info: widget.info,
-          );
+          return ApprovalDetail(checknumcard: widget.checknumcard);
         })));
       },
     );

@@ -17,7 +17,10 @@ class _ApprovalListState extends State<ApprovalList> {
   List<Widget> generateCardApproval(List<Map<String, dynamic>> listPost) {
     List<Widget> card = [];
     for (int i = 0; i < listPost.length; i++) {
-      card.add(CardApproval(info: listPost[i]));
+      card.add(CardApproval(
+        info: listPost[i],
+        checknumcard: i,
+      ));
     }
     return card;
   }
@@ -51,70 +54,70 @@ class _ApprovalListState extends State<ApprovalList> {
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
-                decoration: const BoxDecoration(
-                    color: ColorConstant.white,
-                    // border: Border(
-                    //     bottom: BorderSide(
-                    //         color: ColorConstant.whiteBlack30, width: 1)),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16))),
-                child: Row(
-                  children: [
-                    InkWell(
-                      child: const Icon(
-                        Icons.refresh_rounded,
-                        color: ColorConstant.whiteBlack70,
-                        size: 24,
-                      ),
-                      onTap: () {
-                        setState(() {});
-                      },
-                    ),
-                    const Spacer(),
-                    //TODO number of list
-                    const Text(
-                      "1 of 95",
-                      style: TextStyle(
-                          color: ColorConstant.whiteBlack70, fontSize: 16),
-                    )
-                  ],
-                ),
-              ),
               FutureBuilder(
                   future: context.read<ApprovalViewModel>().getPostAll(),
                   builder: ((context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
+                      int paginate =
+                          context.read<ApprovalViewModel>().getPost.length;
                       return Column(
-                          children: generateCardApproval(
-                              context.watch<ApprovalViewModel>().getPost));
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+                            decoration: const BoxDecoration(
+                                color: ColorConstant.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    topRight: Radius.circular(16))),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  child: const Icon(
+                                    Icons.refresh_rounded,
+                                    color: ColorConstant.whiteBlack70,
+                                    size: 24,
+                                  ),
+                                  onTap: () {
+                                    setState(() {});
+                                  },
+                                ),
+                                const Spacer(),
+                                Text(
+                                  paginate.toString(),
+                                  style: const TextStyle(
+                                      color: ColorConstant.whiteBlack70,
+                                      fontSize: 16),
+                                )
+                              ],
+                            ),
+                          ),
+                          Column(
+                              children: generateCardApproval(
+                                  context.watch<ApprovalViewModel>().getPost)),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(0, 24, 16, 24),
+                            decoration: const BoxDecoration(
+                                color: ColorConstant.white,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16))),
+                            child: Row(
+                              children: [
+                                const Spacer(),
+                                Text(
+                                  paginate.toString(),
+                                  style: const TextStyle(
+                                      color: ColorConstant.whiteBlack70,
+                                      fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      );
                     }
-                    return Container();
+                    return const CircularProgressIndicator();
                   })),
-              Container(
-                padding: const EdgeInsets.fromLTRB(0, 24, 16, 24),
-                decoration: const BoxDecoration(
-                    color: ColorConstant.white,
-                    // border: Border(
-                    //     top: BorderSide(
-                    //         color: ColorConstant.whiteBlack30, width: 1)),
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16))),
-                child: Row(
-                  children: const [
-                    Spacer(),
-                    //TODO number of list
-                    Text(
-                      "1 of 95",
-                      style: TextStyle(
-                          color: ColorConstant.whiteBlack70, fontSize: 16),
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
         ),
