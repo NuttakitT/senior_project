@@ -43,7 +43,9 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
     detailTextController.addListener(() {
       detail = detailTextController.text;
     });
-
+    addtopicTextController.addListener(() {
+      addtopic = addtopicTextController.text;
+    });
     super.initState();
   }
 
