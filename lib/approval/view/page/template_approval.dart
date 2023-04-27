@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senior_project/approval/widget/approval_detail.dart';
-import 'package:senior_project/approval/widget/approval_list.dart';
+import 'package:senior_project/approval/view/widget/approval_list.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 
 class TemplateApproval extends StatefulWidget {
@@ -18,6 +17,6 @@ class _TemplateApprovalState extends State<TemplateApproval> {
         helpdeskadmin: false,
         home: true,
         useTemplatescroll: true,
-        content: ApprovalDetail());
+        content: ApprovalList());
   }
 }
