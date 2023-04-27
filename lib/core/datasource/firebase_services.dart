@@ -172,12 +172,16 @@ class FirebaseServices {
         if (i != 0) {
           if (key[i] == "adminId") {
             query = query.where(key[i], arrayContainsAny: [value[i]]);
+          } else if (value[i] is List) {
+            query = query.where(key[i], arrayContainsAny: value[i]);
           } else {
             query = query.where(key[i], isEqualTo: value[i]);
           }
         } else {
           if (key[i] == "adminId") {
             query = _collection.where(key[i], arrayContainsAny: [value[i]]);
+          } else if (value[i] is List) {
+            query = _collection.where(key[i], arrayContainsAny: value[i]);
           } else {
             query = _collection.where(key[i], isEqualTo: value[i]);
           }

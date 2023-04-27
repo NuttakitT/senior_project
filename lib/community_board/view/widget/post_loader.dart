@@ -7,6 +7,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/desktop/widget/content_card_template.dart';
 import 'package:senior_project/community_board/view/mobile/widget/community_board_content_card_mobile.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 
 class PostLoader extends StatefulWidget {
@@ -18,6 +19,8 @@ class PostLoader extends StatefulWidget {
 }
 
 class _PostLoaderState extends State<PostLoader> {
+  final postService = FirebaseServices("post");
+
   List<Widget> generateCardCommunityBoard(List<Map<String, dynamic>> listPost, bool isMobile) {
     List<Widget> card = [];
     for (int i = 0; i < listPost.length; i++) {
@@ -77,35 +80,77 @@ class _PostLoaderState extends State<PostLoader> {
           Column(
             children: generateCardCommunityBoard(listPost, false),
           ),
-          InkWell(
-            child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(top: 16, bottom: 16),
-              decoration: BoxDecoration(
+          StreamBuilder(
+            stream: postService.listenToDocumentByKeyValuePair(
+              ["topics", ], 
+              [[topicName], ],
+              orderingField: "dateCreate",
+              descending: true
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                print("list mode ${listPost.length}");
+                print("stream ${snapshot.data!.size}");
+                if (snapshot.data!.size != 0) {
+                  return InkWell(
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(top: 16, bottom: 16),
+                      decoration: BoxDecoration(
+                          color: ColorConstant.white,
+                          border: Border.all(
+                              color: ColorConstant.whiteBlack40, width: 1),
+                          borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "ดูเพิ่มเติม",
+                            style: TextStyle(
+                                color: ColorConstant.orange60, fontSize: 20),
+                          ),
+                          Icon(
+                            Icons.expand_more_rounded,
+                            color: ColorConstant.orange60,
+                            size: 24,
+                          )
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      print(context.watch<CommunityBoardViewModel>().getPost);
+                    },
+                  );
+                }
+                return Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  decoration: BoxDecoration(
+                    color: ColorConstant.white,
+                    border: Border.all(
+                      color: ColorConstant.whiteBlack40, width: 1),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16)
+                    )
+                  )
+                );
+              }
+              return Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(top: 16, bottom: 16),
+                decoration: BoxDecoration(
                   color: ColorConstant.white,
                   border: Border.all(
-                      color: ColorConstant.whiteBlack40, width: 1),
+                    color: ColorConstant.whiteBlack40, width: 1),
                   borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16))),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    "ดูเพิ่มเติม",
-                    style: TextStyle(
-                        color: ColorConstant.orange60, fontSize: 20),
-                  ),
-                  Icon(
-                    Icons.expand_more_rounded,
-                    color: ColorConstant.orange60,
-                    size: 24,
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16)
                   )
-                ],
-              ),
-            ),
-            onTap: () {
-              print(context.watch<CommunityBoardViewModel>().getPost);
+                )
+              );
             },
           ),
         ],
