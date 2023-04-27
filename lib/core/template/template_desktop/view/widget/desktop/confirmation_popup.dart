@@ -6,8 +6,8 @@ class ConfirmationPopup extends StatefulWidget {
   final String title;
   final String detail;
   final Widget? widget;
-  final Function(dynamic) onCancel;
-  final Function(dynamic) onConfirm;
+  final Function() onCancel;
+  final Function() onConfirm;
 
   const ConfirmationPopup(
       {super.key,
@@ -53,15 +53,19 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                         icon: const Icon(Icons.close))
                   ],
                 ),
+                const Spacer(),
                 DefaultTextStyle(
                   style: AppFontStyle.wb60L18,
                   child: Text(widget.detail),
                 ),
                 widget.widget ?? Container(),
+                const Spacer(),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
+                      height: 40,
+                      width: 144,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8.0),
@@ -69,7 +73,7 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          widget.onCancel;
+                          widget.onCancel();
                         },
                         child: Text(Consts.cancel,
                             style: AppFontStyle.wb60SemiB16),
@@ -77,13 +81,15 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                     ),
                     const SizedBox(width: 16),
                     Container(
+                      height: 40,
+                      width: 144,
                       decoration: BoxDecoration(
-                        color: ColorConstant.red40,
+                        color: ColorConstant.orange40,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: TextButton(
                         onPressed: () {
-                          widget.onConfirm;
+                          widget.onConfirm();
                         },
                         child:
                             Text(Consts.confirm, style: AppFontStyle.whiteB16),
