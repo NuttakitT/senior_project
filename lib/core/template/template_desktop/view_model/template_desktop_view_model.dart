@@ -13,7 +13,16 @@ class TemplateDesktopViewModel extends ChangeNotifier {
     "description": ""
   }];
   List<bool> _faqTagBar = [true, false];
+  bool _isSafeLoad = true;
+  bool _isSafeClick = true;
+  bool _isApprovedPage = false;
 
+  get getIsSafeClick => _isSafeClick;
+  set setIsSafeClick(bool state) => _isSafeClick = state;
+  get getIsApprovedPage => _isApprovedPage;
+  set setIsApprovedPage(bool state) => _isApprovedPage = state;
+  get getIsSafeLoad => _isSafeLoad;
+  set setIsSafeLoad(bool state) => _isSafeLoad = state;
   get getHomeTagBarName => _home;
   Map<String, dynamic> getHomeTagBarNameSelected(int index) => _home[index];
   bool getNavBarState(int index) => _navBarState[index];
@@ -87,30 +96,56 @@ class TemplateDesktopViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getCategory() async {
+  void clearHomeTagbar() {
     _home = [
       {
-        "name": "All tag post",
+        "name": _isApprovedPage ? "All post" : "Recent Post",
         "description": ""
       }
     ];
     _homeTagBar = [true];
+  }
+
+  Future<void> getCategory() async {
+    _isSafeLoad = false;
+    clearHomeTagbar();
     final category = await FirebaseServices("category").getDocumnetByKeyValuePair(
-      ["isCommunity", "isApproved"], 
-      [true, true]
+      _isApprovedPage ? ["isCommunity"] : ["isCommunity", "isApproved"], 
+      _isApprovedPage ? [true] : [true, true]
     );
     for (int i = 0; i < category!.docs.length; i++) {
-      final post = await FirebaseServices("post").getDocumnetByKeyValuePair(
+      if (_isApprovedPage) {
+        List<Map<String, dynamic>> hasTag = [];
+        if (_home.isNotEmpty) {
+          hasTag = _home.where((element) => element["name"] == category.docs[i].id).toList();
+        }
+        if (hasTag.isEmpty) {
+          _home.add({
+            "name": category.docs[i].id,
+            "description": category.docs[i].get("description")
+          });
+          _homeTagBar.add(false);
+        }
+      } else {
+        final post = await FirebaseServices("post").getDocumnetByKeyValuePair(
         ["topics", "isApproved"], 
         [[category.docs[i].id], true]
-      );
-      if (post!.docs.isNotEmpty) {
-        _home.add({
-          "name": category.docs[i].id,
-          "description": category.docs[i].get("description")
-        });
-        _homeTagBar.add(false);
+        );
+        if (post!.docs.isNotEmpty) {
+          List<Map<String, dynamic>> hasTag = [];
+          if (_home.isNotEmpty) {
+            hasTag = _home.where((element) => element["name"] == category.docs[i].id).toList();
+          }
+          if (hasTag.isEmpty) {
+            _home.add({
+              "name": category.docs[i].id,
+              "description": category.docs[i].get("description")
+            });
+            _homeTagBar.add(false);
+          }
+        }
       }
+      
     }
   }
 }

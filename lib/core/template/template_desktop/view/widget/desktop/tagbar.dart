@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/approval/view_model/approval_view_model.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
@@ -55,10 +56,20 @@ class _TagBarState extends State<TagBar> {
           ),
         ),
         onTap: () {
-          context
+          bool isApprovedPage = context.read<TemplateDesktopViewModel>().getIsApprovedPage;
+          if (!isApprovedPage && context.read<CommunityBoardViewModel>().getIsSafeClick) {
+            context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
+            context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
+            context
               .read<TemplateDesktopViewModel>()
               .changeState(context, widget.index, widget.type);
-          context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
+          } else if (isApprovedPage && context.read<ApprovalViewModel>().getIsSafeClick) {
+            context.read<ApprovalViewModel>().clearModel();
+            context.read<ApprovalViewModel>().setIsSafeLoad = true;
+            context
+              .read<TemplateDesktopViewModel>()
+              .changeState(context, widget.index, widget.type);
+          }
         },
       ),
     );
