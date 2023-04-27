@@ -37,18 +37,18 @@ class _RoleManagementViewState extends State<RoleManagementView> {
               final admins = snapshot.data?.admins ?? [];
               final categories = snapshot.data?.categories ?? [];
               return TemplateDesktop(
-                helpdesk: false,
-                helpdeskadmin: false,
-                home: false,
-                useTemplatescroll: true,
-                content: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      RoleManagementTable(admins: admins),
-                      CategoryTable(categories: categories)
-                    ],
-                  ),
-                ));
+                  helpdesk: false,
+                  helpdeskadmin: false,
+                  home: false,
+                  useTemplatescroll: true,
+                  content: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        RoleManagementTable(admins: admins),
+                        CategoryTable(categories: categories)
+                      ],
+                    ),
+                  ));
             }
             return const Center(
               child: SizedBox(
