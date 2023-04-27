@@ -13,7 +13,10 @@ class TemplateDesktopViewModel extends ChangeNotifier {
     "description": ""
   }];
   List<bool> _faqTagBar = [true, false];
+  bool _isSafeLoad = true;
 
+  get getIsSafeLoad => _isSafeLoad;
+  set setIsSafeLoad(bool state) => _isSafeLoad = state;
   get getHomeTagBarName => _home;
   Map<String, dynamic> getHomeTagBarNameSelected(int index) => _home[index];
   bool getNavBarState(int index) => _navBarState[index];
@@ -87,14 +90,19 @@ class TemplateDesktopViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getCategory() async {
+  void clearHomeTagbar() {
     _home = [
       {
-        "name": "All tag post",
+        "name": "Recent Post",
         "description": ""
       }
     ];
     _homeTagBar = [true];
+  }
+
+  Future<void> getCategory() async {
+    _isSafeLoad = false;
+    clearHomeTagbar();
     final category = await FirebaseServices("category").getDocumnetByKeyValuePair(
       ["isCommunity", "isApproved"], 
       [true, true]
@@ -105,11 +113,17 @@ class TemplateDesktopViewModel extends ChangeNotifier {
         [[category.docs[i].id], true]
       );
       if (post!.docs.isNotEmpty) {
-        _home.add({
-          "name": category.docs[i].id,
-          "description": category.docs[i].get("description")
-        });
-        _homeTagBar.add(false);
+        List<Map<String, dynamic>> hasTag = [];
+        if (_home.isNotEmpty) {
+          hasTag = _home.where((element) => element["name"] == category.docs[i].id).toList();
+        }
+        if (hasTag.isEmpty) {
+          _home.add({
+            "name": category.docs[i].id,
+            "description": category.docs[i].get("description")
+          });
+          _homeTagBar.add(false);
+        }
       }
     }
   }

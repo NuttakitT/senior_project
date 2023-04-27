@@ -53,15 +53,18 @@ class _MainMenuState extends State<MainMenu> {
                 padding: const EdgeInsets.only(right: 40),
                 child: InkWell(
                   onTap: () {
-                    context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
-                    context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
-                    Navigator.pushAndRemoveUntil(
-                      context, 
-                      MaterialPageRoute(builder: (context) {
-                        return const CommunityBoardView();
-                      }), 
-                      (route) => false
-                    );
+                    if (context.read<CommunityBoardViewModel>().getIsSafeClick) {
+                      context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
+                      context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
+                      context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
+                      Navigator.pushAndRemoveUntil(
+                        context, 
+                        MaterialPageRoute(builder: (context) {
+                          return const CommunityBoardView();
+                        }), 
+                        (route) => false
+                      );
+                    }
                   },
                   splashFactory: NoSplash.splashFactory,
                   child: Text(

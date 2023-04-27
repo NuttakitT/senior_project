@@ -55,10 +55,13 @@ class _TagBarState extends State<TagBar> {
           ),
         ),
         onTap: () {
-          context
+          if (context.read<CommunityBoardViewModel>().getIsSafeClick) {
+            context
               .read<TemplateDesktopViewModel>()
               .changeState(context, widget.index, widget.type);
-          context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
+            context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
+            context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
+          }
         },
       ),
     );

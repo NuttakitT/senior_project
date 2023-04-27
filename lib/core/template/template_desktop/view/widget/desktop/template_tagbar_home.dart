@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/approval/view/page/template_approval.dart';
 import 'package:senior_project/approval/view/widget/approval_list.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/widget/search_bar.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/tagbar.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 
 //call function from tagbar.dart
 class TemplateTagBarHome extends StatefulWidget {
@@ -82,40 +84,57 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 24, bottom: 24),
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) {
-                      return const TemplateApproval();
-                    })));
-                  },
-                  style: TextButton.styleFrom(
-                      fixedSize: const Size(280, 40),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      side: const BorderSide(
-                          color: ColorConstant.orange70, width: 1),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      textStyle: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                      foregroundColor: ColorConstant.orange70,
-                      backgroundColor: ColorConstant.white),
-                  child: const Text("Approval")),
-            ),
-            FutureBuilder(
-              future: context.read<TemplateDesktopViewModel>().getCategory(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  List<Map<String, dynamic>> category = context
-                      .watch<TemplateDesktopViewModel>()
-                      .getHomeTagBarName;
-                  return Column(children: generateTopic(category));
+            Builder(
+              builder: (context) {
+                if (context.watch<AppViewModel>().app.getUser.getRole == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 24, bottom: 24),
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: ((context) {
+                            return const TemplateApproval();
+                          })));
+                        },
+                        style: TextButton.styleFrom(
+                            fixedSize: const Size(280, 40),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
+                            side: const BorderSide(
+                                color: ColorConstant.orange70, width: 1),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            textStyle: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                            foregroundColor: ColorConstant.orange70,
+                            backgroundColor: ColorConstant.white),
+                        child: const Text("Approval")),
+                  );
                 }
                 return Container();
-              },
+              }
+            ),
+            Builder(
+              builder: (context) {
+                if (context.watch<TemplateDesktopViewModel>().getIsSafeLoad) {
+                  return FutureBuilder(
+                    future: context.read<TemplateDesktopViewModel>().getCategory(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        List<Map<String, dynamic>> category = context
+                            .watch<TemplateDesktopViewModel>()
+                            .getHomeTagBarName;
+                        return Column(children: generateTopic(category));
+                      }
+                      return Container();
+                    },
+                  );
+                }
+                List<Map<String, dynamic>> category = context
+                    .watch<TemplateDesktopViewModel>()
+                    .getHomeTagBarName;
+                return Column(children: generateTopic(category));   
+              }
             ),
           ],
         ),

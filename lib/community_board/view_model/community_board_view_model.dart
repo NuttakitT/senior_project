@@ -26,7 +26,15 @@ class CommunityBoardViewModel extends ChangeNotifier {
   bool _isShowPostDetail = false;
   bool _isDetailNotEmpty = true;
   bool _isTitleNotEmpty = true;
+  bool _isSafeLoad = true;
+  bool _isSafeClick = true;
   List<Topic> _alltopic = [];
+
+  get getIsSafeClick => _isSafeClick;
+  set setIsSafeClick(bool state) => _isSafeClick = state;
+
+  get getIsSafeLoad => _isSafeLoad;
+  set setIsSafeLoad(bool state) => _isSafeLoad = state;
 
   get getIsDetailNotEmpty => _isDetailNotEmpty;
   set setIsDetailNotEmpty(bool state) {
@@ -80,43 +88,48 @@ class CommunityBoardViewModel extends ChangeNotifier {
     await _service.setDocument(id, postDetail);
   }
 
-  Future<void> getNextPost(String topic, DocumentSnapshot startDoc) async {
-    final snapshot = await _service.getDocumnetByKeyValuePair([
-      "topics",
-      "isApproved"
-    ], [
-      [topic],
-      true
-    ],
-        orderingField: "dateCreate",
-        descending: true,
-        limit: _limit,
-        startDoc: startDoc);
-    if (snapshot!.docs.isNotEmpty) {
-      List<dynamic> postList =
-          _posts.where((element) => element["topic"] == topic).toList();
-      for (int i = 0; i < snapshot.docs.length; i++) {
-        final userSnapshot =
-            await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
-        final commentSnapshot =
-            await _service.getAllSubDocument(snapshot.docs[i].id, "comment");
-        postList[0]["post"].addPost(
-          snapshot.docs[i].get("ownerId"),
-          userSnapshot!.get("name"),
-          snapshot.docs[i].get("title").toString(),
-          snapshot.docs[i].get("detail").toString(),
-          commentSnapshot!.size,
-          snapshot.docs[i].get("topics"),
-          postId: snapshot.docs[i].id,
-          docId: snapshot.docs[i].id,
-          postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
-        );
+  Future<void> getNextPost(String topic, DocumentSnapshot? startDoc) async {
+    if (startDoc != null) {
+      final snapshot = await _service.getDocumnetByKeyValuePair([
+        "topics",
+        "isApproved"
+      ], [
+        [topic],
+        true
+      ],
+          orderingField: "dateCreate",
+          descending: true,
+          limit: _limit,
+          startDoc: startDoc);
+      if (snapshot!.docs.isNotEmpty) {
+        List<dynamic> postList =
+            _posts.where((element) => element["topic"] == topic).toList();
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          final userSnapshot =
+              await _serviceUser.getDocumentById(snapshot.docs[i].get("ownerId"));
+          final commentSnapshot =
+              await _service.getAllSubDocument(snapshot.docs[i].id, "comment");
+          postList[0]["post"].addPost(
+            snapshot.docs[i].get("ownerId"),
+            userSnapshot!.get("name"),
+            snapshot.docs[i].get("title").toString(),
+            snapshot.docs[i].get("detail").toString(),
+            commentSnapshot!.size,
+            snapshot.docs[i].get("topics"),
+            postId: snapshot.docs[i].id,
+            docId: snapshot.docs[i].id,
+            postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
+          );
+        }
+        postList[0]["lastDoc"] = snapshot.docs.last;
+        notifyListeners();
       }
     }
   }
 
   Future<void> getPostByTopic(String topic, {bool isLoadAll = false}) async {
     try {
+      _isSafeLoad = false;
       dynamic snapshot;
       if (isLoadAll) {
         snapshot = await _service.getDocumnetByKeyValuePair(
@@ -135,7 +148,6 @@ class CommunityBoardViewModel extends ChangeNotifier {
         );
       }
       if (snapshot!.size != 0) {
-        clearPost();
         CommunityBoardModel model = CommunityBoardModel();
         for (int i = 0; i < snapshot.docs.length; i++) {
           final userSnapshot = await _serviceUser
@@ -181,6 +193,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
                   docId: snapshot.docs[i].id,
                   postDateCreate: snapshot.docs[i].get("dateCreate").toDate(),
                 );
+                postList[0]["lastDoc"] = snapshot.docs[i];
               }
             }
           } else {
@@ -197,7 +210,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
             );
           }
         }
-        if (!isLoadAll) {
+        if (!isLoadAll && topic.isNotEmpty) {
           final categorySnapshot =
               await _serviceCategory.getDocumentById(topic);
           _posts.add({
@@ -210,7 +223,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
       }
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print("err $e");
       }
     }
   }
@@ -262,7 +275,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
   Future<bool> createTopics(CreateTagRequest request) async {
     return await _serviceCategory.setDocument(request.name, {
       "name": request.name,
-      "description": null,
+      "description": "",
       "isApproved": false,
       "isHelpDesk": false,
       "isCommunity": true,
