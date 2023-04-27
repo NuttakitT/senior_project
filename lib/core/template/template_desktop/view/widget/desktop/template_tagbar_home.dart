@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/approval/view/page/template_approval.dart';
 import 'package:senior_project/approval/view/widget/approval_list.dart';
+import 'package:senior_project/approval/view_model/approval_view_model.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/community_board/view/page/community_board_view.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/widget/search_bar.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/tagbar.dart';
@@ -87,14 +89,53 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
             Builder(
               builder: (context) {
                 if (context.watch<AppViewModel>().app.getUser.getRole == 0) {
+                  if (context.watch<TemplateDesktopViewModel>().getIsApprovedPage) {
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 24, bottom: 24),
+                      child: TextButton(
+                          onPressed: () {
+                            context.read<TemplateDesktopViewModel>().setIsApprovedPage = false;
+                            context.read<TemplateDesktopViewModel>().setIsSafeLoad = true;
+                            context.read<ApprovalViewModel>().setIsSafeClick = false;
+                            context.read<CommunityBoardViewModel>().clearController();
+                            Navigator.pushAndRemoveUntil(
+                              context, 
+                              MaterialPageRoute(builder: (context) {
+                                return const CommunityBoardView();
+                              }), 
+                              (route) => false
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                              fixedSize: const Size(280, 40),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                              side: const BorderSide(
+                                  color: ColorConstant.orange70, width: 1),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              textStyle: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                              foregroundColor: ColorConstant.orange70,
+                              backgroundColor: ColorConstant.white),
+                          child: const Text("Back")),
+                    );
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(left: 24, bottom: 24),
                     child: TextButton(
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: ((context) {
-                            return const TemplateApproval();
-                          })));
+                          context.read<TemplateDesktopViewModel>().setIsApprovedPage = true;
+                          context.read<TemplateDesktopViewModel>().setIsSafeLoad = true;
+                          context.read<CommunityBoardViewModel>().setIsSafeClick = false;
+                          context.read<ApprovalViewModel>().setIsSafeClick = true;
+                          Navigator.pushAndRemoveUntil(
+                            context, 
+                            MaterialPageRoute(builder: (context) {
+                              return const TemplateApproval();
+                            }), 
+                            (route) => false
+                          );
                         },
                         style: TextButton.styleFrom(
                             fixedSize: const Size(280, 40),

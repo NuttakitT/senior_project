@@ -127,9 +127,15 @@ class CommunityBoardViewModel extends ChangeNotifier {
     }
   }
 
+  void clearController() {
+    _isSafeClick = true;
+    _isSafeLoad = true;
+  }
+
   Future<void> getPostByTopic(String topic, {bool isLoadAll = false}) async {
     try {
       _isSafeLoad = false;
+      clearPost();
       dynamic snapshot;
       if (isLoadAll) {
         snapshot = await _service.getDocumnetByKeyValuePair(
@@ -237,8 +243,6 @@ class CommunityBoardViewModel extends ChangeNotifier {
     }
     return false;
   }
-
-  Future<void> approvePost(String docId) async {}
 
   Future<void> createComment(CreateCommentRequest request) async {
     try {

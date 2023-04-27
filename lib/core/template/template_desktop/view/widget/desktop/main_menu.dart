@@ -56,6 +56,7 @@ class _MainMenuState extends State<MainMenu> {
                     if (context.read<CommunityBoardViewModel>().getIsSafeClick) {
                       context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
                       context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
+                      context.read<TemplateDesktopViewModel>().setIsApprovedPage = false;
                       context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
                       Navigator.pushAndRemoveUntil(
                         context, 
@@ -82,6 +83,7 @@ class _MainMenuState extends State<MainMenu> {
                     style: _navbarTextStyle(isHelpDeskSelected),
                   ),
                   onTap: () {
+                    context.read<CommunityBoardViewModel>().setIsSafeClick = true;
                     context.read<HelpDeskViewModel>().setShowMessagePageState(false);
                     context.read<HelpDeskViewModel>().clearContentController();
                     context.read<HelpDeskViewModel>().clearModel();

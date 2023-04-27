@@ -343,18 +343,19 @@ class _PostLoaderState extends State<PostLoader> {
 
   @override
   Widget build(BuildContext context) {
-    int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(2);
-    Map<String, dynamic> tagBarName = context.watch<TemplateDesktopViewModel>().getHomeTagBarNameSelected(tagBarSelected);
-    bool isSafeLoad = context.watch<CommunityBoardViewModel>().getIsSafeLoad;
+    int tagBarSelected = context.read<TemplateDesktopViewModel>().selectedTagBar(2);
+    Map<String, dynamic> tagBarName = context.read<TemplateDesktopViewModel>().getHomeTagBarNameSelected(tagBarSelected);
+    bool isSafeLoad = context.read<CommunityBoardViewModel>().getIsSafeLoad;
+    bool isApprvoedPage = context.read<TemplateDesktopViewModel>().getIsApprovedPage;
     context.read<CommunityBoardViewModel>().setIsSafeClick = false;
 
-    if (!isSafeLoad) {
-      context.read<CommunityBoardViewModel>().setIsSafeClick = true;
+    if (!isSafeLoad && !isApprvoedPage) {
       List<Map<String, dynamic>> allPost = getPostDetail();
       return Padding(
         padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
         child: Builder(
           builder: (context) {
+            context.read<CommunityBoardViewModel>().setIsSafeClick = true;
             return Column(
               children: generateContent(allPost, widget.isMobile),
             );
@@ -362,7 +363,6 @@ class _PostLoaderState extends State<PostLoader> {
         ),
       );
     }
-    context.read<CommunityBoardViewModel>().clearPost();
     return Padding(
       padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
       child: Column(
