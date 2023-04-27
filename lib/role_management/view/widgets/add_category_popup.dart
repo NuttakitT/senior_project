@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/role_management/model/role_management_model.dart';
 import 'package:senior_project/role_management/view/role_management_view.dart';
@@ -168,19 +169,32 @@ class _AddCategoryPopupState extends State<AddCategoryPopup> {
                           });
                         }
                         if (!isTopicEmpty && !isDescriptionEmpty) {
-                          final request = AddCategoryRequest(
-                              categoryName: topicController.text,
-                              description: descriptionController.text);
-                          await context
-                              .read<RoleManagementViewModel>()
-                              .addCategory(request);
-                          Navigator.pushAndRemoveUntil(
-                            context, 
-                            MaterialPageRoute(builder: (context) {
-                              return RoleManagementView(isAdmin: isAdmin);
-                            }), 
-                            (route) => false
-                          );
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ConfirmationPopup(
+                                    title: "Add Topic Category",
+                                    detail:
+                                        "You want to add '${topicController.text}'?",
+                                    widget: null,
+                                    onCancel: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    onConfirm: () async {
+                                      final request = AddCategoryRequest(
+                                          categoryName: topicController.text,
+                                          description:
+                                              descriptionController.text);
+                                      await context
+                                          .read<RoleManagementViewModel>()
+                                          .addCategory(request);
+                                      Navigator.pushAndRemoveUntil(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return RoleManagementView(
+                                            isAdmin: isAdmin);
+                                      }), (route) => false);
+                                    });
+                              });
                         }
                       },
                       style: ButtonStyle(
