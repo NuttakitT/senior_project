@@ -28,7 +28,8 @@ class Header {
   }
 
   static Widget widget(BuildContext context, bool isAdmin) {
-    int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+    int tagBarSelected =
+        context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
     return Padding(
       padding: const EdgeInsets.all(40),
       child: Row(
@@ -48,38 +49,35 @@ class Header {
               ),
             ),
           ),
-          Builder(
-            builder: (context) {
-              if (!isAdmin) {
-                return SizedBox(
-                  width: 153,
-                  height: 40,
-                  child: TextButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const CreateTicketPopup();
-                          });
-                    },
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(ColorConstant.orange50),
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8))),
-                        fixedSize: MaterialStateProperty.all(
-                          const Size(167, 40)
-                        )),
-                    child: const Text(
-                      "+  Create Task",
-                      style: AppFontStyle.whiteSemiB16,
-                    ),
+          Builder(builder: (context) {
+            if (!isAdmin) {
+              return SizedBox(
+                width: 153,
+                height: 40,
+                child: TextButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const CreateTicketPopup();
+                        });
+                  },
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(ColorConstant.orange50),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8))),
+                      fixedSize:
+                          MaterialStateProperty.all(const Size(167, 40))),
+                  child: const Text(
+                    "+  Create Ticket",
+                    style: AppFontStyle.whiteSemiB16,
                   ),
-                );
-              } 
-              return Container();
+                ),
+              );
             }
-          )
+            return Container();
+          })
         ],
       ),
     );
