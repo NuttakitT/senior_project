@@ -10,6 +10,7 @@ import 'package:senior_project/core/template/template_desktop/view/widget/deskto
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/notification_overlay.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/role_management/view/role_management_view.dart';
@@ -53,6 +54,7 @@ class _MainMenuState extends State<MainMenu> {
                 padding: const EdgeInsets.only(right: 40),
                 child: InkWell(
                   onTap: () {
+                      context.read<TextSearch>().clearSearchText();
                       context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
                       context.read<CommunityBoardViewModel>().clearController();
                       context.read<CommunityBoardViewModel>().clearPost();
@@ -83,6 +85,7 @@ class _MainMenuState extends State<MainMenu> {
                     style: _navbarTextStyle(isHelpDeskSelected),
                   ),
                   onTap: () {
+                    context.read<TextSearch>().clearSearchText();
                     context.read<CommunityBoardViewModel>().setIsSafeClick = true;
                     context.read<HelpDeskViewModel>().setShowMessagePageState(false);
                     context.read<HelpDeskViewModel>().clearContentController();
@@ -109,6 +112,7 @@ class _MainMenuState extends State<MainMenu> {
                     style: _navbarTextStyle(isTeacherContactSelected),
                   ),
                   onTap: () {
+                    context.read<TextSearch>().clearSearchText();
                     context.read<TemplateDesktopViewModel>().changeState(context, 2, 1);
                     // TODO link to teacher contact
                   },
@@ -128,6 +132,7 @@ class _MainMenuState extends State<MainMenu> {
                           style: _navbarTextStyle(isRoleManageSelected),
                         ),
                         onTap: () {
+                          context.read<TextSearch>().clearSearchText();
                           context
                               .read<TemplateDesktopViewModel>()
                               .changeState(context, 3, 1);
@@ -153,6 +158,7 @@ class _MainMenuState extends State<MainMenu> {
           if (!isLogin) {
             return TextButton(
               onPressed: () async {
+                context.read<TextSearch>().clearSearchText();
                 await context.read<AppViewModel>().login(context);
               },
               style: ButtonStyle(
@@ -332,6 +338,7 @@ class _MainMenuState extends State<MainMenu> {
                         ),
                         PopupMenuItem(
                           onTap: () async {
+                            context.read<TextSearch>().clearSearchText();
                             await context.read<AppViewModel>().logout();
                           },
                           child: Container(

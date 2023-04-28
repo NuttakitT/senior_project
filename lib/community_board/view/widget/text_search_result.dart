@@ -73,7 +73,7 @@ class _TextSearchResultState extends State<TextSearchResult> {
     Map<String, dynamic> tagBarName = context.watch<TemplateDesktopViewModel>().getHomeTagBarNameSelected(tagBarSelected);
     String topicDescription = "ผลการค้นหา ${context.watch<TextSearch>().getSearchText} ${tagBarSelected != 0 ? "จากโพสต์ในหวมดหมู่ ${tagBarName["name"]}" : "จากโพสต์ทั้งหมด"}";
 
-    context.watch<TextSearch>().getHitsSearcher.query(context.watch<TextSearch>().getSearchText);
+    context.read<TextSearch>().getHitsSearcher.query(context.watch<TextSearch>().getSearchText);
     return StreamBuilder(
       stream: context.watch<TextSearch>().getHitsSearcher.responses,
       builder: (context, snapshot) {

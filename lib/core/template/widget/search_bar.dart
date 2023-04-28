@@ -16,6 +16,7 @@ class _SearchBarState extends State<SearchBar> {
   bool isEditingText = false;
   FocusNode focus = FocusNode();
   int milisec = 200;
+  TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -23,6 +24,10 @@ class _SearchBarState extends State<SearchBar> {
       setState(() {
         isEditingText = focus.hasFocus;
       });
+    });
+    controller.text = context.read<TextSearch>().getSearchText;
+    controller.addListener(() {
+      context.read<TextSearch>().setSearchText(controller.text);
     });
     super.initState();
   }
@@ -52,12 +57,12 @@ class _SearchBarState extends State<SearchBar> {
             )
           ),
         ),
-        
         Expanded(
           child: AnimatedPadding(
             duration: Duration(milliseconds: milisec),
             padding: EdgeInsets.only(left: isEditingText ? 0 : 16),
             child: TextField(
+              controller: controller,
               focusNode: focus,
               maxLength: 512,
               decoration: const InputDecoration(
@@ -73,10 +78,6 @@ class _SearchBarState extends State<SearchBar> {
                   gapPadding: 0
                 )
               ),
-              onChanged: (value) { 
-                text = value;
-                context.read<TextSearch>().setSearchText(value);
-              },
             ),
           ),
         ),
