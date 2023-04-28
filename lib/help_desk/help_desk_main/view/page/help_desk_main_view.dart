@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
+import 'package:senior_project/core/template/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/body.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/header.dart';
@@ -33,6 +35,7 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (isMobileSite) {
+            context.read<TemplateMobileViewModel>().changeMenuState(1);
             return TemplateMenuMobile(
                 content: Builder(
                   builder: (context) {
@@ -55,6 +58,7 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
                   }
                 ));
           }
+          context.read<TemplateDesktopViewModel>().changeState(context, 1, 1);
           return TemplateDesktop(
             helpdesk: !widget.isAdmin,
             helpdeskadmin: widget.isAdmin,
