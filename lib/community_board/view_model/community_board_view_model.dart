@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
+import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:uuid/uuid.dart';
@@ -18,6 +19,7 @@ class Topic {
 class CommunityBoardViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final _service = FirebaseServices("post");
+  final AlgoliaServices _algolia = AlgoliaServices("post");
   final _serviceCategory = FirebaseServices("category");
   final _serviceUser = FirebaseServices("user");
   List<Map<String, dynamic>> _posts = [];
@@ -73,6 +75,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
       CreatePostRequest request, BuildContext context) async {
     String id = getUuid();
     String userId = context.read<AppViewModel>().app.getUser.getId;
+    final userSnapshot = await _serviceUser.getDocumentById(userId);
     // TODO: files are not yet prepared
     Map<String, dynamic> postDetail = {
       "id": id,
@@ -85,6 +88,12 @@ class CommunityBoardViewModel extends ChangeNotifier {
       "isApproved": false,
       "approvedTime": ""
     };
+    postDetail.addAll({
+      "ownerName": userSnapshot!.get("name")
+    });
+    String? objectId = await _algolia.addObject(id, postDetail);
+    postDetail.remove("ownerName");
+    postDetail.addAll({"ObjectID": objectId!});
     await _service.setDocument(id, postDetail);
   }
 
@@ -288,5 +297,39 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   String getUuid() {
     return const Uuid().v1();
+  }
+
+  void reconstructSearchResult(List<dynamic> hits, String topic) {
+    clearPost();
+    clearController();
+    CommunityBoardModel model = CommunityBoardModel();
+    for (var item in hits) {
+      bool isTagetObject = false;
+      List<dynamic> topics = item["topics"] as List<dynamic>;
+      bool isApproved = item["isApproved"] as bool;
+      if (topic.isNotEmpty) {
+        if (topics.toString().contains(topic) && isApproved) {
+          isTagetObject = true;
+        } 
+      } else if (isApproved) {
+        isTagetObject = true;
+      }
+      if (isTagetObject) {
+        model.addPost(
+          item["ownerId"],
+          item["ownerName"],
+          item["title"],
+          item["detail"],
+          0,
+          item["topics"],
+          postId: item["id"],
+          docId: item["id"],
+          postDateCreate: DateTime.parse(item["dateCreate"])
+        );
+      }
+    }
+    _posts.add({
+      "post": model
+    });
   }
 }

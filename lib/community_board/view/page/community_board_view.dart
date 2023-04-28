@@ -5,6 +5,7 @@ import 'package:senior_project/community_board/view/mobile/page/template_communi
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 
 class CommunityBoardView extends StatefulWidget {
   const CommunityBoardView({super.key});
@@ -30,8 +31,10 @@ class _CommunityBoardViewState extends State<CommunityBoardView> {
             );
           }
           if (isMobileSite) {
+            context.read<TextSearch>().clearSearchText();
             return const TemplateCommunityBoardMobile();
           }
+          context.read<TextSearch>().clearSearchText();
           return const TemplateCommunityBoard();
         }
         return Container();

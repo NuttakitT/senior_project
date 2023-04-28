@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/mobile/widget/create_post_mobile.dart';
 import 'package:senior_project/community_board/view/widget/post_loader.dart';
+import 'package:senior_project/community_board/view/widget/text_search_result.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 
 class CommunityBoardHomeMobile extends StatefulWidget {
   const CommunityBoardHomeMobile({super.key});
@@ -48,14 +50,17 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Padding(
-                          padding: EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.only(right: 8),
                           child: SizedBox(
                             height: 38,
                             child: TextField(
+                              onChanged: (value) {
+                                context.read<TextSearch>().setSearchText(value);
+                              },
                               maxLines: 1,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 fillColor: ColorConstant.whiteBlack40,
                                 hintText: "Search",
                                 hintStyle: TextStyle(
@@ -116,7 +121,15 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
             ),
           ),
         ),
-        const PostLoader(isMobile: true)
+        Builder(
+          builder: (context) {
+            String searchText = context.watch<TextSearch>().getSearchText;
+            if (searchText.isEmpty) {
+              return const PostLoader(isMobile: true);
+            }
+            return const TextSearchResult(isMobile: true);
+          },
+        ),
       ],
     );
   }

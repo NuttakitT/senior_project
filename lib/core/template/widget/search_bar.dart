@@ -75,11 +75,7 @@ class _SearchBarState extends State<SearchBar> {
               ),
               onChanged: (value) { 
                 text = value;
-                if (widget.isHelpDeskPage) {
-                  context.read<TextSearch>().setSearchText(value);
-                } else {
-                  // TODO commu search
-                }
+                context.read<TextSearch>().setSearchText(value);
               },
             ),
           ),
