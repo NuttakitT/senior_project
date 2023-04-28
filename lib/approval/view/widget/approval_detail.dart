@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/approval/view_model/approval_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import '../../../assets/color_constant.dart';
 import '../page/template_approval.dart';
@@ -17,7 +18,6 @@ class ApprovalDetail extends StatefulWidget {
 }
 
 class _ApprovalDetailState extends State<ApprovalDetail> {
-  bool checkApprove = false;
   int checknum = 0;
   @override
   void initState() {
@@ -53,8 +53,7 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
   @override
   Widget build(BuildContext context) {
     int paginate = context.read<ApprovalViewModel>().getPost.length;
-    Map<String, dynamic> info =
-        context.read<ApprovalViewModel>().getPost[checknum];
+    Map<String, dynamic> info = context.read<ApprovalViewModel>().getPost[checknum];
     return TemplateDesktop(
         helpdesk: false,
         helpdeskadmin: false,
@@ -112,106 +111,116 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                             },
                           ),
                         ),
-                        Builder(builder: ((context) {
-                          if (checkApprove == false) {
-                            return Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 16),
-                                  child: TextButton(
-                                      onPressed: () async {
-                                        await context
-                                            .read<ApprovalViewModel>()
-                                            .approvePost(true, info["id"]);
-                                        for (int i = 0;
-                                            i < info["topics"].length;
-                                            i++) {
+                        StreamBuilder(
+                          stream: FirebaseServices("post").listenToDocument(info["id"]),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.active) {
+                              if (snapshot.data!.get("approvedTime").toString().isEmpty) {
+                                return Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 16),
+                                      child: TextButton(
+                                          onPressed: () async {
+                                            await context
+                                                .read<ApprovalViewModel>()
+                                                .approvePost(true, info["id"]);
+                                            for (int i = 0;
+                                                i < info["topics"].length;
+                                                i++) {
+                                              await context
+                                                  .read<ApprovalViewModel>()
+                                                  .approveTopic(true,
+                                                      info["topics"][i].toString());
+                                            }
+                                          },
+                                          style: TextButton.styleFrom(
+                                              foregroundColor: ColorConstant.white,
+                                              backgroundColor:
+                                                  ColorConstant.green50,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16)),
+                                              side: const BorderSide(
+                                                  color: ColorConstant.green50,
+                                                  width: 1),
+                                              textStyle: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500),
+                                              padding: const EdgeInsets.fromLTRB(
+                                                  16, 8, 16, 8),
+                                              alignment: Alignment.center),
+                                          child: Row(
+                                            children: const [
+                                              Padding(
+                                                padding: EdgeInsets.only(right: 8),
+                                                child: Icon(
+                                                  Icons.check_rounded,
+                                                  size: 16,
+                                                ),
+                                              ),
+                                              Text("Approve"),
+                                            ],
+                                          )),
+                                    ),
+                                    TextButton(
+                                        onPressed: () async {
                                           await context
                                               .read<ApprovalViewModel>()
-                                              .approveTopic(true,
-                                                  info["topics"][i].toString());
-                                        }
-                                        setState(() {
-                                          checkApprove = true;
-                                        });
-                                      },
-                                      style: TextButton.styleFrom(
-                                          foregroundColor: ColorConstant.white,
-                                          backgroundColor:
-                                              ColorConstant.green50,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(16)),
-                                          side: const BorderSide(
-                                              color: ColorConstant.green50,
-                                              width: 1),
-                                          textStyle: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500),
-                                          padding: const EdgeInsets.fromLTRB(
-                                              16, 8, 16, 8),
-                                          alignment: Alignment.center),
-                                      child: Row(
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 8),
-                                            child: Icon(
-                                              Icons.check_rounded,
-                                              size: 16,
+                                              .approvePost(false, info["id"]);
+                                        },
+                                        style: TextButton.styleFrom(
+                                            foregroundColor: ColorConstant.red60,
+                                            backgroundColor: ColorConstant.white,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16)),
+                                            side: const BorderSide(
+                                                color: ColorConstant.red60,
+                                                width: 1),
+                                            textStyle: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                            padding: const EdgeInsets.fromLTRB(
+                                                16, 8, 16, 8),
+                                            alignment: Alignment.center),
+                                        child: Row(
+                                          children: const [
+                                            Padding(
+                                              padding: EdgeInsets.only(right: 8),
+                                              child: Icon(
+                                                Icons.clear_rounded,
+                                                size: 16,
+                                              ),
                                             ),
-                                          ),
-                                          Text("Approve"),
-                                        ],
-                                      )),
-                                ),
-                                TextButton(
-                                    onPressed: () async {
-                                      await context
-                                          .read<ApprovalViewModel>()
-                                          .approvePost(false, info["id"]);
-                                      setState(() {
-                                        checkApprove = true;
-                                      });
-                                    },
-                                    style: TextButton.styleFrom(
-                                        foregroundColor: ColorConstant.red60,
-                                        backgroundColor: ColorConstant.white,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16)),
-                                        side: const BorderSide(
-                                            color: ColorConstant.red60,
-                                            width: 1),
-                                        textStyle: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                        padding: const EdgeInsets.fromLTRB(
-                                            16, 8, 16, 8),
-                                        alignment: Alignment.center),
-                                    child: Row(
-                                      children: const [
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 8),
-                                          child: Icon(
-                                            Icons.clear_rounded,
-                                            size: 16,
-                                          ),
-                                        ),
-                                        Text("Disapprove"),
-                                      ],
-                                    )),
-                              ],
-                            );
-                          } else {
-                            return const Text(
-                              "verified",
-                              style: TextStyle(
-                                  color: ColorConstant.green50,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14),
-                            );
-                          }
-                        })),
+                                            Text("Disapprove"),
+                                          ],
+                                        )),
+                                  ],
+                                );
+                              }
+                              else if (snapshot.data!.get("isApproved")) {
+                                return const Text(
+                                  "Verified",
+                                  style: TextStyle(
+                                      color: ColorConstant.green50,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                );
+                              }
+                              else if (!snapshot.data!.get("isApproved")) {
+                                return const Text(
+                                  "Not verified",
+                                  style: TextStyle(
+                                      color: ColorConstant.red50,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                );
+                              }
+                            }
+                            return Container();
+                          },
+                        ),
                         const Spacer(),
                         Builder(builder: (context) {
                           if (checknum == 0) {

@@ -44,7 +44,7 @@ class _CardApprovalState extends State<CardApproval> {
   Widget build(BuildContext context) {
     return InkWell(
       child: Container(
-        width: 1128,
+        width: double.infinity,
         height: 58,
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(

@@ -49,10 +49,10 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
               child: RichText(
                 text: const TextSpan(children: [
                   TextSpan(
-                      text: "Create a task\n", style: AppFontStyle.wb80Md28),
+                      text: "Create a ticket\n", style: AppFontStyle.wb80Md28),
                   TextSpan(
                       text:
-                          "Fill in more information for create task in Help-Desk System.",
+                          "Fill in more information for create ticket in Help-Desk System.",
                       style: AppFontStyle.wb60L18)
                 ]),
               ),
@@ -329,7 +329,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                   side: const BorderSide(
                                       color: ColorConstant.orange40)))),
                       child: const Text(
-                        "Confirm",
+                        "Send Ticket",
                         style: AppFontStyle.whiteB16,
                       ),
                     ),

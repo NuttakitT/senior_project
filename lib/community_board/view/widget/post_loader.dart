@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/desktop/widget/content_card_template.dart';
 import 'package:senior_project/community_board/view/mobile/widget/community_board_content_card_mobile.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 
 class PostLoader extends StatefulWidget {
@@ -18,6 +20,8 @@ class PostLoader extends StatefulWidget {
 }
 
 class _PostLoaderState extends State<PostLoader> {
+  final postService = FirebaseServices("post");
+
   List<Widget> generateCardCommunityBoard(List<Map<String, dynamic>> listPost, bool isMobile) {
     List<Widget> card = [];
     for (int i = 0; i < listPost.length; i++) {
@@ -35,7 +39,12 @@ class _PostLoaderState extends State<PostLoader> {
     return card;
   }
 
-  Widget desktopContent(String topicName, String? topicDescription, List<Map<String, dynamic>> listPost) {
+  Widget desktopContent(
+    String topicName, 
+    String? topicDescription, 
+    List<Map<String, dynamic>> listPost, 
+    DocumentSnapshot? nextPost
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
       child: Column(
@@ -77,35 +86,75 @@ class _PostLoaderState extends State<PostLoader> {
           Column(
             children: generateCardCommunityBoard(listPost, false),
           ),
-          InkWell(
-            child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(top: 16, bottom: 16),
-              decoration: BoxDecoration(
+          StreamBuilder(
+            stream: postService.listenToDocumentByKeyValuePair(
+              ["topics", "isApproved"], 
+              [[topicName], true],
+              orderingField: "dateCreate",
+              descending: true
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.data!.size != listPost.length) {
+                  return InkWell(
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(top: 16, bottom: 16),
+                      decoration: BoxDecoration(
+                          color: ColorConstant.white,
+                          border: Border.all(
+                              color: ColorConstant.whiteBlack40, width: 1),
+                          borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "ดูเพิ่มเติม",
+                            style: TextStyle(
+                                color: ColorConstant.orange60, fontSize: 20),
+                          ),
+                          Icon(
+                            Icons.expand_more_rounded,
+                            color: ColorConstant.orange60,
+                            size: 24,
+                          )
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      context.read<CommunityBoardViewModel>().getNextPost(topicName, nextPost);
+                    },
+                  );
+                }
+                return Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  decoration: BoxDecoration(
+                    color: ColorConstant.white,
+                    border: Border.all(
+                      color: ColorConstant.whiteBlack40, width: 1),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16)
+                    )
+                  )
+                );
+              }
+              return Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(top: 16, bottom: 16),
+                decoration: BoxDecoration(
                   color: ColorConstant.white,
                   border: Border.all(
-                      color: ColorConstant.whiteBlack40, width: 1),
+                    color: ColorConstant.whiteBlack40, width: 1),
                   borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16))),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    "ดูเพิ่มเติม",
-                    style: TextStyle(
-                        color: ColorConstant.orange60, fontSize: 20),
-                  ),
-                  Icon(
-                    Icons.expand_more_rounded,
-                    color: ColorConstant.orange60,
-                    size: 24,
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16)
                   )
-                ],
-              ),
-            ),
-            onTap: () {
-              print(context.watch<CommunityBoardViewModel>().getPost);
+                )
+              );
             },
           ),
         ],
@@ -113,7 +162,12 @@ class _PostLoaderState extends State<PostLoader> {
     );
   }
 
-  Widget mobileContent(String topicName, String? topicDescription, List<Map<String, dynamic>> listPost) {
+  Widget mobileContent(
+    String topicName, 
+    String? topicDescription, 
+    List<Map<String, dynamic>> listPost,
+    DocumentSnapshot? nextPost
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -157,34 +211,70 @@ class _PostLoaderState extends State<PostLoader> {
           Column(
             children: generateCardCommunityBoard(listPost, true),
           ),
-          InkWell(
-            child: Container(
-              height: 40,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(right: 8, left: 8),
-              decoration: const BoxDecoration(
-                color: ColorConstant.white,
-                border: Border(
-                    bottom:
-                        BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    "ดูเพิ่มเติม",
-                    style: TextStyle(color: ColorConstant.orange70, fontSize: 16),
-                  ),
-                  Icon(
-                    Icons.expand_more_rounded,
-                    color: ColorConstant.orange70,
-                    size: 24,
-                  )
-                ],
-              ),
+          StreamBuilder(
+            stream: postService.listenToDocumentByKeyValuePair(
+              ["topics", "isApproved"], 
+              [[topicName], true],
+              orderingField: "dateCreate",
+              descending: true
             ),
-            onTap: () {
-              //TODO view more post
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.data!.size != listPost.length) {
+                  return InkWell(
+                    child: Container(
+                      height: 40,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(right: 8, left: 8),
+                      decoration: const BoxDecoration(
+                        color: ColorConstant.white,
+                        border: Border(
+                            bottom:
+                                BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "ดูเพิ่มเติม",
+                            style: TextStyle(color: ColorConstant.orange70, fontSize: 16),
+                          ),
+                          Icon(
+                            Icons.expand_more_rounded,
+                            color: ColorConstant.orange70,
+                            size: 24,
+                          )
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      context.read<CommunityBoardViewModel>().getNextPost(topicName, nextPost);
+                    },
+                  );
+                }
+                return Container(
+                  height: 40,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.only(right: 8, left: 8),
+                  decoration: const BoxDecoration(
+                    color: ColorConstant.white,
+                    border: Border(
+                      bottom:
+                          BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
+                  ),
+                );
+              }
+              return Container(
+                height: 40,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(right: 8, left: 8),
+                decoration: const BoxDecoration(
+                  color: ColorConstant.white,
+                  border: Border(
+                      bottom:
+                          BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
+                ),
+              );
             },
           ),
         ],
@@ -196,18 +286,83 @@ class _PostLoaderState extends State<PostLoader> {
     List<Widget> content = [];
     for (int i = 0; i < detail.length; i++) {
       if (isMobile) {
-        content.add(mobileContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"]));
+        content.add(mobileContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"], detail[i]["lastDoc"]));
       } else {
-        content.add(desktopContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"]));
+        content.add(desktopContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"], detail[i]["lastDoc"]));
       }
     }
     return content;
   }
 
+  List<Map<String, dynamic>> getPostDetail() {
+    List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
+    List<Map<String, dynamic>> allPost = [];
+    for (int i = 0; i < post.length; i++) {
+      int index = post[i]["post"].getPost.length;
+      int allPostIndex = i;
+      if (post[i]["topic"] == "General") {
+        allPostIndex = 0;
+        allPost.insert(0, {
+          "topic": post[i]["topic"],
+          "description": post[i]["description"],
+          "post": <Map<String, dynamic>>[],
+          "lastDoc": post[i]["lastDoc"],
+        });
+      } else {
+        allPost.add({
+          "topic": post[i]["topic"],
+          "description": post[i]["description"],
+          "post": <Map<String, dynamic>>[],
+          "lastDoc": post[i]["lastDoc"],
+        });
+      }
+      
+      for (int j = 0; j < index; j++) {
+        String docId = post[i]["post"].getPost[j].getDocId;
+        String title = post[i]["post"].getPost[j].getContent.getText;
+        String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
+        String ownerName = post[i]["post"].getPost[j].getOwnerName;
+        String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
+        int comments = post[i]["post"].getPost[j].getComment;
+        List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
+        List<Map<String, dynamic>>  postDetail = allPost[allPostIndex]["post"];
+        postDetail.add({
+          "title": title,
+          "detail": detail,
+          "topic": topic,
+          "ownerName": ownerName.split(" ")[0],
+          "dateCreate": dateCreate,
+          "comments": comments,
+          "docId": docId
+        });
+        allPost[allPostIndex]["post"] = postDetail;
+      }
+    }
+    return allPost;
+  }
+
   @override
   Widget build(BuildContext context) {
-    int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(2);
-    Map<String, dynamic> tagBarName = context.watch<TemplateDesktopViewModel>().getHomeTagBarNameSelected(tagBarSelected);
+    int tagBarSelected = context.read<TemplateDesktopViewModel>().selectedTagBar(2);
+    Map<String, dynamic> tagBarName = context.read<TemplateDesktopViewModel>().getHomeTagBarNameSelected(tagBarSelected);
+    bool isSafeLoad = context.read<CommunityBoardViewModel>().getIsSafeLoad;
+    bool isApprvoedPage = context.read<TemplateDesktopViewModel>().getIsApprovedPage;
+    context.read<CommunityBoardViewModel>().setIsSafeClick = false;
+
+    if (!isSafeLoad && !isApprvoedPage) {
+      List<Map<String, dynamic>> allPost = getPostDetail();
+      return Padding(
+        padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
+        child: Builder(
+          builder: (context) {
+            context.read<CommunityBoardViewModel>().setIsSafeClick = true;
+            return Column(
+              children: generateContent(allPost, widget.isMobile),
+            );
+          },
+        ),
+      );
+    }
     return Padding(
       padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
       child: Column(
@@ -219,47 +374,8 @@ class _PostLoaderState extends State<PostLoader> {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
-                List<Map<String, dynamic>> allPost = [];
-                for (int i = 0; i < post.length; i++) {
-                  int index = post[i]["post"].getPost.length;
-                  int allPostIndex = i;
-                  if (post[i]["topic"] == "General") {
-                    allPostIndex = 0;
-                    allPost.insert(0, {
-                      "topic": post[i]["topic"],
-                      "description": post[i]["description"],
-                      "post": <Map<String, dynamic>>[]
-                    });
-                  } else {
-                    allPost.add({
-                      "topic": post[i]["topic"],
-                      "description": post[i]["description"],
-                      "post": <Map<String, dynamic>>[]
-                    });
-                  }
-                  
-                  for (int j = 0; j < index; j++) {
-                    String docId = post[i]["post"].getPost[j].getDocId;
-                    String title = post[i]["post"].getPost[j].getContent.getText;
-                    String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
-                    String ownerName = post[i]["post"].getPost[j].getOwnerName;
-                    String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
-                    int comments = post[i]["post"].getPost[j].getComment;
-                    List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
-                    List<Map<String, dynamic>>  postDetail = allPost[allPostIndex]["post"];
-                    postDetail.add({
-                      "title": title,
-                      "detail": detail,
-                      "topic": topic,
-                      "ownerName": ownerName.split(" ")[0],
-                      "dateCreate": dateCreate,
-                      "comments": comments,
-                      "docId": docId
-                    });
-                    allPost[allPostIndex]["post"] = postDetail;
-                  }
-                }
+                context.read<CommunityBoardViewModel>().setIsSafeClick = true;
+                List<Map<String, dynamic>> allPost = getPostDetail();
                 return Builder(
                   builder: (context) {
                     return Column(
