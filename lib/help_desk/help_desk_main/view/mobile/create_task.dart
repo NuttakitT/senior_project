@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/widget/priority_icon.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -71,11 +72,11 @@ class _CreateTaskState extends State<CreateTask> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: isTitleEmpty 
-                        ? ColorConstant.red50 
-                        : ColorConstant.whiteBlack20),
-                    borderRadius: BorderRadius.circular(4)
-                  ),
+                      border: Border.all(
+                          color: isTitleEmpty
+                              ? ColorConstant.red50
+                              : ColorConstant.whiteBlack20),
+                      borderRadius: BorderRadius.circular(4)),
                   alignment: AlignmentDirectional.centerStart,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -123,7 +124,7 @@ class _CreateTaskState extends State<CreateTask> {
                       Expanded(
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton(
-                            value: priorityValue, 
+                            value: priorityValue,
                             style: AppFontStyle.wb80R16,
                             items: priority.map<DropdownMenuItem>((value) {
                               return DropdownMenuItem(
@@ -189,12 +190,13 @@ class _CreateTaskState extends State<CreateTask> {
                 child: Container(
                   height: 100,
                   decoration: BoxDecoration(
-                    border: Border.all(color: isTitleEmpty 
-                        ? ColorConstant.red50 
-                        : ColorConstant.whiteBlack20),
-                    borderRadius: BorderRadius.circular(4)
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      border: Border.all(
+                          color: isTitleEmpty
+                              ? ColorConstant.red50
+                              : ColorConstant.whiteBlack20),
+                      borderRadius: BorderRadius.circular(4)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: TextField(
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -221,10 +223,10 @@ class _CreateTaskState extends State<CreateTask> {
                   child: TextButton(
                     onPressed: () async {
                       if (title.isEmpty) {
-                          setState(() {
-                            isTitleEmpty = true;
-                          });
-                      } 
+                        setState(() {
+                          isTitleEmpty = true;
+                        });
+                      }
                       if (detail.isEmpty) {
                         setState(() {
                           isDetailEmpty = true;
@@ -232,17 +234,36 @@ class _CreateTaskState extends State<CreateTask> {
                       }
                       if (title.isNotEmpty && detail.isNotEmpty) {
                         int priorityIndex = priority.indexOf(priorityValue);
-                        await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
-                        context.read<HelpDeskViewModel>().clearModel();
-                        context.read<HelpDeskViewModel>().setIsSafeLoad = true;
-                        Navigator.pushAndRemoveUntil(
-                          context, 
-                          MaterialPageRoute(builder: (context) {
-                              return HelpDeskMainView(isAdmin: widget.isAdmin);
-                            }
-                          ), 
-                          (route) => false
-                        );
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ConfirmationPopup(
+                                  title:
+                                      "Are you sure you want to create a ticket?",
+                                  detail:
+                                      " The ticket will be automatically sent to IT support.",
+                                  widget: null,
+                                  onCancel: () {
+                                    Navigator.pop(context);
+                                  },
+                                  onConfirm: () async {
+                                    await context
+                                        .read<HelpDeskViewModel>()
+                                        .createTask(title, detail,
+                                            priorityIndex, categoryValue);
+                                    context
+                                        .read<HelpDeskViewModel>()
+                                        .clearModel();
+                                    context
+                                        .read<HelpDeskViewModel>()
+                                        .setIsSafeLoad = true;
+                                    Navigator.pushAndRemoveUntil(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return HelpDeskMainView(
+                                          isAdmin: widget.isAdmin);
+                                    }), (route) => false);
+                                  });
+                            });
                       }
                     },
                     style: ButtonStyle(
