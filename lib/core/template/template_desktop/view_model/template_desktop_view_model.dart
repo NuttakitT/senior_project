@@ -86,7 +86,6 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       menuTemplate[trueStateIndex] = false;
       menuTemplate[index] = true;
       _copyValue(menuTemplate, type);
-      notifyListeners();
       if (type == 4) {
         context.read<HelpDeskViewModel>().clearContentController();
       }

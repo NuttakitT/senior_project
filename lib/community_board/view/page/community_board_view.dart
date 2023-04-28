@@ -4,6 +4,8 @@ import 'package:senior_project/community_board/view/desktop/page/template_commun
 import 'package:senior_project/community_board/view/mobile/page/template_community_board_mobile.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
+import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
+import 'package:senior_project/core/template/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class CommunityBoardView extends StatefulWidget {
@@ -30,8 +32,10 @@ class _CommunityBoardViewState extends State<CommunityBoardView> {
             );
           }
           if (isMobileSite) {
+            context.read<TemplateMobileViewModel>().changeMenuState(0);
             return const TemplateCommunityBoardMobile();
           }
+          context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
           return const TemplateCommunityBoard();
         }
         return Container();
