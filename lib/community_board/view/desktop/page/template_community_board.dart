@@ -23,8 +23,7 @@ class _TemplateCommunityBoardState extends State<TemplateCommunityBoard> {
         useTemplatescroll: true,
         content: Builder(
           builder: (context) {
-            bool isShowPostDetail = context.watch<CommunityBoardViewModel>().getIsShowPostDetail;
-            if (isShowPostDetail) {
+            if (context.watch<CommunityBoardViewModel>().getIsShowPostDetail) {
               return const InDetailContent();
             }
             return const CommunityBoardContent();
