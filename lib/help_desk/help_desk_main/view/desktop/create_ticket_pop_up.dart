@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -33,7 +34,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -48,10 +49,10 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
               child: RichText(
                 text: const TextSpan(children: [
                   TextSpan(
-                      text: "Create a task\n", style: AppFontStyle.wb80Md28),
+                      text: "Create a ticket\n", style: AppFontStyle.wb80Md28),
                   TextSpan(
                       text:
-                          "Fill in more information for create task in Help-Desk System.",
+                          "Fill in more information for create ticket in Help-Desk System.",
                       style: AppFontStyle.wb60L18)
                 ]),
               ),
@@ -75,11 +76,11 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                     child: Container(
                       height: 40,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: isTitleEmpty 
-                        ? ColorConstant.red50 
-                        : ColorConstant.whiteBlack40)
-                      ),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                              color: isTitleEmpty
+                                  ? ColorConstant.red50
+                                  : ColorConstant.whiteBlack40)),
                       padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
                       child: TextField(
                         decoration: const InputDecoration.collapsed(
@@ -169,7 +170,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
-                          value: categoryValue, 
+                          value: categoryValue,
                           style: AppFontStyle.wb60R16,
                           items:
                               category.map<DropdownMenuItem<String>>((value) {
@@ -209,11 +210,11 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                     child: Container(
                       height: 100,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: isDetailEmpty 
-                        ? ColorConstant.red50 
-                        : ColorConstant.whiteBlack40)
-                      ),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                              color: isDetailEmpty
+                                  ? ColorConstant.red50
+                                  : ColorConstant.whiteBlack40)),
                       padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
                       child: TextField(
                         keyboardType: TextInputType.multiline,
@@ -271,7 +272,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                           setState(() {
                             isTitleEmpty = true;
                           });
-                        } 
+                        }
                         if (detail.isEmpty) {
                           setState(() {
                             isDetailEmpty = true;
@@ -279,17 +280,44 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                         }
                         if (title.isNotEmpty && detail.isNotEmpty) {
                           int priorityIndex = priority.indexOf(priorityValue);
-                          await context.read<HelpDeskViewModel>().createTask(title, detail, priorityIndex, categoryValue);
-                          context.read<HelpDeskViewModel>().clearModel();
-                          context.read<HelpDeskViewModel>().clearContentController();
-                          context.read<HelpDeskViewModel>().setIsSafeLoad = true;
-                          Navigator.pushAndRemoveUntil(
-                            context, 
-                            MaterialPageRoute(builder: (context) {
-                              return HelpDeskMainView(isAdmin: context.watch<AppViewModel>().app.getUser.getRole == 0);
-                            }), 
-                            (route) => false
-                          );
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ConfirmationPopup(
+                                    title:
+                                        "Are you sure you want to create a ticket?",
+                                    detail:
+                                        "The ticket will be automatically sent to IT support.",
+                                    widget: null,
+                                    onCancel: () {
+                                      Navigator.pop(context);
+                                    },
+                                    onConfirm: () async {
+                                      await context
+                                          .read<HelpDeskViewModel>()
+                                          .createTask(title, detail,
+                                              priorityIndex, categoryValue);
+                                      context
+                                          .read<HelpDeskViewModel>()
+                                          .clearModel();
+                                      context
+                                          .read<HelpDeskViewModel>()
+                                          .clearContentController();
+                                      context
+                                          .read<HelpDeskViewModel>()
+                                          .setIsSafeLoad = true;
+                                      Navigator.pushAndRemoveUntil(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return HelpDeskMainView(
+                                            isAdmin: context
+                                                    .watch<AppViewModel>()
+                                                    .app
+                                                    .getUser
+                                                    .getRole ==
+                                                0);
+                                      }), (route) => false);
+                                    });
+                              });
                         }
                       },
                       style: ButtonStyle(
@@ -301,7 +329,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                   side: const BorderSide(
                                       color: ColorConstant.orange40)))),
                       child: const Text(
-                        "Confirm",
+                        "Send Ticket",
                         style: AppFontStyle.whiteB16,
                       ),
                     ),
