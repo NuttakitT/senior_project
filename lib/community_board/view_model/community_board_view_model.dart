@@ -89,11 +89,13 @@ class CommunityBoardViewModel extends ChangeNotifier {
       "approvedTime": ""
     };
     postDetail.addAll({
-      "ownerName": userSnapshot!.get("name")
+      "ownerName": userSnapshot!.get("name"),
+      "comment": 0
     });
     String? objectId = await _algolia.addObject(id, postDetail);
     postDetail.remove("ownerName");
-    postDetail.addAll({"ObjectID": objectId!});
+    postDetail.remove("comment");
+    postDetail.addAll({"objectID": objectId!});
     await _service.setDocument(id, postDetail);
   }
 
@@ -143,8 +145,6 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> getPostByTopic(String topic, {bool isLoadAll = false}) async {
     try {
-      _isSafeLoad = false;
-      clearPost();
       dynamic snapshot;
       if (isLoadAll) {
         snapshot = await _service.getDocumnetByKeyValuePair(
@@ -163,6 +163,8 @@ class CommunityBoardViewModel extends ChangeNotifier {
         );
       }
       if (snapshot!.size != 0) {
+        clearPost();
+        _isSafeLoad = false;
         CommunityBoardModel model = CommunityBoardModel();
         for (int i = 0; i < snapshot.docs.length; i++) {
           final userSnapshot = await _serviceUser
@@ -263,6 +265,11 @@ class CommunityBoardViewModel extends ChangeNotifier {
         "dateCreate": DateTime.now(),
         "dateEdit": null
       });
+      final objectId = await _service.getDocumentById(request.docId);
+      final reply = await _service.getAllSubDocument(request.docId, "comment");
+      await _algolia.updateObject(objectId!.get("objectID"), {
+        "comment": reply!.size
+      });
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -283,6 +290,11 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> deleteComment(String parentId, String subId) async {
     await _service.deleteSubDocument(parentId, "comment", subId);
+    final objectId = await _service.getDocumentById(parentId);
+    final reply = await _service.getAllSubDocument(parentId, "comment");
+    await _algolia.updateObject(objectId!.get("objectID"), {
+      "comment": reply!.size
+    });
   }
 
   Future<bool> createTopics(CreateTagRequest request) async {
@@ -320,7 +332,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
           item["ownerName"],
           item["title"],
           item["detail"],
-          0,
+          item["comment"],
           item["topics"],
           postId: item["id"],
           docId: item["id"],

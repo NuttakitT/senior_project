@@ -53,11 +53,12 @@ class _MainMenuState extends State<MainMenu> {
                 padding: const EdgeInsets.only(right: 40),
                 child: InkWell(
                   onTap: () {
-                    if (context.read<CommunityBoardViewModel>().getIsSafeClick) {
                       context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
-                      context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
+                      context.read<CommunityBoardViewModel>().clearController();
+                      context.read<CommunityBoardViewModel>().clearPost();
                       context.read<TemplateDesktopViewModel>().setIsApprovedPage = false;
                       context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
+                      context.read<TemplateDesktopViewModel>().changeState(context, 0, 2);
                       Navigator.pushAndRemoveUntil(
                         context, 
                         MaterialPageRoute(builder: (context) {
@@ -65,7 +66,6 @@ class _MainMenuState extends State<MainMenu> {
                         }), 
                         (route) => false
                       );
-                    }
                   },
                   splashFactory: NoSplash.splashFactory,
                   child: Text(
