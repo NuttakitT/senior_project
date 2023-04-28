@@ -42,10 +42,11 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
               children: [
                 Row(
                   children: [
-                    DefaultTextStyle(
-                        style: AppFontStyle.orange70Md28,
-                        child: Text(widget.title)),
-                    const Spacer(),
+                    Expanded(
+                      child: DefaultTextStyle(
+                          style: AppFontStyle.orange70Md28,
+                          child: Text(widget.title, maxLines: 3)),
+                    ),
                     IconButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -56,7 +57,7 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                 const Spacer(),
                 DefaultTextStyle(
                   style: AppFontStyle.wb60L18,
-                  child: Text(widget.detail),
+                  child: Text(widget.detail, maxLines: 5),
                 ),
                 widget.widget ?? Container(),
                 const Spacer(),
@@ -105,6 +106,6 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
 }
 
 class Consts {
-  static String confirm = "confirm";
-  static String cancel = "cancel";
+  static String confirm = "Confirm";
+  static String cancel = "Cancel";
 }

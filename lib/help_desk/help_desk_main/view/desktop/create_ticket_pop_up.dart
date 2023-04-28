@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
@@ -279,24 +280,44 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                         }
                         if (title.isNotEmpty && detail.isNotEmpty) {
                           int priorityIndex = priority.indexOf(priorityValue);
-                          await context.read<HelpDeskViewModel>().createTask(
-                              title, detail, priorityIndex, categoryValue);
-                          context.read<HelpDeskViewModel>().clearModel();
-                          context
-                              .read<HelpDeskViewModel>()
-                              .clearContentController();
-                          context.read<HelpDeskViewModel>().setIsSafeLoad =
-                              true;
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(builder: (context) {
-                            return HelpDeskMainView(
-                                isAdmin: context
-                                        .watch<AppViewModel>()
-                                        .app
-                                        .getUser
-                                        .getRole ==
-                                    0);
-                          }), (route) => false);
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ConfirmationPopup(
+                                    title:
+                                        "Are you sure you want to create a ticket?",
+                                    detail:
+                                        "The ticket will be automatically sent to IT support.",
+                                    widget: null,
+                                    onCancel: () {
+                                      Navigator.pop(context);
+                                    },
+                                    onConfirm: () async {
+                                      await context
+                                          .read<HelpDeskViewModel>()
+                                          .createTask(title, detail,
+                                              priorityIndex, categoryValue);
+                                      context
+                                          .read<HelpDeskViewModel>()
+                                          .clearModel();
+                                      context
+                                          .read<HelpDeskViewModel>()
+                                          .clearContentController();
+                                      context
+                                          .read<HelpDeskViewModel>()
+                                          .setIsSafeLoad = true;
+                                      Navigator.pushAndRemoveUntil(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return HelpDeskMainView(
+                                            isAdmin: context
+                                                    .watch<AppViewModel>()
+                                                    .app
+                                                    .getUser
+                                                    .getRole ==
+                                                0);
+                                      }), (route) => false);
+                                    });
+                              });
                         }
                       },
                       style: ButtonStyle(
