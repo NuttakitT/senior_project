@@ -16,11 +16,12 @@ class CommunityBoardModel {
     String title, 
     String detail, 
     int? comment,
+    String? imageUrl,
     List<dynamic> topic,
     {String? postId, String? docId, DateTime? postDateCreate}
   ) {
     comment ??= 0;
-    Post post = Post(ownerId, ownerName, comment, id: postId, docId: docId, dateCreate: postDateCreate);
+    Post post = Post(ownerId, ownerName, imageUrl, comment, id: postId, docId: docId, dateCreate: postDateCreate);
     post.addContent(title, detail);
     for (int i = 0; i < topic.length; i++) {
       post.addTopic(topic[i].toString());
@@ -32,14 +33,14 @@ class CommunityBoardModel {
 class CreatePostRequest {
   String title;
   String detail;
-  // List<XFile>? files;
+  String? imageUrl;
   List<String> topics;
   bool isApproved = false;
 
   CreatePostRequest(
       {required this.title,
       required this.detail,
-      // this.files,
+      required this.imageUrl,
       required this.topics});
 }
 

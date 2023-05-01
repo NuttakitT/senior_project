@@ -120,8 +120,8 @@ class _InDetailMobileState extends State<InDetailMobile> {
                     widget.info["detail"],
                     style: const TextStyle(
                         color: ColorConstant.whiteBlack90, fontSize: 14),
-                  )
-                  // TODO picture
+                  ),
+                  Image.network(widget.info["imageUrl"])
                 ],
               ),
             ),

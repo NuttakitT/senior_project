@@ -44,6 +44,7 @@ class _InDetailContentState extends State<InDetailContent> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> info = context.watch<CommunityBoardViewModel>().getPostDetail;
+    print(info);
 
     return Column(
       children: [
@@ -128,8 +129,8 @@ class _InDetailContentState extends State<InDetailContent> {
                   info["detail"],
                   style: const TextStyle(
                       color: ColorConstant.whiteBlack90, fontSize: 20),
-                )
-                // TODO picture
+                ),
+                Image.network(info["imageUrl"])
               ],
             ),
           ),

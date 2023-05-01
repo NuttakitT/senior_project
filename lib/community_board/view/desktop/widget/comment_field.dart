@@ -80,7 +80,7 @@ class _CommentFieldState extends State<CommentField> {
                               Icon(
                                 Icons.add_photo_alternate_rounded,
                                 color: ColorConstant.orange50,
-                                size: 16,
+                                size: 12,
                               ),
                               Text("Add Image"),
                             ],

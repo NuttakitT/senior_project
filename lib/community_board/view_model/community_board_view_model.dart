@@ -1,14 +1,19 @@
-// ignore_for_file: prefer_is_empty, prefer_final_fields
+// ignore_for_file: prefer_is_empty, prefer_final_fields, depend_on_referenced_packages, library_prefixes
+
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
 import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:uuid/uuid.dart';
+import 'package:path/path.dart' as Path;
 
 class Topic {
   final String name;
@@ -76,14 +81,13 @@ class CommunityBoardViewModel extends ChangeNotifier {
     String id = getUuid();
     String userId = context.read<AppViewModel>().app.getUser.getId;
     final userSnapshot = await _serviceUser.getDocumentById(userId);
-    // TODO: files are not yet prepared
     Map<String, dynamic> postDetail = {
       "id": id,
       "ownerId": userId,
       "title": request.title,
       "detail": request.detail,
       "dateCreate": DateTime.now(),
-      // "files": request.files,
+      "imageUrl": request.imageUrl,
       "topics": request.topics,
       "isApproved": false,
       "approvedTime": ""
@@ -143,6 +147,10 @@ class CommunityBoardViewModel extends ChangeNotifier {
     _isSafeLoad = true;
   }
 
+  void clearAllTopic() {
+    _alltopic = [];
+  }
+
   Future<void> getPostByTopic(String topic, {bool isLoadAll = false}) async {
     try {
       dynamic snapshot;
@@ -187,6 +195,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
                   snapshot.docs[i].get("title").toString(),
                   snapshot.docs[i].get("detail").toString(),
                   commentSnapshot!.size,
+                  snapshot.docs[i].get("imageUrl"),
                   snapshot.docs[i].get("topics"),
                   postId: snapshot.docs[i].id,
                   docId: snapshot.docs[i].id,
@@ -220,6 +229,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
               snapshot.docs[i].get("title").toString(),
               snapshot.docs[i].get("detail").toString(),
               commentSnapshot!.size,
+              snapshot.docs[i].get("imageUrl"),
               snapshot.docs[i].get("topics"),
               postId: snapshot.docs[i].id,
               docId: snapshot.docs[i].id,
@@ -333,6 +343,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
           item["title"],
           item["detail"],
           item["comment"],
+          item["imageUrl"],
           item["topics"],
           postId: item["id"],
           docId: item["id"],
@@ -343,5 +354,33 @@ class CommunityBoardViewModel extends ChangeNotifier {
     _posts.add({
       "post": model
     });
+  }
+
+  Future<String?> getImageUrl(Uint8List? file, String fileName, String path) async {
+    try {
+      String? imageUrl;
+      if (file != null) {
+        FirebaseStorage storage = FirebaseStorage.instance;
+        Reference ref = storage.ref().child("$path/Image-$fileName");
+
+        UploadTask task = ref.putData(file);
+        await task.whenComplete(() async {
+          var url = await ref.getDownloadURL();
+          imageUrl = url.toString();
+        }).catchError((e) {
+          if (kDebugMode) {
+            print(e);
+          }
+        });
+        return imageUrl;
+      }
+      return null;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return null;
+    }
+    
   }
 }
