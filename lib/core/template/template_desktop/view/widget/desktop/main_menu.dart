@@ -14,6 +14,7 @@ import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/role_management/view/role_management_view.dart';
+import 'package:senior_project/teacher_contact/view/teacher_contact_view.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -54,20 +55,24 @@ class _MainMenuState extends State<MainMenu> {
                 padding: const EdgeInsets.only(right: 40),
                 child: InkWell(
                   onTap: () {
-                      context.read<TextSearch>().clearSearchText();
-                      context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
-                      context.read<CommunityBoardViewModel>().clearController();
-                      context.read<CommunityBoardViewModel>().clearPost();
-                      context.read<TemplateDesktopViewModel>().setIsApprovedPage = false;
-                      context.read<TemplateDesktopViewModel>().changeState(context, 0, 1);
-                      context.read<TemplateDesktopViewModel>().changeState(context, 0, 2);
-                      Navigator.pushAndRemoveUntil(
-                        context, 
+                    context.read<TextSearch>().clearSearchText();
+                    context
+                        .read<CommunityBoardViewModel>()
+                        .setIsShowPostDetail(false, false, {});
+                    context.read<CommunityBoardViewModel>().clearController();
+                    context.read<CommunityBoardViewModel>().clearPost();
+                    context.read<TemplateDesktopViewModel>().setIsApprovedPage =
+                        false;
+                    context
+                        .read<TemplateDesktopViewModel>()
+                        .changeState(context, 0, 1);
+                    context
+                        .read<TemplateDesktopViewModel>()
+                        .changeState(context, 0, 2);
+                    Navigator.pushAndRemoveUntil(context,
                         MaterialPageRoute(builder: (context) {
-                          return const CommunityBoardView();
-                        }), 
-                        (route) => false
-                      );
+                      return const CommunityBoardView();
+                    }), (route) => false);
                   },
                   splashFactory: NoSplash.splashFactory,
                   child: Text(
@@ -86,12 +91,17 @@ class _MainMenuState extends State<MainMenu> {
                   ),
                   onTap: () {
                     context.read<TextSearch>().clearSearchText();
-                    context.read<CommunityBoardViewModel>().setIsSafeClick = true;
-                    context.read<HelpDeskViewModel>().setShowMessagePageState(false);
+                    context.read<CommunityBoardViewModel>().setIsSafeClick =
+                        true;
+                    context
+                        .read<HelpDeskViewModel>()
+                        .setShowMessagePageState(false);
                     context.read<HelpDeskViewModel>().clearContentController();
                     context.read<HelpDeskViewModel>().clearModel();
                     context.read<HelpDeskViewModel>().clearReplyDocId();
-                    context.read<TemplateDesktopViewModel>().changeState(context, 1, 1);
+                    context
+                        .read<TemplateDesktopViewModel>()
+                        .changeState(context, 1, 1);
                     int? role =
                         context.read<AppViewModel>().app.getUser.getRole;
                     Navigator.pushAndRemoveUntil(
@@ -113,8 +123,20 @@ class _MainMenuState extends State<MainMenu> {
                   ),
                   onTap: () {
                     context.read<TextSearch>().clearSearchText();
-                    context.read<TemplateDesktopViewModel>().changeState(context, 2, 1);
+                    context
+                        .read<TemplateDesktopViewModel>()
+                        .changeState(context, 2, 1);
                     // TODO link to teacher contact
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) {
+                      return TeacherContactView(
+                          isAdmin: context
+                                  .watch<AppViewModel>()
+                                  .app
+                                  .getUser
+                                  .getRole ==
+                              0);
+                    })));
                   },
                 ),
               ),
@@ -136,13 +158,10 @@ class _MainMenuState extends State<MainMenu> {
                           context
                               .read<TemplateDesktopViewModel>()
                               .changeState(context, 3, 1);
-                          Navigator.pushAndRemoveUntil(
-                            context, 
-                            MaterialPageRoute(builder: (context) {
-                              return RoleManagementView(isAdmin: isAdmin);
-                            }), 
-                            (route) => false
-                          );
+                          Navigator.pushAndRemoveUntil(context,
+                              MaterialPageRoute(builder: (context) {
+                            return RoleManagementView(isAdmin: isAdmin);
+                          }), (route) => false);
                         },
                       ),
                     );
@@ -150,42 +169,33 @@ class _MainMenuState extends State<MainMenu> {
                   return Container();
                 }
                 return Container();
-              }
-            ),
-          ],
-        ),
-        Builder(builder: (context) {
-          if (!isLogin) {
-            return TextButton(
-              onPressed: () async {
-                context.read<TextSearch>().clearSearchText();
-                await context.read<AppViewModel>().login(context);
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  ColorConstant.orange70
-                ),
-                padding: MaterialStateProperty.all(
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10.5)
-                ),
-                fixedSize: MaterialStateProperty.all(
-                  const Size(227, 40)
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)
-                  )
-                ) 
-              ),
-              child: const Text(
-                "Login with KMUTT account",
-                style: TextStyle(
-                  fontFamily: AppFontStyle.font,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  color: Colors.white
-                ),
-              ));
+              }),
+            ],
+          ),
+          Builder(builder: (context) {
+            if (!isLogin) {
+              return TextButton(
+                  onPressed: () async {
+                    context.read<TextSearch>().clearSearchText();
+                    await context.read<AppViewModel>().login(context);
+                  },
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(ColorConstant.orange70),
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10.5)),
+                      fixedSize: MaterialStateProperty.all(const Size(227, 40)),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)))),
+                  child: const Text(
+                    "Login with KMUTT account",
+                    style: TextStyle(
+                        fontFamily: AppFontStyle.font,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        color: Colors.white),
+                  ));
             }
             return Padding(
               padding: const EdgeInsets.only(right: 24),
@@ -225,17 +235,12 @@ class _MainMenuState extends State<MainMenu> {
                         PopupMenuItem(
                           enabled: false,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 16
-                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                             decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: ColorConstant.whiteBlack30
-                                )
-                              ),
-                              color: Colors.white
-                            ),
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: ColorConstant.whiteBlack30)),
+                                color: Colors.white),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -244,11 +249,10 @@ class _MainMenuState extends State<MainMenu> {
                                   child: Text(
                                     "Account",
                                     style: TextStyle(
-                                      fontFamily: AppFontStyle.font,
-                                      fontWeight: AppFontWeight.medium,
-                                      fontSize: 16,
-                                      color: ColorConstant.whiteBlack90
-                                    ),
+                                        fontFamily: AppFontStyle.font,
+                                        fontWeight: AppFontWeight.medium,
+                                        fontSize: 16,
+                                        color: ColorConstant.whiteBlack90),
                                   ),
                                 ),
                                 Row(
@@ -257,12 +261,10 @@ class _MainMenuState extends State<MainMenu> {
                                       width: 40,
                                       height: 40,
                                       decoration: BoxDecoration(
-                                        shape: BoxShape.circle, 
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          color: ColorConstant.orange90
-                                        )
-                                      ),
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: ColorConstant.orange90)),
                                       child: const Icon(
                                         Icons.person_rounded,
                                         color: ColorConstant.orange80,
@@ -271,25 +273,36 @@ class _MainMenuState extends State<MainMenu> {
                                     Padding(
                                       padding: const EdgeInsets.only(left: 8),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            context.read<AppViewModel>().app.getUser.getName,
+                                            context
+                                                .read<AppViewModel>()
+                                                .app
+                                                .getUser
+                                                .getName,
                                             style: const TextStyle(
-                                              fontFamily: AppFontStyle.font,
-                                              fontWeight: AppFontWeight.regular,
-                                              fontSize: 14,
-                                              color: ColorConstant.whiteBlack90
-                                            ),
+                                                fontFamily: AppFontStyle.font,
+                                                fontWeight:
+                                                    AppFontWeight.regular,
+                                                fontSize: 14,
+                                                color:
+                                                    ColorConstant.whiteBlack90),
                                           ),
                                           Text(
-                                            context.read<AppViewModel>().app.getUser.getEmail,
+                                            context
+                                                .read<AppViewModel>()
+                                                .app
+                                                .getUser
+                                                .getEmail,
                                             style: const TextStyle(
-                                              fontFamily: AppFontStyle.font,
-                                              fontWeight: AppFontWeight.regular,
-                                              fontSize: 12,
-                                              color: ColorConstant.whiteBlack70
-                                            ),
+                                                fontFamily: AppFontStyle.font,
+                                                fontWeight:
+                                                    AppFontWeight.regular,
+                                                fontSize: 12,
+                                                color:
+                                                    ColorConstant.whiteBlack70),
                                           )
                                         ],
                                       ),
@@ -303,14 +316,12 @@ class _MainMenuState extends State<MainMenu> {
                         PopupMenuItem(
                           onTap: () {
                             Future.delayed(
-                              const Duration(seconds: 0),
-                              () => showDialog(
-                                context: context, 
-                                builder: (context) {
-                                  return const EditProfile();
-                                }
-                              )
-                            );
+                                const Duration(seconds: 0),
+                                () => showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const EditProfile();
+                                    }));
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -319,18 +330,17 @@ class _MainMenuState extends State<MainMenu> {
                                 Padding(
                                   padding: EdgeInsets.only(right: 10),
                                   child: Icon(
-                                    Icons.create_rounded, 
+                                    Icons.create_rounded,
                                     color: ColorConstant.whiteBlack80,
                                   ),
                                 ),
                                 Text(
                                   "Edit Profile",
                                   style: TextStyle(
-                                    fontFamily: AppFontStyle.font,
-                                    fontSize: 14,
-                                    fontWeight: AppFontWeight.regular,
-                                    color: ColorConstant.whiteBlack80
-                                  ),
+                                      fontFamily: AppFontStyle.font,
+                                      fontSize: 14,
+                                      fontWeight: AppFontWeight.regular,
+                                      color: ColorConstant.whiteBlack80),
                                 )
                               ],
                             ),
@@ -348,18 +358,17 @@ class _MainMenuState extends State<MainMenu> {
                                 Padding(
                                   padding: EdgeInsets.only(right: 10),
                                   child: Icon(
-                                    Icons.logout_rounded, 
+                                    Icons.logout_rounded,
                                     color: ColorConstant.whiteBlack80,
                                   ),
                                 ),
                                 Text(
                                   "Log out",
                                   style: TextStyle(
-                                    fontFamily: AppFontStyle.font,
-                                    fontSize: 14,
-                                    fontWeight: AppFontWeight.regular,
-                                    color: ColorConstant.whiteBlack80
-                                  ),
+                                      fontFamily: AppFontStyle.font,
+                                      fontSize: 14,
+                                      fontWeight: AppFontWeight.regular,
+                                      color: ColorConstant.whiteBlack80),
                                 )
                               ],
                             ),
