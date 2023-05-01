@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view/desktop/widget/content_card_template.dart';
 import 'package:senior_project/community_board/view/mobile/widget/community_board_content_card_mobile.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
@@ -350,6 +351,17 @@ class _PostLoaderState extends State<PostLoader> {
 
     if (!isSafeLoad) {
       List<Map<String, dynamic>> allPost = getPostDetail();
+      if (allPost.isEmpty) {
+        return const Text(
+          "No posts",
+          style: TextStyle(
+            fontFamily: AppFontStyle.font,
+            fontWeight: AppFontWeight.medium,
+            fontSize: 20,
+            color: ColorConstant.whiteBlack80
+          ),
+        );
+      }
       return Padding(
         padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
         child: Builder(
@@ -375,6 +387,17 @@ class _PostLoaderState extends State<PostLoader> {
               if (snapshot.connectionState == ConnectionState.done) {
                 context.read<CommunityBoardViewModel>().setIsSafeClick = true;
                 List<Map<String, dynamic>> allPost = getPostDetail();
+                if (allPost.isEmpty) {
+                  return const Text(
+                    "No posts",
+                    style: TextStyle(
+                      fontFamily: AppFontStyle.font,
+                      fontWeight: AppFontWeight.medium,
+                      fontSize: 20,
+                      color: ColorConstant.whiteBlack80
+                    ),
+                  );
+                }
                 return Builder(
                   builder: (context) {
                     return Column(
