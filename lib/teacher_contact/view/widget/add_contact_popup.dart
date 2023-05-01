@@ -9,6 +9,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/teacher_contact/model/teacher_contact_model.dart';
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
+import 'package:uuid/uuid.dart';
 
 class AddContactPopup extends StatefulWidget {
   final AddTeacherContactRequest? data;
@@ -799,7 +800,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                             }
                             final imageUrl = await context
                                 .read<TeacherContactViewModel>()
-                                .getImageUrl(imageFile, pickedFile!.name);
+                                .getImageUrl(imageFile, const Uuid().v1());
                             if (imageUrl == null) {
                               isImageError = true;
                             }
