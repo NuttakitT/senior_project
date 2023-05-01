@@ -105,7 +105,7 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                                   child: Icon(
                                     Icons.add_photo_alternate_rounded,
                                     color: ColorConstant.orange50,
-                                    size: 14,
+                                    size: 12,
                                   ),
                                 ),
                                 Text("Create Post"),

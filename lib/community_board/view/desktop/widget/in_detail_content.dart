@@ -44,7 +44,6 @@ class _InDetailContentState extends State<InDetailContent> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> info = context.watch<CommunityBoardViewModel>().getPostDetail;
-    print(info);
 
     return Column(
       children: [

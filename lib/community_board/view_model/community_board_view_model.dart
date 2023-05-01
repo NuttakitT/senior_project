@@ -272,6 +272,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
         "id": id,
         "ownerId": request.ownerId,
         "detail": request.text,
+        "imageUrl": request.imageUrl,
         "dateCreate": DateTime.now(),
         "dateEdit": null
       });

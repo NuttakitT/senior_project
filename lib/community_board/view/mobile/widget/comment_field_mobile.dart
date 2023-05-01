@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:uuid/uuid.dart';
 
 class CommentFieldMobile extends StatefulWidget {
   final String docId;
@@ -15,6 +20,28 @@ class CommentFieldMobile extends StatefulWidget {
 
 class _CommentFieldMobileState extends State<CommentFieldMobile> {
   String comment = "";
+  XFile? pickedFile;
+  Uint8List? imageFile;
+  bool hasImage = false;
+  TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    controller.text = "";
+    controller.addListener(() {
+      comment = controller.text;
+    });
+    super.initState();
+  }
+
+  void clear() {
+    comment = "";
+    pickedFile = null;
+    imageFile = null;
+    setState(() {
+      hasImage = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +73,9 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
                   ),
                 ),
                 TextField(
+                  controller: controller,
                   maxLines: 5,
-                  onChanged: (value) {
-                    comment = value;
-                  },
+                  readOnly: !context.watch<AppViewModel>().isLogin,
                   decoration: InputDecoration(
                     fillColor: ColorConstant.whiteBlack40,
                     hintText: commentText,
@@ -76,33 +102,63 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
                           color: ColorConstant.whiteBlack90, fontSize: 16),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      if(!context.watch<AppViewModel>().isLogin) {
-                        //TODO add image
+                  Builder(
+                    builder: (context) {
+                      if (hasImage) {
+                        return Row(
+                          children: [
+                            Text(pickedFile!.name),
+                            IconButton(
+                              onPressed: () {
+                                imageFile = null;
+                                setState(() {
+                                  hasImage = false;
+                                });
+                              }, 
+                              icon: const Icon(
+                                Icons.delete_rounded
+                              )
+                            )
+                          ],
+                        );
                       }
-                    },
-                    style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        side: const BorderSide(
-                            color: ColorConstant.orange50, width: 1),
-                        fixedSize: const Size(125, 32),
-                        foregroundColor: ColorConstant.orange50,
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                        backgroundColor: ColorConstant.white,
-                        textStyle: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold)),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.add_photo_alternate_rounded,
-                          color: ColorConstant.orange50,
-                          size: 16,
+                      return TextButton(
+                        onPressed: () async {
+                          if(context.read<AppViewModel>().isLogin) {
+                            pickedFile = await ImagePicker()
+                              .pickImage(
+                                  source: ImageSource.gallery);
+                            if (pickedFile != null) {
+                              imageFile = await pickedFile!.readAsBytes();
+                              setState(() {
+                                hasImage = true;
+                              });
+                            }
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            side: const BorderSide(
+                                color: ColorConstant.orange50, width: 1),
+                            fixedSize: const Size(125, 32),
+                            foregroundColor: ColorConstant.orange50,
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                            backgroundColor: ColorConstant.white,
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold)),
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.add_photo_alternate_rounded,
+                              color: ColorConstant.orange50,
+                              size: 16,
+                            ),
+                            Text("Add Image"),
+                          ],
                         ),
-                        Text("Add Image"),
-                      ],
-                    ),
+                      );
+                    }
                   ),
                 ],
               )),
@@ -113,8 +169,10 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
               onPressed: () async {
                 if (context.read<AppViewModel>().isLogin && comment.isNotEmpty) {
                   String ownerId = context.read<AppViewModel>().app.getUser.getId;
-                  CreateCommentRequest request = CreateCommentRequest(widget.docId, ownerId, comment);
+                  String? imageUrl = await context.read<CommunityBoardViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", "comment");
+                  CreateCommentRequest request = CreateCommentRequest(widget.docId, ownerId, comment, imageUrl);
                   await context.read<CommunityBoardViewModel>().createComment(request);
+                  clear();
                 }
               },
               style: TextButton.styleFrom(

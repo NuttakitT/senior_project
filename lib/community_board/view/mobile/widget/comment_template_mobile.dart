@@ -224,7 +224,7 @@ class _CommentTemplateMobileState extends State<CommentTemplateMobile> {
                     );
                   },
                 ),
-                // TODO picture
+                Image.network(widget.info["imageUrl"])
               ],
             ),
           );

@@ -47,7 +47,8 @@ class _CommentLoaderState extends State<CommentLoader> {
               "detail": streamSnapshot.data!.docs[i].get("detail"),
               "ownerId": streamSnapshot.data!.docs[i].get("ownerId"),
               "id": streamSnapshot.data!.docs[i].get("id"),
-              "parentId": widget.docId
+              "parentId": widget.docId,
+              "imageUrl": streamSnapshot.data!.docs[i].get("imageUrl"),
             });
           }
           return Column(

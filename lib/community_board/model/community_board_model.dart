@@ -48,8 +48,9 @@ class CreateCommentRequest {
   dynamic docId;
   dynamic ownerId;
   dynamic text;
+  String? imageUrl;
 
-  CreateCommentRequest(this.docId, this.ownerId, this.text);
+  CreateCommentRequest(this.docId, this.ownerId, this.text, this.imageUrl);
 }
 
 class EditCommentRequest {

@@ -27,7 +27,6 @@ class _CreatePostState extends State<CreatePost> {
   bool ifSuccession = true;
   List<Topic> topic = [];
   List<String> topics = [];
-  // File? imageFile;
   XFile? pickedFile;
   Uint8List? imageFile;
   bool hasImage = false;
@@ -371,7 +370,7 @@ class _CreatePostState extends State<CreatePost> {
                                           Icon(
                                             Icons.add_photo_alternate_rounded,
                                             color: ColorConstant.orange50,
-                                            size: 16,
+                                            size: 12,
                                           ),
                                           Text("Add Image"),
                                         ],

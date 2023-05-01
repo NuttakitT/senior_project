@@ -93,6 +93,7 @@ class TemplateDesktopViewModel extends ChangeNotifier {
         context.read<CommunityBoardViewModel>().clearPost();
       }
     }
+    notifyListeners();
   }
 
   void clearHomeTagbar() {
