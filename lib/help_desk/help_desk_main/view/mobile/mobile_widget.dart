@@ -324,13 +324,12 @@ class _MobileWidgetState extends State<MobileWidget> {
             padding: const EdgeInsets.only(right: 24, bottom: 74),
             child: InkWell(
               onTap: () {
-                Navigator.pushAndRemoveUntil(
+                Navigator.push(
                   context, 
                   MaterialPageRoute(builder: (context) {
                       return CreateTask(isAdmin: widget.isAdmin);
                     }
                   ), 
-                  (route) => false
                 );
               },
               child: Container(
