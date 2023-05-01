@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/role_management/view/widgets/category_table.dart';
 import 'package:senior_project/role_management/view/widgets/role_management_table.dart';
 import 'package:senior_project/role_management/view_model/role_management_view_model.dart';
@@ -26,6 +27,7 @@ class _RoleManagementViewState extends State<RoleManagementView> {
     bool isMobileSite = context
         .watch<AppViewModel>()
         .getMobileSiteState(MediaQuery.of(context).size.width);
+    context.read<TemplateDesktopViewModel>().changeState(context, 3, 1);
     if (widget.isAdmin && !isMobileSite) {
       return FutureBuilder(
           future: context.read<RoleManagementViewModel>().fetchPage(),

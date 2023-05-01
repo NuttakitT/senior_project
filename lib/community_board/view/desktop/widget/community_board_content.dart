@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
 import 'package:senior_project/community_board/view/widget/post_loader.dart';
+import 'package:senior_project/community_board/view/widget/text_search_result.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 
 class CommunityBoardContent extends StatefulWidget {
   const CommunityBoardContent({super.key});
@@ -87,7 +89,15 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
             ],
           ),
         ),
-        const PostLoader(isMobile: false)
+        Builder(
+          builder: (context) {
+            String searchText = context.watch<TextSearch>().getSearchText;
+            if (searchText.isEmpty) {
+              return const PostLoader(isMobile: false);
+            }
+            return const TextSearchResult(isMobile: false);
+          },
+        ),
       ],
     );
   }

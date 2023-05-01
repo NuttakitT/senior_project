@@ -10,7 +10,6 @@ class TemplateMobileViewModel extends ChangeNotifier {
     if (trueStateIndex != index && trueStateIndex != -1) {
       menu[trueStateIndex] = false;
       menu[index] = true;
-      notifyListeners();
     }
   }
 }

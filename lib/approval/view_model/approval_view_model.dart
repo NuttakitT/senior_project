@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:senior_project/approval/model/approval_model.dart';
+import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:uuid/uuid.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 
@@ -8,6 +9,7 @@ class ApprovalViewModel extends ChangeNotifier {
   final _name = FirebaseServices("user");
   final _apptopic = FirebaseServices("category");
   final ApprovalModel _model = ApprovalModel();
+  final AlgoliaServices _algolia = AlgoliaServices("post");
   bool _isSafeClick = true;
   bool _isSafeLoad = true;
 
@@ -64,6 +66,11 @@ class ApprovalViewModel extends ChangeNotifier {
     DateTime now = DateTime.now();
     await _service.editDocument(
         docId, {"isApproved": isApproved, "approvedTime": now});
+    final objectId = await _service.getDocumentById(docId);
+    await _algolia.updateObject(
+      objectId!.get("objectID"), 
+      {"isApproved": isApproved, "approvedTime": now}
+    );
   }
 
   Future<void> approveTopic(bool isApproved, String docId) async {
@@ -78,5 +85,35 @@ class ApprovalViewModel extends ChangeNotifier {
 
   String getUuid() {
     return const Uuid().v1();
+  }
+
+  void reconstreuctTextSearch(List<dynamic> hits, String topic) {
+    clearModel();
+    for (var item in hits) {
+      bool isTagetObject = false;
+      bool isApproved = item["isApproved"] as bool;
+      dynamic approvedTime = item["approvedTime"];
+      List<dynamic> topics = item["topics"] as List<dynamic>;
+      if (topic.isNotEmpty) {
+        if (topics.toString().contains(topic) && approvedTime.toString().isEmpty) {
+          isTagetObject = true;
+        } 
+      } else if (approvedTime.toString().isEmpty) {
+        isTagetObject = true;
+      }
+      if (isTagetObject) {
+        _model.setPostDetail = {
+          "id": item["id"],
+          "ownerId": item["ownerId"],
+          "ownerName": item["ownerName"],
+          "detail": item["detail"],
+          "title": item["title"],
+          "topics": item["topics"],
+          "dateCreate": DateTime.parse(item["dateCreate"]),
+          "isApproved": isApproved,
+          "approvedTime": "",
+        };
+      }
+    }
   }
 }

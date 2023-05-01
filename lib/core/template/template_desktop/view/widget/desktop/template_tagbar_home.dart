@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/approval/view/page/template_approval.dart';
-import 'package:senior_project/approval/view/widget/approval_list.dart';
 import 'package:senior_project/approval/view_model/approval_view_model.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view/page/community_board_view.dart';
@@ -11,6 +10,7 @@ import 'package:senior_project/core/template/template_desktop/view/widget/deskto
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
 
 //call function from tagbar.dart
 class TemplateTagBarHome extends StatefulWidget {
@@ -94,6 +94,7 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
                       padding: const EdgeInsets.only(left: 24, bottom: 24),
                       child: TextButton(
                           onPressed: () {
+                            context.read<TextSearch>().clearSearchText();
                             context.read<TemplateDesktopViewModel>().setIsApprovedPage = false;
                             context.read<TemplateDesktopViewModel>().setIsSafeLoad = true;
                             context.read<ApprovalViewModel>().setIsSafeClick = false;
@@ -125,6 +126,7 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
                     padding: const EdgeInsets.only(left: 24, bottom: 24),
                     child: TextButton(
                         onPressed: () {
+                          context.read<TextSearch>().clearSearchText();
                           context.read<TemplateDesktopViewModel>().setIsApprovedPage = true;
                           context.read<TemplateDesktopViewModel>().setIsSafeLoad = true;
                           context.read<CommunityBoardViewModel>().setIsSafeClick = false;
