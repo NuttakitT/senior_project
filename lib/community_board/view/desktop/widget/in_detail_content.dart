@@ -128,8 +128,8 @@ class _InDetailContentState extends State<InDetailContent> {
                   info["detail"],
                   style: const TextStyle(
                       color: ColorConstant.whiteBlack90, fontSize: 20),
-                )
-                // TODO picture
+                ),
+                Image.network(info["imageUrl"])
               ],
             ),
           ),

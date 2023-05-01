@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -6,6 +9,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/teacher_contact/model/teacher_contact_model.dart';
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
+import 'package:uuid/uuid.dart';
 
 class AddContactPopup extends StatefulWidget {
   final AddTeacherContactRequest? data;
@@ -51,7 +55,8 @@ class _AddContactPopupState extends State<AddContactPopup> {
   bool isSubjectEmpty = false;
   String profileImage = "";
 
-  XFile? imageFile;
+  XFile? pickedFile;
+  Uint8List? imageFile;
   String? imageUrl;
   bool isImageError = false;
   final picker = ImagePicker();
@@ -647,13 +652,13 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                     ),
                                     child: TextButton(
                                       onPressed: () async {
-                                        final pickedFile = await ImagePicker()
+                                        pickedFile = await ImagePicker()
                                             .pickImage(
                                                 source: ImageSource.gallery);
                                         if (pickedFile != null) {
+                                          imageFile = await pickedFile!.readAsBytes();
                                           setState(() {
                                             uploadResult = Consts.uploadSuccess;
-                                            imageFile = pickedFile;
                                             isImageError = false;
                                           });
                                         } else {
@@ -680,7 +685,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 16),
+                                  const SizedBox(width: 16),
                                   Text(
                                     uploadResult,
                                     style: uploadResult == Consts.uplaodFailed
@@ -795,7 +800,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                             }
                             final imageUrl = await context
                                 .read<TeacherContactViewModel>()
-                                .getImageUrl(imageFile);
+                                .getImageUrl(imageFile, const Uuid().v1());
                             if (imageUrl == null) {
                               isImageError = true;
                             }

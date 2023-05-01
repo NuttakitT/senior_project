@@ -73,7 +73,6 @@ class _CommentTemplateState extends State<CommentTemplate> {
                               onPressed: () {
                                 if (!(!editText.isNotEmpty && isEditiing) && editText != widget.info["detail"]) {
                                   showDialog(context: context, builder: (context) {
-                                    // TODO confirm design?
                                     return AlertDialog(
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
@@ -242,7 +241,7 @@ class _CommentTemplateState extends State<CommentTemplate> {
                     );
                   },
                 ),
-                // TODO picture
+                Image.network(widget.info["imageUrl"])
               ],
             ),
           );

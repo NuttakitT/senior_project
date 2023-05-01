@@ -5,11 +5,13 @@ class TextMessage extends StatelessWidget {
   final String text;
   final bool isSender;
   final bool isMobile;
+  final String? imageUrl;
   const TextMessage({
     Key? key,
     required this.text,
     required this.isSender,
-    required this.isMobile
+    required this.isMobile, 
+    this.imageUrl
   }) : super(key: key);
 
 
@@ -33,15 +35,41 @@ class TextMessage extends StatelessWidget {
             bottomRight: Radius.circular(24)
           )
       ),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: text,
-              style: const TextStyle(color: ColorConstant.whiteBlack80, fontSize: 16)
-            )
-          ]
-        ),
+      child: Builder(
+        builder: (context) {
+          if (imageUrl == null) {
+            return Text(
+              text,
+              style: const TextStyle(
+                color: ColorConstant.whiteBlack80, 
+                fontSize: 16
+              )
+            ); 
+          }
+          return Column(
+            crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              Builder(
+                builder: (context) {
+                  if (text.isEmpty) {
+                    return Container();
+                  }
+                  return Text(
+                    text,
+                    style: const TextStyle(
+                      color: ColorConstant.whiteBlack80, 
+                      fontSize: 16
+                    )
+                  );
+                }
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Image.network(imageUrl!),
+              ),
+            ],
+          );
+        }
       )
     );
   }

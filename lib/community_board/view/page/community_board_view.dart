@@ -26,6 +26,7 @@ class _CommunityBoardViewState extends State<CommunityBoardView> {
         [true, true]
       ),
       builder: (context, snapshot) {
+        context.read<CommunityBoardViewModel>().clearAllTopic();
         if (snapshot.connectionState == ConnectionState.done) {
           for (int i = 0; i < snapshot.data!.docs.length; i++) {
             context.read<CommunityBoardViewModel>().addAllTopic(

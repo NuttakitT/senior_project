@@ -42,6 +42,7 @@ class _BodyReplyMobileState extends State<BodyReplyMobile> {
                         text: data[index]["text"],
                         isMobile: true,
                         time: data[index]["time"],
+                        imageUrl: data[index]["imageUrl"],
                       ),
                     );
                   }

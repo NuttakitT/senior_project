@@ -1,9 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages, library_prefixes
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -149,26 +150,30 @@ class TeacherContactViewModel extends ChangeNotifier {
       String uid, Map<String, dynamic> data) async {
     try {
       await firebaseService.editDocument(uid, data);
-      print('Update success');
+      if (kDebugMode) {
+        print('Update success');
+      }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
-  Future<String?> getImageUrl(XFile? file) async {
+  Future<String?> getImageUrl(Uint8List? file, String fileName) async {
     String? imageUrl;
     if (file != null) {
-      final imageFile = File(file.path);
-      String fileName = Path.basename(imageFile.path);
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference ref = storage.ref().child("Image-$fileName");
 
-      UploadTask task = ref.putFile(imageFile);
+      UploadTask task = ref.putData(file);
       await task.whenComplete(() async {
         var url = await ref.getDownloadURL();
         imageUrl = url.toString();
       }).catchError((e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       });
       return imageUrl;
     }

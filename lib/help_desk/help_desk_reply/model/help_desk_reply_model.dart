@@ -1,12 +1,13 @@
 class HelpDeskReplyModel {
   final List<Map<String, dynamic>> _reply = [];
 
-  void addReply(String ownerId, String text, DateTime time, bool seen) {
+  void addReply(String ownerId, String text, DateTime time, bool seen, String? imageUrl) {
     _reply.add({
       "time": time,
       "text": text,
       "ownerId": ownerId,
-      "seen": seen
+      "seen": seen,
+      "imageUrl": imageUrl
     });
   }
 

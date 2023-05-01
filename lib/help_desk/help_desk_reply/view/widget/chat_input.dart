@@ -1,8 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatInput extends StatefulWidget {
   const ChatInput({
@@ -15,6 +20,9 @@ class ChatInput extends StatefulWidget {
 
 class _ChatInputState extends State<ChatInput> {
   String text = "";
+  XFile? pickedFile;
+  Uint8List? imageFile;
+  bool hasImage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,18 +47,74 @@ class _ChatInputState extends State<ChatInput> {
                 bottomRight: Radius.circular(16))),
         child: Row(
           children: [
-            InkWell(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                //Todo fill color
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(360)),
-                child: const Icon(
-                  Icons.add,
-                  color: ColorConstant.blue40,
-                ),
-              ),
-              //TODO Send image or video
+            Builder(
+              builder: (context) {
+                if (hasImage) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Container(
+                            height: 40,
+                            width: 70,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: ColorConstant.whiteBlack40),
+                              color: Colors.white
+                            ),
+                            alignment: Alignment.centerLeft,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                pickedFile!.name.toString(),
+                                style: const TextStyle(
+                                  color: ColorConstant.whiteBlack50, fontSize: 14
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            imageFile = null;
+                            setState(() {
+                              hasImage = false;
+                            });
+                          }, 
+                          icon: const Icon(
+                            Icons.delete_rounded
+                          )
+                        )
+                      ],
+                    ),
+                  );
+                }
+                return InkWell(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(360)),
+                    child: const Icon(
+                      Icons.add,
+                      color: ColorConstant.blue40,
+                    ),
+                  ),
+                  onTap: () async {
+                    pickedFile = await ImagePicker()
+                      .pickImage(
+                          source: ImageSource.gallery);
+                    if (pickedFile != null) {
+                      imageFile = await pickedFile!.readAsBytes();
+                      setState(() {
+                        hasImage = true;
+                      });
+                    }
+                  },
+                );
+              }
             ),
             Expanded(
                 child: Container(
@@ -74,18 +138,17 @@ class _ChatInputState extends State<ChatInput> {
                 ),
               ),
             )),
-            InkWell(
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Icon(
-                  Icons.sentiment_satisfied_alt_rounded,
-                  color: ColorConstant.blue40,
-                ),
-              ),
-              onTap: () {
-                //Todo Emoji
-              },
-            ),
+            // InkWell(
+            //   child: const Padding(
+            //     padding: EdgeInsets.symmetric(horizontal: 8.0),
+            //     child: Icon(
+            //       Icons.sentiment_satisfied_alt_rounded,
+            //       color: ColorConstant.blue40,
+            //     ),
+            //   ),
+            //   onTap: () {
+            //   },
+            // ),
             InkWell(
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -94,15 +157,20 @@ class _ChatInputState extends State<ChatInput> {
                   color: ColorConstant.blue40,
                 ),
               ),
-              onTap: () {
-                if (text.isNotEmpty) {
-                  context.read<ReplyChannelViewModel>().createMessage(
+              onTap: () async {
+                String? imageUrl;
+                if (imageFile != null) {
+                  imageUrl = await context.read<ReplyChannelViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", context.read<ReplyChannelViewModel>().getTaskData["docId"]);
+                }
+                if (imageFile != null || text.isNotEmpty) {
+                  await context.read<ReplyChannelViewModel>().createMessage(
                     context.read<ReplyChannelViewModel>().getTaskData["docId"], 
                     {
                       "ownerId": userId,
                       "message": text,
                       "time": DateTime.now(),
-                      "seen": false
+                      "seen": false,
+                      "imageUrl": imageUrl
                     }
                   );
                 }

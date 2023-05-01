@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,9 @@ class _CreatePostState extends State<CreatePost> {
   bool ifSuccession = true;
   List<Topic> topic = [];
   List<String> topics = [];
+  XFile? pickedFile;
+  Uint8List? imageFile;
+  bool hasImage = false;
 
   TextEditingController titleTextController = TextEditingController();
   TextEditingController detailTextController = TextEditingController();
@@ -313,34 +318,65 @@ class _CreatePostState extends State<CreatePost> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                //TODO add image
-                                TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      side: const BorderSide(
-                                          color: ColorConstant.orange50,
-                                          width: 1),
-                                      fixedSize: const Size(116, 28),
-                                      foregroundColor: ColorConstant.orange50,
-                                      padding: const EdgeInsets.fromLTRB(
-                                          16, 8, 16, 8),
-                                      backgroundColor: ColorConstant.white,
-                                      textStyle: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold)),
-                                  child: Row(
-                                    children: const [
-                                      Icon(
-                                        Icons.add_photo_alternate_rounded,
-                                        color: ColorConstant.orange50,
-                                        size: 16,
+                                Builder(
+                                  builder: (context) {
+                                    if (hasImage) {
+                                      return Row(
+                                        children: [
+                                          Text(pickedFile!.name),
+                                          IconButton(
+                                            onPressed: () {
+                                              imageFile = null;
+                                              setState(() {
+                                                hasImage = false;
+                                              });
+                                            }, 
+                                            icon: const Icon(
+                                              Icons.delete_rounded
+                                            )
+                                          )
+                                        ],
+                                      );
+                                    }
+                                    return TextButton(
+                                      onPressed: () async {
+                                        pickedFile = await ImagePicker()
+                                          .pickImage(
+                                              source: ImageSource.gallery);
+                                        if (pickedFile != null) {
+                                          imageFile = await pickedFile!.readAsBytes();
+                                          setState(() {
+                                            hasImage = true;
+                                          });
+                                        }
+                                      },
+                                      style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          side: const BorderSide(
+                                              color: ColorConstant.orange50,
+                                              width: 1),
+                                          fixedSize: const Size(116, 28),
+                                          foregroundColor: ColorConstant.orange50,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              16, 8, 16, 8),
+                                          backgroundColor: ColorConstant.white,
+                                          textStyle: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
+                                      child: Row(
+                                        children: const [
+                                          Icon(
+                                            Icons.add_photo_alternate_rounded,
+                                            color: ColorConstant.orange50,
+                                            size: 12,
+                                          ),
+                                          Text("Add Image"),
+                                        ],
                                       ),
-                                      Text("Add Image"),
-                                    ],
-                                  ),
+                                    );
+                                  }
                                 ),
                               ],
                             )),
@@ -440,10 +476,12 @@ class _CreatePostState extends State<CreatePost> {
                           .read<CommunityBoardViewModel>()
                           .getIsTitleNotEmpty;
                       if ((isTitleNotEmpty && isDetailNotEmpty)) {
+                        String? imageUrl = await context.read<CommunityBoardViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", "post");
                         final request = CreatePostRequest(
                           title: title,
                           detail: detail,
                           topics: topics,
+                          imageUrl: imageUrl
                         );
                         await context
                             .read<CommunityBoardViewModel>()
