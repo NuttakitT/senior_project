@@ -8,12 +8,14 @@ class Message extends StatelessWidget {
   final String time;
   final bool isSender;
   final bool isMobile;
+  final String? imageUrl;
   const Message({
     Key? key,
     required this.text,
     required this.isSender,
     required this.isMobile,
-    required this.time
+    required this.time, 
+    this.imageUrl
   }) : super(key: key);
 
   @override
@@ -25,7 +27,6 @@ class Message extends StatelessWidget {
             isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isSender) ...[
-            //TODO Pull image profile sender
             const Icon(
               Icons.face_rounded,
               color: ColorConstant.blue70,
@@ -39,6 +40,7 @@ class Message extends StatelessWidget {
                 text: text,
                 isSender: isSender,
                 isMobile: isMobile,
+                imageUrl: imageUrl,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 4),

@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
@@ -19,7 +20,8 @@ class ReplyChannelViewModel extends ChangeNotifier {
       data.add({
         "text": _model.getReply[i]["text"],
         "isSender": _model.getReply[i]["ownerId"] == id,
-        "time":  DateFormat("dd MMMM - hh:mm a").format(_model.getReply[i]["time"]), 
+        "time":  DateFormat("dd MMMM - hh:mm a").format(_model.getReply[i]["time"]),
+        "imageUrl": _model.getReply[i]["imageUrl"]
       });
     }
     return data;
@@ -30,19 +32,54 @@ class ReplyChannelViewModel extends ChangeNotifier {
   }
 
   Future<bool> createMessage(String docId, Map<String, dynamic> detail) async {
-    return await _service.setSubDocument(docId, "replyChannel", DateTime.now().millisecondsSinceEpoch.toString() ,detail);
+    try {
+      return await _service.setSubDocument(docId, "replyChannel", DateTime.now().millisecondsSinceEpoch.toString() ,detail);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return false;
+    }
   }
 
   void reconstructData(QuerySnapshot snapshot) {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.added) {
-        _model.addReply(doc.get("ownerId"), doc.get("message"), (doc.get("time") as Timestamp).toDate(), doc.get("seen"));
+        _model.addReply(doc.get("ownerId"), doc.get("message"), (doc.get("time") as Timestamp).toDate(), doc.get("seen"), doc.get("imageUrl"));
       } 
       if (snapshot.docChanges[i].type == DocumentChangeType.modified) {
         int index = snapshot.docChanges[i].newIndex;
         _model.changeSeenStatus(index, doc.get("seen"));
       }
     }
+  }
+
+  Future<String?> getImageUrl(Uint8List? file, String fileName, String docId) async {
+    try {
+      String? imageUrl;
+      if (file != null) {
+        FirebaseStorage storage = FirebaseStorage.instance;
+        Reference ref = storage.ref().child("post/$docId/Image-$fileName");
+
+        UploadTask task = ref.putData(file);
+        await task.whenComplete(() async {
+          var url = await ref.getDownloadURL();
+          imageUrl = url.toString();
+        }).catchError((e) {
+          if (kDebugMode) {
+            print(e);
+          }
+        });
+        return imageUrl;
+      }
+      return null;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return null;
+    }
+    
   }
 }

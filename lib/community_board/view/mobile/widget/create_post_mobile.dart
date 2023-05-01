@@ -366,17 +366,6 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                   }
                   return TextButton(
                     onPressed: () async {
-                      // FilePickerResult? result = await FilePicker.platform.pickFiles(
-                      //   type: FileType.custom,
-                      //   allowedExtensions: ['jpg', 'png'],
-                      // );
-                      // String? filePath = result!.files.single.path;
-                      // if (filePath != null) {
-                      //   setState(() {
-                      //     hasImage = false;
-                      //   });
-                      //   imageFile = File(filePath);
-                      // }
                       pickedFile = await ImagePicker()
                         .pickImage(
                             source: ImageSource.gallery);

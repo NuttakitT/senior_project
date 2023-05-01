@@ -320,6 +320,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                                             isMobile: false,
                                                             time: data[index]
                                                                 ["time"],
+                                                            imageUrl: data[index]["imageUrl"],
                                                           ),
                                                         );
                                                       }
