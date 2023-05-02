@@ -1,3 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:js';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -53,6 +57,14 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  Future<void> init(BuildContext context) async {
+    await context.read<AppViewModel>().initializeLoginState(
+      context, 
+      !(FirebaseAuth.instance.currentUser == null)
+    );
+    await context.read<TemplateDesktopViewModel>().getCategory();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -61,8 +73,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder(
-          future: context.read<AppViewModel>().initializeLoginState(
-              context, !(FirebaseAuth.instance.currentUser == null)),
+          future: init(context),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
               return const CommunityBoardView();

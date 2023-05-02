@@ -160,18 +160,10 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
             Builder(
               builder: (context) {
                 if (context.watch<TemplateDesktopViewModel>().getIsSafeLoad) {
-                  return FutureBuilder(
-                    future: context.read<TemplateDesktopViewModel>().getCategory(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        List<Map<String, dynamic>> category = context
-                            .watch<TemplateDesktopViewModel>()
-                            .getHomeTagBarName;
-                        return Column(children: generateTopic(category));
-                      }
-                      return Container();
-                    },
-                  );
+                  List<Map<String, dynamic>> category = context
+                      .watch<TemplateDesktopViewModel>()
+                      .getHomeTagBarName;
+                  return Column(children: generateTopic(category));
                 }
                 List<Map<String, dynamic>> category = context
                     .watch<TemplateDesktopViewModel>()

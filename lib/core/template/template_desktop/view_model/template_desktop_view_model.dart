@@ -92,8 +92,8 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       if (type == 2) {
         context.read<CommunityBoardViewModel>().clearPost();
       }
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void clearHomeTagbar() {
@@ -145,7 +145,6 @@ class TemplateDesktopViewModel extends ChangeNotifier {
           }
         }
       }
-      
     }
   }
 }
