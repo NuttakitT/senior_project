@@ -126,7 +126,6 @@ class _MainMenuState extends State<MainMenu> {
                     context
                         .read<TemplateDesktopViewModel>()
                         .changeState(context, 2, 1);
-                    // TODO link to teacher contact
                     Navigator.push(context,
                         MaterialPageRoute(builder: ((context) {
                       return TeacherContactView(
@@ -209,12 +208,12 @@ class _MainMenuState extends State<MainMenu> {
                         color: Colors.white,
                       ),
                       onTap: () {
-                        setState(() {
-                          isNotificationEnabled = !isNotificationEnabled;
-                        });
-                        Future.delayed(Duration.zero, () {
-                          _showNotifications(context, isNotificationEnabled);
-                        });
+                        // setState(() {
+                        //   isNotificationEnabled = !isNotificationEnabled;
+                        // });
+                        // Future.delayed(Duration.zero, () {
+                        //   _showNotifications(context, isNotificationEnabled);
+                        // });
                       },
                     ),
                   ),

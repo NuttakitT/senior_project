@@ -1,3 +1,5 @@
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
@@ -146,5 +148,36 @@ class TemplateDesktopViewModel extends ChangeNotifier {
         }
       }
     }
+  }
+
+  Future<void> uploadImage(Uint8List? file, String fileName, String docId) async {
+    try {
+      String? imageUrl;
+      if (file != null) {
+        FirebaseStorage storage = FirebaseStorage.instance;
+        Reference deleteRef = storage.ref().child("profile/$docId");
+        final list = await deleteRef.listAll();
+        for (int i = 0; i < list.items.length; i++) {
+          list.items[i].delete();
+        }
+        Reference ref = storage.ref().child("profile/$docId/$fileName");
+
+        UploadTask task = ref.putData(file);
+        await task.whenComplete(() async {
+          var url = await ref.getDownloadURL();
+          imageUrl = url.toString();
+        }).catchError((e) {
+          if (kDebugMode) {
+            print(e);
+          }
+        });
+        FirebaseServices("user").editDocument(docId, {"profileImageUrl": imageUrl});
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    
   }
 }
