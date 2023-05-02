@@ -7,6 +7,7 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view/page/community_board_view.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/edit_profile.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/notification_dropdown.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/notification_overlay.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -200,23 +201,7 @@ class _MainMenuState extends State<MainMenu> {
               padding: const EdgeInsets.only(right: 24),
               child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 28),
-                    child: InkWell(
-                      child: const Icon(
-                        Icons.notifications_rounded,
-                        color: Colors.white,
-                      ),
-                      onTap: () {
-                        // setState(() {
-                        //   isNotificationEnabled = !isNotificationEnabled;
-                        // });
-                        // Future.delayed(Duration.zero, () {
-                        //   _showNotifications(context, isNotificationEnabled);
-                        // });
-                      },
-                    ),
-                  ),
+                  const NotificationDropdown(),
                   PopupMenuButton(
                     padding: const EdgeInsets.all(0),
                     child: Container(

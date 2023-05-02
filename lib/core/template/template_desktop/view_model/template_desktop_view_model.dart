@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,27 @@ class TemplateDesktopViewModel extends ChangeNotifier {
   bool _isSafeLoad = true;
   bool _isSafeClick = true;
   bool _isApprovedPage = false;
+  List<Map<String, dynamic>> _pendingTicket = [];
+  List<dynamic> _unseenTicket = [];
+  List<int> _unseenMsg = [];
+
+  get getPendingTicket => _pendingTicket;
+  void addPendingTicket(dynamic docId) {
+    _pendingTicket.add(docId);
+  } 
+  get getUnseenTicket => _unseenTicket;
+  void addUnseemTicket(dynamic docId) {
+    _unseenTicket.add(docId);
+  } 
+  get getUnseenMsg => _unseenMsg;
+  void addUnseenMsg(int amount) {
+    _unseenMsg.add(amount);
+  } 
+  void clearNotification() {
+    _pendingTicket = [];
+    _unseenMsg = [];
+    _unseenTicket = [];
+  }
 
   get getIsSafeClick => _isSafeClick;
   set setIsSafeClick(bool state) => _isSafeClick = state;
@@ -177,7 +200,6 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       if (kDebugMode) {
         print(e);
       }
-    }
-    
+    } 
   }
 }

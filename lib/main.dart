@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/approval/view/page/template_approval.dart';
 import 'package:senior_project/approval/view_model/approval_view_model.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view/desktop/page/template_community_board.dart';
 import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
 import 'package:senior_project/community_board/view/mobile/page/template_community_board_mobile.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
       title: 'CPE Services',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: AppFontStyle.font
       ),
       home: FutureBuilder(
           future: init(context),
