@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_final_fields
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
@@ -113,11 +114,14 @@ class TemplateDesktopViewModel extends ChangeNotifier {
       _copyValue(menuTemplate, type);
       if (type == 4) {
         context.read<HelpDeskViewModel>().clearContentController();
+        if (!context.read<HelpDeskViewModel>().getIsFromNoti) {
+          notifyListeners();
+        }
       }
       if (type == 2) {
         context.read<CommunityBoardViewModel>().clearPost();
+        notifyListeners();
       }
-      notifyListeners();
     }
   }
 
@@ -201,5 +205,27 @@ class TemplateDesktopViewModel extends ChangeNotifier {
         print(e);
       }
     } 
+  }
+
+  Future<void> reconstructNoti(QuerySnapshot? snaspshot, String uid) async {
+    for (int i = 0; i < snaspshot!.docs.length; i++) {
+      List<dynamic> seen = snaspshot.docs[i].get("isSeen");
+      final userSnapshot = await FirebaseServices("user").getDocumentById(snaspshot.docs[i].get("ownerId"));
+      if (snaspshot.docs[i].get("status") < 2 && !seen.contains(uid)) {
+        addPendingTicket({
+          "docId": snaspshot.docs[i].id,
+          "title": snaspshot.docs[i].get("title"),
+          "detail": snaspshot.docs[i].get("detail"),
+          "time": snaspshot.docs[i].get("dateCreate").toDate(),
+          "id": snaspshot.docs[i].get("id"),
+          "priority": snaspshot.docs[i].get("priority"),
+          "status": snaspshot.docs[i].get("status"),
+          "category": snaspshot.docs[i].get("category"),
+          "ownerId": snaspshot.docs[i].get("ownerId"),
+          "name": userSnapshot!.get("name"),
+          "adminId": snaspshot.docs[i].get("adminId"),
+        });
+      }
+    }
   }
 }

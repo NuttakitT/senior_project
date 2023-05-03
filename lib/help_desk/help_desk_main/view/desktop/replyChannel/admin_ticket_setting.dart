@@ -31,6 +31,7 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
   Widget build(BuildContext context) {
     String uid = context.watch<AppViewModel>().app.getUser.getId;
     context.read<RoleManagementViewModel>().initModel();
+    print("test ${context.read<ReplyChannelViewModel>().getTaskData}");
 
     return FutureBuilder(
       future: context.read<RoleManagementViewModel>().fetchPage(),

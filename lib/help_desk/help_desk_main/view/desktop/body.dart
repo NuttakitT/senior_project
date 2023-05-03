@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,7 @@ import 'package:senior_project/help_desk/help_desk_main/view/desktop/ticket_list
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/body_reply_desktop.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 Stream? query(String id, int type, bool isAdmin, {
   DocumentSnapshot? startDoc,
@@ -177,6 +180,7 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     bool isShowMesg = context.watch<HelpDeskViewModel>().getIsShowMessagePage;
+    bool isFromNoti = context.watch<HelpDeskViewModel>().getIsFromNoti;
     String uid = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
@@ -221,7 +225,10 @@ class _BodyState extends State<Body> {
                               padding: const EdgeInsets.only(right: 40),
                               child: IconButton(
                                 onPressed: () {
-                                  if (isShowMesg) {
+                                  if (isFromNoti) {
+                                    context.read<HelpDeskViewModel>().setIsFormNoti = false;
+                                  }
+                                  else if (isShowMesg) {
                                     context.read<HelpDeskViewModel>().setShowMessagePageState(false);
                                     context.read<HelpDeskViewModel>().clearModel();
                                     context.read<HelpDeskViewModel>().setIsSafeClick = false;
@@ -232,7 +239,7 @@ class _BodyState extends State<Body> {
                                   }
                                 },
                                 icon: Icon(
-                                  isShowMesg 
+                                  isShowMesg || context.watch<HelpDeskViewModel>().getIsFromNoti
                                   ?  Icons.arrow_back_rounded
                                   : Icons.refresh_rounded, 
                                   color: ColorConstant.whiteBlack70,
@@ -241,7 +248,7 @@ class _BodyState extends State<Body> {
                             ),
                             Builder(
                               builder: (context) {
-                                if (isShowMesg && widget.isAdmin) {
+                                if ((isShowMesg || isFromNoti) && widget.isAdmin) {
                                   return const AdminTicketSetting();
                                 }
                                 return Container();
@@ -256,6 +263,9 @@ class _BodyState extends State<Body> {
                   ),
                   Builder(
                     builder: (context) {
+                      if (isFromNoti) {
+                        return bodyReply(screenHeight);
+                      }
                       if (isShowMesg) {
                         int selectedTicket = context.watch<HelpDeskViewModel>().getSelectedTicket!;
                         int calculatedPage = (selectedTicket / (limit)).ceil();
@@ -322,7 +332,7 @@ class _BodyState extends State<Body> {
                   ),
                   Builder(
                     builder: (context) {
-                      if (!isShowMesg) {
+                      if (!isShowMesg && !isFromNoti) {
                         return Container(
                           height: 56,
                           decoration: const BoxDecoration(

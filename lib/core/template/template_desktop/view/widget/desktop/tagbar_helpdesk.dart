@@ -137,6 +137,7 @@ class _TagBarHelpDeskState extends State<TagBarHelpDesk> {
           ),
         ),
         onTap: () {
+          context.read<HelpDeskViewModel>().setIsFormNoti = false;
           context.read<TemplateDesktopViewModel>().changeState(context, widget.index, 4);
           context.read<HelpDeskViewModel>().setShowMessagePageState(false);
           context.read<HelpDeskViewModel>().clearContentController();
