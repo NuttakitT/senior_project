@@ -266,7 +266,8 @@ class _MainMenuState extends State<MainMenu> {
                                                 .read<AppViewModel>()
                                                 .app
                                                 .getUser
-                                                .getName,
+                                                .getName
+                                                .split(" ")[0],
                                             style: const TextStyle(
                                                 fontFamily: AppFontStyle.font,
                                                 fontWeight:
