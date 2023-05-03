@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/content.dart';
@@ -22,6 +21,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   List<Map<String, dynamic>> _task = [];
   List<String> _category = [];
   bool _isShowMessagePage = false;
+  bool _isFromNoti = false;
   int? _allTicket;
   int? _startTicket;
   int? _endTicket;
@@ -35,6 +35,12 @@ class HelpDeskViewModel extends ChangeNotifier {
   bool _isSafeLoad = true;
   bool _isMobile = false;
   List<String> _replyDocId = [];
+
+  get getIsFromNoti => _isFromNoti;
+  set setIsFormNoti(bool state) {
+    _isFromNoti = state;
+    notifyListeners();
+  } 
 
   void addReplyDocId(String id) {
     _replyDocId.add(id);
@@ -333,17 +339,19 @@ class HelpDeskViewModel extends ChangeNotifier {
   {
     DateTime? dateComplete
   }) async {
-    _task.firstWhere((element) {
-      return element.containsValue(taskId);
-    })[isStatus ? "status" : "priority"] = value;
-    if (isStatus && value >= 2) {
+    if (!_isFromNoti) {
       _task.firstWhere((element) {
         return element.containsValue(taskId);
-      })["timeComplete"] = dateComplete;
-    } else {
-      _task.firstWhere((element) {
-        return element.containsValue(taskId);
-      })["timeComplete"] = null;
+      })[isStatus ? "status" : "priority"] = value;
+      if (isStatus && value >= 2) {
+        _task.firstWhere((element) {
+          return element.containsValue(taskId);
+        })["timeComplete"] = dateComplete;
+      } else {
+        _task.firstWhere((element) {
+          return element.containsValue(taskId);
+        })["timeComplete"] = null;
+      }
     }
     await _algolia.updateObject(
       objectId, 
@@ -360,24 +368,33 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
-    DocumentSnapshot? query = await _serviceTicket.getDocumentById(id);
-    if (query!.exists) {
-      String docId = query.id;
-      String taskId = query.get("id");
-      String objectId = query.get("objectID") as String;
-      DateTime dateComplete = DateTime.now();
-      if (isStatus) {
-        _helpDeskModel.getTask.firstWhere((element) {
-          return element.getId == taskId;
-        }).changeStatus(value, dateComplete: dateComplete);
-      } else {
-        _helpDeskModel.getTask.firstWhere((element) {
-          return element.getId == taskId;
-        }).changePriority(value);
+    try {
+      DocumentSnapshot? query = await _serviceTicket.getDocumentById(id);
+      if (query!.exists) {
+        String docId = query.id;
+        String taskId = query.get("id");
+        String objectId = query.get("objectID") as String;
+        DateTime dateComplete = DateTime.now();
+        if (!_isFromNoti) {
+          if (isStatus) {
+            _helpDeskModel.getTask.firstWhere((element) {
+              return element.getId == taskId;
+            }).changeStatus(value, dateComplete: dateComplete);
+          } else {
+            _helpDeskModel.getTask.firstWhere((element) {
+              return element.getId == taskId;
+            }).changePriority(value);
+          }
+        }
+        await _changeTaskState(docId, taskId, objectId, value, isStatus, dateComplete: dateComplete);
+        notifyListeners();
       }
-      await _changeTaskState(docId, taskId, objectId, value, isStatus, dateComplete: dateComplete);
-      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
+    
   }
 
   // ------------- Listen to database and update data in application ---------------

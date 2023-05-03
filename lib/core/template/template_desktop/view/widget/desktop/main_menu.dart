@@ -91,6 +91,7 @@ class _MainMenuState extends State<MainMenu> {
                     style: _navbarTextStyle(isHelpDeskSelected),
                   ),
                   onTap: () {
+                    context.read<HelpDeskViewModel>().setIsFormNoti = false;
                     context.read<TextSearch>().clearSearchText();
                     context.read<CommunityBoardViewModel>().setIsSafeClick =
                         true;

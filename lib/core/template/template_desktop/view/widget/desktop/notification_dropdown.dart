@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/core/view_model/text_search.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 class NotificationDropdown extends StatefulWidget {
   const NotificationDropdown({super.key});
@@ -72,9 +77,44 @@ class _NotificationDropdownState extends State<NotificationDropdown> {
             )
           ];
           for (int i = 0; i < list.length; i++) {
-            List<String> time = local.difference(list[i]["dateCreate"]).toString().split(":");
+            List<String> time = local.difference(list[i]["time"]).toString().split(":");
             result.add(
               PopupMenuItem(
+                onTap: () async {
+                  context.read<TextSearch>().clearSearchText();
+                  context.read<CommunityBoardViewModel>().setIsSafeClick =true;
+                  context.read<HelpDeskViewModel>().setShowMessagePageState(false);
+                  context.read<HelpDeskViewModel>().clearContentController();
+                  context.read<HelpDeskViewModel>().clearModel();
+                  context.read<HelpDeskViewModel>().clearReplyDocId();
+                  context.read<HelpDeskViewModel>().setIsFormNoti = true;
+                  context.read<ReplyChannelViewModel>().setTaskData = {
+                    "docId": list[i]["docId"],
+                    "id": list[i]["id"],
+                    "title": list[i]["title"],
+                    "detail": list[i]["detail"],
+                    "priority": list[i]["priority"],
+                    "status": list[i]["status"],
+                    "category": list[i]["category"],
+                    "time": list[i]["time"],
+                    "ownerId": list[i]["ownerId"],
+                    "name": list[i]["name"],
+                    "adminId": list[i]["adminId"],
+                  };
+                  Future.delayed(
+                    const Duration(seconds: 0),
+                    () => 
+                    Navigator.pushAndRemoveUntil(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const HelpDeskMainView(isAdmin: true);
+                        }
+                      ), 
+                      (route) => false
+                    )
+                  );
+                },
                 child: Column(
                   children: [
                     Container(
@@ -104,17 +144,17 @@ class _NotificationDropdownState extends State<NotificationDropdown> {
                               Builder(
                                 builder: (context) {
                                   if (time[0] != "0") {
-                                    int day = (int.parse(time[0])%24).ceil();
+                                    int day = (int.parse(time[0])/24).ceil();
                                     return Text(
                                       day != 0 
-                                      ? "$day day ago" 
-                                      : "${time[0]} hour ago",
+                                      ? "$day days ago" 
+                                      : "${time[0]} hours ago",
                                       style: timeStyle,
                                     );
                                   }
                                   if (time[1] != "0") {
                                     return Text(
-                                    "${time[1]} min ago",
+                                    "${time[1]} mins ago",
                                     style: timeStyle,
                                   );
                                   }
@@ -174,17 +214,16 @@ class _NotificationDropdownState extends State<NotificationDropdown> {
         if (ticketSnapshot.connectionState == ConnectionState.active) {
           if (ticketSnapshot.data!.docs.length != 0) {
             context.read<TemplateDesktopViewModel>().clearNotification();
-            for (int i = 0; i < ticketSnapshot.data!.docs.length; i++) {
-              if (ticketSnapshot.data!.docs[i].get("status") < 2) {
-                context.read<TemplateDesktopViewModel>().addPendingTicket({
-                  "docId": ticketSnapshot.data!.docs[i].id,
-                  "title": ticketSnapshot.data!.docs[i].get("title"),
-                  "detail": ticketSnapshot.data!.docs[i].get("detail"),
-                  "dateCreate": ticketSnapshot.data!.docs[i].get("dateCreate").toDate(),
-                });
-              }
-            }
-            return popupNotification(context.watch<TemplateDesktopViewModel>().getPendingTicket);
+            return FutureBuilder(
+              future: context.read<TemplateDesktopViewModel>().reconstructNoti(ticketSnapshot.data, uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  List<Map<String, dynamic>> list = context.watch<TemplateDesktopViewModel>().getPendingTicket;
+                  return popupNotification(list);
+                }
+                return popupNotification([]);
+              },
+            );
           }
           return popupNotification([]);
         }
