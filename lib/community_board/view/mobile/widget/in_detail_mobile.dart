@@ -22,11 +22,10 @@ class _InDetailMobileState extends State<InDetailMobile> {
     for (int i = 0; i < topic.length; i++) {
       list.add(
         Padding(
-          padding: const EdgeInsets.only(bottom: 40),
+          padding: const EdgeInsets.only(bottom: 40, right: 8),
           child: Container(
             width: 100,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: ColorConstant.white,
@@ -46,8 +45,12 @@ class _InDetailMobileState extends State<InDetailMobile> {
 
   @override
   Widget build(BuildContext context) {
-    bool isMobile = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
-    context.read<CommunityBoardViewModel>().setIsShowPostDetail(true, true, widget.info);
+    bool isMobile = context
+        .watch<AppViewModel>()
+        .getMobileSiteState(MediaQuery.of(context).size.width);
+    context
+        .read<CommunityBoardViewModel>()
+        .setIsShowPostDetail(true, true, widget.info);
     if (!isMobile) {
       return const CommunityBoardView();
     }
@@ -58,7 +61,9 @@ class _InDetailMobileState extends State<InDetailMobile> {
             alignment: Alignment.centerLeft,
             child: InkWell(
               onTap: () {
-                context.read<CommunityBoardViewModel>().setIsShowPostDetail(true, false, {});
+                context
+                    .read<CommunityBoardViewModel>()
+                    .setIsShowPostDetail(true, false, {});
                 Navigator.pop(context);
               },
               child: const Padding(
@@ -102,7 +107,8 @@ class _InDetailMobileState extends State<InDetailMobile> {
                           child: Text(
                             widget.info["ownerName"],
                             style: const TextStyle(
-                                color: ColorConstant.whiteBlack70, fontSize: 14),
+                                color: ColorConstant.whiteBlack70,
+                                fontSize: 14),
                           ),
                         ),
                         Text(
@@ -133,7 +139,9 @@ class _InDetailMobileState extends State<InDetailMobile> {
               ),
             ),
           ),
-          CommentFieldMobile(docId: widget.info["docId"],),
+          CommentFieldMobile(
+            docId: widget.info["docId"],
+          ),
           CommentLoader(docId: widget.info["docId"], isMobile: true)
         ],
       ),

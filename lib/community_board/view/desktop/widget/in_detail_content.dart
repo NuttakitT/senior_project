@@ -19,22 +19,20 @@ class _InDetailContentState extends State<InDetailContent> {
     for (int i = 0; i < topic.length; i++) {
       list.add(
         Padding(
-          padding: const EdgeInsets.only(bottom: 40),
+          padding: const EdgeInsets.only(bottom: 40, right: 8),
           child: Container(
-            width: 200,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: ColorConstant.white,
-                border: Border.all(color: ColorConstant.whiteBlack30),
-                borderRadius: BorderRadius.circular(8)),
-            child: Text(
-              topic[i].toString(),
-              style: const TextStyle(
-                color: ColorConstant.whiteBlack70, fontSize: 18),
-            )
-          ),
+              width: 200,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: ColorConstant.white,
+                  border: Border.all(color: ColorConstant.whiteBlack30),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Text(
+                topic[i].toString(),
+                style: const TextStyle(
+                    color: ColorConstant.whiteBlack70, fontSize: 18),
+              )),
         ),
       );
     }
@@ -43,7 +41,8 @@ class _InDetailContentState extends State<InDetailContent> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> info = context.watch<CommunityBoardViewModel>().getPostDetail;
+    Map<String, dynamic> info =
+        context.watch<CommunityBoardViewModel>().getPostDetail;
 
     return Column(
       children: [
@@ -61,34 +60,37 @@ class _InDetailContentState extends State<InDetailContent> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: TextButton(
-                    onPressed: () {
-                      context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, false, {});
-                    }, 
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(ColorConstant.orange70),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)
-                        )
-                      ),
-                      padding: MaterialStateProperty.all(
-                        const EdgeInsets.all(16)
-                      )
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.arrow_back_rounded, color: Colors.white,),
-                        Text("Back", style: TextStyle(
-                          fontFamily: AppFontStyle.font,
-                          fontSize: 20,
-                          fontWeight: AppFontWeight.medium,
-                          color: Colors.white
-                        ),),
-                      ],
-                    )
-                  ),
+                      onPressed: () {
+                        context
+                            .read<CommunityBoardViewModel>()
+                            .setIsShowPostDetail(false, false, {});
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(ColorConstant.orange70),
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8))),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.all(16))),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Icon(
+                            Icons.arrow_back_rounded,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "Back",
+                            style: TextStyle(
+                                fontFamily: AppFontStyle.font,
+                                fontSize: 20,
+                                fontWeight: AppFontWeight.medium,
+                                color: Colors.white),
+                          ),
+                        ],
+                      )),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -143,7 +145,9 @@ class _InDetailContentState extends State<InDetailContent> {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(40, 0, 40, 24),
-          child: CommentField(docId: info["docId"],),
+          child: CommentField(
+            docId: info["docId"],
+          ),
         ),
         CommentLoader(docId: info["docId"], isMobile: false)
       ],
