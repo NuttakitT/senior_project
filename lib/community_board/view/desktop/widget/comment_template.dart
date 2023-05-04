@@ -241,7 +241,14 @@ class _CommentTemplateState extends State<CommentTemplate> {
                     );
                   },
                 ),
-                Image.network(widget.info["imageUrl"])
+                Builder(
+                  builder: (context) {
+                    if (widget.info["imageUrl"] != null) {
+                      return Image.network(widget.info["imageUrl"]);
+                    }
+                    return Container();
+                  },
+                ),
               ],
             ),
           );

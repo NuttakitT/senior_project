@@ -35,6 +35,7 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
   }
 
   void clear() {
+    controller.text = "";
     comment = "";
     pickedFile = null;
     imageFile = null;
@@ -167,9 +168,12 @@ class _CommentFieldMobileState extends State<CommentFieldMobile> {
             height: 40,
             child: TextButton(
               onPressed: () async {
-                if (context.read<AppViewModel>().isLogin && comment.isNotEmpty) {
+                String? imageUrl;
+                if (hasImage) {
+                  imageUrl = await context.read<CommunityBoardViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", "comment");
+                }
+                if (context.read<AppViewModel>().isLogin && (comment.isNotEmpty || hasImage)) {
                   String ownerId = context.read<AppViewModel>().app.getUser.getId;
-                  String? imageUrl = await context.read<CommunityBoardViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", "comment");
                   CreateCommentRequest request = CreateCommentRequest(widget.docId, ownerId, comment, imageUrl);
                   await context.read<CommunityBoardViewModel>().createComment(request);
                   clear();

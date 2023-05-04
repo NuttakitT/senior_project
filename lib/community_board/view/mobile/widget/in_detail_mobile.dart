@@ -121,7 +121,14 @@ class _InDetailMobileState extends State<InDetailMobile> {
                     style: const TextStyle(
                         color: ColorConstant.whiteBlack90, fontSize: 14),
                   ),
-                  Image.network(widget.info["imageUrl"])
+                  Builder(
+                    builder: (context) {
+                      if (widget.info["imageUrl"] != null) {
+                        return Image.network(widget.info["imageUrl"]);
+                      }
+                      return Container();
+                    },
+                  ),
                 ],
               ),
             ),

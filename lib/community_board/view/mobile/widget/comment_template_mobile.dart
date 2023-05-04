@@ -224,7 +224,14 @@ class _CommentTemplateMobileState extends State<CommentTemplateMobile> {
                     );
                   },
                 ),
-                Image.network(widget.info["imageUrl"])
+                Builder(
+                  builder: (context) {
+                    if (widget.info["imageUrl"] != null) {
+                      return Image.network(widget.info["imageUrl"]);
+                    }
+                    return Container();
+                  },
+                ),
               ],
             ),
           );

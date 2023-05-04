@@ -129,7 +129,14 @@ class _InDetailContentState extends State<InDetailContent> {
                   style: const TextStyle(
                       color: ColorConstant.whiteBlack90, fontSize: 20),
                 ),
-                Image.network(info["imageUrl"])
+                Builder(
+                  builder: (context) {
+                    if (info["imageUrl"] != null) {
+                      return Image.network(info["imageUrl"]);
+                    }
+                    return Container();
+                  },
+                ),
               ],
             ),
           ),
