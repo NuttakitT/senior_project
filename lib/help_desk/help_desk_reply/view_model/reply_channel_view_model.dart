@@ -60,7 +60,7 @@ class ReplyChannelViewModel extends ChangeNotifier {
       String? imageUrl;
       if (file != null) {
         FirebaseStorage storage = FirebaseStorage.instance;
-        Reference ref = storage.ref().child("post/$docId/Image-$fileName");
+        Reference ref = storage.ref().child("ticket/$docId/Image-$fileName");
 
         UploadTask task = ref.putData(file);
         await task.whenComplete(() async {
