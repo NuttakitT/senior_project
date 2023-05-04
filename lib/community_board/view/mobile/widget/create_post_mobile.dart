@@ -63,7 +63,7 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
         content: Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 24, bottom: 24),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: Container(
             width: double.infinity,
             constraints: const BoxConstraints(maxHeight: 30),
@@ -71,24 +71,18 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                InkWell(
-                  child: const Padding(
-                    padding: EdgeInsets.only(right: 100),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 16),
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: ColorConstant.whiteBlack90,
-                          size: 24,
-                        ),
-                      ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 24),
+                  child: InkWell(
+                    child: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      color: ColorConstant.whiteBlack90,
+                      size: 24,
                     ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
                 ),
                 const Text(
                   "Create Post",
@@ -147,151 +141,154 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                       color: ColorConstant.whiteBlack90, fontSize: 18),
                 ),
               ),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 659),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Builder(builder: ((context) {
-                        if (checkAddTopic) {
-                          return SizedBox(
-                            height: 40,
-                            child: TextField(
-                              controller: addtopicTextController,
-                              decoration: const InputDecoration(
-                                hintText: "เพิ่ม Topic ของคุณ",
-                                hintStyle: TextStyle(
-                                    color: ColorConstant.whiteBlack60,
-                                    fontSize: 12),
-                                border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8))),
-                              ),
-                            ),
-                          );
-                        }
-                        return SingleChildScrollView(
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Column(children: <Widget>[
-                              MultiSelectDialogField(
-                                  items: topic
-                                      .map((topic) => MultiSelectItem<Topic>(
-                                          topic, topic.name))
-                                      .toList(),
-                                  title: const Text("Topics"),
-                                  selectedColor: ColorConstant.orange40,
-                                  decoration: BoxDecoration(
-                                      color: ColorConstant.white,
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(8)),
-                                      border: Border.all(
-                                          color: ColorConstant.whiteBlack60,
-                                          width: 1)),
-                                  buttonIcon: const Icon(
-                                    Icons.arrow_drop_down_rounded,
-                                    color: ColorConstant.whiteBlack90,
-                                  ),
-                                  buttonText: const Text(
-                                    "Select Topic",
-                                    style: TextStyle(
-                                        color: ColorConstant.whiteBlack90,
-                                        fontSize: 16),
-                                  ),
-                                  onConfirm: (results) {
-                                    for (int i = 0; i < results.length; i++) {
-                                      topics.add(results[i].name);
-                                    }
-                                  })
-                            ]),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Builder(builder: ((context) {
+                    if (checkAddTopic) {
+                      return SizedBox(
+                        width: 659,
+                        height: 40,
+                        child: TextField(
+                          maxLength: 25,
+                          controller: addtopicTextController,
+                          decoration: const InputDecoration(
+                            counterText: "",
+                            hintText: "เพิ่ม Topic ของคุณ",
+                            hintStyle: TextStyle(
+                                color: ColorConstant.whiteBlack60,
+                                fontSize: 12),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
                           ),
-                        );
-                      })),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: TextButton(
-                        onPressed: () async {
-                          if (checkAddTopic) {
-                            final request = CreateTagRequest(
-                              id: const Uuid().v1(),
-                              name: addtopic,
-                            );
-                            if (ifSuccession) {
-                              setState(() {
-                                ifSuccession = false;
-                              });
-                              bool ifSuccess = await context
-                                  .read<CommunityBoardViewModel>()
-                                  .createTopics(request);
-                              if (ifSuccess) {
-                                setState(() {
-                                  ifSuccession = true;
-                                  topic.add(Topic(name: addtopic));
-                                  checkAddTopic = false;
-                                });
-                              }
-                            }
-                          } else {
-                            setState(() {
-                              checkAddTopic = true;
-                            });
-                          }
-                        },
-                        style: TextButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            side: const BorderSide(
-                                color: ColorConstant.orange50, width: 1),
-                            fixedSize: const Size(88, 40),
-                            foregroundColor: ColorConstant.orange50,
-                            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                            backgroundColor: ColorConstant.white,
-                            textStyle: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500)),
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.add,
-                              color: ColorConstant.orange50,
-                              size: 16,
-                            ),
-                            Text("Add Topic"),
-                          ],
                         ),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Column(children: <Widget>[
+                          MultiSelectDialogField(
+                              items: topic
+                                  .map((topic) => MultiSelectItem<Topic>(
+                                      topic, topic.name))
+                                  .toList(),
+                              title: const Text("Topics"),
+                              selectedColor: ColorConstant.orange40,
+                              decoration: BoxDecoration(
+                                  color: ColorConstant.white,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8)),
+                                  border: Border.all(
+                                      color: ColorConstant.whiteBlack60,
+                                      width: 1)),
+                              buttonIcon: const Icon(
+                                Icons.arrow_drop_down_rounded,
+                                color: ColorConstant.whiteBlack90,
+                              ),
+                              buttonText: const Text(
+                                "Select Topic",
+                                style: TextStyle(
+                                    color: ColorConstant.whiteBlack90,
+                                    fontSize: 16),
+                              ),
+                              onConfirm: (results) {
+                                for (int i = 0; i < results.length; i++) {
+                                  topics.add(results[i].name);
+                                }
+                              })
+                        ]),
                       ),
-                    ),
-                    Builder(builder: ((context) {
-                      if (checkAddTopic) {
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: TextButton(
-                            onPressed: () {
+                    );
+                  })),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Row(
+                      children: [
+                        TextButton(
+                          onPressed: () async {
+                            if (checkAddTopic) {
+                              final request = CreateTagRequest(
+                                id: const Uuid().v1(),
+                                name: addtopic,
+                              );
+                              if (ifSuccession) {
+                                setState(() {
+                                  ifSuccession = false;
+                                });
+                                bool ifSuccess = await context
+                                    .read<CommunityBoardViewModel>()
+                                    .createTopics(request);
+                                if (ifSuccess) {
+                                  setState(() {
+                                    ifSuccession = true;
+                                    topic.add(Topic(name: addtopic));
+                                    checkAddTopic = false;
+                                  });
+                                }
+                              }
+                            } else {
                               setState(() {
-                                checkAddTopic = false;
+                                checkAddTopic = true;
                               });
-                            },
-                            style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                side: const BorderSide(
-                                    color: ColorConstant.orange50, width: 1),
-                                fixedSize: const Size(88, 40),
-                                foregroundColor: ColorConstant.orange50,
-                                padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                                backgroundColor: ColorConstant.white,
-                                textStyle: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w500)),
-                            child: const Text("Cancel"),
+                            }
+                          },
+                          style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              side: const BorderSide(
+                                  color: ColorConstant.orange50, width: 1),
+                              fixedSize: const Size(88, 40),
+                              foregroundColor: ColorConstant.orange50,
+                              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                              backgroundColor: ColorConstant.white,
+                              textStyle: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w500)),
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.add,
+                                color: ColorConstant.orange50,
+                                size: 16,
+                              ),
+                              Text("Add Topic"),
+                            ],
                           ),
-                        );
-                      }
-                      return Container();
-                    }))
-                  ],
-                ),
+                        ),
+                        Builder(builder: ((context) {
+                          if (checkAddTopic) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    checkAddTopic = false;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
+                                    side: const BorderSide(
+                                        color: ColorConstant.orange50, width: 1),
+                                    fixedSize: const Size(88, 40),
+                                    foregroundColor: ColorConstant.orange50,
+                                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                                    backgroundColor: ColorConstant.white,
+                                    textStyle: const TextStyle(
+                                        fontSize: 12, fontWeight: FontWeight.w500)),
+                                child: const Text("Cancel"),
+                              ),
+                            );
+                          }
+                          return Container();
+                        }))
+                      ],
+                    ),
+                  ),
+                  
+                ],
               ),
             ],
           ),

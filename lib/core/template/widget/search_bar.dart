@@ -42,21 +42,6 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // AnimatedContainer(
-        //   duration: Duration(milliseconds: milisec),
-        //   width: !isEditingText ? 20 : 0,
-        //   child: AnimatedOpacity(
-        //     opacity: !isEditingText ? 1.0 : 0.0, 
-        //     duration: Duration(milliseconds: milisec),
-        //     child: const Padding(
-        //       padding: EdgeInsets.only(left: 16),
-        //       child: Icon(
-        //         Icons.search_rounded,
-        //         color: ColorConstant.whiteBlack30,
-        //       ),
-        //     )
-        //   ),
-        // ),
         Expanded(
           child: AnimatedPadding(
             duration: Duration(milliseconds: milisec),

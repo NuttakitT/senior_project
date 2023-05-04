@@ -140,8 +140,10 @@ class _CreatePostState extends State<CreatePost> {
                                 return SizedBox(
                                   height: 40,
                                   child: TextField(
+                                    maxLength: 25,
                                     controller: addtopicTextController,
                                     decoration: const InputDecoration(
+                                      counterText: "",
                                       hintText: "เพิ่ม Topic ของคุณ",
                                       hintStyle: TextStyle(
                                           color: ColorConstant.whiteBlack60,

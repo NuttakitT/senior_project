@@ -19,9 +19,10 @@ class _InDetailContentState extends State<InDetailContent> {
     for (int i = 0; i < topic.length; i++) {
       list.add(
         Padding(
-          padding: const EdgeInsets.only(bottom: 40, right: 8),
+          padding: const EdgeInsets.only(right: 8),
           child: Container(
-              width: 200,
+              height: 40,
+              width: 250,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               alignment: Alignment.center,
               decoration: BoxDecoration(
@@ -123,13 +124,17 @@ class _InDetailContentState extends State<InDetailContent> {
                     ],
                   ),
                 ),
-                Row(
+                Wrap(
+                  runSpacing: 4,
                   children: getTopic(info["topic"]),
                 ),
-                Text(
-                  info["detail"],
-                  style: const TextStyle(
-                      color: ColorConstant.whiteBlack90, fontSize: 20),
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Text(
+                    info["detail"],
+                    style: const TextStyle(
+                        color: ColorConstant.whiteBlack90, fontSize: 20),
+                  ),
                 ),
                 Builder(
                   builder: (context) {

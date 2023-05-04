@@ -22,9 +22,10 @@ class _InDetailMobileState extends State<InDetailMobile> {
     for (int i = 0; i < topic.length; i++) {
       list.add(
         Padding(
-          padding: const EdgeInsets.only(bottom: 40, right: 8),
+          padding: const EdgeInsets.only(right: 8),
           child: Container(
-            width: 100,
+            height: 40,
+            width: 150,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -119,13 +120,17 @@ class _InDetailMobileState extends State<InDetailMobile> {
                       ],
                     ),
                   ),
-                  Row(
+                  Wrap(
+                    runSpacing: 4,
                     children: getTopic(widget.info["topic"]),
                   ),
-                  Text(
-                    widget.info["detail"],
-                    style: const TextStyle(
-                        color: ColorConstant.whiteBlack90, fontSize: 14),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Text(
+                      widget.info["detail"],
+                      style: const TextStyle(
+                          color: ColorConstant.whiteBlack90, fontSize: 14),
+                    ),
                   ),
                   Builder(
                     builder: (context) {

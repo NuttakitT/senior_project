@@ -182,7 +182,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
           if (isLoadAll) {
             List<dynamic> topic = snapshot.docs[i].get("topics");
             for (int j = 0; j < topic.length; j++) {
-              List<dynamic> postList = _posts
+              List<Map<String, dynamic>> postList = _posts
                   .where((element) => element["topic"] == topic[j])
                   .toList();
               if (postList.isEmpty) {
@@ -214,6 +214,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
                   snapshot.docs[i].get("title").toString(),
                   snapshot.docs[i].get("detail").toString(),
                   commentSnapshot!.size,
+                  snapshot.docs[i].get("imageUrl"),
                   snapshot.docs[i].get("topics"),
                   postId: snapshot.docs[i].id,
                   docId: snapshot.docs[i].id,

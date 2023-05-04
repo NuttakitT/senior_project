@@ -63,9 +63,12 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                children: getTopic(widget.info["topic"])
-              ),
+              child: Wrap(
+                children: getTopic(widget.info["topic"]),
+              )
+              // Row(
+              //   children: getTopic(widget.info["topic"])
+              // ),
             ),
             Row(
               children: [
