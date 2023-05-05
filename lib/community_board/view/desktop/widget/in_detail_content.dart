@@ -14,6 +14,8 @@ class InDetailContent extends StatefulWidget {
 }
 
 class _InDetailContentState extends State<InDetailContent> {
+  TextEditingController detailController = TextEditingController();
+
   List<Widget> getTopic(List<dynamic> topic) {
     List<Widget> list = [];
     for (int i = 0; i < topic.length; i++) {
@@ -44,6 +46,7 @@ class _InDetailContentState extends State<InDetailContent> {
   Widget build(BuildContext context) {
     Map<String, dynamic> info =
         context.watch<CommunityBoardViewModel>().getPostDetail;
+    detailController.text = info["detail"];
 
     return Column(
       children: [
@@ -130,11 +133,22 @@ class _InDetailContentState extends State<InDetailContent> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 40),
-                  child: Text(
-                    info["detail"],
-                    style: const TextStyle(
-                        color: ColorConstant.whiteBlack90, fontSize: 20),
-                  ),
+                  child: TextField(
+                    readOnly: true,
+                    controller: detailController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.zero,
+                        borderSide: BorderSide.none,
+                        gapPadding: 0
+                      )
+                    ),
+                  )
+                  // Text(
+                  //   info["detail"],
+                  //   style: const TextStyle(
+                  //       color: ColorConstant.whiteBlack90, fontSize: 20),
+                  // ),
                 ),
                 Builder(
                   builder: (context) {
