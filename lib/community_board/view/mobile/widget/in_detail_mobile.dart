@@ -127,20 +127,17 @@ class _InDetailMobileState extends State<InDetailMobile> {
                     children: getTopic(widget.info["topic"]),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: TextField(
-                      maxLines: null,
-                      readOnly: true,
-                      controller: detailController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.zero,
-                          borderSide: BorderSide.none,
-                          gapPadding: 0
-                        )
-                      ),
-                    )
-                  ),
+                      padding: const EdgeInsets.only(top: 24),
+                      child: TextField(
+                        maxLines: null,
+                        readOnly: true,
+                        controller: detailController,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                                borderSide: BorderSide.none,
+                                gapPadding: 0)),
+                      )),
                   Builder(
                     builder: (context) {
                       if (widget.info["imageUrl"] != null) {
