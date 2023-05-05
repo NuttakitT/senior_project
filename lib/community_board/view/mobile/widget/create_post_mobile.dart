@@ -436,7 +436,10 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
             isTitleNotEmpty =
                 context.read<CommunityBoardViewModel>().getIsTitleNotEmpty;
             if ((isTitleNotEmpty && isDetailNotEmpty)) {
-              String? imageUrl = await context.read<CommunityBoardViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", "post");
+              String? imageUrl;
+              if (hasImage) {
+                imageUrl = await context.read<CommunityBoardViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", "post");
+              }
               final request = CreatePostRequest(
                 title: title,
                 detail: detail,
