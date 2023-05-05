@@ -132,24 +132,23 @@ class _InDetailContentState extends State<InDetailContent> {
                   children: getTopic(info["topic"]),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: TextField(
-                    readOnly: true,
-                    controller: detailController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.zero,
-                        borderSide: BorderSide.none,
-                        gapPadding: 0
-                      )
+                    padding: const EdgeInsets.only(top: 40),
+                    child: TextField(
+                      maxLines: null,
+                      readOnly: true,
+                      controller: detailController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.zero,
+                              borderSide: BorderSide.none,
+                              gapPadding: 0)),
+                    )
+                    // Text(
+                    //   info["detail"],
+                    //   style: const TextStyle(
+                    //       color: ColorConstant.whiteBlack90, fontSize: 20),
+                    // ),
                     ),
-                  )
-                  // Text(
-                  //   info["detail"],
-                  //   style: const TextStyle(
-                  //       color: ColorConstant.whiteBlack90, fontSize: 20),
-                  // ),
-                ),
                 Builder(
                   builder: (context) {
                     if (info["imageUrl"] != null) {

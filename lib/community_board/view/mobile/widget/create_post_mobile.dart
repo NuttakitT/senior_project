@@ -172,8 +172,8 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                         child: Column(children: <Widget>[
                           MultiSelectDialogField(
                               items: topic
-                                  .map((topic) => MultiSelectItem<Topic>(
-                                      topic, topic.name))
+                                  .map((topic) =>
+                                      MultiSelectItem<Topic>(topic, topic.name))
                                   .toList(),
                               title: const Text("Topics"),
                               selectedColor: ColorConstant.orange40,
@@ -271,13 +271,16 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8)),
                                     side: const BorderSide(
-                                        color: ColorConstant.orange50, width: 1),
+                                        color: ColorConstant.orange50,
+                                        width: 1),
                                     fixedSize: const Size(88, 40),
                                     foregroundColor: ColorConstant.orange50,
-                                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 8, 8, 8),
                                     backgroundColor: ColorConstant.white,
                                     textStyle: const TextStyle(
-                                        fontSize: 12, fontWeight: FontWeight.w500)),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500)),
                                 child: const Text("Cancel"),
                               ),
                             );
@@ -287,7 +290,6 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                       ],
                     ),
                   ),
-                  
                 ],
               ),
             ],
@@ -307,6 +309,7 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                 ),
               ),
               TextField(
+                maxLines: 7,
                 controller: detailTextController,
                 onTap: () {
                   context.read<CommunityBoardViewModel>().setIsDetailNotEmpty =
@@ -341,62 +344,56 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
                       color: ColorConstant.whiteBlack90, fontSize: 18),
                 ),
               ),
-              Builder(
-                builder: (context) {
-                  if (hasImage) {
-                    return Row(
-                      children: [
-                        Text(pickedFile!.name),
-                        IconButton(
+              Builder(builder: (context) {
+                if (hasImage) {
+                  return Row(
+                    children: [
+                      Text(pickedFile!.name),
+                      IconButton(
                           onPressed: () {
                             imageFile = null;
                             setState(() {
                               hasImage = false;
                             });
-                          }, 
-                          icon: const Icon(
-                            Icons.delete_rounded
-                          )
-                        )
-                      ],
-                    );
-                  }
-                  return TextButton(
-                    onPressed: () async {
-                      pickedFile = await ImagePicker()
-                        .pickImage(
-                            source: ImageSource.gallery);
-                      if (pickedFile != null) {
-                        imageFile = await pickedFile!.readAsBytes();
-                        setState(() {
-                          hasImage = true;
-                        });
-                      }
-                    },
-                    style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        side: const BorderSide(
-                            color: ColorConstant.orange50, width: 1),
-                        fixedSize: const Size(125, 32),
-                        foregroundColor: ColorConstant.orange50,
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                        backgroundColor: ColorConstant.white,
-                        textStyle: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold)),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.add_photo_alternate_rounded,
-                          color: ColorConstant.orange50,
-                          size: 16,
-                        ),
-                        Text("Add Image"),
-                      ],
-                    ),
+                          },
+                          icon: const Icon(Icons.delete_rounded))
+                    ],
                   );
                 }
-              ),
+                return TextButton(
+                  onPressed: () async {
+                    pickedFile = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    if (pickedFile != null) {
+                      imageFile = await pickedFile!.readAsBytes();
+                      setState(() {
+                        hasImage = true;
+                      });
+                    }
+                  },
+                  style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      side: const BorderSide(
+                          color: ColorConstant.orange50, width: 1),
+                      fixedSize: const Size(125, 32),
+                      foregroundColor: ColorConstant.orange50,
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      backgroundColor: ColorConstant.white,
+                      textStyle: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold)),
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.add_photo_alternate_rounded,
+                        color: ColorConstant.orange50,
+                        size: 16,
+                      ),
+                      Text("Add Image"),
+                    ],
+                  ),
+                );
+              }),
             ],
           ),
         ),
@@ -438,14 +435,16 @@ class _CreatePostMobileState extends State<CreatePostMobile> {
             if ((isTitleNotEmpty && isDetailNotEmpty)) {
               String? imageUrl;
               if (hasImage) {
-                imageUrl = await context.read<CommunityBoardViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", "post");
+                imageUrl = await context
+                    .read<CommunityBoardViewModel>()
+                    .getImageUrl(imageFile,
+                        "${const Uuid().v1()}_${pickedFile!.name}", "post");
               }
               final request = CreatePostRequest(
-                title: title,
-                detail: detail,
-                topics: topics,
-                imageUrl: imageUrl
-              );
+                  title: title,
+                  detail: detail,
+                  topics: topics,
+                  imageUrl: imageUrl);
               await context
                   .read<CommunityBoardViewModel>()
                   .createPost(request, context);
