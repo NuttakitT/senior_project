@@ -17,6 +17,7 @@ class InDetailMobile extends StatefulWidget {
 }
 
 class _InDetailMobileState extends State<InDetailMobile> {
+  TextEditingController detailController = TextEditingController();
   List<Widget> getTopic(List<dynamic> topic) {
     List<Widget> list = [];
     for (int i = 0; i < topic.length; i++) {
@@ -52,6 +53,7 @@ class _InDetailMobileState extends State<InDetailMobile> {
     context
         .read<CommunityBoardViewModel>()
         .setIsShowPostDetail(true, true, widget.info);
+    detailController.text = widget.info["detail"];
     if (!isMobile) {
       return const CommunityBoardView();
     }
@@ -126,11 +128,18 @@ class _InDetailMobileState extends State<InDetailMobile> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40),
-                    child: Text(
-                      widget.info["detail"],
-                      style: const TextStyle(
-                          color: ColorConstant.whiteBlack90, fontSize: 14),
-                    ),
+                    child: TextField(
+                      maxLines: null,
+                      readOnly: true,
+                      controller: detailController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.zero,
+                          borderSide: BorderSide.none,
+                          gapPadding: 0
+                        )
+                      ),
+                    )
                   ),
                   Builder(
                     builder: (context) {
