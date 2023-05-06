@@ -138,7 +138,7 @@ class StatisticViewModel extends ChangeNotifier {
 
     snapshot?.docs.forEach((doc) {
       Timestamp startTimestamp = doc['dateCreate'];
-      Timestamp endTimestamp = doc['dateComplete'];
+      Timestamp endTimestamp = doc['dateComplete'] ?? Timestamp.now();
 
       if (startTimestamp != null && endTimestamp != null) {
         DateTime startTime = startTimestamp.toDate();

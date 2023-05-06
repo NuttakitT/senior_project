@@ -83,11 +83,11 @@ class _StatisticGridViewState extends State<StatisticGridView> {
             // const SizedBox(width: 16),
           ]),
           const SizedBox(height: 16),
-          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            TicketStar(chartData: ticketRating, average: 4.21),
-            const SizedBox(width: 16),
-            TicketComment(ticketComment: comments)
-          ]),
+          // Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          //   TicketStar(chartData: ticketRating, average: 4.21),
+          //   const SizedBox(width: 16),
+          //   TicketComment(ticketComment: comments)
+          // ]),
         ],
       ),
     );
