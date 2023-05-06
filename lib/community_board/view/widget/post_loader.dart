@@ -325,7 +325,7 @@ class _PostLoaderState extends State<PostLoader> {
         String ownerName = post[i]["post"].getPost[j].getOwnerName;
         String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
         int comments = post[i]["post"].getPost[j].getComment;
-        String imageUrl = post[i]["post"].getPost[j].getImageUrl;
+        String? imageUrl = post[i]["post"].getPost[j].getImageUrl;
         List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
         List<Map<String, dynamic>>  postDetail = allPost[allPostIndex]["post"];
         postDetail.add({
