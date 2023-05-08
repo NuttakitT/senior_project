@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
@@ -115,7 +114,7 @@ TableRow buildRow(String uid, List<dynamic> cells, bool isHeader, bool isLastInd
           return Padding(
               padding: const EdgeInsets.only(
                   left: 16, top: 18, bottom: 18, right: 16),
-              child: MultiSelectTopics(topics: topic, uid: uid,)
+              child: MultiSelectTopics(topics: topic, uid: uid, adminResponsibility: cell,)
               );
         } else {
           return Container();

@@ -10,7 +10,8 @@ import 'package:senior_project/role_management/view_model/role_management_view_m
 class MultiSelectTopics extends StatefulWidget {
   final String uid;
   final List<TopicCategory> topics;
-  const MultiSelectTopics({super.key, required this.topics, required this.uid});
+  final List<TopicCategory> adminResponsibility;
+  const MultiSelectTopics({super.key, required this.topics, required this.uid, required this.adminResponsibility});
 
   @override
   State<MultiSelectTopics> createState() => _MultiSelectTopicsState();
@@ -52,23 +53,37 @@ class _MultiSelectTopicsState extends State<MultiSelectTopics> {
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (selectedValues.isEmpty)
-              const Text('Select...')
-            else
-              ...selectedValues
-                  .map(
-                    (selectedValue) => Text(
-                      '${selectedValue.categoryName}, ',
-                      style: const TextStyle(color: ColorConstant.whiteBlack60),
-                    ),
-                  )
-                  .toList(),
-            const Spacer(),
-            const Icon(Icons.expand_more),
-          ],
+        child: SizedBox(
+          width: 600,
+          child: Builder(
+            builder: (context) {
+              if (selectedValues.isEmpty && widget.adminResponsibility.isEmpty) {
+                return const Text('Select...');
+              } else {
+                List<TopicCategory> topic = [];
+                if (widget.adminResponsibility.isNotEmpty) {
+                  topic = widget.adminResponsibility;
+                }
+                if (selectedValues.isNotEmpty) {
+                  topic = selectedValues;
+                }
+                String text = "";
+                for (int i = 0; i < topic.length; i++) {
+                  text = "$text${topic[i].categoryName}, ";
+                }
+                return RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: text,
+                        style: const TextStyle(color: ColorConstant.whiteBlack60),
+                      )
+                    ]
+                  ),
+                );
+              }
+            },
+          )
         ),
       ),
     );

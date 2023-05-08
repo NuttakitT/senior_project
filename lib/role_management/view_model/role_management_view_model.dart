@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_final_fields
 
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +79,6 @@ class RoleManagementViewModel extends ChangeNotifier {
       for (int i = 0; i < adminSnapshot.docs.length; i++) {
         if (adminSnapshot.docs[i].get("id") !=
             FirebaseAuth.instance.currentUser?.uid) {
-          _alluser.add(adminSnapshot.docs[i].get("email"));
 
           if (adminSnapshot.docs[i].get("role") == 0) {
             List<dynamic> resposibility =
@@ -105,11 +106,14 @@ class RoleManagementViewModel extends ChangeNotifier {
               "Admin",
               cat,
             ));
+          } else {
+            _alluser.add(adminSnapshot.docs[i].get("email"));
           }
         }
       }
     }
     final model = RoleManagementModel.overloaddedConstructor(admin, category);
+    _model = model;
     return model;
   }
 }
