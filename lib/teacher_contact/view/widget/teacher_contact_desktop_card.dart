@@ -24,6 +24,9 @@ class TeacherContactDesktopCard extends StatelessWidget {
           final nameSplitted = cardDetail['name'].split(' ') as List<String>;
           final thaiNameSplitted =
               cardDetail['thaiName'].split(' ') as List<String>;
+          List<dynamic> dynamicSubject = cardDetail['subjectId'];
+          List<String> subjectsList =
+              dynamicSubject.map((e) => e.toString()).toList();
           final editData = AddTeacherContactRequest(
               imageUrl: cardDetail['imageUrl'],
               firstName: nameSplitted[0],
@@ -34,7 +37,7 @@ class TeacherContactDesktopCard extends StatelessWidget {
               phone: cardDetail['phone'],
               officeHours: "",
               facebookLink: cardDetail['facebookLink'],
-              subjectId: []);
+              subjectId: subjectsList);
           showDialog(
               context: context,
               builder: (context) {

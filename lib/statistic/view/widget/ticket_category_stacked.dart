@@ -34,7 +34,7 @@ class _TicketCategoryStackedState extends State<TicketCategoryStacked> {
                       ColorConstant.whiteBlack40,
                       ColorConstant.yellow40,
                       ColorConstant.green40,
-                      ColorConstant.red40
+                      // ColorConstant.red40
                     ],
                     title: ChartTitle(
                         text: "Ticket by Category",
@@ -67,14 +67,6 @@ class _TicketCategoryStackedState extends State<TicketCategoryStacked> {
                               data.xAxis,
                           yValueMapper: (StackBarChartModel data, _) => data.y3,
                           name: "Done"),
-                      StackedColumnSeries<StackBarChartModel, String>(
-                          dataLabelSettings: const DataLabelSettings(
-                              isVisible: true, showCumulativeValues: false),
-                          dataSource: widget.chartData,
-                          xValueMapper: (StackBarChartModel data, _) =>
-                              data.xAxis,
-                          yValueMapper: (StackBarChartModel data, _) => data.y4,
-                          name: "Failed"),
                     ],
                     legend: Legend(
                       isVisible: true,

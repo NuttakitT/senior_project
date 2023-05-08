@@ -53,7 +53,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
   String officeHourDay = daysOfWeek.first;
   String facebookLink = "";
   bool isFacebookLinkEmpty = false;
-  List<String> selectedSubjects = [];
+  List<String> selectedSubjectStringlist = [];
   bool isSubjectEmpty = false;
   String profileImage = "";
 
@@ -73,6 +73,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
   late TextEditingController facebookController;
 
   List<Subject> subjects = [];
+  List<Subject> userSelectedsubjects = [];
 
   bool get allFieldNotError =>
       !isFirstNameEmpty &&
@@ -110,8 +111,13 @@ class _AddContactPopupState extends State<AddContactPopup> {
   Future<void> fetchSubjects() async {
     final subjectList =
         await context.read<TeacherContactViewModel>().getSubjects();
+    final subjectsString = context
+        .read<TeacherContactViewModel>()
+        .convertSubjectStringToObject(widget.data?.subjectId ?? []);
+
     setState(() {
       subjects = subjectList;
+      userSelectedsubjects = subjectsString;
     });
   }
 
@@ -669,39 +675,15 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                           setColorOfTextField(isSubjectEmpty)),
                                 ),
                                 // subjects
-                                // child: FutureBuilder(
-                                //     future: context
-                                //         .read<TeacherContactViewModel>()
-                                //         .getSubjects(),
-                                //     builder: (context, snapshot) {
-                                //       List<Subject> subjects =
-                                //           Subject.subjectsFromJson(
-                                //               snapshot.data);
-                                //       final items = subjects
-                                //           .map((subject) => MultiSelectItem<
-                                //                   Subject>(subject,
-                                //               "${subject.id} ${subject.name}"))
-                                //           .toList();
-                                //       return MultiSelectDialogField(
-                                //         initialValue: const [],
-                                //         items: items,
-                                //         searchable: true,
-                                //         onConfirm: (selectedList) {
-                                //           selectedSubjects = context
-                                //               .read<TeacherContactViewModel>()
-                                //               .getSubjectStrings(
-                                //                   selectedList);
-                                //         },
-                                //       );
-                                //     }),
                                 child: MultiSelectSubject(
                                   subjects: subjects,
                                   uid: widget.id ?? "",
                                   onConfirm: (selectedList) {
-                                    context
+                                    selectedSubjectStringlist = context
                                         .read<TeacherContactViewModel>()
                                         .getSubjectStrings(selectedList);
                                   },
+                                  initValue: userSelectedsubjects,
                                 ),
                               ),
                             ]),
@@ -876,7 +858,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 isFacebookLinkEmpty = true;
                               });
                             }
-                            if (selectedSubjects.isEmpty) {
+                            if (selectedSubjectStringlist.isEmpty) {
                               setState(() {
                                 isSubjectEmpty = true;
                               });
@@ -901,7 +883,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 phone: phoneNumber,
                                 officeHours: officeHours,
                                 facebookLink: facebookLink,
-                                subjectId: selectedSubjects,
+                                subjectId: selectedSubjectStringlist,
                               );
                               if (widget.id != null) {
                                 String? id = widget.id!;

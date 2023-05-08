@@ -80,14 +80,12 @@ class StackBarChartModel extends Chart {
   double y1;
   double y2;
   double y3;
-  double y4;
 
   StackBarChartModel(
       {required this.xAxis,
       required this.y1,
       required this.y2,
-      required this.y3,
-      required this.y4});
+      required this.y3});
 }
 
 class SingleResultChart extends Chart {
