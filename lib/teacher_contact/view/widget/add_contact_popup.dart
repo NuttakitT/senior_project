@@ -9,6 +9,7 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/teacher_contact/model/teacher_contact_model.dart';
+import 'package:senior_project/teacher_contact/view/widget/multi_select_subject.dart';
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -71,6 +72,8 @@ class _AddContactPopupState extends State<AddContactPopup> {
   late TextEditingController phoneController;
   late TextEditingController facebookController;
 
+  List<Subject> subjects = [];
+
   bool get allFieldNotError =>
       !isFirstNameEmpty &&
       !isLastNameEmpty &&
@@ -101,6 +104,15 @@ class _AddContactPopupState extends State<AddContactPopup> {
     emailTextController = TextEditingController(text: widget.data?.email);
     phoneController = TextEditingController(text: widget.data?.phone);
     facebookController = TextEditingController(text: widget.data?.facebookLink);
+    fetchSubjects();
+  }
+
+  Future<void> fetchSubjects() async {
+    final subjectList =
+        await context.read<TeacherContactViewModel>().getSubjects();
+    setState(() {
+      subjects = subjectList;
+    });
   }
 
   @override
@@ -649,38 +661,49 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                   child: Text(Consts.subjectLabel)),
                               const SizedBox(height: 8),
                               Container(
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(
-                                        color: setColorOfTextField(
-                                            isSubjectEmpty)),
-                                  ),
-                                  child: FutureBuilder(
-                                      future: context
-                                          .read<TeacherContactViewModel>()
-                                          .getSubjects(),
-                                      builder: (context, snapshot) {
-                                        List<Subject> subjects =
-                                            Subject.subjectsFromJson(
-                                                snapshot.data);
-                                        final items = subjects
-                                            .map((subject) => MultiSelectItem<
-                                                    Subject>(subject,
-                                                "${subject.id} ${subject.name}"))
-                                            .toList();
-                                        return MultiSelectDialogField(
-                                          initialValue: const [],
-                                          items: items,
-                                          searchable: true,
-                                          onConfirm: (selectedList) {
-                                            selectedSubjects = context
-                                                .read<TeacherContactViewModel>()
-                                                .getSubjectStrings(
-                                                    selectedList);
-                                          },
-                                        );
-                                      })),
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                      color:
+                                          setColorOfTextField(isSubjectEmpty)),
+                                ),
+                                // subjects
+                                // child: FutureBuilder(
+                                //     future: context
+                                //         .read<TeacherContactViewModel>()
+                                //         .getSubjects(),
+                                //     builder: (context, snapshot) {
+                                //       List<Subject> subjects =
+                                //           Subject.subjectsFromJson(
+                                //               snapshot.data);
+                                //       final items = subjects
+                                //           .map((subject) => MultiSelectItem<
+                                //                   Subject>(subject,
+                                //               "${subject.id} ${subject.name}"))
+                                //           .toList();
+                                //       return MultiSelectDialogField(
+                                //         initialValue: const [],
+                                //         items: items,
+                                //         searchable: true,
+                                //         onConfirm: (selectedList) {
+                                //           selectedSubjects = context
+                                //               .read<TeacherContactViewModel>()
+                                //               .getSubjectStrings(
+                                //                   selectedList);
+                                //         },
+                                //       );
+                                //     }),
+                                child: MultiSelectSubject(
+                                  subjects: subjects,
+                                  uid: widget.id ?? "",
+                                  onConfirm: (selectedList) {
+                                    context
+                                        .read<TeacherContactViewModel>()
+                                        .getSubjectStrings(selectedList);
+                                  },
+                                ),
+                              ),
                             ]),
                       ),
                     ),

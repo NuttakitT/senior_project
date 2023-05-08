@@ -18,8 +18,8 @@ class TeacherContactViewModel extends ChangeNotifier {
   final firebaseServiceSuject = FirebaseServices("subject");
   List<Map<String, dynamic>?>? _teacherList;
   List<Map<String, dynamic>?>? get teacherList => _teacherList;
-  List<Map<String, dynamic>?>? _subjects;
-  List<Map<String, dynamic>?>? get subjects => _subjects;
+  // List<Map<String, dynamic>?>? _subjects;
+  // List<Map<String, dynamic>?>? get subjects => _subjects;
 
   // MARK: - Add Contact
   Future<void> createNewContact(AddTeacherContactRequest request) async {
@@ -124,29 +124,29 @@ class TeacherContactViewModel extends ChangeNotifier {
     return _teacherList;
   }
 
-  Future<List<Map<String, dynamic>?>?> _getAllSujects() async {
+  Future<List<Subject>> _getAllSujects() async {
     final snapshot = await firebaseServiceSuject.getAllDocument();
 
     if (snapshot?.size == 0) {
-      return null;
+      return [];
     }
 
-    List<Map<String, dynamic>> subjects = [];
+    List<Subject> subjects = [];
 
     for (QueryDocumentSnapshot doc in snapshot!.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      subjects.add(data);
+      Subject subject = Subject.fromJson(data);
+      subjects.add(subject);
     }
 
-    _subjects = subjects;
-    return _subjects;
+    return subjects;
   }
 
   Future<List<Map<String, dynamic>?>?> getTeacherContacts() async {
     return await _getAllTeacherContacts();
   }
 
-  Future<List<Map<String, dynamic>?>?> getSubjects() async {
+  Future<List<Subject>> getSubjects() async {
     return await _getAllSujects();
   }
 

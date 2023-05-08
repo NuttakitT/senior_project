@@ -87,4 +87,11 @@ class Subject {
       );
     }).toList();
   }
+
+  factory Subject.fromJson(Map<String, dynamic> json) {
+    return Subject(
+      id: json['subjectId'] as String,
+      name: json['name'] as String,
+    );
+  }
 }
