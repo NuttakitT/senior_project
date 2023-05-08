@@ -15,6 +15,7 @@ import 'package:senior_project/core/view_model/text_search.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/role_management/view/role_management_view.dart';
+import 'package:senior_project/statistic/view/statistic_view.dart';
 import 'package:senior_project/teacher_contact/view/teacher_contact_view.dart';
 
 class MainMenu extends StatefulWidget {
@@ -162,6 +163,36 @@ class _MainMenuState extends State<MainMenu> {
                           Navigator.pushAndRemoveUntil(context,
                               MaterialPageRoute(builder: (context) {
                             return RoleManagementView(isAdmin: isAdmin);
+                          }), (route) => false);
+                        },
+                      ),
+                    );
+                  }
+                  return Container();
+                }
+                return Container();
+              }),
+              Builder(builder: (context) {
+                if (isLogin) {
+                  bool isAdmin =
+                      context.watch<AppViewModel>().app.getUser.getRole == 0;
+                  if (isAdmin) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 40),
+                      child: InkWell(
+                        splashFactory: NoSplash.splashFactory,
+                        child: Text(
+                          "Statistics",
+                          style: _navbarTextStyle(isRoleManageSelected),
+                        ),
+                        onTap: () {
+                          context.read<TextSearch>().clearSearchText();
+                          context
+                              .read<TemplateDesktopViewModel>()
+                              .changeState(context, 4, 1);
+                          Navigator.pushAndRemoveUntil(context,
+                              MaterialPageRoute(builder: (context) {
+                            return StatisticView(isAdmin: isAdmin);
                           }), (route) => false);
                         },
                       ),
