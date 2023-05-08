@@ -77,38 +77,34 @@ class RoleManagementViewModel extends ChangeNotifier {
     final adminSnapshot = await _servicesUser.getAllDocument();
     if (adminSnapshot != null) {
       for (int i = 0; i < adminSnapshot.docs.length; i++) {
-        if (adminSnapshot.docs[i].get("id") !=
-            FirebaseAuth.instance.currentUser?.uid) {
-
-          if (adminSnapshot.docs[i].get("role") == 0) {
-            List<dynamic> resposibility =
-                adminSnapshot.docs[i].get("responsibility");
-            List<TopicCategory> cat = [];
-            for (int j = 0; j < resposibility.length; j++) {
-              final categorySnapshot =
-                  await _serviesCategory.getDocumentById(resposibility[j]);
-              if (categorySnapshot != null && categorySnapshot.exists) {
-                cat.add(TopicCategory(
-                  id: categorySnapshot.id,
-                  categoryName: categorySnapshot.get("name"),
-                  description: categorySnapshot.get("description"),
-                ));
-              }
+        if (adminSnapshot.docs[i].get("role") == 0) {
+          List<dynamic> resposibility =
+              adminSnapshot.docs[i].get("responsibility");
+          List<TopicCategory> cat = [];
+          for (int j = 0; j < resposibility.length; j++) {
+            final categorySnapshot =
+                await _serviesCategory.getDocumentById(resposibility[j]);
+            if (categorySnapshot != null && categorySnapshot.exists) {
+              cat.add(TopicCategory(
+                id: categorySnapshot.id,
+                categoryName: categorySnapshot.get("name"),
+                description: categorySnapshot.get("description"),
+              ));
             }
-
-            List<String> name =
-                adminSnapshot.docs[i].get("name").toString().split(" ");
-            admin.add(Admin(
-              adminSnapshot.docs[i].id,
-              name[0],
-              name[1],
-              adminSnapshot.docs[i].get("email"),
-              "Admin",
-              cat,
-            ));
-          } else {
-            _alluser.add(adminSnapshot.docs[i].get("email"));
           }
+
+          List<String> name =
+              adminSnapshot.docs[i].get("name").toString().split(" ");
+          admin.add(Admin(
+            adminSnapshot.docs[i].id,
+            name[0],
+            name[1],
+            adminSnapshot.docs[i].get("email"),
+            "Admin",
+            cat,
+          ));
+        } else {
+          _alluser.add(adminSnapshot.docs[i].get("email"));
         }
       }
     }
