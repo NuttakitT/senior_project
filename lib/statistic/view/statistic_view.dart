@@ -37,11 +37,11 @@ class _StatisticViewState extends State<StatisticView> {
               final ticketPriority = snapshot.data?.ticketPriority ?? [];
               final ticketCategory = snapshot.data?.ticketByCategories ?? [];
               final defaultStatistics = snapshot.data?.defaultStatistics ?? [];
-              data[0] = ticketVolume;
-              data[1] = ticketStatus;
-              data[2] = ticketPriority;
-              data[3] = ticketCategory;
-              data[4] = defaultStatistics;
+              data.add(ticketVolume);
+              data.add(ticketStatus);
+              data.add(ticketPriority);
+              data.add(ticketCategory);
+              data.add(defaultStatistics);
 
               return TemplateDesktop(
                   helpdesk: false,
