@@ -180,7 +180,9 @@ class _EditCategoryPopupState extends State<EditCategoryPopup> {
                               )
                             ),
                             child: TextField(
-                              maxLength: 300,
+                              maxLength: 150,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
                               controller: detailController,
                               style: const TextStyle(
                                 fontWeight: AppFontWeight.regular,

@@ -94,10 +94,13 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex) {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                cell.contains("isDes") ? cell.split(" ")[1] : cell,
-                style: isHeader ? AppFontStyle.wb80B20 : AppFontStyle.wb80R20,
-                overflow: TextOverflow.ellipsis,
+              SizedBox(
+                width: cell.contains("isDes") ? 700 : null,
+                child: Text(
+                  cell.contains("isDes") ? cell.split(" ")[1] : cell,
+                  style: isHeader ? AppFontStyle.wb80B20 : AppFontStyle.wb80R20,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               Builder(
                 builder: (context) {
