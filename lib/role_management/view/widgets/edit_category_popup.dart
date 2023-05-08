@@ -1,7 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/role_management/view/role_management_view.dart';
+import 'package:senior_project/role_management/view_model/role_management_view_model.dart';
 
 class EditCategoryPopup extends StatefulWidget {
   final String title;
@@ -27,6 +33,8 @@ class _EditCategoryPopupState extends State<EditCategoryPopup> {
   
   @override
   Widget build(BuildContext context) {
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+
     return AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -75,7 +83,20 @@ class _EditCategoryPopupState extends State<EditCategoryPopup> {
                               onCancel: () {
                                 Navigator.pop(context);
                               }, 
-                              onConfirm: () {}
+                              onConfirm: () async {
+                                await context.read<RoleManagementViewModel>().deleteCategory(
+                                  widget.title
+                                );
+                                Navigator.pushAndRemoveUntil(
+                                  context, 
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return RoleManagementView(isAdmin: isAdmin);
+                                    }
+                                  ), 
+                                  (route) => false
+                                );
+                              }
                             );
                           }
                         );
@@ -274,7 +295,22 @@ class _EditCategoryPopupState extends State<EditCategoryPopup> {
                                       onCancel: () {
                                         Navigator.pop(context);
                                       }, 
-                                      onConfirm: () {}
+                                      onConfirm: () async {
+                                        await context.read<RoleManagementViewModel>().editCategory(
+                                          widget.title, 
+                                          titleController.text, 
+                                          detailController.text
+                                        );
+                                        Navigator.pushAndRemoveUntil(
+                                          context, 
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return RoleManagementView(isAdmin: isAdmin);
+                                            }
+                                          ), 
+                                          (route) => false
+                                        );
+                                      }
                                     );
                                   }
                                 );
