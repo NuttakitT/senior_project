@@ -114,11 +114,8 @@ class _AddContactPopupState extends State<AddContactPopup> {
     final subjectsObject = context
         .read<TeacherContactViewModel>()
         .convertSubjectStringToObject(widget.data?.subjectId ?? []);
-    // print("Subject:${subjectsObject}");
-    // setState(() {
     subjects = subjectList;
     userSelectedsubjects = subjectsObject;
-    // });
   }
 
   @override
