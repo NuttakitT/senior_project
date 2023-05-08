@@ -33,8 +33,6 @@ class _StatisticGridViewState extends State<StatisticGridView> {
         widget.data[3].cast<StackBarChartModel>();
     List<SingleResultChart> defaultStatistic =
         widget.data[4].cast<SingleResultChart>();
-    List<BarChartModel> ticketRating = widget.data[5].cast<BarChartModel>();
-    List<TicketCommentModel> comments = widget.commentData;
     // end casting
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 64.0),
