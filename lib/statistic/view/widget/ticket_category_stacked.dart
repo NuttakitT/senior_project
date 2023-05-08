@@ -34,7 +34,6 @@ class _TicketCategoryStackedState extends State<TicketCategoryStacked> {
                       ColorConstant.whiteBlack40,
                       ColorConstant.yellow40,
                       ColorConstant.green40,
-                      // ColorConstant.red40
                     ],
                     title: ChartTitle(
                         text: "Ticket by Category",
