@@ -111,14 +111,11 @@ class _AddContactPopupState extends State<AddContactPopup> {
   Future<void> fetchSubjects() async {
     final subjectList =
         await context.read<TeacherContactViewModel>().getSubjects();
-    final subjectsString = context
+    final subjectsObject = context
         .read<TeacherContactViewModel>()
         .convertSubjectStringToObject(widget.data?.subjectId ?? []);
-
-    setState(() {
-      subjects = subjectList;
-      userSelectedsubjects = subjectsString;
-    });
+    subjects = subjectList;
+    userSelectedsubjects = subjectsObject;
   }
 
   @override
@@ -675,16 +672,24 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                           setColorOfTextField(isSubjectEmpty)),
                                 ),
                                 // subjects
-                                child: MultiSelectSubject(
-                                  subjects: subjects,
-                                  uid: widget.id ?? "",
-                                  onConfirm: (selectedList) {
-                                    selectedSubjectStringlist = context
-                                        .read<TeacherContactViewModel>()
-                                        .getSubjectStrings(selectedList);
-                                  },
-                                  initValue: userSelectedsubjects,
-                                ),
+                                child: FutureBuilder(
+                                    future: fetchSubjects(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState !=
+                                          ConnectionState.done) {
+                                        return Container();
+                                      }
+                                      return MultiSelectSubject(
+                                        subjects: subjects,
+                                        uid: widget.id ?? "",
+                                        onConfirm: (selectedList) {
+                                          selectedSubjectStringlist = context
+                                              .read<TeacherContactViewModel>()
+                                              .getSubjectStrings(selectedList);
+                                        },
+                                        initValue: userSelectedsubjects,
+                                      );
+                                    }),
                               ),
                             ]),
                       ),
