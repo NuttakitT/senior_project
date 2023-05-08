@@ -32,7 +32,7 @@ class _TicketCategoryState extends State<TicketCategory> {
                   padding: const EdgeInsets.all(8.0),
                   child: SfCartesianChart(
                       title: ChartTitle(
-                          text: "Ticket bt Category",
+                          text: "Ticket by Category",
                           alignment: ChartAlignment.near,
                           textStyle: AppFontStyle.blackMd18),
                       primaryXAxis: CategoryAxis(),

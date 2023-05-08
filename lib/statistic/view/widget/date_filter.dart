@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 
 class DateFilter extends StatefulWidget {
@@ -58,10 +59,11 @@ class _DateFilterState extends State<DateFilter> {
         GestureDetector(
           onTap: () => _selectStartDate(context),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
+              color: ColorConstant.white,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: ColorConstant.whiteBlack60),
             ),
             child: Text(
               _startDate != null
@@ -74,10 +76,11 @@ class _DateFilterState extends State<DateFilter> {
         GestureDetector(
           onTap: () => _selectEndDate(context),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
+              color: ColorConstant.white,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: ColorConstant.whiteBlack60),
             ),
             child: Text(
               _endDate != null ? _endDate.toString().split(' ')[0] : 'End Date',
