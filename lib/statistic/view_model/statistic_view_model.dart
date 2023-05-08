@@ -213,7 +213,6 @@ class StatisticViewModel extends ChangeNotifier {
         y1: categoryData[0].toDouble(),
         y2: categoryData[1].toDouble(),
         y3: categoryData[2].toDouble(),
-        y4: 0.0, // set y4 to 0.0 since it's not used in the data list
       );
       chartData.add(model);
     });

@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/teacher_contact/model/teacher_contact_model.dart';
-import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 
 class MultiSelectSubject extends StatefulWidget {
   final String uid;
   final List<Subject> subjects;
   final Function(List<dynamic>) onConfirm;
+  final List<Subject> initValue;
   const MultiSelectSubject(
       {super.key,
       required this.subjects,
       required this.uid,
-      required this.onConfirm});
+      required this.onConfirm,
+      required this.initValue});
 
   @override
   State<MultiSelectSubject> createState() => _MultiSelectSubjectState();
 }
 
 class _MultiSelectSubjectState extends State<MultiSelectSubject> {
-  List<Subject> selectedValues = [];
+  late List<Subject> selectedValues;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedValues = widget.initValue;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +63,7 @@ class _MultiSelectSubjectState extends State<MultiSelectSubject> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             if (selectedValues.isEmpty)
-              const Text('Select...')
+              const Text('Select Subjects')
             else
               ...selectedValues
                   .map(

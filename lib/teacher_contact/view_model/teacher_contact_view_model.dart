@@ -154,6 +154,18 @@ class TeacherContactViewModel extends ChangeNotifier {
     return list.map((subject) => "${subject.id} ${subject.name}").toList();
   }
 
+  List<Subject> convertSubjectStringToObject(List<String> strList) {
+    List<Subject> list = [];
+    for (String str in strList) {
+      List<String> subjectParts = str.split(" ");
+      String subjectId = subjectParts[0];
+      String name = subjectParts.sublist(1).join(" ");
+      Subject subject = Subject(id: subjectId, name: name);
+      list.add(subject);
+    }
+    return list;
+  }
+
   Future<void> updateTeacherContactDetailById(
       String uid, Map<String, dynamic> data) async {
     try {
