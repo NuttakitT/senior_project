@@ -1,8 +1,11 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/role_management/model/role_management_model.dart';
 import 'package:senior_project/role_management/view/widgets/add_category_popup.dart';
+import 'package:senior_project/role_management/view/widgets/edit_category_popup.dart';
 import 'package:senior_project/role_management/view/widgets/role_management_header.dart';
 
 class CategoryTable extends StatefulWidget {
@@ -46,7 +49,7 @@ class _CategoryDetailTableState extends State<CategoryDetailTable> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 64),
+      padding: const EdgeInsets.fromLTRB(64, 0, 64, 16),
       child: Container(
         decoration: BoxDecoration(
             color: ColorConstant.white,
@@ -65,7 +68,7 @@ class _CategoryDetailTableState extends State<CategoryDetailTable> {
               buildRow([
                 (number++).toString(),
                 widget.widget.categories[i].categoryName,
-                widget.widget.categories[i].description,
+                "isDes ${widget.widget.categories[i].description}",
               ], false, i == widget.widget.categories.length - 1),
             ]
           ],
@@ -88,10 +91,51 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex) {
       children: cells.map((cell) {
         return Padding(
           padding: const EdgeInsets.only(left: 16, top: 28, bottom: 28),
-          child: Text(
-            cell,
-            style: isHeader ? AppFontStyle.wb80B20 : AppFontStyle.wb80R20,
-            overflow: TextOverflow.ellipsis,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                cell.contains("isDes") ? cell.split(" ")[1] : cell,
+                style: isHeader ? AppFontStyle.wb80B20 : AppFontStyle.wb80R20,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Builder(
+                builder: (context) {
+                  if (!isHeader && cell.contains("isDes")) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context, 
+                            builder: (context) {
+                              return EditCategoryPopup(title: cells[1], detail: cells[2].split(" ")[1]);
+                            }
+                          );
+                        },
+                        child: Row(
+                          children: const [
+                            Icon(Icons.edit_rounded, color: ColorConstant.whiteBlack60,),
+                            Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                "แก้ไข",
+                                style: TextStyle(
+                                  fontWeight: AppFontWeight.regular,
+                                  fontSize: 20,
+                                  color: ColorConstant.whiteBlack60
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+              )
+            ],
           ),
         );
       }).toList());
