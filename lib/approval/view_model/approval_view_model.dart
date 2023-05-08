@@ -46,6 +46,7 @@ class ApprovalViewModel extends ChangeNotifier {
             "dateCreate": snapshot.docs[i].get("dateCreate").toDate(),
             "isApproved": snapshot.docs[i].get("isApproved"),
             "approvedTime": "",
+            "imageUrl": snapshot.docs[i].get("imageUrl"),
           };
         }
       } else {
@@ -112,6 +113,7 @@ class ApprovalViewModel extends ChangeNotifier {
           "dateCreate": DateTime.parse(item["dateCreate"]),
           "isApproved": isApproved,
           "approvedTime": "",
+          "imageUrl": item["imageUrl"]
         };
       }
     }

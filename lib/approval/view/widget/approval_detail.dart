@@ -315,7 +315,15 @@ class _ApprovalDetailState extends State<ApprovalDetail> {
                           info["detail"],
                           style: const TextStyle(
                               color: ColorConstant.whiteBlack90, fontSize: 20),
-                        )
+                        ),
+                        Builder(
+                          builder: (context) {
+                            if (info["imageUrl"] != null) {
+                              return Image.network(info["imageUrl"]);
+                            }
+                            return Container();
+                          },
+                        ),
                       ],
                     ),
                   )
