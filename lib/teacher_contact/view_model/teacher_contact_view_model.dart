@@ -48,6 +48,7 @@ class TeacherContactViewModel extends ChangeNotifier {
       "subjectId": model.subjectId
     };
     await firebaseService.setDocument(docId, teacherContactDetail);
+    notifyListeners();
   }
 
   Future<bool> editContact(String id, AddTeacherContactRequest request) async {
@@ -65,6 +66,13 @@ class TeacherContactViewModel extends ChangeNotifier {
     };
     final bool isSuccess =
         await firebaseService.editDocument(id, teacherContactDetail);
+    notifyListeners();
+    return isSuccess;
+  }
+
+  Future<bool> deleteContact(String id) async {
+    final isSuccess = await firebaseService.deleteDocument(id);
+    notifyListeners();
     return isSuccess;
   }
 
