@@ -46,6 +46,8 @@ class _MainMenuState extends State<MainMenu> {
         context.watch<TemplateDesktopViewModel>().getNavBarState(2);
     bool isRoleManageSelected =
         context.watch<TemplateDesktopViewModel>().getNavBarState(3);
+    bool isStatisticSelected =
+        context.watch<TemplateDesktopViewModel>().getNavBarState(4);
     bool isLogin = context.watch<AppViewModel>().isLogin;
     return Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -183,7 +185,7 @@ class _MainMenuState extends State<MainMenu> {
                         splashFactory: NoSplash.splashFactory,
                         child: Text(
                           "Statistics",
-                          style: _navbarTextStyle(isRoleManageSelected),
+                          style: _navbarTextStyle(isStatisticSelected),
                         ),
                         onTap: () {
                           context.read<TextSearch>().clearSearchText();
@@ -421,7 +423,7 @@ class _MainMenuState extends State<MainMenu> {
       padding: const EdgeInsets.only(left: 80),
       child: Builder(
         builder: (context) {
-          if (screenWidth < 1025) {
+          if (screenWidth < 1150) {
             return Scrollbar(
               controller: _controller,
               child: SingleChildScrollView(
