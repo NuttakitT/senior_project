@@ -83,31 +83,37 @@ class _CardApprovalState extends State<CardApproval> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: RichText(
-                  text: TextSpan(children: [
-                TextSpan(
-                    text: widget.info["title"],
-                    style: const TextStyle(
-                        color: ColorConstant.whiteBlack90,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-                const TextSpan(
-                    text: "- ",
-                    style: TextStyle(
-                        color: ColorConstant.whiteBlack60, fontSize: 16)),
-                TextSpan(
-                    text: widget.info["detail"],
-                    style: const TextStyle(
-                        color: ColorConstant.whiteBlack60, fontSize: 16))
-              ])),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: RichText(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                    text: TextSpan(children: [
+                  TextSpan(
+                      text: widget.info["title"],
+                      style: const TextStyle(
+                          color: ColorConstant.whiteBlack90,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold)),
+                  const TextSpan(
+                      text: " - ",
+                      style: TextStyle(
+                          color: ColorConstant.whiteBlack60, fontSize: 16)),
+                  TextSpan(
+                      text: widget.info["detail"],
+                      style: const TextStyle(
+                          color: ColorConstant.whiteBlack60, fontSize: 16))
+                ])),
+              ),
             ),
-            const Spacer(),
-            Text(
-              DateFormat('dd MMM').format(widget.info["dateCreate"]),
-              style: const TextStyle(
-                  color: ColorConstant.whiteBlack60, fontSize: 16),
+            SizedBox(
+              width: 70,
+              child: Text(
+                DateFormat('dd MMM').format(widget.info["dateCreate"]),
+                style: const TextStyle(
+                    color: ColorConstant.whiteBlack60, fontSize: 16),
+              ),
             )
           ],
         ),
