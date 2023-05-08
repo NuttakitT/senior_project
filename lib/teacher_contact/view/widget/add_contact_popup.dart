@@ -7,7 +7,9 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/teacher_contact/model/teacher_contact_model.dart';
+import 'package:senior_project/teacher_contact/view/widget/multi_select_subject.dart';
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -70,6 +72,8 @@ class _AddContactPopupState extends State<AddContactPopup> {
   late TextEditingController phoneController;
   late TextEditingController facebookController;
 
+  List<Subject> subjects = [];
+
   bool get allFieldNotError =>
       !isFirstNameEmpty &&
       !isLastNameEmpty &&
@@ -100,6 +104,15 @@ class _AddContactPopupState extends State<AddContactPopup> {
     emailTextController = TextEditingController(text: widget.data?.email);
     phoneController = TextEditingController(text: widget.data?.phone);
     facebookController = TextEditingController(text: widget.data?.facebookLink);
+    fetchSubjects();
+  }
+
+  Future<void> fetchSubjects() async {
+    final subjectList =
+        await context.read<TeacherContactViewModel>().getSubjects();
+    setState(() {
+      subjects = subjectList;
+    });
   }
 
   @override
@@ -129,6 +142,34 @@ class _AddContactPopupState extends State<AddContactPopup> {
                             ? Consts.addContactTitle
                             : Consts.editContactInformation)),
                     const Spacer(),
+                    if (widget.id != null)
+                      IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return ConfirmationPopup(
+                                      title: "Delete Contact",
+                                      detail:
+                                          "Are you sure you want to delete this profile?",
+                                      widget: null,
+                                      onCancel: () {
+                                        Navigator.pop(context);
+                                      },
+                                      onConfirm: () async {
+                                        if (widget.id != null) {
+                                          String id = widget.id ?? "";
+                                          await context
+                                              .read<TeacherContactViewModel>()
+                                              .deleteContact(id);
+                                        }
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      });
+                                });
+                          },
+                          icon: const Icon(Icons.delete)),
+                    const SizedBox(width: 16),
                     IconButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -162,21 +203,26 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       color: setColorOfTextField(
                                           isFirstNameEmpty)),
                                 ),
-                                child: Center(
-                                  child: TextField(
-                                    controller: firstNameController,
-                                    decoration: const InputDecoration.collapsed(
-                                        hintText: "First Name eg. Nick"),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        firstName = value;
-                                      });
-                                    },
-                                    onTap: () {
-                                      setState(() {
-                                        isFirstNameEmpty = false;
-                                      });
-                                    },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Center(
+                                    child: TextField(
+                                      controller: firstNameController,
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                              hintText: "First Name eg. Nick"),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          firstName = value;
+                                        });
+                                      },
+                                      onTap: () {
+                                        setState(() {
+                                          isFirstNameEmpty = false;
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
@@ -202,19 +248,24 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       color:
                                           setColorOfTextField(isLastNameEmpty)),
                                 ),
-                                child: Center(
-                                  child: TextField(
-                                    controller: lastNameController,
-                                    decoration: const InputDecoration.collapsed(
-                                        hintText: ""),
-                                    onChanged: (value) {
-                                      lastName = value;
-                                    },
-                                    onTap: () {
-                                      setState(() {
-                                        isLastNameEmpty = false;
-                                      });
-                                    },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Center(
+                                    child: TextField(
+                                      controller: lastNameController,
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                              hintText: ""),
+                                      onChanged: (value) {
+                                        lastName = value;
+                                      },
+                                      onTap: () {
+                                        setState(() {
+                                          isLastNameEmpty = false;
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
@@ -247,19 +298,24 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       color: setColorOfTextField(
                                           isFirstNameThaiEmpty)),
                                 ),
-                                child: Center(
-                                  child: TextField(
-                                    controller: firstNameThaiController,
-                                    decoration: const InputDecoration.collapsed(
-                                        hintText: ""),
-                                    onChanged: (value) {
-                                      firstNameThai = value;
-                                    },
-                                    onTap: () {
-                                      setState(() {
-                                        isFirstNameThaiEmpty = false;
-                                      });
-                                    },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Center(
+                                    child: TextField(
+                                      controller: firstNameThaiController,
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                              hintText: ""),
+                                      onChanged: (value) {
+                                        firstNameThai = value;
+                                      },
+                                      onTap: () {
+                                        setState(() {
+                                          isFirstNameThaiEmpty = false;
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
@@ -285,19 +341,24 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       color: setColorOfTextField(
                                           isLastNameThaiEmpty)),
                                 ),
-                                child: Center(
-                                  child: TextField(
-                                    controller: lastNameThaiController,
-                                    decoration: const InputDecoration.collapsed(
-                                        hintText: ""),
-                                    onChanged: (value) {
-                                      lastNameThai = value;
-                                    },
-                                    onTap: () {
-                                      setState(() {
-                                        isLastNameThaiEmpty = false;
-                                      });
-                                    },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Center(
+                                    child: TextField(
+                                      controller: lastNameThaiController,
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                              hintText: ""),
+                                      onChanged: (value) {
+                                        lastNameThai = value;
+                                      },
+                                      onTap: () {
+                                        setState(() {
+                                          isLastNameThaiEmpty = false;
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
@@ -329,19 +390,24 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                   border: Border.all(
                                       color: setColorOfTextField(isEmailEmpty)),
                                 ),
-                                child: Center(
-                                  child: TextField(
-                                    controller: emailTextController,
-                                    decoration: const InputDecoration.collapsed(
-                                        hintText: ""),
-                                    onChanged: (value) {
-                                      email = value;
-                                    },
-                                    onTap: () {
-                                      setState(() {
-                                        isEmailEmpty = false;
-                                      });
-                                    },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Center(
+                                    child: TextField(
+                                      controller: emailTextController,
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                              hintText: ""),
+                                      onChanged: (value) {
+                                        email = value;
+                                      },
+                                      onTap: () {
+                                        setState(() {
+                                          isEmailEmpty = false;
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
@@ -367,19 +433,24 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       color: setColorOfTextField(
                                           isPhoneNumberEmpty)),
                                 ),
-                                child: Center(
-                                  child: TextField(
-                                    controller: phoneController,
-                                    decoration: const InputDecoration.collapsed(
-                                        hintText: ""),
-                                    onChanged: (value) {
-                                      phoneNumber = value;
-                                    },
-                                    onTap: () {
-                                      setState(() {
-                                        isPhoneNumberEmpty = false;
-                                      });
-                                    },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Center(
+                                    child: TextField(
+                                      controller: phoneController,
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                              hintText: ""),
+                                      onChanged: (value) {
+                                        phoneNumber = value;
+                                      },
+                                      onTap: () {
+                                        setState(() {
+                                          isPhoneNumberEmpty = false;
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
@@ -590,38 +661,49 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                   child: Text(Consts.subjectLabel)),
                               const SizedBox(height: 8),
                               Container(
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(
-                                        color: setColorOfTextField(
-                                            isSubjectEmpty)),
-                                  ),
-                                  child: FutureBuilder(
-                                      future: context
-                                          .read<TeacherContactViewModel>()
-                                          .getSubjects(),
-                                      builder: (context, snapshot) {
-                                        List<Subject> subjects =
-                                            Subject.subjectsFromJson(
-                                                snapshot.data);
-                                        final items = subjects
-                                            .map((subject) => MultiSelectItem<
-                                                    Subject>(subject,
-                                                "${subject.id} ${subject.name}"))
-                                            .toList();
-                                        return MultiSelectDialogField(
-                                          initialValue: const [],
-                                          items: items,
-                                          searchable: true,
-                                          onConfirm: (selectedList) {
-                                            selectedSubjects = context
-                                                .read<TeacherContactViewModel>()
-                                                .getSubjectStrings(
-                                                    selectedList);
-                                          },
-                                        );
-                                      })),
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                      color:
+                                          setColorOfTextField(isSubjectEmpty)),
+                                ),
+                                // subjects
+                                // child: FutureBuilder(
+                                //     future: context
+                                //         .read<TeacherContactViewModel>()
+                                //         .getSubjects(),
+                                //     builder: (context, snapshot) {
+                                //       List<Subject> subjects =
+                                //           Subject.subjectsFromJson(
+                                //               snapshot.data);
+                                //       final items = subjects
+                                //           .map((subject) => MultiSelectItem<
+                                //                   Subject>(subject,
+                                //               "${subject.id} ${subject.name}"))
+                                //           .toList();
+                                //       return MultiSelectDialogField(
+                                //         initialValue: const [],
+                                //         items: items,
+                                //         searchable: true,
+                                //         onConfirm: (selectedList) {
+                                //           selectedSubjects = context
+                                //               .read<TeacherContactViewModel>()
+                                //               .getSubjectStrings(
+                                //                   selectedList);
+                                //         },
+                                //       );
+                                //     }),
+                                child: MultiSelectSubject(
+                                  subjects: subjects,
+                                  uid: widget.id ?? "",
+                                  onConfirm: (selectedList) {
+                                    context
+                                        .read<TeacherContactViewModel>()
+                                        .getSubjectStrings(selectedList);
+                                  },
+                                ),
+                              ),
                             ]),
                       ),
                     ),
@@ -656,7 +738,8 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                             .pickImage(
                                                 source: ImageSource.gallery);
                                         if (pickedFile != null) {
-                                          imageFile = await pickedFile!.readAsBytes();
+                                          imageFile =
+                                              await pickedFile!.readAsBytes();
                                           setState(() {
                                             uploadResult = Consts.uploadSuccess;
                                             isImageError = false;
