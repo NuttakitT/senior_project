@@ -152,6 +152,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                               .deleteContact(id);
                                         }
                                         Navigator.pop(context);
+                                        Navigator.pop(context);
                                       });
                                 });
                           },
