@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
@@ -111,5 +110,26 @@ class RoleManagementViewModel extends ChangeNotifier {
     final model = RoleManagementModel.overloaddedConstructor(admin, category);
     _model = model;
     return model;
+  }
+
+  Future<void> deleteCategory(String docId) async {
+    await _serviesCategory.deleteDocument(docId);
+  }
+
+  Future<void> editCategory(String docId, String title, String detail) async {
+    if (title != docId) {
+      await deleteCategory(docId);
+      await _serviesCategory.setDocument(title, {
+        "name": title,
+        "description": detail,
+        "isHelpDesk": true,
+        "isCommunity": false,
+        "isApproved": false
+      });
+    } else {
+      await _serviesCategory.editDocument(docId, {
+        "description": detail,
+      });
+    }
   }
 }

@@ -118,7 +118,7 @@ class _NotificationDropdownState extends State<NotificationDropdown> {
                 child: Column(
                   children: [
                     Container(
-                      width: 319,
+                      // width: 319,
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       decoration: const BoxDecoration(
                         color: Colors.white,
@@ -130,15 +130,26 @@ class _NotificationDropdownState extends State<NotificationDropdown> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                list[i]["title"],
-                                style: const TextStyle(
-                                  fontFamily: AppFontStyle.font,
-                                  fontWeight: AppFontWeight.regular,
-                                  fontSize: 20,
-                                  color: ColorConstant.whiteBlack90
+                              SizedBox(
+                                width: 190,
+                                child: RichText(
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: list[i]["title"],
+                                        style: const TextStyle(
+                                          fontFamily: AppFontStyle.font,
+                                          fontWeight: AppFontWeight.regular,
+                                          fontSize: 20,
+                                          color: ColorConstant.whiteBlack90
+                                        ),
+                                      )
+                                    ]
+                                  ),
                                 ),
                               ),
                               Builder(
