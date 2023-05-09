@@ -162,6 +162,11 @@ extension AppFontStyle on FontStyle {
       fontWeight: AppFontWeight.semiBold,
       fontSize: 16,
       color: ColorConstant.whiteBlack60);
+  static const wb70R14 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.regular,
+      fontSize: 14,
+      color: ColorConstant.whiteBlack70);
   static const wb70R16 = TextStyle(
       fontFamily: font,
       fontWeight: AppFontWeight.regular,
@@ -267,6 +272,11 @@ extension AppFontStyle on FontStyle {
       color: ColorConstant.whiteBlack90,
       fontWeight: AppFontWeight.medium,
       fontSize: 32);
+  static const wb90R18 = TextStyle(
+      fontFamily: font,
+      color: ColorConstant.whiteBlack90,
+      fontWeight: AppFontWeight.regular,
+      fontSize: 18);
 
   // orange
   static const orange40SemiB16 = TextStyle(
