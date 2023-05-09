@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: unused_element
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/my_profile/model/user_profile_model.dart';
 
@@ -39,7 +40,9 @@ class UserProfileViewModel extends ChangeNotifier {
     try {
       await firebaseServiceForUser.editDocument(uid, data);
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

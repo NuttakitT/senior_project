@@ -1,5 +1,3 @@
-import 'package:uuid/uuid.dart';
-
 class TeacherContactModel {
   final String? id;
   final String imageUrl;

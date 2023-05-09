@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view/widget/chat_input.dart';
 import 'package:senior_project/statistic/model/statistic_model.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 

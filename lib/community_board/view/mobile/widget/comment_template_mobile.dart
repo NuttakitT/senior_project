@@ -73,7 +73,6 @@ class _CommentTemplateMobileState extends State<CommentTemplateMobile> {
                                 onPressed: () {
                                   if (!(!editText.isNotEmpty && isEditiing) && editText != widget.info["detail"]) {
                                     showDialog(context: context, builder: (context) {
-                                      // TODO confirm design?
                                       return AlertDialog(
                                         content: Column(
                                           mainAxisSize: MainAxisSize.min,

@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages, avoid_function_literals_in_foreach_calls
+
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ class StatisticViewModel extends ChangeNotifier {
       DateTime currentDateOnly =
           DateTime(currentDate.year, currentDate.month, currentDate.day);
       allDates.add(currentDateOnly);
-      currentDate = currentDate.add(Duration(days: 1));
+      currentDate = currentDate.add(const Duration(days: 1));
     }
     Map<DateTime, int> mergedData = {};
     allDates.forEach((date) {
@@ -140,6 +142,7 @@ class StatisticViewModel extends ChangeNotifier {
       Timestamp startTimestamp = doc['dateCreate'];
       Timestamp endTimestamp = doc['dateComplete'] ?? Timestamp.now();
 
+      // ignore: unnecessary_null_comparison
       if (startTimestamp != null && endTimestamp != null) {
         DateTime startTime = startTimestamp.toDate();
         DateTime endTime = endTimestamp.toDate();

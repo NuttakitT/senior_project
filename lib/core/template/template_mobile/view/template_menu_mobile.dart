@@ -8,6 +8,8 @@ import 'package:senior_project/community_board/view_model/community_board_view_m
 import 'package:senior_project/core/template/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
+import 'package:senior_project/teacher_contact/view/teacher_contact_view.dart';
+import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
 
 class TemplateMenuMobile extends StatefulWidget {
   final Widget content;
@@ -190,10 +192,17 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         ),
                       ),
                       onTap: () {
+                        int? role =
+                            context.read<AppViewModel>().app.getUser.getRole;
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(2);
-                        //TODO when click link to teacher contact
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(builder: (context) {
+                            return TeacherContactView(isAdmin: role == 0 ? true : false);
+                          })
+                        );
                       },
                     ),
                   ),
@@ -227,17 +236,18 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         ),
                       ),
                       onTap: () {
-                        // TODO edit profile
+                        int? role =
+                            context.read<AppViewModel>().app.getUser.getRole;
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(3);
-                        // Navigator.pushAndRemoveUntil(
-                        //   context, 
-                        //   MaterialPageRoute(builder: (context) {
-                        //     return MyProfileView();
-                        //   }), 
-                        //   (route) => false
-                        // );
+                        Navigator.pushAndRemoveUntil(
+                          context, 
+                          MaterialPageRoute(builder: (context) {
+                            return MyProfileView(isAdmin: role == 0 ? true : false,);
+                          }), 
+                          (route) => false
+                        );
                       },
                     ),
                   ),

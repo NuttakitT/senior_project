@@ -3,7 +3,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
@@ -33,8 +32,8 @@ class _AddContactPopupState extends State<AddContactPopup> {
     'Sunday',
   ];
 
-  TimeOfDay startTime = TimeOfDay(hour: 8, minute: 30);
-  TimeOfDay endTime = TimeOfDay(hour: 17, minute: 30);
+  TimeOfDay startTime = const TimeOfDay(hour: 8, minute: 30);
+  TimeOfDay endTime = const TimeOfDay(hour: 17, minute: 30);
 
   String firstName = "";
   bool isFirstNameEmpty = false;

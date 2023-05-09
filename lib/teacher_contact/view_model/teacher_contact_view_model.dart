@@ -1,16 +1,11 @@
 // ignore_for_file: depend_on_referenced_packages, library_prefixes
-
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/datasource/firebase_services.dart';
 import '../model/teacher_contact_model.dart';
-import 'package:path/path.dart' as Path;
 
 class TeacherContactViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();

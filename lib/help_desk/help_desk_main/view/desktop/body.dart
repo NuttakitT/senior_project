@@ -18,7 +18,6 @@ import 'package:senior_project/help_desk/help_desk_main/view/desktop/ticket_list
 import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_status.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/body_reply_desktop.dart';
-import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 Stream? query(String id, int type, bool isAdmin, {
   DocumentSnapshot? startDoc,

@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
@@ -19,7 +17,6 @@ class _NotificationOverlayState extends State<NotificationOverlay> {
   @override
   void initState() {
     context.read<AppViewModel>().getSettingDetail();
-    // TODO: implement initState
     startTime = context.read<AppViewModel>().startTime;
     endTime = context.read<AppViewModel>().endTime;
     super.initState();

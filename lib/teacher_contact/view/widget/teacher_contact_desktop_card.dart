@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
@@ -47,7 +48,9 @@ class TeacherContactDesktopCard extends StatelessWidget {
                 );
               });
         } catch (e) {
-          print(e);
+          if (kDebugMode) {
+            print(e);
+          }
         }
 
         // handle edit data

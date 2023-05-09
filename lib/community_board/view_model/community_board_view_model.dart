@@ -1,19 +1,15 @@
 // ignore_for_file: prefer_is_empty, prefer_final_fields, depend_on_referenced_packages, library_prefixes
 
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/community_board/model/community_board_model.dart';
 import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:uuid/uuid.dart';
-import 'package:path/path.dart' as Path;
 
 class Topic {
   final String name;

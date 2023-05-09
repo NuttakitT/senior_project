@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:senior_project/statistic/view/widget/ticket_category.dart';
-
 // class StatisticModel {
 //   int totalTicket;
 //   List<LineChartModel>? ticketVolume;
