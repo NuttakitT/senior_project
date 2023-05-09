@@ -246,7 +246,6 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                           Navigator.pushAndRemoveUntil(context,
                               MaterialPageRoute(builder: (context) {
                             return const EditProfileMobile();
-                            // return MyProfileView(isAdmin: role == 0 ? true : false,);
                           }), (route) => false);
                         },
                       ),
