@@ -206,50 +206,57 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: InkWell(
-                      child: Container(
-                        decoration: profileState ? selectedStyle() : null,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 16, bottom: 16, left: 16, right: 8),
-                              child: Icon(
-                                Icons.account_circle_rounded,
-                                color: profileState
-                                    ? ColorConstant.orange60
-                                    : ColorConstant.whiteBlack80,
-                              ),
+                  Builder(
+                    builder: (context) {
+                      if (!isLogin) {
+                        return Container();
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: InkWell(
+                          child: Container(
+                            decoration: profileState ? selectedStyle() : null,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 16, bottom: 16, left: 16, right: 8),
+                                  child: Icon(
+                                    Icons.account_circle_rounded,
+                                    color: profileState
+                                        ? ColorConstant.orange60
+                                        : ColorConstant.whiteBlack80,
+                                  ),
+                                ),
+                                Text(
+                                  'Edit Profile',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    color: profileState
+                                        ? ColorConstant.orange60
+                                        : ColorConstant.whiteBlack80,
+                                  ),
+                                )
+                              ],
                             ),
-                            Text(
-                              'Edit Profile',
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: profileState
-                                    ? ColorConstant.orange60
-                                    : ColorConstant.whiteBlack80,
-                              ),
-                            )
-                          ],
+                          ),
+                          onTap: () {
+                            context
+                                .read<TemplateMobileViewModel>()
+                                .changeMenuState(3);
+                            int? role =
+                                context.read<AppViewModel>().app.getUser.getRole;
+                            Navigator.pushAndRemoveUntil(
+                              context, 
+                              MaterialPageRoute(builder: (context) {
+                                return MyProfileView(isAdmin: role == 0 ? true : false,);
+                              }), 
+                              (route) => false
+                            );
+                          },
                         ),
-                      ),
-                      onTap: () {
-                        context
-                            .read<TemplateMobileViewModel>()
-                            .changeMenuState(3);
-                        int? role =
-                            context.read<AppViewModel>().app.getUser.getRole;
-                        Navigator.pushAndRemoveUntil(
-                          context, 
-                          MaterialPageRoute(builder: (context) {
-                            return MyProfileView(isAdmin: role == 0 ? true : false,);
-                          }), 
-                          (route) => false
-                        );
-                      },
-                    ),
+                      );
+                    }
                   ),
                 ],
               ),
