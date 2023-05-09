@@ -179,7 +179,7 @@ class _EditProfileMobileState extends State<EditProfileMobile> {
                         fixedSize:
                             MaterialStateProperty.all(const Size(150, 40))),
                     child: const Text(
-                      "Uplaod",
+                      "Upload",
                       style: TextStyle(
                           fontFamily: AppFontStyle.font,
                           fontWeight: AppFontWeight.bold,
