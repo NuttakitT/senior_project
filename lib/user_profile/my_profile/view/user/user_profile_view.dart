@@ -13,10 +13,9 @@ class UserProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // bool isMobileSite = context
-    //     .watch<AppViewModel>()
-    //     .getMobileSiteState(MediaQuery.of(context).size.width);
-    bool isMobileSite = true;
+    bool isMobileSite = context
+        .watch<AppViewModel>()
+        .getMobileSiteState(MediaQuery.of(context).size.width);
 
     if (isMobileSite) {
       return TemplateMenuMobile(
