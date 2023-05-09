@@ -24,7 +24,7 @@ class TeacherContactView extends StatelessWidget {
         future: context.watch<TeacherContactViewModel>().getTeacherContacts(),
         builder: ((context, snapshot) {
           if (isMobileSite) {
-            context.read<TemplateMobileViewModel>().changeMenuState(1);
+            context.read<TemplateMobileViewModel>().changeMenuState(2);
             return TemplateMenuMobile(
                   content: TeacherContactDesktopListView(
                   isMobileSite: isMobileSite,

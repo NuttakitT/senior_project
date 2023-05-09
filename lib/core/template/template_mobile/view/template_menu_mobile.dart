@@ -192,11 +192,11 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         ),
                       ),
                       onTap: () {
-                        int? role =
-                            context.read<AppViewModel>().app.getUser.getRole;
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(2);
+                        int? role =
+                            context.read<AppViewModel>().app.getUser.getRole;
                         Navigator.push(
                           context, 
                           MaterialPageRoute(builder: (context) {
@@ -236,11 +236,11 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         ),
                       ),
                       onTap: () {
-                        int? role =
-                            context.read<AppViewModel>().app.getUser.getRole;
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(3);
+                        int? role =
+                            context.read<AppViewModel>().app.getUser.getRole;
                         Navigator.pushAndRemoveUntil(
                           context, 
                           MaterialPageRoute(builder: (context) {
