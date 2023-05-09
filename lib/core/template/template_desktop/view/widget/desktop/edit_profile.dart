@@ -79,7 +79,7 @@ class _EditProfileState extends State<EditProfile> {
                   padding: const EdgeInsets.only(right: 24),
                   child: Builder(
                     builder: (context) {
-                      if (imageUrl!.isNotEmpty) {
+                      if (imageUrl != null) {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Image.network(
