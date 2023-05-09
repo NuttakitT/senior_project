@@ -97,7 +97,7 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex) {
               SizedBox(
                 width: cell.contains("isDes") ? 700 : null,
                 child: Text(
-                  cell.contains("isDes") ? cell.split(" ")[1] : cell,
+                  cell.contains("isDes") ? cell.split("isDes ")[1] : cell,
                   style: isHeader ? AppFontStyle.wb80B20 : AppFontStyle.wb80R20,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -112,7 +112,7 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex) {
                           showDialog(
                             context: context, 
                             builder: (context) {
-                              return EditCategoryPopup(title: cells[1], detail: cells[2].split(" ")[1]);
+                              return EditCategoryPopup(title: cells[1], detail: cells[2].split("isDes ")[1]);
                             }
                           );
                         },
