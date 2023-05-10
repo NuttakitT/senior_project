@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/community_board/view/page/community_board_view.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
+import 'package:senior_project/core/template/template_mobile/view/edit_profile_mobile.dart';
 import 'package:senior_project/core/template/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
@@ -105,17 +106,15 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         ),
                       ),
                       onTap: () {
-                        context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
+                        context.read<CommunityBoardViewModel>().setIsSafeLoad =
+                            true;
                         context
                             .read<TemplateMobileViewModel>()
                             .changeMenuState(0);
-                        Navigator.pushAndRemoveUntil(
-                          context, 
-                          MaterialPageRoute(builder: (context) {
-                            return const CommunityBoardView();
-                          }), 
-                          (route) => false
-                        );
+                        Navigator.pushAndRemoveUntil(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const CommunityBoardView();
+                        }), (route) => false);
                       },
                     ),
                   ),
@@ -197,67 +196,61 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                             .changeMenuState(2);
                         int? role =
                             context.read<AppViewModel>().app.getUser.getRole;
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) {
-                            return TeacherContactView(isAdmin: role == 0 ? true : false);
-                          })
-                        );
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return TeacherContactView(
+                              isAdmin: role == 0 ? true : false);
+                        }));
                       },
                     ),
                   ),
-                  Builder(
-                    builder: (context) {
-                      if (!isLogin) {
-                        return Container();
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: InkWell(
-                          child: Container(
-                            decoration: profileState ? selectedStyle() : null,
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16, bottom: 16, left: 16, right: 8),
-                                  child: Icon(
-                                    Icons.account_circle_rounded,
-                                    color: profileState
-                                        ? ColorConstant.orange60
-                                        : ColorConstant.whiteBlack80,
-                                  ),
-                                ),
-                                Text(
-                                  'Edit Profile',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    color: profileState
-                                        ? ColorConstant.orange60
-                                        : ColorConstant.whiteBlack80,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          onTap: () {
-                            context
-                                .read<TemplateMobileViewModel>()
-                                .changeMenuState(3);
-                            int? role =
-                                context.read<AppViewModel>().app.getUser.getRole;
-                            Navigator.pushAndRemoveUntil(
-                              context, 
-                              MaterialPageRoute(builder: (context) {
-                                return MyProfileView(isAdmin: role == 0 ? true : false,);
-                              }), 
-                              (route) => false
-                            );
-                          },
-                        ),
-                      );
+                  Builder(builder: (context) {
+                    if (!isLogin) {
+                      return Container();
                     }
-                  ),
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: InkWell(
+                        child: Container(
+                          decoration: profileState ? selectedStyle() : null,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 16, bottom: 16, left: 16, right: 8),
+                                child: Icon(
+                                  Icons.account_circle_rounded,
+                                  color: profileState
+                                      ? ColorConstant.orange60
+                                      : ColorConstant.whiteBlack80,
+                                ),
+                              ),
+                              Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: profileState
+                                      ? ColorConstant.orange60
+                                      : ColorConstant.whiteBlack80,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          context
+                              .read<TemplateMobileViewModel>()
+                              .changeMenuState(3);
+                          int? role =
+                              context.read<AppViewModel>().app.getUser.getRole;
+                          Navigator.pushAndRemoveUntil(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const EditProfileMobile();
+                          }), (route) => false);
+                        },
+                      ),
+                    );
+                  }),
                 ],
               ),
               Padding(
@@ -287,13 +280,10 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                     } else {
                       await context.read<AppViewModel>().login(context);
                     }
-                    Navigator.pushAndRemoveUntil(
-                      context, 
-                      MaterialPageRoute(builder: (context) {
-                        return const CommunityBoardView();
-                      }), 
-                      (route) => false
-                    );
+                    Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const CommunityBoardView();
+                    }), (route) => false);
                   },
                 ),
               ),

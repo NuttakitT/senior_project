@@ -732,7 +732,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                           });
                                         } else {
                                           setState(() {
-                                            uploadResult = Consts.uplaodFailed;
+                                            uploadResult = Consts.uploadFailed;
                                             isImageError = true;
                                           });
                                         }
@@ -757,7 +757,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                   const SizedBox(width: 16),
                                   Text(
                                     uploadResult,
-                                    style: uploadResult == Consts.uplaodFailed
+                                    style: uploadResult == Consts.uploadFailed
                                         ? AppFontStyle.red40R14
                                         : AppFontStyle.wb60R14,
                                   )
@@ -951,5 +951,5 @@ class Consts {
   static String upload = "Upload";
 
   static String uploadSuccess = "Upload Complete!";
-  static String uplaodFailed = "Error";
+  static String uploadFailed = "Error";
 }

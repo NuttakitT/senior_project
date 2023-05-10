@@ -23,7 +23,8 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     String? phone = context.read<AppViewModel>().app.getUser.getPhone;
     String uid = context.watch<AppViewModel>().app.getUser.getId;
-    String? imageUrl = context.watch<AppViewModel>().app.getUser.getProfileImageUrl;
+    String? imageUrl =
+        context.watch<AppViewModel>().app.getUser.getProfileImageUrl;
     return AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -34,10 +35,8 @@ class _EditProfileState extends State<EditProfile> {
           Container(
             width: double.infinity,
             decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: ColorConstant.whiteBlack20)
-              )
-            ),
+                border: Border(
+                    bottom: BorderSide(color: ColorConstant.whiteBlack20))),
             padding: const EdgeInsets.fromLTRB(0, 24, 24, 24),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,11 +44,10 @@ class _EditProfileState extends State<EditProfile> {
                 const Text(
                   "Edit Profile",
                   style: TextStyle(
-                    fontFamily: AppFontStyle.font,
-                    fontWeight: AppFontWeight.bold,
-                    fontSize: 28,
-                    color: ColorConstant.orange60
-                  ),
+                      fontFamily: AppFontStyle.font,
+                      fontWeight: AppFontWeight.bold,
+                      fontSize: 28,
+                      color: ColorConstant.orange60),
                 ),
                 InkWell(
                   onTap: () {
@@ -59,9 +57,8 @@ class _EditProfileState extends State<EditProfile> {
                     width: 24,
                     height: 24,
                     decoration: const BoxDecoration(
-                      color: ColorConstant.whiteBlack70,
-                      shape: BoxShape.circle
-                    ),
+                        color: ColorConstant.whiteBlack70,
+                        shape: BoxShape.circle),
                     child: const Icon(
                       Icons.close_rounded,
                       color: Colors.white,
@@ -77,34 +74,32 @@ class _EditProfileState extends State<EditProfile> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 24),
-                  child: Builder(
-                    builder: (context) {
-                      if (imageUrl != null) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            imageUrl,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.fill,
-                          ),
-                        );
-                      }
-                      return Container(
-                        width: 100,
-                        height: 100,
-                        decoration: const BoxDecoration(
-                          color: ColorConstant.blue40,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.person_rounded,
-                          color: ColorConstant.whiteBlack90,
-                          size: 70,
+                  child: Builder(builder: (context) {
+                    if (imageUrl != null) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(
+                          imageUrl,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fill,
                         ),
                       );
                     }
-                  ),
+                    return Container(
+                      width: 100,
+                      height: 100,
+                      decoration: const BoxDecoration(
+                        color: ColorConstant.blue40,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.person_rounded,
+                        color: ColorConstant.whiteBlack90,
+                        size: 70,
+                      ),
+                    );
+                  }),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,134 +109,118 @@ class _EditProfileState extends State<EditProfile> {
                       child: Text(
                         context.read<AppViewModel>().app.getUser.getName,
                         style: const TextStyle(
-                          fontFamily: AppFontStyle.font,
-                          fontWeight: AppFontWeight.medium,
-                          fontSize: 28,
-                          color: ColorConstant.whiteBlack80
-                        ),
+                            fontFamily: AppFontStyle.font,
+                            fontWeight: AppFontWeight.medium,
+                            fontSize: 28,
+                            color: ColorConstant.whiteBlack80),
                       ),
                     ),
-                    Builder(
-                      builder: (context) {
-                        if (hasImage) {
-                          return Row(
-                            children: [
-                              Text(
-                                pickedFile!.name,
-                                style: const TextStyle(
+                    Builder(builder: (context) {
+                      if (hasImage) {
+                        return Row(
+                          children: [
+                            Text(
+                              pickedFile!.name,
+                              style: const TextStyle(
                                   fontFamily: AppFontStyle.font,
                                   fontWeight: AppFontWeight.bold,
                                   fontSize: 16,
-                                  color: ColorConstant.whiteBlack70
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: TextButton(
-                                  onPressed: () async {
-                                    await context.read<TemplateDesktopViewModel>().uploadImage(imageFile, pickedFile!.name, uid);
-                                    // ignore: use_build_context_synchronously
-                                    Navigator.pop(context);
-                                  }, 
-                                  style: ButtonStyle(
+                                  color: ColorConstant.whiteBlack70),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: TextButton(
+                                onPressed: () async {
+                                  await context
+                                      .read<TemplateDesktopViewModel>()
+                                      .uploadImage(
+                                          imageFile, pickedFile!.name, uid);
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.pop(context);
+                                },
+                                style: ButtonStyle(
                                     shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16)
-                                      )
-                                    ),
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16))),
                                     backgroundColor: MaterialStateProperty.all(
-                                      ColorConstant.orange70
-                                    ),
+                                        ColorConstant.orange70),
                                     padding: MaterialStateProperty.all(
-                                      const EdgeInsets.all(16)
-                                    )
-                                  ),
-                                  child: const Text(
-                                    "Confirm",
-                                    style: TextStyle(
+                                        const EdgeInsets.all(16))),
+                                child: const Text(
+                                  "Confirm",
+                                  style: TextStyle(
                                       fontFamily: AppFontStyle.font,
                                       fontWeight: AppFontWeight.bold,
                                       fontSize: 16,
-                                      color: Colors.white
-                                    ),
-                                  ),
+                                      color: Colors.white),
                                 ),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    hasImage = false;
-                                  });
-                                  imageFile = null;
-                                  pickedFile = null;
-                                }, 
-                                style: ButtonStyle(
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  hasImage = false;
+                                });
+                                imageFile = null;
+                                pickedFile = null;
+                              },
+                              style: ButtonStyle(
                                   shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)
-                                    )
-                                  ),
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16))),
                                   backgroundColor: MaterialStateProperty.all(
-                                    ColorConstant.white
-                                  ),
+                                      ColorConstant.white),
                                   side: MaterialStateProperty.all(
-                                    const BorderSide(color: ColorConstant.orange70)
-                                  ),
+                                      const BorderSide(
+                                          color: ColorConstant.orange70)),
                                   padding: MaterialStateProperty.all(
-                                    const EdgeInsets.all(16)
-                                  )
-                                ),
-                                child: const Text(
-                                  "Cancel",
-                                  style: TextStyle(
+                                      const EdgeInsets.all(16))),
+                              child: const Text(
+                                "Cancel",
+                                style: TextStyle(
                                     fontFamily: AppFontStyle.font,
                                     fontWeight: AppFontWeight.bold,
                                     fontSize: 16,
-                                    color: ColorConstant.orange70
-                                  ),
-                                ),
+                                    color: ColorConstant.orange70),
                               ),
-                            ],
-                          );
-                        }
-                        return TextButton(
-                          onPressed: () async {
-                            pickedFile = await ImagePicker()
-                              .pickImage(
-                                  source: ImageSource.gallery);
-                            if (pickedFile != null) {
-                              imageFile = await pickedFile!.readAsBytes();
-                              setState(() {
-                                hasImage = true;
-                              });
-                            }
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.white),
-                            side: MaterialStateProperty.all(
-                              const BorderSide(color: ColorConstant.orange50)
                             ),
+                          ],
+                        );
+                      }
+                      return TextButton(
+                        onPressed: () async {
+                          pickedFile = await ImagePicker()
+                              .pickImage(source: ImageSource.gallery);
+                          if (pickedFile != null) {
+                            imageFile = await pickedFile!.readAsBytes();
+                            setState(() {
+                              hasImage = true;
+                            });
+                          }
+                        },
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.white),
+                            side: MaterialStateProperty.all(const BorderSide(
+                                color: ColorConstant.orange50)),
                             shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)
-                              )
-                            ),
-                            fixedSize: MaterialStateProperty.all(
-                              const Size(150, 40)
-                            )
-                          ),
-                          child: const Text(
-                            "Uplaod",
-                            style: TextStyle(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                            fixedSize:
+                                MaterialStateProperty.all(const Size(150, 40))),
+                        child: const Text(
+                          "Upload",
+                          style: TextStyle(
                               fontFamily: AppFontStyle.font,
                               fontWeight: AppFontWeight.bold,
                               fontSize: 16,
-                              color: ColorConstant.orange50
-                            ),
-                          ),
-                        );
-                      }
-                    )
+                              color: ColorConstant.orange50),
+                        ),
+                      );
+                    })
                   ],
                 )
               ],
@@ -257,11 +236,10 @@ class _EditProfileState extends State<EditProfile> {
                   child: Text(
                     "E-mail",
                     style: TextStyle(
-                      fontFamily: AppFontStyle.font,
-                      fontWeight: AppFontWeight.regular,
-                      fontSize: 18,
-                      color: ColorConstant.whiteBlack60
-                    ),
+                        fontFamily: AppFontStyle.font,
+                        fontWeight: AppFontWeight.regular,
+                        fontSize: 18,
+                        color: ColorConstant.whiteBlack60),
                   ),
                 ),
                 Container(
@@ -269,18 +247,16 @@ class _EditProfileState extends State<EditProfile> {
                   height: 45,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    border: Border.all(color: ColorConstant.whiteBlack30),
-                    borderRadius: BorderRadius.circular(8)
-                  ),
+                      border: Border.all(color: ColorConstant.whiteBlack30),
+                      borderRadius: BorderRadius.circular(8)),
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
                     context.read<AppViewModel>().app.getUser.getEmail,
                     style: const TextStyle(
-                      fontFamily: AppFontStyle.font,
-                      fontWeight: AppFontWeight.regular,
-                      fontSize: 18,
-                      color: ColorConstant.whiteBlack70
-                    ),
+                        fontFamily: AppFontStyle.font,
+                        fontWeight: AppFontWeight.regular,
+                        fontSize: 18,
+                        color: ColorConstant.whiteBlack70),
                   ),
                 )
               ],
@@ -294,11 +270,10 @@ class _EditProfileState extends State<EditProfile> {
                 child: Text(
                   "Phone",
                   style: TextStyle(
-                    fontFamily: AppFontStyle.font,
-                    fontWeight: AppFontWeight.regular,
-                    fontSize: 18,
-                    color: ColorConstant.whiteBlack60
-                  ),
+                      fontFamily: AppFontStyle.font,
+                      fontWeight: AppFontWeight.regular,
+                      fontSize: 18,
+                      color: ColorConstant.whiteBlack60),
                 ),
               ),
               Container(
@@ -306,18 +281,16 @@ class _EditProfileState extends State<EditProfile> {
                 width: double.infinity,
                 height: 45,
                 decoration: BoxDecoration(
-                  border: Border.all(color: ColorConstant.whiteBlack30),
-                  borderRadius: BorderRadius.circular(8)
-                ),
+                    border: Border.all(color: ColorConstant.whiteBlack30),
+                    borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
                   phone ?? "-",
                   style: const TextStyle(
-                    fontFamily: AppFontStyle.font,
-                    fontWeight: AppFontWeight.regular,
-                    fontSize: 18,
-                    color: ColorConstant.whiteBlack70
-                  ),
+                      fontFamily: AppFontStyle.font,
+                      fontWeight: AppFontWeight.regular,
+                      fontSize: 18,
+                      color: ColorConstant.whiteBlack70),
                 ),
               )
             ],

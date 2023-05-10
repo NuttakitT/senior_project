@@ -27,6 +27,13 @@ class _MyProfileViewState extends State<MyProfileView> {
     final userData = context.select<UserProfileViewModel, UserModel?>(
         (viewModel) => viewModel.user);
 
+    return FutureBuilder(
+        // future: context.read<UserProfileViewModel>(),
+        builder: (context, snapshot) {
+      if (snapshot == null) {}
+      return Container();
+    });
+
     if (userData == null) {
       return const Center(
         child: Text("No results"),
