@@ -129,7 +129,6 @@ class FirebaseServices {
     }
   }
 
-  // TODO add change to report
   // Get all documents in the collection, return null there are no
   // document or collection in the database.
   Future<QuerySnapshot?> getAllDocument(
@@ -149,7 +148,6 @@ class FirebaseServices {
     }
   }
 
-  // TODO add change to report
   //---------------------- Read operation(Real-time) ---------------------------
   // A stream listener use as a listener for a document queried by key-value.
   // key: list of the filed to query
@@ -399,7 +397,6 @@ class FirebaseServices {
     }
   }
 
-  // TODO add change to report
   //---------------------- Read operation(Real-time) ---------------------------
   // A stream listener used as a listener for a document in sub-collection
   // queried by key-value.
