@@ -241,12 +241,14 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                           context
                               .read<TemplateMobileViewModel>()
                               .changeMenuState(3);
-                          int? role =
-                              context.read<AppViewModel>().app.getUser.getRole;
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const EditProfileMobile();
-                          }), (route) => false);
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const EditProfileMobile();
+                              }
+                            )
+                          );
                         },
                       ),
                     );
