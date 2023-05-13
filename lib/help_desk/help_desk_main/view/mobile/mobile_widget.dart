@@ -322,7 +322,7 @@ class _MobileWidgetState extends State<MobileWidget> {
           ),
           Builder(
             builder: (context) {
-              if (!widget.isAdmin) {
+              if (widget.isAdmin) {
                 return Container();
               }
               return Padding(
