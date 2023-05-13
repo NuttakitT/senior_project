@@ -39,7 +39,7 @@ class HelpDeskReplyPage extends StatefulWidget {
 class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
   @override
   Widget build(BuildContext context) {
-    bool isMobile = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
+    // bool isMobile = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     String uid = context.watch<AppViewModel>().app.getUser.getId;
     context.read<ReplyChannelViewModel>().setTaskData = {
@@ -54,7 +54,7 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
       "adminId": widget.adminId,
     };
 
-    if (isMobile) {
+    // if (isMobile) {
       return Builder(
         builder: (context) {
           return StreamBuilder(
@@ -109,7 +109,7 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
           );
         }
       );
-    }
-    return HelpDeskMainView(isAdmin: isAdmin,);
+    // }
+    // return HelpDeskMainView(isAdmin: isAdmin,);
   }
 }

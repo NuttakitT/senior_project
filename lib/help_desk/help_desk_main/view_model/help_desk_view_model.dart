@@ -47,9 +47,6 @@ class HelpDeskViewModel extends ChangeNotifier {
   get getReplyDocId => _replyDocId;
   void clearReplyDocId() => _replyDocId = [];
 
-  set setIsMobile(bool state) => _isMobile = state;
-  get getIsMobile => _isMobile;
-
   set setIsSafeClick(bool state) => _isSafeClick = state;
   get getIsSafeClick => _isSafeClick;
 

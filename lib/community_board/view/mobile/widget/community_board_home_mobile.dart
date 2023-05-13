@@ -60,7 +60,9 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                                 context.read<TextSearch>().setSearchText(value);
                               },
                               maxLines: 1,
+                              maxLength: 512,
                               decoration: const InputDecoration(
+                                counterText: "",
                                 fillColor: ColorConstant.whiteBlack40,
                                 hintText: "Search",
                                 hintStyle: TextStyle(
