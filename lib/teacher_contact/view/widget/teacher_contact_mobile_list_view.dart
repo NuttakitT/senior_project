@@ -23,13 +23,16 @@ class TeacherContactMobileListView extends StatelessWidget {
     if (cards.isEmpty) {
       return const Center(child: Text('No results'));
     }
-    return Container(
+    return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: ListView.builder(
-            itemCount: cards.length,
-            itemBuilder: (context, index) {
-              return TeacherContactMobileCard(cardDetail: cards[index]);
-            }));
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 200),
+          child: ListView.builder(
+              itemCount: cards.length,
+              itemBuilder: (context, index) {
+                return TeacherContactMobileCard(cardDetail: cards[index]);
+              }),
+        ));
   }
 }

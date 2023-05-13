@@ -27,17 +27,23 @@ class TeacherContactMobileCard extends StatelessWidget {
                       backgroundImage: NetworkImage(cardDetail['imageUrl']),
                       radius: 30),
                   const SizedBox(width: 24),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb90R18,
-                          child: Text(cardDetail['name'])),
-                      const SizedBox(height: 4),
-                      DefaultTextStyle(
-                          style: AppFontStyle.wb70R16,
-                          child: Text(cardDetail['email'])),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DefaultTextStyle(
+                            style: AppFontStyle.wb90R18,
+                            child: Text(cardDetail['name'])),
+                        const SizedBox(height: 4),
+                        DefaultTextStyle(
+                            style: AppFontStyle.wb70R16,
+                            child: Text(
+                              cardDetail['email'],
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            )),
+                      ],
+                    ),
                   )
                 ],
               ),
