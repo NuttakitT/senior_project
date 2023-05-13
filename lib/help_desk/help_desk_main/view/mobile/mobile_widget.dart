@@ -320,29 +320,36 @@ class _MobileWidgetState extends State<MobileWidget> {
               )
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 24, bottom: 74),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) {
-                      return CreateTask(isAdmin: widget.isAdmin);
-                    }
-                  ), 
-                );
-              },
-              child: Container(
-                width: 46,
-                height: 46,
-                decoration: const BoxDecoration(
-                  color: ColorConstant.orange60,
-                  shape: BoxShape.circle
+          Builder(
+            builder: (context) {
+              if (!widget.isAdmin) {
+                return Container();
+              }
+              return Padding(
+                padding: const EdgeInsets.only(right: 24, bottom: 74),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) {
+                          return CreateTask(isAdmin: widget.isAdmin);
+                        }
+                      ), 
+                    );
+                  },
+                  child: Container(
+                    width: 46,
+                    height: 46,
+                    decoration: const BoxDecoration(
+                      color: ColorConstant.orange60,
+                      shape: BoxShape.circle
+                    ),
+                    alignment: AlignmentDirectional.center,
+                    child: const Icon(Icons.add, color: Colors.white, size: 32,),
+                  ),
                 ),
-                alignment: AlignmentDirectional.center,
-                child: const Icon(Icons.add, color: Colors.white, size: 32,),
-              ),
-            ),
+              );
+            }
           )
         ]
       ),
