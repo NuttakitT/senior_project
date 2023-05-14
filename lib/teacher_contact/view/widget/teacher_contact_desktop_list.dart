@@ -28,7 +28,7 @@ class TeacherContactDesktopListView extends StatelessWidget {
       child: GridView.count(
           padding: const EdgeInsets.only(top: 40, left: 102, right: 102),
           crossAxisCount: isMobileSite ? 1 : 2,
-          childAspectRatio: 2.25,
+          childAspectRatio: 2.1,
           mainAxisSpacing: 20.0,
           crossAxisSpacing: 20.0,
           children: List.generate(cards.length, (index) {
