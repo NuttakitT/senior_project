@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
@@ -19,11 +20,13 @@ class _StatisticViewState extends State<StatisticView> {
   List<TicketCommentModel> comments = [];
 
   List<double> parameters = [];
+
+  bool isMobileSite = kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
+
   @override
   Widget build(BuildContext context) {
-    bool isMobileSite = context
-        .watch<AppViewModel>()
-        .getMobileSiteState(MediaQuery.of(context).size.width);
     if (widget.isAdmin && !isMobileSite) {
       return FutureBuilder(
           future: context.read<StatisticViewModel>().fetchPage(),

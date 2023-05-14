@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
@@ -6,15 +7,16 @@ import 'package:senior_project/user_profile/my_profile/view/user/widget/user_pro
 import 'package:senior_project/user_profile/my_profile/view/user/widget/user_profile_header.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 
-import '../../../../../core/view_model/app_view_model.dart';
-
 class AdminProfileView extends StatelessWidget {
   final Map<String, dynamic> data;
   const AdminProfileView({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
+    bool isMobileSite = kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.android);
+    // bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
 
     if (isMobileSite) {
       return TemplateMenuMobile(

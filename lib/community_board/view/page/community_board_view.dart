@@ -18,22 +18,21 @@ class CommunityBoardView extends StatefulWidget {
 }
 
 class _CommunityBoardViewState extends State<CommunityBoardView> {
-  bool isMobileSite = kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android);
+  bool isMobileSite = kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
   @override
   Widget build(BuildContext context) {
-    // bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
     return FutureBuilder(
       future: FirebaseServices("category").getDocumnetByKeyValuePair(
-        ["isCommunity", "isApproved"],
-        [true, true]
-      ),
+          ["isCommunity", "isApproved"], [true, true]),
       builder: (context, snapshot) {
         context.read<CommunityBoardViewModel>().clearAllTopic();
         if (snapshot.connectionState == ConnectionState.done) {
           for (int i = 0; i < snapshot.data!.docs.length; i++) {
-            context.read<CommunityBoardViewModel>().addAllTopic(
-              snapshot.data!.docs[i].get("name")
-            );
+            context
+                .read<CommunityBoardViewModel>()
+                .addAllTopic(snapshot.data!.docs[i].get("name"));
           }
           if (isMobileSite) {
             context.read<TemplateMobileViewModel>().changeMenuState(0);
