@@ -33,22 +33,27 @@ class _TicketCardState extends State<TicketCard> {
         .watch<HelpDeskViewModel>()
         .convertToString(true, widget.detail["status"]);
     double cardWidth = 396;
-    String localTime = "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
-    String taskTime = "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
+    String localTime =
+        "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
+    String taskTime =
+        "${widget.detail["time"].day}/${widget.detail["time"].month}/${widget.detail["time"].year}";
     String uid = context.watch<AppViewModel>().app.getUser.getId;
-    bool isRead = widget.detail["isSeen"].contains(uid) || FirebaseAuth.instance.currentUser!.uid == widget.detail["ownerId"];
+    bool isRead = widget.detail["isSeen"].contains(uid) ||
+        FirebaseAuth.instance.currentUser!.uid == widget.detail["ownerId"];
 
     return FutureBuilder(
-      future: context.read<HelpDeskViewModel>().formatTaskDetail(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-            child: InkWell(
-              onTap: () async {
-                String docId = await context.read<HelpDeskViewModel>().getTaskDocId(widget.detail["id"]);
-                Navigator.push(context, 
-                  MaterialPageRoute(builder: (context) {
+        future: context.read<HelpDeskViewModel>().formatTaskDetail(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Padding(
+              padding:
+                  const EdgeInsets.only(left: 16, right: 8, bottom: 4, top: 4),
+              child: InkWell(
+                onTap: () async {
+                  String docId = await context
+                      .read<HelpDeskViewModel>()
+                      .getTaskDocId(widget.detail["id"]);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return HelpDeskReplyPage(
                       docId: docId,
                       id: widget.detail["id"],
@@ -58,131 +63,137 @@ class _TicketCardState extends State<TicketCard> {
                       status: widget.detail["status"],
                       category: widget.detail["category"],
                       time: widget.detail["time"],
-                      adminId: widget.detail["adminId"], 
+                      adminId: widget.detail["adminId"],
                       ownerId: widget.detail["ownerId"],
                     );
-                  })
-                );
-              },
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: SizedBox(
-                  width: cardWidth,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: ColorConstant.blue20
-                        ),
-                        child: const Icon(
-                          Icons.person_rounded,
-                          color: ColorConstant.whiteBlack90,
-                        ),
+                  }));
+                },
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        border: Border(
+                      bottom: BorderSide(
+                        color: ColorConstant.whiteBlack20,
+                        width: 1.0,
                       ),
-                      Container(
-                        width: 332,
-                        padding: const EdgeInsets.only(left: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  fit: FlexFit.tight,
-                                  flex: 2,
-                                  child: RichText(
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: widget.detail["name"],
-                                          style: detailStyle(
-                                            16, 
-                                            isRead, 
-                                            isRead ? ColorConstant.whiteBlack60 : ColorConstant.whiteBlack90
-                                          )
-                                        )
-                                      ]
-                                    ),
-                                  )
-                                ),
-                                Text(
-                                  localTime == taskTime 
-                                    ? DateFormat('hh:mm a').format(widget.detail["time"]) 
-                                    : DateFormat('dd MMM').format(widget.detail["time"]),
-                                  style: detailStyle(
-                                    14, 
-                                    isRead,
-                                    isRead ? ColorConstant.whiteBlack40 : ColorConstant.whiteBlack80
-                                  )
-                                ),
-                              ],
+                    )),
+                    width: cardWidth,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: ColorConstant.blue20),
+                            child: const Icon(
+                              Icons.person_rounded,
+                              color: ColorConstant.whiteBlack90,
                             ),
-                            Row(
+                          ),
+                          Container(
+                            width: 332,
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "[$status] ",
-                                  style: detailStyle(
-                                    14, 
-                                    isRead,
-                                    isRead ? ColorConstant.whiteBlack60 : ColorConstant.whiteBlack80
-                                  )
-                                ), 
-                                Flexible(
-                                  fit: FlexFit.tight,
-                                  flex: 3,
-                                  child: RichText(
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: widget.detail["title"],
-                                          style: detailStyle(
-                                            14, 
-                                            isRead, 
-                                            isRead ? ColorConstant.whiteBlack60 : ColorConstant.whiteBlack80
-                                          )
-                                        )
-                                      ]
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            RichText(
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: widget.detail["detail"],
-                                    style: detailStyle(
-                                      14, 
-                                      isRead, 
-                                      isRead ? ColorConstant.whiteBlack60 : ColorConstant.whiteBlack80
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                        fit: FlexFit.tight,
+                                        flex: 2,
+                                        child: RichText(
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          text: TextSpan(children: [
+                                            TextSpan(
+                                                text: widget.detail["name"],
+                                                style: detailStyle(
+                                                    16,
+                                                    isRead,
+                                                    isRead
+                                                        ? ColorConstant
+                                                            .whiteBlack60
+                                                        : ColorConstant
+                                                            .whiteBlack90))
+                                          ]),
+                                        )),
+                                    Text(
+                                        localTime == taskTime
+                                            ? DateFormat('hh:mm a')
+                                                .format(widget.detail["time"])
+                                            : DateFormat('dd MMM')
+                                                .format(widget.detail["time"]),
+                                        style: detailStyle(
+                                            14,
+                                            isRead,
+                                            isRead
+                                                ? ColorConstant.whiteBlack40
+                                                : ColorConstant.whiteBlack80)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("[$status] ",
+                                        style: detailStyle(
+                                            14,
+                                            isRead,
+                                            isRead
+                                                ? ColorConstant.whiteBlack60
+                                                : ColorConstant.whiteBlack80)),
+                                    Flexible(
+                                      fit: FlexFit.tight,
+                                      flex: 3,
+                                      child: RichText(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        text: TextSpan(children: [
+                                          TextSpan(
+                                              text: widget.detail["title"],
+                                              style: detailStyle(
+                                                  14,
+                                                  isRead,
+                                                  isRead
+                                                      ? ColorConstant
+                                                          .whiteBlack60
+                                                      : ColorConstant
+                                                          .whiteBlack80))
+                                        ]),
+                                      ),
                                     )
-                                  )
-                                ]
-                              ),
+                                  ],
+                                ),
+                                RichText(
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  text: TextSpan(children: [
+                                    TextSpan(
+                                        text: widget.detail["detail"],
+                                        style: detailStyle(
+                                            14,
+                                            isRead,
+                                            isRead
+                                                ? ColorConstant.whiteBlack60
+                                                : ColorConstant.whiteBlack80))
+                                  ]),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
-                    ],
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        }
-        return Container();
-      } 
-    );
+            );
+          }
+          return Container();
+        });
   }
 }
