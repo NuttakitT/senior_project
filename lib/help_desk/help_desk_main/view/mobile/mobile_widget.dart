@@ -20,20 +20,12 @@ Stream? query(String id, int type, bool isAdmin) {
   final FirebaseServices service = FirebaseServices("ticket");
   if (type == 0) {
     return service.listenToDocumentByKeyValuePair(
-    [isAdmin ? "adminId" : "ownerId"],
-    [id], 
-    orderingField: 'dateCreate',
-    descending: true,
-    limit: 100
-  );
+        [isAdmin ? "adminId" : "ownerId"], [id],
+        orderingField: 'dateCreate', descending: true, limit: 100);
   }
   return service.listenToDocumentByKeyValuePair(
-    [isAdmin ? "adminId" : "ownerId", "status"],
-    [id, type-1], 
-    orderingField: 'dateCreate',
-    descending: true,
-    limit: 100
-  );
+      [isAdmin ? "adminId" : "ownerId", "status"], [id, type - 1],
+      orderingField: 'dateCreate', descending: true, limit: 100);
 }
 
 class MobileWidget extends StatefulWidget {
@@ -95,14 +87,13 @@ class _MobileWidgetState extends State<MobileWidget> {
     double pixelWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height-90,
+      height: MediaQuery.of(context).size.height - 90,
       child: Stack(alignment: AlignmentDirectional.bottomEnd, children: [
         Column(
           children: [
             Container(
               color: Colors.white,
-              padding: EdgeInsets.only(
-                  top: 24 + _scaleText(pixelWidth)),
+              padding: EdgeInsets.only(top: 24 + _scaleText(pixelWidth)),
               alignment: Alignment.center,
               width: double.infinity,
               child: Stack(
@@ -152,207 +143,243 @@ class _MobileWidgetState extends State<MobileWidget> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  border: Border.all(color: ColorConstant.whiteBlack30),
-                  borderRadius: BorderRadius.circular(8)
-                ),
-                alignment: Alignment.center,
-                child: const SearchBar(isHelpDeskPage: true,)
-              ),
+                  height: 50,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: ColorConstant.whiteBlack30),
+                      borderRadius: BorderRadius.circular(8)),
+                  alignment: Alignment.center,
+                  child: const SearchBar(
+                    isHelpDeskPage: true,
+                  )),
             ),
             Container(
               width: double.infinity,
               decoration: const BoxDecoration(
                   color: Colors.white,
                   border: Border(
-                    bottom: BorderSide(
-                      color: ColorConstant.whiteBlack15
-                    )
-                  )
-                ),
-                child: Builder(
-                  builder: (context) {
-                    if (pixelWidth <= 340) {
-                      return Scrollbar(
-                        controller: _menuController,
-                        thumbVisibility: true,
-                        thickness: 4,
-                        child: SingleChildScrollView(
-                          controller: _menuController,
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: InkWell(
-                                  onTap: () {
-                                    context.read<HelpDeskViewModel>().changeMobileMenuState(0);
-                                  },
-                                  child: menu(
-                                    "All", 
-                                    context.watch<HelpDeskViewModel>().getMobileMenuState(0) as bool
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: InkWell(
-                                  onTap: () {
-                                    context.read<HelpDeskViewModel>().changeMobileMenuState(1);
-                                  },
-                                  child: menu(
-                                    "Not start", 
-                                    context.watch<HelpDeskViewModel>().getMobileMenuState(1) as bool
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: InkWell(
-                                  onTap: () {
-                                    context.read<HelpDeskViewModel>().changeMobileMenuState(2);
-                                  },
-                                  child: menu(
-                                    "In progress", 
-                                    context.watch<HelpDeskViewModel>().getMobileMenuState(2) as bool
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                    context.read<HelpDeskViewModel>().changeMobileMenuState(3);
-                                  },
-                                child: menu(
-                                  "Closed", 
-                                  context.watch<HelpDeskViewModel>().getMobileMenuState(3) as bool
-                                ),
-                              ),
-                            ],
+                      bottom: BorderSide(color: ColorConstant.whiteBlack15))),
+              child: Builder(builder: (context) {
+                if (pixelWidth <= 340) {
+                  return Scrollbar(
+                    controller: _menuController,
+                    thumbVisibility: true,
+                    thickness: 4,
+                    child: SingleChildScrollView(
+                      controller: _menuController,
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: InkWell(
+                              onTap: () {
+                                context
+                                    .read<HelpDeskViewModel>()
+                                    .changeMobileMenuState(0);
+                              },
+                              child: menu(
+                                  "All",
+                                  context
+                                      .watch<HelpDeskViewModel>()
+                                      .getMobileMenuState(0) as bool),
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            context.read<HelpDeskViewModel>().changeMobileMenuState(0);
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: InkWell(
+                              onTap: () {
+                                context
+                                    .read<HelpDeskViewModel>()
+                                    .changeMobileMenuState(1);
+                              },
+                              child: menu(
+                                  "Not start",
+                                  context
+                                      .watch<HelpDeskViewModel>()
+                                      .getMobileMenuState(1) as bool),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: InkWell(
+                              onTap: () {
+                                context
+                                    .read<HelpDeskViewModel>()
+                                    .changeMobileMenuState(2);
+                              },
+                              child: menu(
+                                  "In progress",
+                                  context
+                                      .watch<HelpDeskViewModel>()
+                                      .getMobileMenuState(2) as bool),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              context
+                                  .read<HelpDeskViewModel>()
+                                  .changeMobileMenuState(3);
+                            },
+                            child: menu(
+                                "Closed",
+                                context
+                                    .watch<HelpDeskViewModel>()
+                                    .getMobileMenuState(3) as bool),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          context
+                              .read<HelpDeskViewModel>()
+                              .changeMobileMenuState(0);
+                        },
+                        child: menu(
+                            "All",
+                            context
+                                .watch<HelpDeskViewModel>()
+                                .getMobileMenuState(0) as bool)),
+                    InkWell(
+                        onTap: () {
+                          context
+                              .read<HelpDeskViewModel>()
+                              .changeMobileMenuState(1);
+                        },
+                        child: menu(
+                            "Not start",
+                            context
+                                .watch<HelpDeskViewModel>()
+                                .getMobileMenuState(1) as bool)),
+                    InkWell(
+                        onTap: () {
+                          context
+                              .read<HelpDeskViewModel>()
+                              .changeMobileMenuState(2);
+                        },
+                        child: menu(
+                            "In progress",
+                            context
+                                .watch<HelpDeskViewModel>()
+                                .getMobileMenuState(2) as bool)),
+                    InkWell(
+                        onTap: () {
+                          context
+                              .read<HelpDeskViewModel>()
+                              .changeMobileMenuState(3);
+                        },
+                        child: menu(
+                            "Closed",
+                            context
+                                .watch<HelpDeskViewModel>()
+                                .getMobileMenuState(3) as bool)),
+                  ],
+                );
+              }),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Scrollbar(
+                controller: _vContraoller,
+                thumbVisibility: true,
+                child: SingleChildScrollView(
+                    controller: _vContraoller,
+                    child: Builder(builder: (context) {
+                      String searchText =
+                          context.watch<TextSearch>().getSearchText;
+                      if (searchText.isEmpty) {
+                        context.read<HelpDeskViewModel>().clearModel();
+                        int tagBarSelected = context
+                            .watch<HelpDeskViewModel>()
+                            .getSelectedMobileMenu();
+                        String id =
+                            context.watch<AppViewModel>().app.getUser.getId;
+                        return StreamBuilder(
+                          stream: query(id, tagBarSelected, widget.isAdmin),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const LoaderStatus(text: "Error occurred");
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.active) {
+                              if (snapshot.data!.docs.isNotEmpty) {
+                                return FutureBuilder(
+                                  future: context
+                                      .read<HelpDeskViewModel>()
+                                      .reconstructQueryData(
+                                          snapshot.data as QuerySnapshot),
+                                  builder: (context, futureSnapshot) {
+                                    if (futureSnapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      List<Map<String, dynamic>> content =
+                                          context
+                                              .watch<HelpDeskViewModel>()
+                                              .getTask;
+                                      return Column(
+                                          children: generateContent(content));
+                                    }
+                                    return Container();
+                                  },
+                                );
+                              } else {
+                                context.read<HelpDeskViewModel>().clearModel();
+                                return const LoaderStatus(
+                                    text: "No task in this section");
+                              }
+                            } else {
+                              return const LoaderStatus(text: "Loading...");
+                            }
                           },
-                          child: menu("All", context.watch<HelpDeskViewModel>().getMobileMenuState(0) as bool)
-                        ),
-                        InkWell(
-                          onTap: () {
-                            context.read<HelpDeskViewModel>().changeMobileMenuState(1);
-                          },
-                          child: menu("Not start", context.watch<HelpDeskViewModel>().getMobileMenuState(1) as bool)
-                        ),
-                        InkWell(
-                          onTap: () {
-                            context.read<HelpDeskViewModel>().changeMobileMenuState(2);
-                          },
-                          child: menu("In progress", context.watch<HelpDeskViewModel>().getMobileMenuState(2) as bool)
-                        ),
-                        InkWell(
-                          onTap: () {
-                            context.read<HelpDeskViewModel>().changeMobileMenuState(3);
-                          },
-                          child: menu("Closed", context.watch<HelpDeskViewModel>().getMobileMenuState(3) as bool)
-                        ),
-                      ],
-                    );
-                  }
+                        );
+                      }
+                      context.read<TextSearch>().initHitSearcher("ticket");
+                      context
+                          .read<TextSearch>()
+                          .getHitsSearcher
+                          .query(searchText);
+                      return const TextSearcResultMobile();
+                    })),
+              ),
+            )
+          ],
+        ),
+        Builder(builder: (context) {
+          if (widget.isAdmin) {
+            return Container();
+          }
+          return Padding(
+            padding: const EdgeInsets.only(right: 24, bottom: 24),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return CreateTask(isAdmin: widget.isAdmin);
+                  }),
+                );
+              },
+              child: Container(
+                width: 46,
+                height: 46,
+                decoration: const BoxDecoration(
+                    color: ColorConstant.orange60, shape: BoxShape.circle),
+                alignment: AlignmentDirectional.center,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 32,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 24),
-                child: Scrollbar(
-                  controller: _vContraoller,
-                  thumbVisibility: true,
-                  child: SingleChildScrollView(
-                    controller: _vContraoller,
-                    child: Builder(
-                      builder: (context) {
-                        String searchText = context.watch<TextSearch>().getSearchText;
-                        if (searchText.isEmpty) {
-                          context.read<HelpDeskViewModel>().clearModel();
-                          int tagBarSelected = context.watch<HelpDeskViewModel>().getSelectedMobileMenu();
-                          String id = context.watch<AppViewModel>().app.getUser.getId;   
-                          return StreamBuilder(
-                            stream: query(id, tagBarSelected, widget.isAdmin),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return const LoaderStatus(text: "Error occurred");
-                              } 
-                              if (snapshot.connectionState == ConnectionState.active) {
-                                if (snapshot.data!.docs.isNotEmpty) {
-                                  return FutureBuilder(
-                                    future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
-                                    builder: (context, futureSnapshot) {
-                                      if (futureSnapshot.connectionState == ConnectionState.done) {
-                                        List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-                                        return Column(
-                                        children: generateContent(content)
-                                      );
-                                      }
-                                      return Container();
-                                    },
-                                  );
-                                } else {
-                                  context.read<HelpDeskViewModel>().clearModel();
-                                  return const LoaderStatus(text: "No task in this section");
-                                }      
-                              } else {
-                                return const LoaderStatus(text: "Loading...");
-                              }
-                            },
-                          );
-                        }
-                        context.read<TextSearch>().initHitSearcher("ticket");
-                        context.read<TextSearch>().getHitsSearcher.query(searchText);
-                        return const TextSearcResultMobile();
-                      }
-                    )
-                  ),
-                ),
-              )
-            ],
-          ),
-          Builder(
-            builder: (context) {
-              if (widget.isAdmin) {
-                return Container();
-              }
-              return Padding(
-                padding: const EdgeInsets.only(right: 24, bottom: 74),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (context) {
-                          return CreateTask(isAdmin: widget.isAdmin);
-                        }
-                      ), 
-                    );
-                  },
-                  child: Container(
-                    width: 46,
-                    height: 46,
-                    decoration: const BoxDecoration(
-                      color: ColorConstant.orange60,
-                      shape: BoxShape.circle
-                    ),
-                    alignment: AlignmentDirectional.center,
-                    child: const Icon(Icons.add, color: Colors.white, size: 32,),
-                  ),
-                ),
-              );
-            }
-          )
-        ]
-      ),
+            ),
+          );
+        })
+      ]),
     );
   }
 }
