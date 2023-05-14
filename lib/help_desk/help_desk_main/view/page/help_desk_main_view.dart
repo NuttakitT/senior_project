@@ -85,8 +85,8 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
                       child: Column(
                         children: [
                           Header.widget(context, widget.isAdmin),
-                          const Body(
-                            isAdmin: true,
+                          Body(
+                            isAdmin: widget.isAdmin,
                           )
                         ],
                       ),
