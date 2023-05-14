@@ -22,6 +22,8 @@ class ConfirmationPopup extends StatefulWidget {
 }
 
 class _ConfirmationPopupState extends State<ConfirmationPopup> {
+  bool isButtonEnabled = true;
+
   @override
   void initState() {
     super.initState();
@@ -90,7 +92,12 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          widget.onConfirm();
+                          if (isButtonEnabled) {
+                            widget.onConfirm();
+                            setState(() {
+                              isButtonEnabled = false;
+                            });
+                          }
                         },
                         child:
                             Text(Consts.confirm, style: AppFontStyle.whiteB16),
