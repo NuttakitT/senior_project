@@ -56,52 +56,52 @@ class _DateFilterState extends State<DateFilter> {
         const DefaultTextStyle(
             style: AppFontStyle.wb90Md32, child: Text("Dashboard")),
         const Spacer(),
-        GestureDetector(
-          onTap: () => _selectStartDate(context),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: ColorConstant.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: ColorConstant.whiteBlack60),
-            ),
-            child: Text(
-              _startDate != null
-                  ? _startDate.toString().split(' ')[0]
-                  : 'Start Date',
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        GestureDetector(
-          onTap: () => _selectEndDate(context),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: ColorConstant.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: ColorConstant.whiteBlack60),
-            ),
-            child: Text(
-              _endDate != null ? _endDate.toString().split(' ')[0] : 'End Date',
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        DropdownButton<String>(
-          value: _selectedOption,
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedOption = newValue!;
-            });
-          },
-          items: _options.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ),
+        // GestureDetector(
+        //   onTap: () => _selectStartDate(context),
+        //   child: Container(
+        //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        //     decoration: BoxDecoration(
+        //       color: ColorConstant.white,
+        //       borderRadius: BorderRadius.circular(8),
+        //       border: Border.all(color: ColorConstant.whiteBlack60),
+        //     ),
+        //     child: Text(
+        //       _startDate != null
+        //           ? _startDate.toString().split(' ')[0]
+        //           : 'Start Date',
+        //     ),
+        //   ),
+        // ),
+        // const SizedBox(width: 16),
+        // GestureDetector(
+        //   onTap: () => _selectEndDate(context),
+        //   child: Container(
+        //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        //     decoration: BoxDecoration(
+        //       color: ColorConstant.white,
+        //       borderRadius: BorderRadius.circular(8),
+        //       border: Border.all(color: ColorConstant.whiteBlack60),
+        //     ),
+        //     child: Text(
+        //       _endDate != null ? _endDate.toString().split(' ')[0] : 'End Date',
+        //     ),
+        //   ),
+        // ),
+        // const SizedBox(width: 16),
+        // DropdownButton<String>(
+        //   value: _selectedOption,
+        //   onChanged: (String? newValue) {
+        //     setState(() {
+        //       _selectedOption = newValue!;
+        //     });
+        //   },
+        //   items: _options.map<DropdownMenuItem<String>>((String value) {
+        //     return DropdownMenuItem<String>(
+        //       value: value,
+        //       child: Text(value),
+        //     );
+        //   }).toList(),
+        // ),
       ],
     );
   }
