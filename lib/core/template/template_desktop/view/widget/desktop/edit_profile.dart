@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -132,11 +134,11 @@ class _EditProfileState extends State<EditProfile> {
                                   const EdgeInsets.symmetric(horizontal: 16),
                               child: TextButton(
                                 onPressed: () async {
-                                  await context
+                                  String? url = await context
                                       .read<TemplateDesktopViewModel>()
                                       .uploadImage(
                                           imageFile, pickedFile!.name, uid);
-                                  // ignore: use_build_context_synchronously
+                                  context.read<AppViewModel>().app.getUser.setProfileImageUrl = url;
                                   Navigator.pop(context);
                                 },
                                 style: ButtonStyle(

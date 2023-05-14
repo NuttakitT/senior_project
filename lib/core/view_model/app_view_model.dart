@@ -168,7 +168,7 @@ class AppViewModel extends ChangeNotifier {
         "email": credential.user!.email,
         "name": credential.user!.displayName,
         "phone": credential.user!.phoneNumber,
-        "profileImageUrl": credential.user!.photoURL,
+        "profileImageUrl":snapshot.get("profileImageUrl"),
         "role": snapshot.get("role"),
         "responsibility": snapshot.get("responsibility")
       });

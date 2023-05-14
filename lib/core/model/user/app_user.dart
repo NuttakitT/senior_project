@@ -30,6 +30,6 @@ class AppUser {
   int? get getRole => _role;
   List<dynamic> get getResponsibility => _responsibility;
 
-  set setProfileImageUrl(String url) => _profileImageUrl = url;
+  set setProfileImageUrl(String? url) => _profileImageUrl = url;
   set setRole(int role) => _role = role;
 }

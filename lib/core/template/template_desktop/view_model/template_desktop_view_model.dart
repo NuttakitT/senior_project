@@ -177,7 +177,7 @@ class TemplateDesktopViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> uploadImage(Uint8List? file, String fileName, String docId) async {
+  Future<String?> uploadImage(Uint8List? file, String fileName, String docId) async {
     try {
       String? imageUrl;
       if (file != null) {
@@ -200,10 +200,12 @@ class TemplateDesktopViewModel extends ChangeNotifier {
         });
         FirebaseServices("user").editDocument(docId, {"profileImageUrl": imageUrl});
       }
+      return imageUrl;
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
+      return null;
     } 
   }
 

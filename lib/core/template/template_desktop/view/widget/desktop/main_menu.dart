@@ -235,7 +235,16 @@ class _MainMenuState extends State<MainMenu> {
               padding: const EdgeInsets.only(right: 24),
               child: Row(
                 children: [
-                  const NotificationDropdown(),
+                  Builder(
+                    builder: (context) {
+                      bool isAdmin =
+                      context.watch<AppViewModel>().app.getUser.getRole == 0;
+                      if (!isAdmin) {
+                        return Container();
+                      }
+                      return const NotificationDropdown();
+                    }
+                  ),
                   PopupMenuButton(
                     padding: const EdgeInsets.all(0),
                     child: Container(

@@ -83,76 +83,97 @@ class _EditProfileMobileState extends State<EditProfileMobile> {
                 }),
                 const SizedBox(height: 16),
                 DefaultTextStyle(
-                    style: AppFontStyle.wb80Md28, child: Text(name)),
+                  style: AppFontStyle.wb80Md28, 
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  child: Text(name)
+                ),
                 const SizedBox(height: 8),
                 Builder(builder: (context) {
                   if (hasImage) {
-                    return Row(
+                    return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          pickedFile!.name,
-                          style: const TextStyle(
-                              fontFamily: AppFontStyle.font,
-                              fontWeight: AppFontWeight.bold,
-                              fontSize: 16,
-                              color: ColorConstant.whiteBlack70),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: TextButton(
-                            onPressed: () async {
-                              await context
-                                  .read<TemplateDesktopViewModel>()
-                                  .uploadImage(
-                                      imageFile, pickedFile!.name, uid);
-                              // ignore: use_build_context_synchronously
-                              Navigator.pop(context);
-                            },
-                            style: ButtonStyle(
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(16))),
-                                backgroundColor: MaterialStateProperty.all(
-                                    ColorConstant.orange70),
-                                padding: MaterialStateProperty.all(
-                                    const EdgeInsets.all(16))),
-                            child: const Text(
-                              "Confirm",
-                              style: TextStyle(
-                                  fontFamily: AppFontStyle.font,
-                                  fontWeight: AppFontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              hasImage = false;
-                            });
-                            imageFile = null;
-                            pickedFile = null;
-                          },
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16))),
-                              backgroundColor: MaterialStateProperty.all(
-                                  ColorConstant.white),
-                              side: MaterialStateProperty.all(const BorderSide(
-                                  color: ColorConstant.orange70)),
-                              padding: MaterialStateProperty.all(
-                                  const EdgeInsets.all(16))),
-                          child: const Text(
-                            "Cancel",
-                            style: TextStyle(
+                        SizedBox(
+                          width: 200,
+                          child: Text(
+                            pickedFile!.name,
+                            style: const TextStyle(
                                 fontFamily: AppFontStyle.font,
                                 fontWeight: AppFontWeight.bold,
                                 fontSize: 16,
-                                color: ColorConstant.orange70),
+                                color: ColorConstant.whiteBlack70),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16),
+                                child: TextButton(
+                                  onPressed: () async {
+                                    String? url = await context
+                                        .read<TemplateDesktopViewModel>()
+                                        .uploadImage(
+                                            imageFile, pickedFile!.name, uid);
+                                    // ignore: use_build_context_synchronously
+                                    context.read<AppViewModel>().app.getUser.setProfileImageUrl = url;
+                                    setState(() {
+                                      hasImage = false;
+                                    });
+                                    imageFile = null;
+                                    pickedFile = null;
+                                  },
+                                  style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16))),
+                                      backgroundColor: MaterialStateProperty.all(
+                                          ColorConstant.orange70),
+                                      padding: MaterialStateProperty.all(
+                                          const EdgeInsets.all(16))),
+                                  child: const Text(
+                                    "Confirm",
+                                    style: TextStyle(
+                                        fontFamily: AppFontStyle.font,
+                                        fontWeight: AppFontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    hasImage = false;
+                                  });
+                                  imageFile = null;
+                                  pickedFile = null;
+                                },
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(16))),
+                                    backgroundColor: MaterialStateProperty.all(
+                                        ColorConstant.white),
+                                    side: MaterialStateProperty.all(const BorderSide(
+                                        color: ColorConstant.orange70)),
+                                    padding: MaterialStateProperty.all(
+                                        const EdgeInsets.all(16))),
+                                child: const Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      fontFamily: AppFontStyle.font,
+                                      fontWeight: AppFontWeight.bold,
+                                      fontSize: 16,
+                                      color: ColorConstant.orange70),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
