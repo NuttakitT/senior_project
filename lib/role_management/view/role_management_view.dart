@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
@@ -5,7 +6,6 @@ import 'package:senior_project/core/template/template_desktop/view_model/templat
 import 'package:senior_project/role_management/view/widgets/category_table.dart';
 import 'package:senior_project/role_management/view/widgets/role_management_table.dart';
 import 'package:senior_project/role_management/view_model/role_management_view_model.dart';
-import '../../core/view_model/app_view_model.dart';
 
 class RoleManagementView extends StatefulWidget {
   final bool isAdmin;
@@ -22,11 +22,12 @@ class _RoleManagementViewState extends State<RoleManagementView> {
     super.initState();
   }
 
+  bool isMobileSite = kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
+
   @override
   Widget build(BuildContext context) {
-    bool isMobileSite = context
-        .watch<AppViewModel>()
-        .getMobileSiteState(MediaQuery.of(context).size.width);
     context.read<TemplateDesktopViewModel>().changeState(context, 3, 1);
     if (widget.isAdmin && !isMobileSite) {
       return FutureBuilder(

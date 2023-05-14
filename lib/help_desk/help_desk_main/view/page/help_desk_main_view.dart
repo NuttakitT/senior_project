@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
@@ -21,14 +22,17 @@ class HelpDeskMainView extends StatefulWidget {
 }
 
 class _HelpDeskMainViewState extends State<HelpDeskMainView> {
+  bool isMobileSite = kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
 
   @override
   Widget build(BuildContext context) {
-    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
-    double screenHeight = MediaQuery.of(context).size.height;
+    // bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
+    // double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole;
     bool isLogin = context.watch<AppViewModel>().isLogin;
-    context.read<HelpDeskViewModel>().setIsMobile = isMobileSite;
+    // context.read<HelpDeskViewModel>().setIsMobile = isMobileSite;
 
     return FutureBuilder(
       future: context.read<HelpDeskViewModel>().initTicketCategory(),
@@ -36,75 +40,69 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
         if (snapshot.connectionState == ConnectionState.done) {
           if (isMobileSite) {
             context.read<TemplateMobileViewModel>().changeMenuState(1);
-            return TemplateMenuMobile(
-                content: Builder(
-                  builder: (context) {
-                    if (!isLogin) {
-                      return const Center(
-                        child: Text(
-                          "Please login to use the services",
-                          style: TextStyle(
-                            color: ColorConstant.orange60,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: AppFontStyle.font,
-                            fontSize: 18
-                          ),
-                        ),
-                      );
-                    }
-                    return MobileWidget(
-              isAdmin: role == 0 ? true : false,
-            );
-                  }
-                ));
+            return TemplateMenuMobile(content: Builder(builder: (context) {
+              if (!isLogin) {
+                return const Center(
+                  child: Text(
+                    "Please login to use the services",
+                    style: TextStyle(
+                        color: ColorConstant.orange60,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: AppFontStyle.font,
+                        fontSize: 18),
+                  ),
+                );
+              }
+              return MobileWidget(
+                isAdmin: role == 0 ? true : false,
+              );
+            }));
           }
           context.read<TemplateDesktopViewModel>().changeState(context, 1, 1);
           return TemplateDesktop(
-            helpdesk: !widget.isAdmin,
-            helpdeskadmin: widget.isAdmin,
-            home: false,
-            useTemplatescroll: false,
-            content: Builder(
-              builder: (context) {
+              helpdesk: !widget.isAdmin,
+              helpdeskadmin: widget.isAdmin,
+              home: false,
+              useTemplatescroll: false,
+              content: Builder(builder: (context) {
                 if (!isLogin) {
                   return const Center(
                     child: Text(
                       "Please login to use the services",
                       style: TextStyle(
-                        color: ColorConstant.orange60,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: AppFontStyle.font,
-                        fontSize: 24
-                      ),
+                          color: ColorConstant.orange60,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: AppFontStyle.font,
+                          fontSize: 24),
                     ),
                   );
-                  }
+                }
                 return Container(
                   alignment: AlignmentDirectional.topCenter,
-                  child: Builder(
-                    builder: (context) {
-                      if (screenHeight < 500) {
-                        return SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Header.widget(context, widget.isAdmin),
-                              const Body(isAdmin: true,)
-                            ],
-                          ),
-                        );
-                      }
-                      return Column(
+                  child: Builder(builder: (context) {
+                    // if (screenHeight < 500) {
+                    return SingleChildScrollView(
+                      child: Column(
                         children: [
                           Header.widget(context, widget.isAdmin),
-                          Body(isAdmin: widget.isAdmin,)
+                          const Body(
+                            isAdmin: true,
+                          )
                         ],
-                      );
-                    }
-                  ),
+                      ),
+                    );
+                    // }
+                    // return Column(
+                    //   children: [
+                    //     Header.widget(context, widget.isAdmin),
+                    //     Body(
+                    //       isAdmin: widget.isAdmin,
+                    //     )
+                    //   ],
+                    // );
+                  }),
                 );
-              }
-            )
-          );
+              }));
         }
         return Container();
       },

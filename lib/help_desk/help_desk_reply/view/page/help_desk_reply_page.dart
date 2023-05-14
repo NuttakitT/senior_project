@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
@@ -18,25 +19,27 @@ class HelpDeskReplyPage extends StatefulWidget {
   final DateTime time;
   final List<dynamic> adminId;
   final String ownerId;
-  const HelpDeskReplyPage({
-    super.key, 
-    required this.docId,
-    required this.id,
-    required this.title,
-    required this.detail,
-    required this.priority,
-    required this.status,
-    required this.category,
-    required this.time,
-    required this.adminId,
-    required this.ownerId
-  });
+  const HelpDeskReplyPage(
+      {super.key,
+      required this.docId,
+      required this.id,
+      required this.title,
+      required this.detail,
+      required this.priority,
+      required this.status,
+      required this.category,
+      required this.time,
+      required this.adminId,
+      required this.ownerId});
 
   @override
   State<HelpDeskReplyPage> createState() => _HelpDeskReplyPageState();
 }
 
 class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
+  bool isMobile = kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
   @override
   Widget build(BuildContext context) {
     // bool isMobile = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
@@ -54,11 +57,11 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
       "adminId": widget.adminId,
     };
 
-    // if (isMobile) {
-      return Builder(
-        builder: (context) {
-          return StreamBuilder(
-            stream: FirebaseServices("ticket").listenToSubDocumentByKeyValuePair(
+    if (isMobile) {
+      return Builder(builder: (context) {
+        return StreamBuilder(
+            stream:
+                FirebaseServices("ticket").listenToSubDocumentByKeyValuePair(
               widget.docId,
               "replyChannel",
               ["seen"],
@@ -70,31 +73,28 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
                 for (var item in stream.data!.docs) {
                   if (!isAdmin && item.get("ownerId") != widget.ownerId) {
                     context.read<HelpDeskViewModel>().addReplyDocId(item.id);
-                  } else if(isAdmin && item.get("ownerId") == widget.ownerId) {
+                  } else if (isAdmin && item.get("ownerId") == widget.ownerId) {
                     context.read<HelpDeskViewModel>().addReplyDocId(item.id);
                   }
-                }   
+                }
                 return FutureBuilder(
-                  future: context.read<HelpDeskViewModel>().changeSeenStatus(
-                    widget.docId,
-                    uid, 
-                    isAdmin
-                  ),
-                  builder: (contex, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return const HelpDeskReplyMobile();
-                    }
-                    return const Scaffold(
-                      body: Center(
-                        child: SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: CircularProgressIndicator(),
+                    future: context
+                        .read<HelpDeskViewModel>()
+                        .changeSeenStatus(widget.docId, uid, isAdmin),
+                    builder: (contex, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return const HelpDeskReplyMobile();
+                      }
+                      return const Scaffold(
+                        body: Center(
+                          child: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                );
+                      );
+                    });
               }
               return const Scaffold(
                 body: Center(
@@ -105,11 +105,11 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
                   ),
                 ),
               );
-            }
-          );
-        }
-      );
-    // }
-    // return HelpDeskMainView(isAdmin: isAdmin,);
+            });
+      });
+    }
+    return HelpDeskMainView(
+      isAdmin: isAdmin,
+    );
   }
 }

@@ -1,10 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/user_profile/my_profile/view/user/widget/user_profile_card.dart';
 import 'package:senior_project/user_profile/my_profile/view/user/widget/user_profile_header.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
-import '../../../../core/view_model/app_view_model.dart';
 import 'widget/user_profile_mobile.dart';
 
 class UserProfileView extends StatelessWidget {
@@ -13,9 +12,12 @@ class UserProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isMobileSite = context
-        .watch<AppViewModel>()
-        .getMobileSiteState(MediaQuery.of(context).size.width);
+    bool isMobileSite = kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.android);
+    // bool isMobileSite = context
+    //     .watch<AppViewModel>()
+    //     .getMobileSiteState(MediaQuery.of(context).size.width);
 
     if (isMobileSite) {
       return TemplateMenuMobile(
