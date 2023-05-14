@@ -48,11 +48,13 @@ class RoleManagementViewModel extends ChangeNotifier {
           .editDocument(uid, {"responsibility": responsibility});
       for (int i = 0; i < responsibility.length; i++) {
         final snapshot = await _serviesTicket.getDocumnetByKeyValuePair(["category"], [responsibility[i]]);
-        for (int j = 0; j < snapshot!.size; i ++) {
-          if (snapshot.docs[i].get("status") == 0) {
-            List<dynamic> adminList = snapshot.docs[i].get("adminId");
-            adminList.add(uid);
-            await _serviesTicket.editDocument(snapshot.docs[i].id, {"adminId": adminList});
+        for (int j = 0; j < snapshot!.size; j ++) {
+          if (snapshot.docs[j].get("status") == 0) {
+            List<dynamic> adminList = snapshot.docs[j].get("adminId");
+            if(!adminList.contains(uid)) {
+              adminList.add(uid);
+              await _serviesTicket.editDocument(snapshot.docs[j].id, {"adminId": adminList});
+            }
           }
         }
       }
@@ -62,6 +64,36 @@ class RoleManagementViewModel extends ChangeNotifier {
         print(e);
       }
       return false;
+    }
+  }
+
+  Future<void> removeAdmin(String uid) async {
+    try {
+      final snapshot = await _servicesUser.getDocumentById(uid);
+      List<dynamic> responsibility = [];
+      if (snapshot != null) {
+        responsibility = snapshot.get("responsibility");
+      }
+      await _servicesUser.editDocument(uid, {
+        "responsibility": [],
+        "role": 1
+      });
+      for (int i = 0; i < responsibility.length; i++) {
+        final snapshot = await _serviesTicket.getDocumnetByKeyValuePair(["category"], [responsibility[i]]);
+        for (int j = 0; j < snapshot!.size; j ++) {
+          List<dynamic> adminList = snapshot.docs[j].get("adminId");
+          if (adminList.contains(uid)) {
+            adminList.remove(uid);
+            await _serviesTicket.editDocument(snapshot.docs[j].id, {
+              "adminId": adminList
+            });
+          }
+        }
+      }
+    } catch(e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 

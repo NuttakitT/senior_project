@@ -53,37 +53,34 @@ class _MultiSelectTopicsState extends State<MultiSelectTopics> {
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: SizedBox(
-          width: 600,
-          child: Builder(
-            builder: (context) {
-              if (selectedValues.isEmpty && widget.adminResponsibility.isEmpty) {
-                return const Text('Select...');
-              } else {
-                List<TopicCategory> topic = [];
-                if (widget.adminResponsibility.isNotEmpty) {
-                  topic = widget.adminResponsibility;
-                }
-                if (selectedValues.isNotEmpty) {
-                  topic = selectedValues;
-                }
-                String text = "";
-                for (int i = 0; i < topic.length; i++) {
-                  text = "$text${topic[i].categoryName}, ";
-                }
-                return RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: text,
-                        style: const TextStyle(color: ColorConstant.whiteBlack60),
-                      )
-                    ]
-                  ),
-                );
+        child: Builder(
+          builder: (context) {
+            if (selectedValues.isEmpty && widget.adminResponsibility.isEmpty) {
+              return const Text('Select...');
+            } else {
+              List<TopicCategory> topic = [];
+              if (widget.adminResponsibility.isNotEmpty) {
+                topic = widget.adminResponsibility;
               }
-            },
-          )
+              if (selectedValues.isNotEmpty) {
+                topic = selectedValues;
+              }
+              String text = "";
+              for (int i = 0; i < topic.length; i++) {
+                text = "$text${topic[i].categoryName}, ";
+              }
+              return RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: text,
+                      style: const TextStyle(color: ColorConstant.whiteBlack60),
+                    )
+                  ]
+                ),
+              );
+            }
+          },
         ),
       ),
     );

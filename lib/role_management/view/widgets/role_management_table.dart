@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/role_management/model/role_management_model.dart';
+import 'package:senior_project/role_management/view/role_management_view.dart';
 import 'package:senior_project/role_management/view/widgets/add_admin_popup.dart';
 import 'package:senior_project/role_management/view/widgets/multi_select_topics.dart';
 import 'package:senior_project/role_management/view/widgets/role_management_header.dart';
@@ -54,8 +57,9 @@ class RoleManagementDetailTable extends StatelessWidget {
             1: FixedColumnWidth(220),
             2: FixedColumnWidth(220),
             3: FixedColumnWidth(220),
-            4: FixedColumnWidth(220),
-            5: FlexColumnWidth()
+            4: FixedColumnWidth(120),
+            5: FlexColumnWidth(),
+            6: FixedColumnWidth(50)
           },
           children: [
             buildRow(
@@ -66,7 +70,8 @@ class RoleManagementDetailTable extends StatelessWidget {
               Consts.lastName,
               Consts.email,
               Consts.role,
-              Consts.responsibility
+              Consts.responsibility,
+              ""
             ], true, false, context),
             for (int i = 0; i < widget.admins.length; i++) ...[
               buildRow(
@@ -78,6 +83,7 @@ class RoleManagementDetailTable extends StatelessWidget {
                 widget.admins[i].email,
                 widget.admins[i].role,
                 widget.admins[i].responsibility,
+                ""
               ], false, i == widget.admins.length - 1, context),
             ]
           ],
@@ -91,6 +97,7 @@ TableRow buildRow(String uid, List<dynamic> cells, bool isHeader, bool isLastInd
     BuildContext context) {
   List<TopicCategory> topic =
       context.watch<RoleManagementViewModel>().getCategories;
+  String selfUid = context.watch<AppViewModel>().app.getUser.getId;
   return TableRow(
       decoration: BoxDecoration(
         border: Border(
@@ -102,6 +109,43 @@ TableRow buildRow(String uid, List<dynamic> cells, bool isHeader, bool isLastInd
       ),
       children: cells.map((cell) {
         if (cell is String) {
+          if (cell == "" && !isHeader) {
+            return Builder(
+              builder: (context) {
+                if (selfUid == uid) {
+                  return Container();
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context, 
+                        builder: (context) {
+                          return ConfirmationPopup(
+                            title: "Are you sure you want to delete this user from the Admin role?",
+                            detail: "This action cannot be undone.", 
+                            widget: null, 
+                            onCancel: () {Navigator.pop(context);}, 
+                            onConfirm: () async {
+                              await context.read<RoleManagementViewModel>().removeAdmin(uid);
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushAndRemoveUntil(
+                                context, 
+                                MaterialPageRoute(builder: (context) => const RoleManagementView(isAdmin: true)), 
+                                (route) => false
+                              );
+                            }
+                          );
+                        }
+                      );
+                    }, 
+                    icon: const Icon(Icons.delete_rounded, color: ColorConstant.whiteBlack60,)
+                  ),
+                );
+              }
+            );
+          }
           return Padding(
             padding: const EdgeInsets.only(left: 16, top: 28, bottom: 28),
             child: Text(
