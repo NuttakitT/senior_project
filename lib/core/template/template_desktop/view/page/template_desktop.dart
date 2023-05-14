@@ -60,8 +60,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
             }
             return widget.content;
           },
-        )
-      );
+        ));
   }
 
   @override
@@ -103,7 +102,8 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                 }),
                 Builder(
                   builder: (context) {
-                    return _content(widget.content, screenWidth, height: 879);
+                    return _content(widget.content, screenWidth,
+                        height: double.infinity);
                   },
                 ),
               ],

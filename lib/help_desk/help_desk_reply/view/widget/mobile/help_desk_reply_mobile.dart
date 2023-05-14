@@ -15,12 +15,13 @@ class HelpDeskReplyMobile extends StatefulWidget {
 class _HelpDeskReplyMobileState extends State<HelpDeskReplyMobile> {
   @override
   Widget build(BuildContext context) {
-    String taskTitle = context.watch<ReplyChannelViewModel>().getTaskData["title"];
+    String taskTitle =
+        context.watch<ReplyChannelViewModel>().getTaskData["title"];
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: (){
+          onPressed: () {
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -31,9 +32,14 @@ class _HelpDeskReplyMobileState extends State<HelpDeskReplyMobile> {
         backgroundColor: ColorConstant.white,
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(
-            taskTitle,
-            style: const TextStyle(color: ColorConstant.whiteBlack80, fontSize: 24),
+          Expanded(
+            // width: 200,
+            child: Text(
+              taskTitle,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                  color: ColorConstant.whiteBlack80, fontSize: 24),
+            ),
           ),
           InkWell(
             child: const Icon(
