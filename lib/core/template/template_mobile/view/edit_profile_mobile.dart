@@ -83,6 +83,7 @@ class _EditProfileMobileState extends State<EditProfileMobile> {
                 }),
                 const SizedBox(height: 16),
                 DefaultTextStyle(
+                  maxLines: 2,
                   style: AppFontStyle.wb80Md28, 
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
