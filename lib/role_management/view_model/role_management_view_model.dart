@@ -9,6 +9,7 @@ import 'package:senior_project/role_management/model/role_management_model.dart'
 
 class RoleManagementViewModel extends ChangeNotifier {
   final FirebaseServices _serviesCategory = FirebaseServices("category");
+  final FirebaseServices _serviesTicket = FirebaseServices("ticket");
   final FirebaseServices _servicesUser = FirebaseServices("user");
   List<String> _alluser = [];
   RoleManagementModel _model = RoleManagementModel();
@@ -38,13 +39,30 @@ class RoleManagementViewModel extends ChangeNotifier {
 
   Future<bool> changeResponsibility(
       String uid, List<TopicCategory> newResponsibility) async {
-    List<String> responsibility = [];
-    for (int i = 0; i < newResponsibility.length; i++) {
-      responsibility.add(newResponsibility[i].id!);
+    try {
+      List<String> responsibility = [];
+      for (int i = 0; i < newResponsibility.length; i++) {
+        responsibility.add(newResponsibility[i].id!);
+      }
+      bool isSuccess = await _servicesUser
+          .editDocument(uid, {"responsibility": responsibility});
+      for (int i = 0; i < responsibility.length; i++) {
+        final snapshot = await _serviesTicket.getDocumnetByKeyValuePair(["category"], [responsibility[i]]);
+        for (int j = 0; j < snapshot!.size; i ++) {
+          if (snapshot.docs[i].get("status") == 0) {
+            List<dynamic> adminList = snapshot.docs[i].get("adminId");
+            adminList.add(uid);
+            await _serviesTicket.editDocument(snapshot.docs[i].id, {"adminId": adminList});
+          }
+        }
+      }
+      return isSuccess; 
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return false;
     }
-    bool isSuccess = await _servicesUser
-        .editDocument(uid, {"responsibility": responsibility});
-    return isSuccess;
   }
 
   Future<bool> addCategory(AddCategoryRequest request) async {
