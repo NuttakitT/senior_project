@@ -44,7 +44,7 @@ class _PostLoaderState extends State<PostLoader> {
     String topicName, 
     String? topicDescription, 
     List<Map<String, dynamic>> listPost, 
-    DocumentSnapshot? nextPost
+    // DocumentSnapshot? nextPost
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
@@ -87,77 +87,90 @@ class _PostLoaderState extends State<PostLoader> {
           Column(
             children: generateCardCommunityBoard(listPost, false),
           ),
-          StreamBuilder(
-            stream: postService.listenToDocumentByKeyValuePair(
-              ["topics", "isApproved"], 
-              [[topicName], true],
-              orderingField: "dateCreate",
-              descending: true
-            ),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.data!.size != listPost.length) {
-                  return InkWell(
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      decoration: BoxDecoration(
-                          color: ColorConstant.white,
-                          border: Border.all(
-                              color: ColorConstant.whiteBlack40, width: 1),
-                          borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(16),
-                              bottomRight: Radius.circular(16))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            "ดูเพิ่มเติม",
-                            style: TextStyle(
-                                color: ColorConstant.orange60, fontSize: 20),
-                          ),
-                          Icon(
-                            Icons.expand_more_rounded,
-                            color: ColorConstant.orange60,
-                            size: 24,
-                          )
-                        ],
-                      ),
-                    ),
-                    onTap: () {
-                      context.read<CommunityBoardViewModel>().getNextPost(topicName, nextPost);
-                    },
-                  );
-                }
-                return Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  decoration: BoxDecoration(
-                    color: ColorConstant.white,
-                    border: Border.all(
-                      color: ColorConstant.whiteBlack40, width: 1),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16)
-                    )
-                  )
-                );
-              }
-              return Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(top: 16, bottom: 16),
-                decoration: BoxDecoration(
-                  color: ColorConstant.white,
-                  border: Border.all(
-                    color: ColorConstant.whiteBlack40, width: 1),
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(16),
-                    bottomRight: Radius.circular(16)
-                  )
-                )
-              );
-            },
-          ),
+          // StreamBuilder(
+          //   stream: postService.listenToDocumentByKeyValuePair(
+          //     ["topics", "isApproved"], 
+          //     [[topicName], true],
+          //     orderingField: "dateCreate",
+          //     descending: true
+          //   ),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.active) {
+          //       if (snapshot.data!.size != listPost.length) {
+          //         return InkWell(
+          //           child: Container(
+          //             alignment: Alignment.center,
+          //             padding: const EdgeInsets.only(top: 16, bottom: 16),
+          //             decoration: BoxDecoration(
+          //                 color: ColorConstant.white,
+          //                 border: Border.all(
+          //                     color: ColorConstant.whiteBlack40, width: 1),
+          //                 borderRadius: const BorderRadius.only(
+          //                     bottomLeft: Radius.circular(16),
+          //                     bottomRight: Radius.circular(16))),
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.center,
+          //               children: const [
+          //                 Text(
+          //                   "ดูเพิ่มเติม",
+          //                   style: TextStyle(
+          //                       color: ColorConstant.orange60, fontSize: 20),
+          //                 ),
+          //                 Icon(
+          //                   Icons.expand_more_rounded,
+          //                   color: ColorConstant.orange60,
+          //                   size: 24,
+          //                 )
+          //               ],
+          //             ),
+          //           ),
+          //           onTap: () {
+          //             context.read<CommunityBoardViewModel>().getNextPost(topicName, nextPost);
+          //           },
+          //         );
+          //       }
+          //       return Container(
+          //         alignment: Alignment.center,
+          //         padding: const EdgeInsets.only(top: 16, bottom: 16),
+          //         decoration: BoxDecoration(
+          //           color: ColorConstant.white,
+          //           border: Border.all(
+          //             color: ColorConstant.whiteBlack40, width: 1),
+          //           borderRadius: const BorderRadius.only(
+          //             bottomLeft: Radius.circular(16),
+          //             bottomRight: Radius.circular(16)
+          //           )
+          //         )
+          //       );
+          //     }
+          //     return Container(
+          //       alignment: Alignment.center,
+          //       padding: const EdgeInsets.only(top: 16, bottom: 16),
+          //       decoration: BoxDecoration(
+          //         color: ColorConstant.white,
+          //         border: Border.all(
+          //           color: ColorConstant.whiteBlack40, width: 1),
+          //         borderRadius: const BorderRadius.only(
+          //           bottomLeft: Radius.circular(16),
+          //           bottomRight: Radius.circular(16)
+          //         )
+          //       )
+          //     );
+          //   },
+          // ),
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(top: 16, bottom: 16),
+            decoration: BoxDecoration(
+              color: ColorConstant.white,
+              border: Border.all(
+                color: ColorConstant.whiteBlack40, width: 1),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16)
+              )
+            )
+          )
         ],
       ),
     );
@@ -167,7 +180,7 @@ class _PostLoaderState extends State<PostLoader> {
     String topicName, 
     String? topicDescription, 
     List<Map<String, dynamic>> listPost,
-    DocumentSnapshot? nextPost
+    // DocumentSnapshot? nextPost
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -212,72 +225,83 @@ class _PostLoaderState extends State<PostLoader> {
           Column(
             children: generateCardCommunityBoard(listPost, true),
           ),
-          StreamBuilder(
-            stream: postService.listenToDocumentByKeyValuePair(
-              ["topics", "isApproved"], 
-              [[topicName], true],
-              orderingField: "dateCreate",
-              descending: true
+          // StreamBuilder(
+          //   stream: postService.listenToDocumentByKeyValuePair(
+          //     ["topics", "isApproved"], 
+          //     [[topicName], true],
+          //     orderingField: "dateCreate",
+          //     descending: true
+          //   ),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.active) {
+          //       if (snapshot.data!.size != listPost.length) {
+          //         return InkWell(
+          //           child: Container(
+          //             height: 40,
+          //             alignment: Alignment.center,
+          //             padding: const EdgeInsets.only(right: 8, left: 8),
+          //             decoration: const BoxDecoration(
+          //               color: ColorConstant.white,
+          //               border: Border(
+          //                   bottom:
+          //                       BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
+          //             ),
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.center,
+          //               children: const [
+          //                 Text(
+          //                   "ดูเพิ่มเติม",
+          //                   style: TextStyle(color: ColorConstant.orange70, fontSize: 16),
+          //                 ),
+          //                 Icon(
+          //                   Icons.expand_more_rounded,
+          //                   color: ColorConstant.orange70,
+          //                   size: 24,
+          //                 )
+          //               ],
+          //             ),
+          //           ),
+          //           onTap: () {
+          //             context.read<CommunityBoardViewModel>().getNextPost(topicName, nextPost);
+          //           },
+          //         );
+          //       }
+          //       return Container(
+          //         height: 40,
+          //         alignment: Alignment.center,
+          //         padding: const EdgeInsets.only(right: 8, left: 8),
+          //         decoration: const BoxDecoration(
+          //           color: ColorConstant.white,
+          //           border: Border(
+          //             bottom:
+          //                 BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
+          //         ),
+          //       );
+          //     }
+          //     return Container(
+          //       height: 40,
+          //       alignment: Alignment.center,
+          //       padding: const EdgeInsets.only(right: 8, left: 8),
+          //       decoration: const BoxDecoration(
+          //         color: ColorConstant.white,
+          //         border: Border(
+          //             bottom:
+          //                 BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
+          //       ),
+          //     );
+          //   },
+          // ),
+          Container(
+            height: 40,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(right: 8, left: 8),
+            decoration: const BoxDecoration(
+              color: ColorConstant.white,
+              border: Border(
+                  bottom:
+                      BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
             ),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.data!.size != listPost.length) {
-                  return InkWell(
-                    child: Container(
-                      height: 40,
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.only(right: 8, left: 8),
-                      decoration: const BoxDecoration(
-                        color: ColorConstant.white,
-                        border: Border(
-                            bottom:
-                                BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            "ดูเพิ่มเติม",
-                            style: TextStyle(color: ColorConstant.orange70, fontSize: 16),
-                          ),
-                          Icon(
-                            Icons.expand_more_rounded,
-                            color: ColorConstant.orange70,
-                            size: 24,
-                          )
-                        ],
-                      ),
-                    ),
-                    onTap: () {
-                      context.read<CommunityBoardViewModel>().getNextPost(topicName, nextPost);
-                    },
-                  );
-                }
-                return Container(
-                  height: 40,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(right: 8, left: 8),
-                  decoration: const BoxDecoration(
-                    color: ColorConstant.white,
-                    border: Border(
-                      bottom:
-                          BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
-                  ),
-                );
-              }
-              return Container(
-                height: 40,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(right: 8, left: 8),
-                decoration: const BoxDecoration(
-                  color: ColorConstant.white,
-                  border: Border(
-                      bottom:
-                          BorderSide(color: ColorConstant.whiteBlack20, width: 1)),
-                ),
-              );
-            },
-          ),
+          )
         ],
       ),
     );
@@ -287,61 +311,70 @@ class _PostLoaderState extends State<PostLoader> {
     List<Widget> content = [];
     for (int i = 0; i < detail.length; i++) {
       if (isMobile) {
-        content.add(mobileContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"], detail[i]["lastDoc"]));
+        content.add(mobileContent(detail[i]["category"], detail[i]["description"], detail[i]["faq"]));
       } else {
-        content.add(desktopContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"], detail[i]["lastDoc"]));
+        content.add(desktopContent(detail[i]["category"], detail[i]["description"], detail[i]["faq"]));
       }
     }
     return content;
   }
 
   List<Map<String, dynamic>> getPostDetail() {
-    List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
-    List<Map<String, dynamic>> allPost = [];
-    for (int i = 0; i < post.length; i++) {
-      int index = post[i]["post"].getPost.length;
-      int allPostIndex = i;
-      if (post[i]["topic"] == "General") {
-        allPostIndex = 0;
-        allPost.insert(0, {
-          "topic": post[i]["topic"],
-          "description": post[i]["description"],
-          "post": <Map<String, dynamic>>[],
-          "lastDoc": post[i]["lastDoc"],
-        });
-      } else {
-        allPost.add({
-          "topic": post[i]["topic"],
-          "description": post[i]["description"],
-          "post": <Map<String, dynamic>>[],
-          "lastDoc": post[i]["lastDoc"],
-        });
-      }
+    // List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
+    // List<Map<String, dynamic>> allPost = [];
+    // for (int i = 0; i < post.length; i++) {
+    //   int index = post[i]["post"].getPost.length;
+    //   int allPostIndex = i;
+    //   if (post[i]["topic"] == "General") {
+    //     allPostIndex = 0;
+    //     allPost.insert(0, {
+    //       "topic": post[i]["topic"],
+    //       "description": post[i]["description"],
+    //       "post": <Map<String, dynamic>>[],
+    //       "lastDoc": post[i]["lastDoc"],
+    //     });
+    //   } else {
+    //     allPost.add({
+    //       "topic": post[i]["topic"],
+    //       "description": post[i]["description"],
+    //       "post": <Map<String, dynamic>>[],
+    //       "lastDoc": post[i]["lastDoc"],
+    //     });
+    //   }
       
-      for (int j = 0; j < index; j++) {
-        String docId = post[i]["post"].getPost[j].getDocId;
-        String title = post[i]["post"].getPost[j].getContent.getText;
-        String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
-        String ownerName = post[i]["post"].getPost[j].getOwnerName;
-        String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
-        int comments = post[i]["post"].getPost[j].getComment;
-        String? imageUrl = post[i]["post"].getPost[j].getImageUrl;
-        List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
-        List<Map<String, dynamic>>  postDetail = allPost[allPostIndex]["post"];
-        postDetail.add({
-          "title": title,
-          "detail": detail,
-          "topic": topic,
-          "ownerName": ownerName.split(" ")[0],
-          "dateCreate": dateCreate,
-          "comments": comments,
-          "docId": docId,
-          "imageUrl": imageUrl
-        });
-        allPost[allPostIndex]["post"] = postDetail;
-      }
-    }
-    return allPost;
+    //   for (int j = 0; j < index; j++) {
+    //     String docId = post[i]["post"].getPost[j].getDocId;
+    //     String title = post[i]["post"].getPost[j].getContent.getText;
+    //     String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
+    //     String ownerName = post[i]["post"].getPost[j].getOwnerName;
+    //     String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
+    //     int comments = post[i]["post"].getPost[j].getComment;
+    //     String? imageUrl = post[i]["post"].getPost[j].getImageUrl;
+    //     List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
+    //     List<Map<String, dynamic>>  postDetail = allPost[allPostIndex]["post"];
+    //     postDetail.add({
+    //       "title": title,
+    //       "detail": detail,
+    //       "topic": topic,
+    //       "ownerName": ownerName.split(" ")[0],
+    //       "dateCreate": dateCreate,
+    //       "comments": comments,
+    //       "docId": docId,
+    //       "imageUrl": imageUrl
+    //     });
+    //     allPost[allPostIndex]["post"] = postDetail;
+    //   }
+    // }
+
+    // List<Map<String, dynamic>> faq = context.watch<CommunityBoardViewModel>().getFaq;
+    List<Map<String, dynamic>> allFaq = [];
+    // print(faq);
+    // for (int i = 0; i < faq.length; i++) {
+    //   if (faq[i]["category"] == "General") {
+    //     allFaq.insert(0, element);
+    //   }
+    // }
+    return allFaq;
   }
 
   @override
@@ -381,15 +414,16 @@ class _PostLoaderState extends State<PostLoader> {
       child: Column(
         children: [
           FutureBuilder(
-            future: context.read<CommunityBoardViewModel>().getPostByTopic(
-              tagBarSelected == 0 ? "" : tagBarName["name"].toString(),
-              isLoadAll: tagBarSelected == 0 ? true : false
-            ),
+            // future: context.read<CommunityBoardViewModel>().getPostByTopic(
+            //   tagBarSelected == 0 ? "" : tagBarName["name"].toString(),
+            //   isLoadAll: tagBarSelected == 0 ? true : false
+            // ),
+            future: context.read<CommunityBoardViewModel>().fetchFaq(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 context.read<CommunityBoardViewModel>().setIsSafeClick = true;
-                List<Map<String, dynamic>> allPost = getPostDetail();
-                if (allPost.isEmpty) {
+                List<Map<String, dynamic>> allFaq = context.watch<CommunityBoardViewModel>().getFaq;
+                if (allFaq.isEmpty) {
                   return const Text(
                     "No posts",
                     style: TextStyle(
@@ -403,7 +437,7 @@ class _PostLoaderState extends State<PostLoader> {
                 return Builder(
                   builder: (context) {
                     return Column(
-                      children: generateContent(allPost, widget.isMobile),
+                      children: generateContent(allFaq, widget.isMobile),
                     );
                   },
                 );

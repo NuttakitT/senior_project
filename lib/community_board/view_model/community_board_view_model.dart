@@ -381,4 +381,46 @@ class CommunityBoardViewModel extends ChangeNotifier {
     }
     
   }
+
+// *****************************************************************************
+  final _serviceFaq = FirebaseServices("faq");
+  List<Map<String, dynamic>> _faq = [];
+
+  get getFaq => _faq;
+
+  Future<void> fetchFaq() async {
+    try {
+      dynamic snapshot;
+      snapshot = await _serviceFaq.getAllDocument();
+      if (snapshot!.size != 0) {
+        _faq = [];
+        _isSafeLoad = false;
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          List<Map<String, dynamic>> faqLsit = _faq.where((element) => element["category"] == snapshot.docs[i].get("category")).toList();
+          final categorySnapshot = await _serviceCategory.getDocumentById(snapshot.docs[i].get("category"));
+          if (faqLsit.isEmpty) {
+            _faq.add({
+              "category": snapshot.docs[i].get("category"),
+              "description": categorySnapshot!.get("description"),
+              "faq": [{
+                "question": snapshot.docs[i].get("question"),
+                "answer": snapshot.docs[i].get("answer")
+              }]
+            });
+          } else {
+            faqLsit[0]["faq"].add({
+              "question": snapshot.docs[i].get("question"),
+              "answer": snapshot.docs[i].get("answer")
+            });
+          }
+        }
+        // print(_faq.where((element) => element["category"] == "General").toList()[0]["faq"]);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("err $e");
+      }
+    }
+  }  
+
 }

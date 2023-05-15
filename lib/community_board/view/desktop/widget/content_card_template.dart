@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
-import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 
 class ContentCardTemplate extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -40,83 +38,80 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-        decoration: const BoxDecoration(
-            color: ColorConstant.whiteBlack5,
-            border: Border(
-                left: BorderSide(width: 1, color: ColorConstant.whiteBlack40),
-                bottom: BorderSide(width: 1, color: ColorConstant.whiteBlack40),
-                right:
-                    BorderSide(width: 1, color: ColorConstant.whiteBlack40))),
-        padding: const EdgeInsets.only(top: 8, bottom: 16, left: 16, right: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Text(
-                widget.info["title"],
-                style: const TextStyle(
-                    color: ColorConstant.whiteBlack80, fontSize: 24),
-              ),
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+          color: ColorConstant.whiteBlack5,
+          border: Border(
+              left: BorderSide(width: 1, color: ColorConstant.whiteBlack40),
+              bottom: BorderSide(width: 1, color: ColorConstant.whiteBlack40),
+              right:
+                  BorderSide(width: 1, color: ColorConstant.whiteBlack40))),
+      padding: const EdgeInsets.only(top: 8, bottom: 16, left: 16, right: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              widget.info["question"],
+              style: const TextStyle(
+                  color: ColorConstant.whiteBlack80, fontSize: 24),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Wrap(
-                children: getTopic(widget.info["topic"]),
-              )
-              // Row(
-              //   children: getTopic(widget.info["topic"])
-              // ),
+          ),
+          DefaultTextStyle(
+            maxLines: null,
+            style: const TextStyle(
+              color: ColorConstant.whiteBlack50, 
+              fontSize: 20
             ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 40),
-                  child: Text(
-                    widget.info["ownerName"],
-                    style: const TextStyle(
-                        color: ColorConstant.whiteBlack70, fontSize: 18),
-                  ),
-                ),
-                Text(
-                  widget.info["dateCreate"],
-                  style: const TextStyle(
-                      color: ColorConstant.whiteBlack50, fontSize: 16),
-                ),
-                const Spacer(),
-                Builder(
-                  builder: (context) {
-                    if (widget.info["comments"] == 0) {
-                      return Container();
-                    }
-                    return Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 8),
-                          child: Icon(
-                            Icons.chat_rounded,
-                            color: ColorConstant.whiteBlack60,
-                          ),
-                        ),
-                        Text(
-                          widget.info["comments"].toString(),
-                          style: const TextStyle(
-                              color: ColorConstant.whiteBlack80, fontSize: 18),
-                        ),
-                      ],
-                    );
-                  }
-                )
-              ],
-            )
-          ],
-        ),
+            child: Text(
+              widget.info["answer"],
+            ),
+          ),
+          // Row(
+          //   children: [
+          //     Padding(
+          //       padding: const EdgeInsets.only(right: 40),
+          //       child: Text(
+          //         widget.info["ownerName"],
+          //         style: const TextStyle(
+          //             color: ColorConstant.whiteBlack70, fontSize: 18),
+          //       ),
+          //     ),
+          //     Text(
+          //       widget.info["dateCreate"],
+          //       style: const TextStyle(
+          //           color: ColorConstant.whiteBlack50, fontSize: 16),
+          //     ),
+          //     const Spacer(),
+          //     Builder(
+          //       builder: (context) {
+          //         if (widget.info["comments"] == 0) {
+          //           return Container();
+          //         }
+          //         return Row(
+          //           children: [
+          //             const Padding(
+          //               padding: EdgeInsets.only(right: 8),
+          //               child: Icon(
+          //                 Icons.chat_rounded,
+          //                 color: ColorConstant.whiteBlack60,
+          //               ),
+          //             ),
+          //             Text(
+          //               widget.info["comments"].toString(),
+          //               style: const TextStyle(
+          //                   color: ColorConstant.whiteBlack80, fontSize: 18),
+          //             ),
+          //           ],
+          //         );
+          //       }
+          //     )
+          //   ],
+          // )
+        ],
       ),
-      onTap: () {
-        context.read<CommunityBoardViewModel>().setIsShowPostDetail(false, true, widget.info);
-      },
     );
   }
 }

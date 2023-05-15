@@ -26,7 +26,7 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
           child: Row(
             children: [
               const Text(
-                "Community Board",
+                "Frequently Ask Questions",
                 style: TextStyle(
                     color: ColorConstant.whiteBlack90,
                     fontSize: 32,
@@ -45,45 +45,46 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
               Builder(
                 builder: (context) {
                   bool isLogin = context.watch<AppViewModel>().isLogin;
-                  if (!isLogin) {
-                    return Container();
-                  }
-                  return InkWell(
-                    child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                          color: ColorConstant.orange50,
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Row(
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.only(right: 4),
-                            child: Icon(
-                              Icons.add,
-                              color: ColorConstant.white,
-                            ),
-                          ),
-                          Text(
-                            "Create Post",
-                            style: TextStyle(
+                  bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+                  if (isLogin && isAdmin) {
+                    return InkWell(
+                      child: Container(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                            color: ColorConstant.orange50,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Row(
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.only(right: 4),
+                              child: Icon(
+                                Icons.add,
                                 color: ColorConstant.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
+                              ),
+                            ),
+                            Text(
+                              "Add FAQ",
+                              style: TextStyle(
+                                  color: ColorConstant.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: ((context) {
-                            return const AlertDialog(
-                              content: CreatePost(),
-                            );
-                          }));
-                    },
-                  );
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: ((context) {
+                              return const AlertDialog(
+                                content: CreatePost(),
+                              );
+                            }));
+                      },
+                    );
+                  }
+                  return Container();
                 }
               )
             ],
