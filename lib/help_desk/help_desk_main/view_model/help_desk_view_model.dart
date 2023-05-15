@@ -241,7 +241,9 @@ class HelpDeskViewModel extends ChangeNotifier {
     List<String> responsibilityAdmin = [];
     await FirebaseServices("user").getDocumentByKeyList("responsibility", [category]).then((value) {
       for (int i = 0; i < value!.docs.length; i++) {
-        responsibilityAdmin.add(value.docs[i].get("id"));
+        if (value.docs[i].get("role") == 0) {
+          responsibilityAdmin.add(value.docs[i].get("id"));
+        }
       }
     });
     Task task = Task(

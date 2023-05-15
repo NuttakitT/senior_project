@@ -90,7 +90,7 @@ class _ContentLoaderState extends State<ContentLoader> {
                 )
               ),
               alignment: Alignment.center,
-              child: const LoaderStatus(text: "No task in this section")
+              child: const LoaderStatus(text: "No ticket in this section")
             );
           }      
         } else {
