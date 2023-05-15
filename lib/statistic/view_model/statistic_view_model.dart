@@ -10,11 +10,16 @@ import 'package:senior_project/statistic/view_model/statistic_helper.dart';
 class StatisticViewModel extends ChangeNotifier {
   final helper = StatisticHelper();
   final DateTime now = DateTime.now();
-  final DateTime last30days = DateTime.now().subtract(const Duration(days: 30));
+  // final DateTime last30days = DateTime.now().subtract(const Duration(days: 30));
+
+  DateTime startDate = DateTime.now().subtract(const Duration(days: 30));
+  DateTime endDate = DateTime.now();
+
   final FirebaseServices _service = FirebaseServices("ticket");
 
   Future<List<LineChartModel>> fetchTicketVolume() async {
-    final snapshot = await _service.getDocumentByDateInterval(last30days, now);
+    final snapshot =
+        await _service.getDocumentByDateInterval(startDate, endDate);
     Map<DateTime, int> ticketVolumeData = {};
 
     snapshot?.docs.forEach((doc) {
@@ -23,7 +28,7 @@ class StatisticViewModel extends ChangeNotifier {
       ticketVolumeData.update(day, (value) => value + 1, ifAbsent: () => 1);
     });
     List<DateTime> allDates = [];
-    DateTime currentDate = last30days;
+    DateTime currentDate = startDate;
     while (currentDate.isBefore(now) || currentDate.isAtSameMomentAs(now)) {
       DateTime currentDateOnly =
           DateTime(currentDate.year, currentDate.month, currentDate.day);
@@ -43,7 +48,8 @@ class StatisticViewModel extends ChangeNotifier {
   }
 
   Future<List<PieChartModel>> fetchTicketStatus() async {
-    final snapshot = await _service.getAllDocument();
+    final snapshot =
+        await _service.getDocumentByDateInterval(startDate, endDate);
 
     Map<int, int> ticketStatusData = {
       0: 0, // not started
@@ -69,7 +75,8 @@ class StatisticViewModel extends ChangeNotifier {
   }
 
   Future<List<PieChartModel>> fetchTicketPriority() async {
-    final snapshot = await _service.getAllDocument();
+    final snapshot =
+        await _service.getDocumentByDateInterval(startDate, endDate);
 
     Map<int, int> ticketPriorityData = {
       0: 0, // l
@@ -95,6 +102,24 @@ class StatisticViewModel extends ChangeNotifier {
     return pieChartData;
   }
 
+  void setStartDate(DateTime? date) {
+    if (date == null) {
+      return;
+    }
+    startDate = date;
+    // print(startDate);
+    notifyListeners();
+  }
+
+  void setEndDate(DateTime? date) {
+    if (date == null) {
+      return;
+    }
+    endDate = date;
+    // print(endDate);
+    notifyListeners();
+  }
+
   // fetchDefaultStatistic is for query result of
   // [0] total tickets today (tickets)
   // [1] total tickets this week (tickets)
@@ -103,7 +128,7 @@ class StatisticViewModel extends ChangeNotifier {
   Future<List<SingleResultChart>> fetchDefaultStatistics() async {
     List<SingleResultChart> list = [];
     DateTime today = DateTime(now.year, now.month, now.day, 0, 0, 0);
-    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    DateTime startOfWeek = now.subtract(Duration(days: now.day - 7));
     DateTime startOfMonth = DateTime(now.year, now.month, 1);
 
     final todayTicket = await _service.getDocumentByDateInterval(today, now);
@@ -133,7 +158,8 @@ class StatisticViewModel extends ChangeNotifier {
   }
 
   Future<Duration> fetchAverageTicketTime() async {
-    final snapshot = await _service.getAllDocument();
+    final snapshot =
+        await _service.getDocumentByDateInterval(startDate, endDate);
 
     int totalMilliseconds = 0;
     int numTickets = 0;
@@ -162,7 +188,8 @@ class StatisticViewModel extends ChangeNotifier {
   }
 
   Future<Map<String, List<int>>> fetchTicketCategory() async {
-    final snapshot = await _service.getAllDocument();
+    final snapshot =
+        await _service.getDocumentByDateInterval(startDate, endDate);
     Map<String, Map<String, int>> dataMap = {};
 
     snapshot?.docs.forEach((doc) {
@@ -223,7 +250,7 @@ class StatisticViewModel extends ChangeNotifier {
     return chartData;
   }
 
-  Future<StatisticModel> fetchPage() async {
+  Future<StatisticModel> fetchPage(DateTime fromDate, DateTime toDate) async {
     final model = StatisticModel(
         ticketVolume: await fetchTicketVolume(),
         ticketStatus: await fetchTicketStatus(),

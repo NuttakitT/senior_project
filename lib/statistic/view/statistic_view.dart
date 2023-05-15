@@ -29,12 +29,15 @@ class _StatisticViewState extends State<StatisticView> {
   Widget build(BuildContext context) {
     if (widget.isAdmin && !isMobileSite) {
       return FutureBuilder(
-          future: context.read<StatisticViewModel>().fetchPage(),
+          future: context.read<StatisticViewModel>().fetchPage(
+              context.watch<StatisticViewModel>().startDate,
+              context.watch<StatisticViewModel>().endDate),
           builder: ((context, snapshot) {
             if (snapshot.hasError) {
               return Text('Has error ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.done) {
+              data = [];
               final ticketVolume = snapshot.data?.ticketVolume ?? [];
               final ticketStatus = snapshot.data?.ticketStatus ?? [];
               final ticketPriority = snapshot.data?.ticketPriority ?? [];
