@@ -378,6 +378,11 @@ class _MainMenuState extends State<MainMenu> {
                           onTap: () async {
                             context.read<TextSearch>().clearSearchText();
                             await context.read<AppViewModel>().logout();
+                            Navigator.pushAndRemoveUntil(
+                              context, 
+                              MaterialPageRoute(builder: (context) => const CommunityBoardView()), 
+                              (route) => false
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 16),
