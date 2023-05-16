@@ -388,6 +388,42 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   get getFaq => _faq;
 
+  Future<void> createFaq(Map<String, dynamic> detail) async {
+    try {
+      String docId = DateTime.now().millisecondsSinceEpoch.toString();
+      _serviceFaq.setDocument(docId, {
+        "id": docId,
+        "question": detail["question"],
+        "answer": detail["answer"],
+        "category": detail["category"]
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> editFaq(String docId, Map<String, dynamic> detail) async {
+    try {
+      _serviceFaq.editDocument(docId, detail);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> deleteFaq(String docId) async {
+    try {
+      _serviceFaq.deleteDocument(docId);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
   Future<void> fetchFaq() async {
     try {
       dynamic snapshot;

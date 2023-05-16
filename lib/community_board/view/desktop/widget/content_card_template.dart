@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 
 class ContentCardTemplate extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -52,21 +53,100 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              widget.info["question"],
-              style: const TextStyle(
-                  color: ColorConstant.whiteBlack80, fontSize: 24),
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(right: 16),
+                      child: Text(
+                        "Q:",
+                        style: TextStyle(
+                            color: ColorConstant.whiteBlack80, fontSize: 24),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 940,
+                      child: RichText(
+                        maxLines: null,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: widget.info["question"],
+                              style: const TextStyle(
+                                color: ColorConstant.whiteBlack80, 
+                                fontSize: 24
+                              ),
+                            )
+                          ]
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                InkWell(
+                  onTap: () {
+                    // showDialog(
+                    //   context: context, 
+                    //   builder: (context) {
+                        
+                    //   }
+                    // );
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(Icons.edit_rounded, color: ColorConstant.whiteBlack60,),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          "แก้ไข",
+                          style: TextStyle(
+                            fontWeight: AppFontWeight.regular,
+                            fontSize: 16,
+                            color: ColorConstant.whiteBlack60
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          DefaultTextStyle(
-            maxLines: null,
-            style: const TextStyle(
-              color: ColorConstant.whiteBlack50, 
-              fontSize: 20
-            ),
-            child: Text(
-              widget.info["answer"],
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(right: 16),
+                  child: Text(
+                    "A:",
+                    style: TextStyle(
+                        color: ColorConstant.whiteBlack80, fontSize: 20),
+                  ),
+                ),
+                SizedBox(
+                  width: 940,
+                  child: RichText(
+                    maxLines: null,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: widget.info["answer"],
+                          style: const TextStyle(
+                            color: ColorConstant.whiteBlack50, 
+                            fontSize: 20
+                          ),
+                        )
+                      ]
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           // Row(

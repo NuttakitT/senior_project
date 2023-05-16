@@ -384,31 +384,31 @@ class _PostLoaderState extends State<PostLoader> {
     bool isSafeLoad = context.watch<CommunityBoardViewModel>().getIsSafeLoad;
     context.read<CommunityBoardViewModel>().setIsSafeClick = false;
 
-    if (!isSafeLoad) {
-      List<Map<String, dynamic>> allPost = getPostDetail();
-      if (allPost.isEmpty) {
-        return const Text(
-          "No posts",
-          style: TextStyle(
-            fontFamily: AppFontStyle.font,
-            fontWeight: AppFontWeight.medium,
-            fontSize: 20,
-            color: ColorConstant.whiteBlack80
-          ),
-        );
-      }
-      return Padding(
-        padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
-        child: Builder(
-          builder: (context) {
-            context.read<CommunityBoardViewModel>().setIsSafeClick = true;
-            return Column(
-              children: generateContent(allPost, widget.isMobile),
-            );
-          },
-        ),
-      );
-    }
+    // if (!isSafeLoad) {
+    //   List<Map<String, dynamic>> allPost = getPostDetail();
+    //   if (allPost.isEmpty) {
+    //     return const Text(
+    //       "No posts",
+    //       style: TextStyle(
+    //         fontFamily: AppFontStyle.font,
+    //         fontWeight: AppFontWeight.medium,
+    //         fontSize: 20,
+    //         color: ColorConstant.whiteBlack80
+    //       ),
+    //     );
+    //   }
+    //   return Padding(
+    //     padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
+    //     child: Builder(
+    //       builder: (context) {
+    //         context.read<CommunityBoardViewModel>().setIsSafeClick = true;
+    //         return Column(
+    //           children: generateContent(allPost, widget.isMobile),
+    //         );
+    //       },
+    //     ),
+    //   );
+    // }
     return Padding(
       padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
       child: Column(
