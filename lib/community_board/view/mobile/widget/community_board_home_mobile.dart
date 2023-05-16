@@ -38,7 +38,7 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 16),
                   child: Text(
-                    "Community Board",
+                    "Frequently Ask Questions(CPE)",
                     style: TextStyle(
                         color: ColorConstant.whiteBlack90,
                         fontSize: 28,

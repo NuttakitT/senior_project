@@ -26,7 +26,7 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
           child: Row(
             children: [
               const Text(
-                "Frequently Ask Questions",
+                "Frequently Ask Questions(CPE)",
                 style: TextStyle(
                     color: ColorConstant.whiteBlack90,
                     fontSize: 32,

@@ -63,6 +63,7 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(right: 16),

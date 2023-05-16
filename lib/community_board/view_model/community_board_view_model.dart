@@ -384,6 +384,7 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
 // *****************************************************************************
   final _serviceFaq = FirebaseServices("faq");
+  final AlgoliaServices _algoliaFaq = AlgoliaServices("faq");
   List<Map<String, dynamic>> _faq = [];
 
   get getFaq => _faq;
@@ -391,12 +392,10 @@ class CommunityBoardViewModel extends ChangeNotifier {
   Future<void> createFaq(Map<String, dynamic> detail) async {
     try {
       String docId = DateTime.now().millisecondsSinceEpoch.toString();
-      _serviceFaq.setDocument(docId, {
-        "id": docId,
-        "question": detail["question"],
-        "answer": detail["answer"],
-        "category": detail["category"]
-      });
+      detail.addAll({"id": docId});
+      String? objectId = await _algoliaFaq.addObject(docId, detail);
+      detail.addAll({"objectId": objectId});
+      _serviceFaq.setDocument(docId, detail);
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -406,7 +405,9 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> editFaq(String docId, Map<String, dynamic> detail) async {
     try {
-      _serviceFaq.editDocument(docId, detail);
+      final snapshot =await _serviceFaq.getDocumentById(docId);
+      await _serviceFaq.editDocument(docId, detail);
+      await _algoliaFaq.updateObject(snapshot!.get("objectId"), detail);
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -416,7 +417,9 @@ class CommunityBoardViewModel extends ChangeNotifier {
 
   Future<void> deleteFaq(String docId) async {
     try {
-      _serviceFaq.deleteDocument(docId);
+      final snapshot = await _serviceFaq.getDocumentById(docId);
+      await _algoliaFaq.deleteObject(snapshot!.get("objectId"));
+      await _serviceFaq.deleteDocument(docId);
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -424,17 +427,24 @@ class CommunityBoardViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchFaq() async {
+  Future<void> fetchFaq(String category) async {
     try {
       dynamic snapshot;
-      snapshot = await _serviceFaq.getAllDocument();
+      if (category.isNotEmpty) {
+        snapshot = await _serviceFaq.getDocumnetByKeyValuePair(
+          ["category"], 
+          [category]
+        );
+      } else {
+        snapshot = await _serviceFaq.getAllDocument();
+      }
       if (snapshot!.size != 0) {
         _faq = [];
         _isSafeLoad = false;
         for (int i = 0; i < snapshot.docs.length; i++) {
-          List<Map<String, dynamic>> faqLsit = _faq.where((element) => element["category"] == snapshot.docs[i].get("category")).toList();
+          List<Map<String, dynamic>> faqList = _faq.where((element) => element["category"] == snapshot.docs[i].get("category")).toList();
           final categorySnapshot = await _serviceCategory.getDocumentById(snapshot.docs[i].get("category"));
-          if (faqLsit.isEmpty) {
+          if (faqList.isEmpty) {
             _faq.add({
               "category": snapshot.docs[i].get("category"),
               "description": categorySnapshot!.get("description"),
@@ -442,14 +452,25 @@ class CommunityBoardViewModel extends ChangeNotifier {
                 "id": snapshot.docs[i].id,
                 "question": snapshot.docs[i].get("question"),
                 "answer": snapshot.docs[i].get("answer")
-              }]
+              }],
+              "lastDoc": snapshot.docs[i]
             });
           } else {
-            faqLsit[0]["faq"].add({
-              "id": snapshot.docs[i].id,
-              "question": snapshot.docs[i].get("question"),
-              "answer": snapshot.docs[i].get("answer")
-            });
+            if (category.isEmpty && faqList[0]["faq"].length < 3) {
+              faqList[0]["lastDoc"] = snapshot.docs[i];
+              faqList[0]["faq"].add({
+                "id": snapshot.docs[i].id,
+                "question": snapshot.docs[i].get("question"),
+                "answer": snapshot.docs[i].get("answer")
+              });
+            } else if (category.isNotEmpty) {
+              faqList[0]["lastDoc"] = snapshot.docs[i];
+              faqList[0]["faq"].add({
+                "id": snapshot.docs[i].id,
+                "question": snapshot.docs[i].get("question"),
+                "answer": snapshot.docs[i].get("answer")
+              });
+            }
           }
         }
       }
@@ -459,5 +480,27 @@ class CommunityBoardViewModel extends ChangeNotifier {
       }
     }
   }  
+
+  Future<void> getNextFaq(String topic, DocumentSnapshot? startDoc) async {
+    if (startDoc != null) {
+      final snapshot = await _serviceFaq.getDocumnetByKeyValuePair(
+        ["category"], 
+        [topic],
+        limit: 5,
+        startDoc: startDoc);
+      if (snapshot!.docs.isNotEmpty) {
+        List<Map<String, dynamic>> faqList = _faq.where((element) => element["category"] == topic).toList();
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          faqList[0]["faq"].add({
+            "id": snapshot.docs[i].id,
+            "question": snapshot.docs[i].get("question"),
+            "answer": snapshot.docs[i].get("answer")
+          });
+        }
+        faqList[0]["lastDoc"] = snapshot.docs.last;
+        notifyListeners();
+      }
+    }
+  }
 
 }

@@ -24,8 +24,7 @@ class _CommunityBoardViewState extends State<CommunityBoardView> {
   Widget build(BuildContext context) {
     // bool isMobileSite = MediaQuery.of(context).size.width <= 430;
     return FutureBuilder(
-      future: FirebaseServices("category").getDocumnetByKeyValuePair(
-          ["isCommunity", "isApproved"], [true, true]),
+      future: FirebaseServices("category").getAllDocument(),
       builder: (context, snapshot) {
         context.read<CommunityBoardViewModel>().clearAllTopic();
         if (snapshot.connectionState == ConnectionState.done) {

@@ -86,77 +86,77 @@ class _TemplateTagBarHomeState extends State<TemplateTagBarHome> {
                 ],
               ),
             ),
-            Builder(
-              builder: (context) {
-                if (context.watch<AppViewModel>().app.getUser.getRole == 0) {
-                  if (context.watch<TemplateDesktopViewModel>().getIsApprovedPage) {
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 24, bottom: 24),
-                      child: TextButton(
-                          onPressed: () {
-                            context.read<TextSearch>().clearSearchText();
-                            context.read<TemplateDesktopViewModel>().setIsApprovedPage = false;
-                            context.read<TemplateDesktopViewModel>().setIsSafeLoad = true;
-                            context.read<ApprovalViewModel>().setIsSafeClick = false;
-                            context.read<CommunityBoardViewModel>().clearController();
-                            Navigator.pushAndRemoveUntil(
-                              context, 
-                              MaterialPageRoute(builder: (context) {
-                                return const CommunityBoardView();
-                              }), 
-                              (route) => false
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                              fixedSize: const Size(280, 40),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16)),
-                              side: const BorderSide(
-                                  color: ColorConstant.orange70, width: 1),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              textStyle: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                              foregroundColor: ColorConstant.orange70,
-                              backgroundColor: ColorConstant.white),
-                          child: const Text("Back")),
-                    );
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 24, bottom: 24),
-                    child: TextButton(
-                        onPressed: () {
-                          context.read<TextSearch>().clearSearchText();
-                          context.read<TemplateDesktopViewModel>().setIsApprovedPage = true;
-                          context.read<TemplateDesktopViewModel>().setIsSafeLoad = true;
-                          context.read<CommunityBoardViewModel>().setIsSafeClick = false;
-                          context.read<ApprovalViewModel>().setIsSafeClick = true;
-                          Navigator.pushAndRemoveUntil(
-                            context, 
-                            MaterialPageRoute(builder: (context) {
-                              return const TemplateApproval();
-                            }), 
-                            (route) => false
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                            fixedSize: const Size(280, 40),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
-                            side: const BorderSide(
-                                color: ColorConstant.orange70, width: 1),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            textStyle: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                            foregroundColor: ColorConstant.orange70,
-                            backgroundColor: ColorConstant.white),
-                        child: const Text("Approval")),
-                  );
-                }
-                return Container();
-              }
-            ),
+            // Builder(
+            //   builder: (context) {
+            //     if (context.watch<AppViewModel>().app.getUser.getRole == 0) {
+            //       if (context.watch<TemplateDesktopViewModel>().getIsApprovedPage) {
+            //         return Padding(
+            //           padding: const EdgeInsets.only(left: 24, bottom: 24),
+            //           child: TextButton(
+            //               onPressed: () {
+            //                 context.read<TextSearch>().clearSearchText();
+            //                 context.read<TemplateDesktopViewModel>().setIsApprovedPage = false;
+            //                 context.read<TemplateDesktopViewModel>().setIsSafeLoad = true;
+            //                 context.read<ApprovalViewModel>().setIsSafeClick = false;
+            //                 context.read<CommunityBoardViewModel>().clearController();
+            //                 Navigator.pushAndRemoveUntil(
+            //                   context, 
+            //                   MaterialPageRoute(builder: (context) {
+            //                     return const CommunityBoardView();
+            //                   }), 
+            //                   (route) => false
+            //                 );
+            //               },
+            //               style: TextButton.styleFrom(
+            //                   fixedSize: const Size(280, 40),
+            //                   shape: RoundedRectangleBorder(
+            //                       borderRadius: BorderRadius.circular(16)),
+            //                   side: const BorderSide(
+            //                       color: ColorConstant.orange70, width: 1),
+            //                   padding: const EdgeInsets.symmetric(
+            //                       horizontal: 16, vertical: 8),
+            //                   textStyle: const TextStyle(
+            //                       fontSize: 20, fontWeight: FontWeight.bold),
+            //                   foregroundColor: ColorConstant.orange70,
+            //                   backgroundColor: ColorConstant.white),
+            //               child: const Text("Back")),
+            //         );
+            //       }
+            //       return Padding(
+            //         padding: const EdgeInsets.only(left: 24, bottom: 24),
+            //         child: TextButton(
+            //             onPressed: () {
+            //               context.read<TextSearch>().clearSearchText();
+            //               context.read<TemplateDesktopViewModel>().setIsApprovedPage = true;
+            //               context.read<TemplateDesktopViewModel>().setIsSafeLoad = true;
+            //               context.read<CommunityBoardViewModel>().setIsSafeClick = false;
+            //               context.read<ApprovalViewModel>().setIsSafeClick = true;
+            //               Navigator.pushAndRemoveUntil(
+            //                 context, 
+            //                 MaterialPageRoute(builder: (context) {
+            //                   return const TemplateApproval();
+            //                 }), 
+            //                 (route) => false
+            //               );
+            //             },
+            //             style: TextButton.styleFrom(
+            //                 fixedSize: const Size(280, 40),
+            //                 shape: RoundedRectangleBorder(
+            //                     borderRadius: BorderRadius.circular(16)),
+            //                 side: const BorderSide(
+            //                     color: ColorConstant.orange70, width: 1),
+            //                 padding: const EdgeInsets.symmetric(
+            //                     horizontal: 16, vertical: 8),
+            //                 textStyle: const TextStyle(
+            //                     fontSize: 20, fontWeight: FontWeight.bold),
+            //                 foregroundColor: ColorConstant.orange70,
+            //                 backgroundColor: ColorConstant.white),
+            //             child: const Text("Approval")),
+            //       );
+            //     }
+            //     return Container();
+            //   }
+            // ),
             Builder(
               builder: (context) {
                 if (context.watch<TemplateDesktopViewModel>().getIsSafeLoad) {

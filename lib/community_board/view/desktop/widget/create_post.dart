@@ -11,6 +11,7 @@ import 'package:senior_project/community_board/model/community_board_model.dart'
 import 'package:senior_project/community_board/view/page/community_board_view.dart';
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
+import 'package:senior_project/main.dart';
 import 'package:uuid/uuid.dart';
 
 class CreatePost extends StatefulWidget {
@@ -120,7 +121,7 @@ class _CreatePostState extends State<CreatePost> {
                                     context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
                                     Navigator.pushAndRemoveUntil(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return const CommunityBoardView();
+                                      return const MyApp();
                                     }), (route) => false);
                                   }
                                 )
@@ -409,7 +410,7 @@ class _CreatePostState extends State<CreatePost> {
                                 context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
                                 Navigator.pushAndRemoveUntil(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return const CommunityBoardView();
+                                  return const MyApp();
                                 }), (route) => false);
                               } else {
                                 await context.read<CommunityBoardViewModel>().createFaq({
@@ -420,7 +421,7 @@ class _CreatePostState extends State<CreatePost> {
                                 context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
                                 Navigator.pushAndRemoveUntil(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return const CommunityBoardView();
+                                  return const MyApp();
                                 }), (route) => false);
                               }
                             }
