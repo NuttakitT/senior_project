@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 
 class ContentCardTemplate extends StatefulWidget {
   final Map<String, dynamic> info;
-  const ContentCardTemplate({super.key, required this.info});
+  final String category;
+  const ContentCardTemplate({super.key, required this.info, required this.category});
 
   @override
   State<ContentCardTemplate> createState() => _ContentCardTemplateState();
@@ -69,7 +73,7 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
                       ),
                     ),
                     SizedBox(
-                      width: 940,
+                      width: 890,
                       child: RichText(
                         maxLines: null,
                         text: TextSpan(
@@ -87,31 +91,47 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
                     ),
                   ],
                 ),
-                InkWell(
-                  onTap: () {
-                    // showDialog(
-                    //   context: context, 
-                    //   builder: (context) {
-                        
-                    //   }
-                    // );
-                  },
-                  child: Row(
-                    children: const [
-                      Icon(Icons.edit_rounded, color: ColorConstant.whiteBlack60,),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "แก้ไข",
-                          style: TextStyle(
-                            fontWeight: AppFontWeight.regular,
-                            fontSize: 16,
-                            color: ColorConstant.whiteBlack60
-                          ),
+                Builder(
+                  builder: (context) {
+                    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+                    bool isLogin = context.watch<AppViewModel>().isLogin;
+                    if (isLogin && isAdmin) {
+                      return InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context, 
+                            builder: (context) {
+                              return AlertDialog(
+                                content: CreatePost(isEdit: true, detail: {
+                                  "category": widget.category,
+                                  "question": widget.info["question"],
+                                  "answer": widget.info["answer"],
+                                  "id": widget.info["id"]
+                                },),
+                              );
+                            }
+                          );
+                        },
+                        child: Row(
+                          children: const [
+                            Icon(Icons.edit_rounded, color: ColorConstant.whiteBlack60,),
+                            Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                "แก้ไข",
+                                style: TextStyle(
+                                  fontWeight: AppFontWeight.regular,
+                                  fontSize: 16,
+                                  color: ColorConstant.whiteBlack60
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
+                      );
+                    }
+                    return Container();
+                  }
                 ),
               ],
             ),

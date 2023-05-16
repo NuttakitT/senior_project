@@ -23,7 +23,7 @@ class PostLoader extends StatefulWidget {
 class _PostLoaderState extends State<PostLoader> {
   final postService = FirebaseServices("post");
 
-  List<Widget> generateCardCommunityBoard(List<Map<String, dynamic>> listPost, bool isMobile) {
+  List<Widget> generateCardCommunityBoard(String category, List<Map<String, dynamic>> listPost, bool isMobile) {
     List<Widget> card = [];
     for (int i = 0; i < listPost.length; i++) {
       if (isMobile) {
@@ -32,6 +32,7 @@ class _PostLoaderState extends State<PostLoader> {
         ));
       } else {
         card.add(ContentCardTemplate(
+          category: category,
           info: listPost[i],
         ));
       }
@@ -85,7 +86,7 @@ class _PostLoaderState extends State<PostLoader> {
             ),
           ),
           Column(
-            children: generateCardCommunityBoard(listPost, false),
+            children: generateCardCommunityBoard(topicName, listPost, false),
           ),
           // StreamBuilder(
           //   stream: postService.listenToDocumentByKeyValuePair(
@@ -223,7 +224,7 @@ class _PostLoaderState extends State<PostLoader> {
                 ]),
           ),
           Column(
-            children: generateCardCommunityBoard(listPost, true),
+            children: generateCardCommunityBoard(topicName, listPost, true),
           ),
           // StreamBuilder(
           //   stream: postService.listenToDocumentByKeyValuePair(
@@ -384,31 +385,31 @@ class _PostLoaderState extends State<PostLoader> {
     bool isSafeLoad = context.watch<CommunityBoardViewModel>().getIsSafeLoad;
     context.read<CommunityBoardViewModel>().setIsSafeClick = false;
 
-    // if (!isSafeLoad) {
-    //   List<Map<String, dynamic>> allPost = getPostDetail();
-    //   if (allPost.isEmpty) {
-    //     return const Text(
-    //       "No posts",
-    //       style: TextStyle(
-    //         fontFamily: AppFontStyle.font,
-    //         fontWeight: AppFontWeight.medium,
-    //         fontSize: 20,
-    //         color: ColorConstant.whiteBlack80
-    //       ),
-    //     );
-    //   }
-    //   return Padding(
-    //     padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
-    //     child: Builder(
-    //       builder: (context) {
-    //         context.read<CommunityBoardViewModel>().setIsSafeClick = true;
-    //         return Column(
-    //           children: generateContent(allPost, widget.isMobile),
-    //         );
-    //       },
-    //     ),
-    //   );
-    // }
+    if (!isSafeLoad) {
+      List<Map<String, dynamic>> allFaq = context.watch<CommunityBoardViewModel>().getFaq;
+      if (allFaq.isEmpty) {
+        return const Text(
+          "No FAQ",
+          style: TextStyle(
+            fontFamily: AppFontStyle.font,
+            fontWeight: AppFontWeight.medium,
+            fontSize: 20,
+            color: ColorConstant.whiteBlack80
+          ),
+        );
+      }
+      return Padding(
+        padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
+        child: Builder(
+          builder: (context) {
+            context.read<CommunityBoardViewModel>().setIsSafeClick = true;
+            return Column(
+              children: generateContent(allFaq, widget.isMobile),
+            );
+          },
+        ),
+      );
+    }
     return Padding(
       padding: EdgeInsets.all(widget.isMobile ? 0 : 40),
       child: Column(
@@ -425,7 +426,7 @@ class _PostLoaderState extends State<PostLoader> {
                 List<Map<String, dynamic>> allFaq = context.watch<CommunityBoardViewModel>().getFaq;
                 if (allFaq.isEmpty) {
                   return const Text(
-                    "No posts",
+                    "No FAQ",
                     style: TextStyle(
                       fontFamily: AppFontStyle.font,
                       fontWeight: AppFontWeight.medium,

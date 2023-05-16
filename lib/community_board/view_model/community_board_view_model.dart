@@ -439,18 +439,19 @@ class CommunityBoardViewModel extends ChangeNotifier {
               "category": snapshot.docs[i].get("category"),
               "description": categorySnapshot!.get("description"),
               "faq": [{
+                "id": snapshot.docs[i].id,
                 "question": snapshot.docs[i].get("question"),
                 "answer": snapshot.docs[i].get("answer")
               }]
             });
           } else {
             faqLsit[0]["faq"].add({
+              "id": snapshot.docs[i].id,
               "question": snapshot.docs[i].get("question"),
               "answer": snapshot.docs[i].get("answer")
             });
           }
         }
-        // print(_faq.where((element) => element["category"] == "General").toList()[0]["faq"]);
       }
     } catch (e) {
       if (kDebugMode) {

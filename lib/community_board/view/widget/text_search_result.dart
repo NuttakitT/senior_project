@@ -19,7 +19,7 @@ class TextSearchResult extends StatefulWidget {
 }
 
 class _TextSearchResultState extends State<TextSearchResult> {
-  List<Widget> generateCardCommunityBoard(bool isMobile, List<Map<String, dynamic>> listPost) {
+  List<Widget> generateCardCommunityBoard(String category, bool isMobile, List<Map<String, dynamic>> listPost) {
     List<Widget> card = [];
     for (int i = 0; i < listPost.length; i++) {
       if (isMobile) {
@@ -28,6 +28,7 @@ class _TextSearchResultState extends State<TextSearchResult> {
         ));
       } else {
         card.add(ContentCardTemplate(
+          category: category,
           info: listPost[i],
         ));
       }
@@ -151,7 +152,7 @@ class _TextSearchResultState extends State<TextSearchResult> {
                         );
                       }
                       return Column(
-                        children: generateCardCommunityBoard(true, allPost),
+                        children: generateCardCommunityBoard(topicName, true, allPost),
                       );
                     }
                   ),
@@ -233,7 +234,7 @@ class _TextSearchResultState extends State<TextSearchResult> {
                         );
                       }
                       return Column(
-                        children: generateCardCommunityBoard(false, allPost),
+                        children: generateCardCommunityBoard(topicName, false, allPost),
                       );
                     }
                   ),
