@@ -53,6 +53,7 @@ class ItemReservation {
   int amount;
   DateTime startDate;
   DateTime endDate;
+  String userId;
   String status;
 
   ItemReservation(
@@ -61,6 +62,7 @@ class ItemReservation {
       required this.amount,
       required this.startDate,
       required this.endDate,
+      required this.userId,
       required this.status});
 }
 
@@ -69,4 +71,19 @@ class Booking {
   List<ItemReservation> itemRes;
 
   Booking({required this.roomRes, required this.itemRes});
+}
+
+class BookingCard {
+  String title;
+  String detail;
+  String createTime;
+  String requestTime;
+  String status;
+
+  BookingCard(
+      {required this.title,
+      required this.detail,
+      required this.createTime,
+      required this.requestTime,
+      required this.status});
 }

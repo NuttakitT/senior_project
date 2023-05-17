@@ -53,19 +53,14 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   Future<List<ItemModel>> getItems() async {
-    // final snapshot = await _itemService.getAllDocument();
+    final snapshot = await _itemService.getAllDocument();
 
-    // List<ItemModel> items = [];
+    List<ItemModel> items = [];
 
-    // for (QueryDocumentSnapshot doc in snapshot!.docs) {
-    //   ItemModel item = ItemModel(objectName: doc['objectName']);
-    //   items.add(item);
-    // }
-    List<ItemModel> items = [
-      ItemModel(objectName: "objectName"),
-      ItemModel(objectName: "objectName2"),
-      ItemModel(objectName: "objectName3"),
-    ];
+    for (QueryDocumentSnapshot doc in snapshot!.docs) {
+      ItemModel item = ItemModel(objectName: doc['objectName']);
+      items.add(item);
+    }
     return items;
   }
 
@@ -73,8 +68,31 @@ class FacilityViewModel extends ChangeNotifier {
     return true;
   }
 
-  Future<Booking> fetchBookings() async {
-    final bookings = Booking(roomRes: [], itemRes: []);
-    return bookings;
+  Future<List<BookingCard>> fetchBookings(String userId) async {
+    final itemSnapshot =
+        await _itemReservation.getDocumentByKeyList("userId", [userId]);
+    final roomSnapshot = await _roomService.getAllDocument();
+
+    final List<BookingCard> list = [
+      BookingCard(
+          title: "title",
+          detail: "detail",
+          createTime: "time",
+          requestTime: "time",
+          status: "status"),
+      BookingCard(
+          title: "title",
+          detail: "detail",
+          createTime: "time",
+          requestTime: "time",
+          status: "status"),
+      BookingCard(
+          title: "title",
+          detail: "detail",
+          createTime: "time",
+          requestTime: "time",
+          status: "status"),
+    ];
+    return list;
   }
 }
