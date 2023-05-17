@@ -26,6 +26,21 @@ class RoomReservation {
       required this.status});
 }
 
+class RoomReservationRequest {
+  RoomModel room;
+  String purpose;
+  DateTime bookDate;
+  DateTime bookTime;
+  String userId;
+
+  RoomReservationRequest(
+      {required this.room,
+      required this.purpose,
+      required this.bookDate,
+      required this.bookTime,
+      required this.userId});
+}
+
 class ItemModel {
   String objectName;
 

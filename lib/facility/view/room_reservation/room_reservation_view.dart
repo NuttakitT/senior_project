@@ -5,7 +5,9 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
+import 'package:senior_project/facility/view/my_booking/my_booking.dart';
 import 'package:senior_project/facility/view/room_reservation/radio_form.dart';
 import 'package:senior_project/facility/view/widget/facility_header.dart';
 import 'package:senior_project/facility/view/widget/facility_header_mobile.dart';
@@ -356,8 +358,25 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
                   child: SizedBox(
                     height: isMobileSite ? 36 : 40,
                     child: TextButton(
-                      onPressed: () {
-                        if (isReserveButtonEnabled()) {}
+                      onPressed: () async {
+                        if (isReserveButtonEnabled()) {
+                          final id =
+                              context.read<AppViewModel>().app.getUser.getId;
+                          final request = RoomReservationRequest(
+                              room: selectedRoom!,
+                              purpose: textController.text,
+                              bookDate: _date!,
+                              bookTime: _time!,
+                              userId: id);
+                          await context
+                              .read<FacilityViewModel>()
+                              .reserveRoom(request);
+
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: ((context) {
+                            return const MyBookingView();
+                          })));
+                        }
                       },
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
