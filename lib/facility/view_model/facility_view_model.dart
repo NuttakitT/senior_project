@@ -7,6 +7,10 @@ class FacilityViewModel extends ChangeNotifier {
   final _roomService = FirebaseServices("rooms");
   final _itemService = FirebaseServices("items");
   final _itemReservation = FirebaseServices("itemReservations");
+  List<ItemModel> _items = [];
+
+  get getViewModeItems => _items;
+  void clearItems() => _items = [];
 
   Future<List<RoomModel>> getAvailableRoom() async {
     final rooms = [
@@ -52,21 +56,15 @@ class FacilityViewModel extends ChangeNotifier {
     );
   }
 
-  Future<List<ItemModel>> getItems() async {
-    // final snapshot = await _itemService.getAllDocument();
-
-    // List<ItemModel> items = [];
-
-    // for (QueryDocumentSnapshot doc in snapshot!.docs) {
-    //   ItemModel item = ItemModel(objectName: doc['objectName']);
-    //   items.add(item);
-    // }
-    List<ItemModel> items = [
-      ItemModel(objectName: "objectName"),
-      ItemModel(objectName: "objectName2"),
-      ItemModel(objectName: "objectName3"),
-    ];
-    return items;
+  Future<void> getItems() async {
+    final snapshot = await _itemService.getAllDocument();
+    for (QueryDocumentSnapshot doc in snapshot!.docs) {
+      ItemModel item = ItemModel(objectName: doc['objectName']);
+      List<ItemModel> hasItemList = _items.where((element) => element.objectName == doc["objectName"]).toList();
+      if (hasItemList.isEmpty) {
+        _items.add(item);
+      }
+    }
   }
 
   Future<bool> requestBookings() async {

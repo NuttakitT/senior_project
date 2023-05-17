@@ -62,6 +62,7 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
   TextEditingController textController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   ItemModel? selectedItem;
+  bool isInit = true;
 
   bool isReserveButtonEnabled() {
     if (_fromDate != null &&
@@ -173,41 +174,57 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                             return Text(
                                 'Error: ${snapshot.error}'); // Show an error message if there's an error
                           }
-                          final items = snapshot.data ?? [];
-                          if (items.isEmpty) {
-                            return SizedBox(
-                              height: isMobileSite ? 80 : 120,
-                              child: const Center(
-                                child: DefaultTextStyle(
-                                  style: AppFontStyle.wb40R16,
-                                  child:
-                                      Text("No item available at this time."),
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            final items = context.watch<FacilityViewModel>().getViewModeItems;
+                            if (items.isEmpty) {
+                              return SizedBox(
+                                height: isMobileSite ? 80 : 120,
+                                child: const Center(
+                                  child: DefaultTextStyle(
+                                    style: AppFontStyle.wb40R16,
+                                    child:
+                                        Text("No item available at this time."),
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-                          selectedItem = items.first;
-                          return DropdownButton<ItemModel>(
-                            value: selectedItem,
-                            icon: const Icon(Icons.arrow_downward),
-                            elevation: 16,
-                            underline: Container(
-                              height: 2,
-                              color: Colors.deepPurpleAccent,
-                            ),
-                            onChanged: (ItemModel? value) {
-                              setState(() {
-                                selectedItem = value!;
-                              });
-                            },
-                            items: items.map<DropdownMenuItem<ItemModel>>(
-                                (ItemModel value) {
-                              return DropdownMenuItem<ItemModel>(
-                                value: value,
-                                child: Text(value.objectName),
                               );
-                            }).toList(),
-                          );
+                            }
+                            if (isInit) {
+                              selectedItem = items.first;
+                            }
+                            return DropdownButton<ItemModel>(
+                              isExpanded: true,
+                              value: selectedItem,
+                              icon: const Icon(Icons.arrow_downward),
+                              elevation: 16,
+                              underline: Container(
+                                height: 2,
+                                color: Colors.deepPurpleAccent,
+                              ),
+                              onChanged: (ItemModel? value) {
+                                setState(() {
+                                  selectedItem = value!;
+                                  isInit = false;
+                                });
+                              },
+                              items: items.map<DropdownMenuItem<ItemModel>>(
+                                  (ItemModel value) {
+                                return DropdownMenuItem<ItemModel>(
+                                  value: value,
+                                  child: Text(value.objectName),
+                                );
+                              }).toList(),
+                            );    
+                          }
+                          return SizedBox(
+                                height: isMobileSite ? 80 : 120,
+                                child: const Center(
+                                  child: DefaultTextStyle(
+                                    style: AppFontStyle.wb40R16,
+                                    child:
+                                        Text("Loading..."),
+                                  ),
+                                ),
+                              );
                         })),
               ],
             ),
