@@ -20,11 +20,11 @@ Stream? query(String id, int type, bool isAdmin) {
   final FirebaseServices service = FirebaseServices("ticket");
   if (type == 0) {
     return service.listenToDocumentByKeyValuePair(
-        [isAdmin ? "adminId" : "ownerId"], [id],
+        [isAdmin ? "relateAdmin" : "ownerId"], [id],
         orderingField: 'dateCreate', descending: true, limit: 100);
   }
   return service.listenToDocumentByKeyValuePair(
-      [isAdmin ? "adminId" : "ownerId", "status"], [id, type - 1],
+      [isAdmin ? "relateAdmin" : "ownerId", "status"], [id, type - 1],
       orderingField: 'dateCreate', descending: true, limit: 100);
 }
 
@@ -78,7 +78,7 @@ class _MobileWidgetState extends State<MobileWidget> {
   @override
   void initState() {
     context.read<TextSearch>().clearSearchText();
-    context.read<HelpDeskViewModel>().clearContentController();
+    // context.read<HelpDeskViewModel>().clearContentController();
     super.initState();
   }
 
@@ -312,7 +312,7 @@ class _MobileWidgetState extends State<MobileWidget> {
                                 return FutureBuilder(
                                   future: context
                                       .read<HelpDeskViewModel>()
-                                      .reconstructQueryData(
+                                      .reconstructQueryData(context,
                                           snapshot.data as QuerySnapshot),
                                   builder: (context, futureSnapshot) {
                                     if (futureSnapshot.connectionState ==

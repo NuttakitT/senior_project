@@ -171,7 +171,7 @@ class FirebaseServices {
     if ((key.length == value.length) && key.isNotEmpty) {
       for (int i = 0; i < key.length; i++) {
         if (i != 0) {
-          if (key[i] == "adminId") {
+          if (key[i] == "relateAdmin") {
             query = query.where(key[i], arrayContainsAny: [value[i]]);
           } else if (value[i] is List) {
             query = query.where(key[i], arrayContainsAny: value[i]);
@@ -179,7 +179,7 @@ class FirebaseServices {
             query = query.where(key[i], isEqualTo: value[i]);
           }
         } else {
-          if (key[i] == "adminId") {
+          if (key[i] == "relateAdmin") {
             query = _collection.where(key[i], arrayContainsAny: [value[i]]);
           } else if (value[i] is List) {
             query = _collection.where(key[i], arrayContainsAny: value[i]);

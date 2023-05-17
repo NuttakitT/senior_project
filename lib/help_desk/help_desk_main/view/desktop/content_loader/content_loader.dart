@@ -44,14 +44,14 @@ class _ContentLoaderState extends State<ContentLoader> {
             context.read<HelpDeskViewModel>().addPreviousFirst = context.read<HelpDeskViewModel>().getFirstDoc!.id;
             context.read<HelpDeskViewModel>().clearModel();
             return FutureBuilder(
-              future: context.read<HelpDeskViewModel>().reconstructQueryData(snapshot.data as QuerySnapshot),
+              future: context.read<HelpDeskViewModel>().reconstructQueryData(context, snapshot.data as QuerySnapshot),
               builder: (context, futureSnapshot) {
                 if (futureSnapshot.connectionState == ConnectionState.done) {
                   return FutureBuilder(
                     future: context.read<HelpDeskViewModel>().formatTaskDetail(),
                     builder: (context, _) {
-                      List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
                       if (_.connectionState == ConnectionState.done) {
+                        List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
                         context.read<HelpDeskViewModel>().setIsSafeClick = true;
                         context.read<HelpDeskViewModel>().setIsSafeLoad = false;
                         return Column(
