@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
@@ -17,13 +18,38 @@ class FacilityViewModel extends ChangeNotifier {
     roomFromRaioForm = room;
   }
 
-  Future<List<RoomModel>> getAvailableRoom() async {
-    final rooms = [
-      RoomModel(name: "CPE1111", capacity: 20, type: "Lecture Room"),
-      RoomModel(name: "CPE1112", capacity: 25, type: "Lecture Room"),
-      RoomModel(name: "CPE1113", capacity: 30, type: "Lecture Room"),
-    ];
-    return rooms;
+  Future<List<RoomModel>> getAvailableRoom(DateTime? date, DateTime? time) async {
+    try {
+      List<RoomModel> rooms = [];
+      if (date != null && time != null) {
+        final roomSnapshot = await _roomService.getAllDocument(
+          orderingField: "name"
+        );
+        for (int i = 0; i < roomSnapshot!.docs.length; i++) {
+          final reservationSnapshot = await _roomService.getSubDocumnetByKeyValuePair(
+            roomSnapshot.docs[i].id, 
+            "reservations", 
+            ["bookTime"], 
+            [combineDateTime(date, time)]
+          );
+          if (reservationSnapshot!.size == 0) {
+            rooms.add(RoomModel
+              (
+                name: roomSnapshot.docs[i].get("name"), 
+                type: roomSnapshot.docs[i].get("type"), 
+                capacity: roomSnapshot.docs[i].get("capacity"), 
+              )
+            );
+          }
+        }
+      }
+      return rooms;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return [];
+    }
   }
 
   Future<bool> reserveRoom(RoomReservationRequest request) async {

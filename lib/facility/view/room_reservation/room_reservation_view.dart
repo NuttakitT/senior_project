@@ -313,7 +313,7 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
                         : FutureBuilder(
                             future: context
                                 .read<FacilityViewModel>()
-                                .getAvailableRoom(),
+                                .getAvailableRoom(_date, _time),
                             builder: (context, snapshot) {
                               final rooms = snapshot.data ?? [];
                               if (rooms.isEmpty) {
