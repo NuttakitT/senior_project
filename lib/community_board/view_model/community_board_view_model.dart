@@ -502,5 +502,33 @@ class CommunityBoardViewModel extends ChangeNotifier {
       }
     }
   }
-
+  
+  void reconstructSearchFaqResult(List<dynamic> hits, String category) {
+    try {
+      _faq = [];
+      clearController();
+      for (var item in hits) {
+        bool isTagetObject = false;
+        if (category.isNotEmpty) {
+          if (item["category"].toString().contains(category)) {
+            isTagetObject = true;
+          } 
+        } else {
+          isTagetObject = true;
+        }
+        if (isTagetObject) {
+          _faq.add({
+            "category": item["category"],
+            "id": item["id"],
+            "question": item["question"],
+            "answer": item["answer"]
+          });
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
 }

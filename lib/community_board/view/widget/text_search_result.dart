@@ -24,12 +24,12 @@ class _TextSearchResultState extends State<TextSearchResult> {
     for (int i = 0; i < listPost.length; i++) {
       if (isMobile) {
         card.add(CommunityBoardContentCardMobile(
-          category: category,
+          category: listPost[i]["category"],
           info: listPost[i],
         ));
       } else {
         card.add(ContentCardTemplate(
-          category: category,
+          category: listPost[i]["category"],
           info: listPost[i],
         ));
       }
@@ -38,33 +38,33 @@ class _TextSearchResultState extends State<TextSearchResult> {
     return card;
   }
 
-  List<Map<String, dynamic>> generatePostDetail() {
-    List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
-    List<Map<String, dynamic>> allPost = [];
-    for (int i = 0; i < post[0]["post"].getPost.length; i++) {
-      String docId = post[0]["post"].getPost[i].getDocId;
-      String title = post[0]["post"].getPost[i].getContent.getText;
-      String detail = post[0]["post"].getPost[i].getContent.getOptionalString;
-      String ownerName = post[0]["post"].getPost[i].getOwnerName;
-      String dateCreate = DateFormat("d MMMM.").format(post[0]["post"].getPost[i].getDateCreate).toString();
-      int comments = post[0]["post"].getPost[i].getComment;
-      List<dynamic> topic = post[0]["post"].getPost[i].getTopic;
-      allPost.add({
-        "title": title,
-        "detail": detail,
-        "topic": topic,
-        "ownerName": ownerName.split(" ")[0],
-        "dateCreate": dateCreate,
-        "comments": comments,
-        "docId": docId
-      });
-    }
-    return allPost;
-  }
+  // List<Map<String, dynamic>> generatePostDetail() {
+  //   List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
+  //   List<Map<String, dynamic>> allPost = [];
+  //   for (int i = 0; i < post[0]["post"].getPost.length; i++) {
+  //     String docId = post[0]["post"].getPost[i].getDocId;
+  //     String title = post[0]["post"].getPost[i].getContent.getText;
+  //     String detail = post[0]["post"].getPost[i].getContent.getOptionalString;
+  //     String ownerName = post[0]["post"].getPost[i].getOwnerName;
+  //     String dateCreate = DateFormat("d MMMM.").format(post[0]["post"].getPost[i].getDateCreate).toString();
+  //     int comments = post[0]["post"].getPost[i].getComment;
+  //     List<dynamic> topic = post[0]["post"].getPost[i].getTopic;
+  //     allPost.add({
+  //       "title": title,
+  //       "detail": detail,
+  //       "topic": topic,
+  //       "ownerName": ownerName.split(" ")[0],
+  //       "dateCreate": dateCreate,
+  //       "comments": comments,
+  //       "docId": docId
+  //     });
+  //   }
+  //   return allPost;
+  // }
 
   @override
   void initState() {
-    context.read<TextSearch>().initHitSearcher("post");
+    context.read<TextSearch>().initHitSearcher("faq");
     super.initState();
   }
 
@@ -81,11 +81,11 @@ class _TextSearchResultState extends State<TextSearchResult> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           List<dynamic> result = snapshot.data!.hits.toList();
-          context.read<CommunityBoardViewModel>().reconstructSearchResult(
+          context.read<CommunityBoardViewModel>().reconstructSearchFaqResult(
             result, 
             tagBarSelected != 0 ? tagBarName["name"] : ""
           );
-          List<Map<String, dynamic>> allPost = generatePostDetail();
+          List<Map<String, dynamic>> allPost = context.watch<CommunityBoardViewModel>().getFaq;
           if (widget.isMobile) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
