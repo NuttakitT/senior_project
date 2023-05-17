@@ -17,13 +17,15 @@ class RoomReservation {
   DateTime bookTime;
   String userId;
   String status;
+  String? room; // for watch bookings
 
   RoomReservation(
       {required this.purpose,
       required this.dateCreate,
       required this.bookTime,
       required this.userId,
-      required this.status});
+      required this.status,
+      this.room});
 }
 
 class RoomReservationRequest {

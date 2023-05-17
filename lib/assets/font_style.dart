@@ -366,6 +366,11 @@ extension AppFontStyle on FontStyle {
       fontWeight: AppFontWeight.medium,
       color: ColorConstant.red40,
       fontSize: 14);
+  static const red40R16 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.medium,
+      color: ColorConstant.red40,
+      fontSize: 16);
 
   // blue
   static const blue90Md24 = TextStyle(

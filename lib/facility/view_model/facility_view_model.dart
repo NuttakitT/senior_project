@@ -68,31 +68,52 @@ class FacilityViewModel extends ChangeNotifier {
     return true;
   }
 
-  Future<List<BookingCard>> fetchBookings(String userId) async {
+  Future<Booking> fetchBooking(String userId) async {
     final itemSnapshot =
         await _itemReservation.getDocumentByKeyList("userId", [userId]);
     final roomSnapshot = await _roomService.getAllDocument();
 
-    final List<BookingCard> list = [
-      BookingCard(
-          title: "title",
-          detail: "detail",
-          createTime: "time",
-          requestTime: "time",
-          status: "status"),
-      BookingCard(
-          title: "title",
-          detail: "detail",
-          createTime: "time",
-          requestTime: "time",
-          status: "status"),
-      BookingCard(
-          title: "title",
-          detail: "detail",
-          createTime: "time",
-          requestTime: "time",
-          status: "status"),
-    ];
-    return list;
+    final Booking booking = Booking(roomRes: [
+      RoomReservation(
+          purpose: "purpose",
+          dateCreate: DateTime.now(),
+          bookTime: DateTime.now(),
+          userId: userId,
+          status: "Approved",
+          room: "CPE1111"),
+      RoomReservation(
+          purpose: "purpose",
+          dateCreate: DateTime.now(),
+          bookTime: DateTime.now(),
+          userId: userId,
+          status: "Approved",
+          room: "CPE1112"),
+    ], itemRes: [
+      ItemReservation(
+          objectName: "objectName",
+          purpose: "purose",
+          amount: 3,
+          startDate: DateTime.now(),
+          endDate: DateTime.now(),
+          userId: userId,
+          status: "Approve"),
+      ItemReservation(
+          objectName: "Dog",
+          purpose: "purose",
+          amount: 3,
+          startDate: DateTime.now(),
+          endDate: DateTime.now(),
+          userId: userId,
+          status: "Approve"),
+      ItemReservation(
+          objectName: "Cat",
+          purpose: "purose",
+          amount: 3,
+          startDate: DateTime.now(),
+          endDate: DateTime.now(),
+          userId: userId,
+          status: "Approve"),
+    ]);
+    return booking;
   }
 }
