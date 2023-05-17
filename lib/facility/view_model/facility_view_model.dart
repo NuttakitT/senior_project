@@ -7,6 +7,10 @@ class FacilityViewModel extends ChangeNotifier {
   final _roomService = FirebaseServices("rooms");
   final _itemService = FirebaseServices("items");
   final _itemReservation = FirebaseServices("itemReservations");
+  List<ItemModel> _items = [];
+
+  get getViewModeItems => _items;
+  void clearItems() => _items = [];
 
   Future<List<RoomModel>> getAvailableRoom() async {
     final rooms = [
