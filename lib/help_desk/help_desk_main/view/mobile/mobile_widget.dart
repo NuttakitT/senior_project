@@ -321,6 +321,10 @@ class _MobileWidgetState extends State<MobileWidget> {
                                           context
                                               .watch<HelpDeskViewModel>()
                                               .getTask;
+                                      if (content.isEmpty) {
+                                        return const LoaderStatus(
+                                    text: "No task in this section");
+                                      }
                                       return Column(
                                           children: generateContent(content));
                                     }

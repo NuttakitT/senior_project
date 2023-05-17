@@ -50,10 +50,10 @@ class RoleManagementViewModel extends ChangeNotifier {
         final snapshot = await _serviesTicket.getDocumnetByKeyValuePair(["category"], [responsibility[i]]);
         for (int j = 0; j < snapshot!.size; j ++) {
           if (snapshot.docs[j].get("status") == 0) {
-            List<dynamic> adminList = snapshot.docs[j].get("adminId");
+            List<dynamic> adminList = snapshot.docs[j].get("relateAdmin");
             if(!adminList.contains(uid)) {
               adminList.add(uid);
-              await _serviesTicket.editDocument(snapshot.docs[j].id, {"adminId": adminList});
+              await _serviesTicket.editDocument(snapshot.docs[j].id, {"relateAdmin": adminList});
             }
           }
         }
@@ -81,11 +81,11 @@ class RoleManagementViewModel extends ChangeNotifier {
       for (int i = 0; i < responsibility.length; i++) {
         final snapshot = await _serviesTicket.getDocumnetByKeyValuePair(["category"], [responsibility[i]]);
         for (int j = 0; j < snapshot!.size; j ++) {
-          List<dynamic> adminList = snapshot.docs[j].get("adminId");
+          List<dynamic> adminList = snapshot.docs[j].get("relateAdmin");
           if (adminList.contains(uid)) {
             adminList.remove(uid);
             await _serviesTicket.editDocument(snapshot.docs[j].id, {
-              "adminId": adminList
+              "relateAdmin": adminList
             });
           }
         }

@@ -357,13 +357,12 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState ==
                                                 ConnectionState.active) {
-                                              List<dynamic> adminList =
+                                              dynamic adminId =
                                                   snapshot.data!.get("adminId");
                                               if ((!isAdmin && snapshot.data!.get("status") <
                                                       2) ||
                                                   (isAdmin &&
-                                                      adminList.length == 1 &&
-                                                      adminList[0] == userId &&
+                                                      adminId == userId &&
                                                       snapshot.data!
                                                               .get("status") <
                                                           2)) {

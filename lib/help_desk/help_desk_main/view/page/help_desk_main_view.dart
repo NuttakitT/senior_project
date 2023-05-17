@@ -22,13 +22,13 @@ class HelpDeskMainView extends StatefulWidget {
 }
 
 class _HelpDeskMainViewState extends State<HelpDeskMainView> {
-  // bool isMobileSite = kIsWeb &&
-  //     (defaultTargetPlatform == TargetPlatform.iOS ||
-  //         defaultTargetPlatform == TargetPlatform.android);
+  bool isMobileSite = kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
 
   @override
   Widget build(BuildContext context) {
-    bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
+    // bool isMobileSite = context.watch<AppViewModel>().getMobileSiteState(MediaQuery.of(context).size.width);
     // double screenHeight = MediaQuery.of(context).size.height;
     int? role = context.watch<AppViewModel>().app.getUser.getRole;
     bool isLogin = context.watch<AppViewModel>().isLogin;

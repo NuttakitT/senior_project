@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
@@ -35,6 +36,9 @@ class _ContentLoaderState extends State<ContentLoader> {
       stream: widget.stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
+          if (kDebugMode) {
+            print(snapshot.error);
+          }
           return const LoaderStatus(text: "Error occurred");
         } 
         if (snapshot.connectionState == ConnectionState.active) {
@@ -54,6 +58,20 @@ class _ContentLoaderState extends State<ContentLoader> {
                         List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
                         context.read<HelpDeskViewModel>().setIsSafeClick = true;
                         context.read<HelpDeskViewModel>().setIsSafeLoad = false;
+                        if (content.isEmpty) {
+                          return Container(
+                            height: widget.contentSize,
+                            width: double.infinity,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              border: Border(
+                                bottom: BorderSide(color: ColorConstant.whiteBlack30),
+                              )
+                            ),
+                            alignment: Alignment.center,
+                            child: const LoaderStatus(text: "No ticket in this section")
+                          );
+                        }
                         return Column(
                           children: GenerateContent.generateContent(context, content, widget.contentSize)
                         );

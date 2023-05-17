@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_is_empty
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +8,6 @@ import 'package:senior_project/community_board/view/desktop/widget/create_post.d
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 const List<String> priority = <String>['Urgent', 'High', 'Medium', 'Low'];
@@ -122,54 +121,61 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: ColorConstant.whiteBlack5,
-                boxShadow: [
-                  BoxShadow(
-                    offset: const Offset(5, 5),
-                    color: ColorConstant.black.withOpacity(0.05),
-                    blurRadius: 10,
-                  ),
-                ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    "FAQ",
-                    style: TextStyle(
-                        color: ColorConstant.whiteBlack90,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                FutureBuilder(
-                  future: FirebaseServices("faq").getDocumnetByKeyValuePair(
-                    ["category"], 
-                    [category]
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return Container();
-                    }
-                    if (isInit) {
-                      selectedValue = snapshot.data!.docs.first.get("question");
-                    }
-                    answer = {};
-                    for (int i = 0; i < snapshot.data!.docs.length; i++) {
-                      answer.addAll({
-                        snapshot.data!.docs[i].get("question"): snapshot.data!.docs[i].get("answer") 
-                      });
-                    }
-                    return Column(
+        Builder(
+          builder: (context) {
+            bool isAdmin = context.read<AppViewModel>().app.getUser.getRole == 0;
+            if (!isAdmin) {
+              return Container();
+            }
+            return FutureBuilder(
+              future: FirebaseServices("faq").getDocumnetByKeyValuePair(
+                ["category"], 
+                [category]
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return Container();
+                }
+                if (snapshot.data!.size == 0) {
+                  return Container();
+                }
+                if (isInit) {
+                  selectedValue = snapshot.data!.docs.first.get("question");
+                }
+                answer = {};
+                for (int i = 0; i < snapshot.data!.docs.length; i++) {
+                  answer.addAll({
+                    snapshot.data!.docs[i].get("question"): snapshot.data!.docs[i].get("answer") 
+                  });
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: ColorConstant.whiteBlack5,
+                        boxShadow: [
+                          BoxShadow(
+                            offset: const Offset(5, 5),
+                            color: ColorConstant.black.withOpacity(0.05),
+                            blurRadius: 10,
+                          ),
+                        ]),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "FAQ",
+                            style: TextStyle(
+                                color: ColorConstant.whiteBlack90,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           child: Container(
@@ -270,51 +276,59 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                           }
                         ),
                       ],
-                    );
-                  }
-                ),
-              ],
-            ),
-          ),
+                    ),
+                  ),
+                );
+              }
+            );
+          }
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: TextButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: ((context) {
-                  return AlertDialog(
-                    content: CreatePost(isEdit: false, detail: {
-                      "category": category,
-                      "question": taskDetail,
-                      "answer": "",
-                    }, isFromReply: true,),
-                  );
-                }));
-            },
-            style: ButtonStyle(
-              fixedSize: MaterialStateProperty.all(
-                const Size(332, 56)
+        Builder(
+          builder: (context) {
+            bool isAdmin = context.read<AppViewModel>().app.getUser.getRole == 0;
+            if (!isAdmin) {
+              return Container();
+            }
+            return Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: TextButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: ((context) {
+                      return AlertDialog(
+                        content: CreatePost(isEdit: false, detail: {
+                          "category": category,
+                          "question": taskDetail,
+                          "answer": "",
+                        }, isFromReply: true,),
+                      );
+                    }));
+                },
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(
+                    const Size(332, 56)
+                  ),
+                  backgroundColor: MaterialStateProperty.all(
+                    ColorConstant.orange50
+                  ),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)
+                    )
+                  )
+                ),
+                child: const Text(
+                  "Create FAQ",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: AppFontWeight.bold,
+                    color: Colors.white
+                  ),
+                ),
               ),
-              backgroundColor: MaterialStateProperty.all(
-                ColorConstant.orange50
-              ),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)
-                )
-              )
-            ),
-            child: const Text(
-              "Create FAQ",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: AppFontWeight.bold,
-                color: Colors.white
-              ),
-            ),
-          ),
+            );
+          }
         )
       ],
     );

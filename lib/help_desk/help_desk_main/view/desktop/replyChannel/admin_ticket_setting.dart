@@ -25,7 +25,7 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
   String stausValue = status[0];
   String? adminValue;
   String hintText = "Assign to";
-  List<dynamic> taskAdmin = [];
+  dynamic taskAdmin = "";
   
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
             builder: (context, streamSnapshot) {
               if (streamSnapshot.connectionState == ConnectionState.active) {
                 taskAdmin = streamSnapshot.data!.get("adminId");
-                if (taskAdmin.length == 1 && taskAdmin[0] == uid) {
+                if (taskAdmin == uid) {
                   hintText = "You";
                 }
                 return Row(
@@ -171,7 +171,7 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
                     ),
                     Builder(
                       builder: (context) {
-                        if (taskAdmin.length == 1 && taskAdmin[0] == uid) {
+                        if (taskAdmin == uid) {
                           return Container();
                         } else {
                           return Padding(
