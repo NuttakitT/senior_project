@@ -74,7 +74,7 @@ class _CommunityBoardContentCardMobileState
                                     "question": widget.info["question"],
                                     "answer": widget.info["answer"],
                                     "id": widget.info["id"]
-                                  }, 
+                                  }, isFromReply: false, 
                                 )
                               );
                           }));

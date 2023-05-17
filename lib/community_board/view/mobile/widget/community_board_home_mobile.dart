@@ -90,7 +90,7 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                                 MaterialPageRoute(builder: (context) {
                                   // return const CreatePostMobile();
                                   // ignore: prefer_const_constructors
-                                  return TemplateMenuMobile(content: CreatePost(isEdit: false, detail: const {}));
+                                  return TemplateMenuMobile(content: CreatePost(isEdit: false, detail: const {}, isFromReply: false,));
                               }));
                             },
                             style: TextButton.styleFrom(

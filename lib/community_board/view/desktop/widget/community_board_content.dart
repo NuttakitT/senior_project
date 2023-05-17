@@ -78,7 +78,7 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
                             context: context,
                             builder: ((context) {
                               return const AlertDialog(
-                                content: CreatePost(isEdit: false, detail: {},),
+                                content: CreatePost(isEdit: false, detail: {}, isFromReply: false,),
                               );
                             }));
                       },

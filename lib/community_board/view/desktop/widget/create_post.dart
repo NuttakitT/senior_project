@@ -12,8 +12,9 @@ import 'package:senior_project/main.dart';
 
 class CreatePost extends StatefulWidget {
   final bool isEdit;
+  final bool isFromReply;
   final Map<String, dynamic> detail;
-  const CreatePost({super.key, required this.isEdit, required this.detail});
+  const CreatePost({super.key, required this.isEdit, required this.detail, required this.isFromReply});
 
   @override
   State<CreatePost> createState() => _CreatePostState();
@@ -39,7 +40,7 @@ class _CreatePostState extends State<CreatePost> {
   ScrollController hContoller = ScrollController();
   @override
   void initState() {
-    if (widget.isEdit) {
+    if (widget.detail.isNotEmpty) {
       titleTextController.text = widget.detail["question"];
       detailTextController.text = widget.detail["answer"];
       setState(() {
@@ -422,10 +423,15 @@ class _CreatePostState extends State<CreatePost> {
                                 "category": selectedTopic
                               });
                               context.read<CommunityBoardViewModel>().setIsSafeLoad = true;
-                              Navigator.pushAndRemoveUntil(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return const MyApp();
-                              }), (route) => false);
+                              if (widget.isFromReply) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              } else {
+                                Navigator.pushAndRemoveUntil(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const MyApp();
+                                }), (route) => false);
+                              }
                             }
                           }
                         )

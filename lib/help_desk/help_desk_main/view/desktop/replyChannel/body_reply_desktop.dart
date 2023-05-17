@@ -1,4 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -272,8 +273,8 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                                 height: snapshot.data!
                                                             .get("status") !=
                                                         2
-                                                    ? screenHeight - 560
-                                                    : screenHeight - 496,
+                                                    ? screenHeight - 498
+                                                    : screenHeight - 434,
                                                 decoration: const BoxDecoration(
                                                     color: ColorConstant
                                                         .whiteBlack5),

@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,17 +20,37 @@ class ChatInput extends StatefulWidget {
 }
 
 class _ChatInputState extends State<ChatInput> {
-  String text = "";
+  TextEditingController controller = TextEditingController();
   XFile? pickedFile;
   Uint8List? imageFile;
   bool hasImage = false;
 
+  Future<void> sendMessage() async {
+    String userId = context.read<AppViewModel>().app.getUser.getId;
+    String? imageUrl;
+    if (imageFile != null) {
+      imageUrl = await context.read<ReplyChannelViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", context.read<ReplyChannelViewModel>().getTaskData["docId"]);
+    }
+    if (imageFile != null || controller.text.isNotEmpty) {
+      await context.read<ReplyChannelViewModel>().createMessage(
+        context.read<ReplyChannelViewModel>().getTaskData["docId"], 
+        {
+          "ownerId": userId,
+          "message": controller.text,
+          "time": DateTime.now(),
+          "seen": false,
+          "imageUrl": imageUrl
+        }
+      );
+      imageFile = null;
+      pickedFile =  null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    String userId = context.watch<AppViewModel>().app.getUser.getId;
-
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 64),
+      constraints: const BoxConstraints(maxHeight: 70),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         alignment: Alignment.center,
@@ -119,21 +140,24 @@ class _ChatInputState extends State<ChatInput> {
             Expanded(
                 child: Container(
               alignment: Alignment.centerLeft,
-              height: 40,
               decoration: BoxDecoration(
                   color: ColorConstant.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: ColorConstant.whiteBlack40)),
               child: Container(
+                height: 40,
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 child: TextField(
+                  controller: controller,
+                  maxLines: null,
+                  scrollPadding: const EdgeInsets.all(0),
                   decoration: const InputDecoration.collapsed(
                       hintText: "Type message...", border: InputBorder.none),
                   style: const TextStyle(
                       color: ColorConstant.whiteBlack50, fontSize: 14),
-                  onChanged: (value) {
-                    text = value;
+                  onSubmitted: (value) async {
+                    await sendMessage();
                   },
                 ),
               ),
@@ -158,22 +182,7 @@ class _ChatInputState extends State<ChatInput> {
                 ),
               ),
               onTap: () async {
-                String? imageUrl;
-                if (imageFile != null) {
-                  imageUrl = await context.read<ReplyChannelViewModel>().getImageUrl(imageFile, "${const Uuid().v1()}_${pickedFile!.name}", context.read<ReplyChannelViewModel>().getTaskData["docId"]);
-                }
-                if (imageFile != null || text.isNotEmpty) {
-                  await context.read<ReplyChannelViewModel>().createMessage(
-                    context.read<ReplyChannelViewModel>().getTaskData["docId"], 
-                    {
-                      "ownerId": userId,
-                      "message": text,
-                      "time": DateTime.now(),
-                      "seen": false,
-                      "imageUrl": imageUrl
-                    }
-                  );
-                }
+                await sendMessage();
               },
             )
           ],
