@@ -29,15 +29,13 @@ class RoomReservation {
 }
 
 class RoomReservationRequest {
-  RoomModel room;
   String purpose;
   DateTime bookDate;
   DateTime bookTime;
   String userId;
 
   RoomReservationRequest(
-      {required this.room,
-      required this.purpose,
+      {required this.purpose,
       required this.bookDate,
       required this.bookTime,
       required this.userId});

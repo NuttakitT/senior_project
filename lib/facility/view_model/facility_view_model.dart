@@ -8,15 +8,20 @@ class FacilityViewModel extends ChangeNotifier {
   final _itemService = FirebaseServices("items");
   final _itemReservation = FirebaseServices("itemReservations");
   List<ItemModel> _items = [];
+  RoomModel? roomFromRaioForm;
 
   get getViewModeItems => _items;
   void clearItems() => _items = [];
 
+  void setSelectedRooms(RoomModel room) {
+    roomFromRaioForm = room;
+  }
+
   Future<List<RoomModel>> getAvailableRoom() async {
     final rooms = [
-      RoomModel(name: "CPE 1111", capacity: 20, type: "Lecture Room"),
-      RoomModel(name: "CPE 1112", capacity: 25, type: "Lecture Room"),
-      RoomModel(name: "CPE 1113", capacity: 30, type: "Lecture Room"),
+      RoomModel(name: "CPE1111", capacity: 20, type: "Lecture Room"),
+      RoomModel(name: "CPE1112", capacity: 25, type: "Lecture Room"),
+      RoomModel(name: "CPE1113", capacity: 30, type: "Lecture Room"),
     ];
     return rooms;
   }
@@ -24,7 +29,7 @@ class FacilityViewModel extends ChangeNotifier {
   Future<bool> reserveRoom(RoomReservationRequest request) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('rooms')
-        .where('name', isEqualTo: request.room)
+        .where('name', isEqualTo: roomFromRaioForm?.name)
         .limit(1)
         .get();
 

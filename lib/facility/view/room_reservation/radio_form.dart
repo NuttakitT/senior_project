@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
+import 'package:senior_project/facility/view_model/facility_view_model.dart';
 
 class RadioForm extends StatefulWidget {
   final List<RoomModel> rooms;
@@ -28,6 +30,7 @@ class _RadioFormState extends State<RadioForm> {
             setState(() {
               selectedRoom = value;
             });
+            context.read<FacilityViewModel>().setSelectedRooms(value!);
           },
         );
       }).toList(),

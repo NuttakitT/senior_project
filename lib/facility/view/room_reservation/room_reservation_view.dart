@@ -62,13 +62,12 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
   DateTime? _date;
   DateTime? _time;
   TextEditingController textController = TextEditingController();
-  RoomModel? selectedRoom;
 
   bool isReserveButtonEnabled() {
-    if (_date != null &&
-        _time != null &&
-        textController.text.isNotEmpty &&
-        selectedRoom != null) {
+    print(_date);
+    print(_time);
+    print(textController.text);
+    if (_date != null && _time != null && textController.text.isNotEmpty) {
       return true;
     }
     return false;
@@ -330,12 +329,7 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
                                 );
                               }
                               return RadioForm(
-                                  rooms: rooms,
-                                  onPressed: (rooms) {
-                                    setState(() {
-                                      selectedRoom = rooms;
-                                    });
-                                  });
+                                  rooms: rooms, onPressed: (rooms) {});
                             })),
               ],
             ),
@@ -363,7 +357,6 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
                           final id =
                               context.read<AppViewModel>().app.getUser.getId;
                           final request = RoomReservationRequest(
-                              room: selectedRoom!,
                               purpose: textController.text,
                               bookDate: _date!,
                               bookTime: _time!,
