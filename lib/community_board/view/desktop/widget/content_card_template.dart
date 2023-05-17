@@ -74,7 +74,7 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
                       ),
                     ),
                     SizedBox(
-                      width: 890,
+                      width: 880,
                       child: RichText(
                         maxLines: null,
                         text: TextSpan(
@@ -103,12 +103,15 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
                             context: context, 
                             builder: (context) {
                               return AlertDialog(
-                                content: CreatePost(isEdit: true, detail: {
-                                  "category": widget.category,
-                                  "question": widget.info["question"],
-                                  "answer": widget.info["answer"],
-                                  "id": widget.info["id"]
-                                },),
+                                content: CreatePost(
+                                  isEdit: true, 
+                                  detail: {
+                                    "category": widget.category,
+                                    "question": widget.info["question"],
+                                    "answer": widget.info["answer"],
+                                    "id": widget.info["id"]
+                                  }, 
+                                ),
                               );
                             }
                           );

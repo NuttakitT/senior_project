@@ -24,6 +24,7 @@ class _TextSearchResultState extends State<TextSearchResult> {
     for (int i = 0; i < listPost.length; i++) {
       if (isMobile) {
         card.add(CommunityBoardContentCardMobile(
+          category: category,
           info: listPost[i],
         ));
       } else {

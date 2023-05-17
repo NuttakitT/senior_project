@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view/desktop/widget/content_card_template.dart';
@@ -29,6 +28,7 @@ class _PostLoaderState extends State<PostLoader> {
     for (int i = 0; i < listPost.length; i++) {
       if (isMobile) {
         card.add(CommunityBoardContentCardMobile(
+          category: category,
           info: listPost[i],
         ));
       } else {

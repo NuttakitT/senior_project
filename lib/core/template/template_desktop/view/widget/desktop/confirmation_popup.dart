@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
@@ -23,6 +24,9 @@ class ConfirmationPopup extends StatefulWidget {
 
 class _ConfirmationPopupState extends State<ConfirmationPopup> {
   bool isButtonEnabled = true;
+  bool isMobileSite = kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
 
   @override
   void initState() {
@@ -31,15 +35,17 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
 
   @override
   Widget build(BuildContext context) {
+    // bool isMobileSite = MediaQuery.of(context).size.width <= 430;
     return AlertDialog(
         backgroundColor: ColorConstant.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         content: SizedBox(
-          width: 450,
+          width: isMobileSite ? null : 450,
           height: 320,
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
@@ -63,12 +69,12 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                 ),
                 widget.widget ?? Container(),
                 const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  runSpacing: 4,
                   children: [
                     Container(
                       height: 40,
-                      width: 144,
+                      width: isMobileSite ? double.infinity : 144,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8.0),
@@ -85,7 +91,7 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                     const SizedBox(width: 16),
                     Container(
                       height: 40,
-                      width: 144,
+                      width: isMobileSite ? double.infinity : 144,
                       decoration: BoxDecoration(
                         color: ColorConstant.orange40,
                         borderRadius: BorderRadius.circular(8.0),
