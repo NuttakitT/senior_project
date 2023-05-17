@@ -53,14 +53,19 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   Future<List<ItemModel>> getItems() async {
-    final snapshot = await _itemService.getAllDocument();
+    // final snapshot = await _itemService.getAllDocument();
 
-    List<ItemModel> items = [];
+    // List<ItemModel> items = [];
 
-    for (QueryDocumentSnapshot doc in snapshot!.docs) {
-      ItemModel item = ItemModel(objectName: doc['objectName']);
-      items.add(item);
-    }
+    // for (QueryDocumentSnapshot doc in snapshot!.docs) {
+    //   ItemModel item = ItemModel(objectName: doc['objectName']);
+    //   items.add(item);
+    // }
+    List<ItemModel> items = [
+      ItemModel(objectName: "objectName"),
+      ItemModel(objectName: "objectName2"),
+      ItemModel(objectName: "objectName3"),
+    ];
     return items;
   }
 
