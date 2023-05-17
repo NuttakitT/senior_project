@@ -5,10 +5,12 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
 import 'package:senior_project/facility/view/widget/facility_header.dart';
 import 'package:senior_project/facility/view/widget/facility_header_mobile.dart';
 import 'package:senior_project/facility/view_model/facility_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class ItemReservationView extends StatefulWidget {
   const ItemReservationView({super.key});
@@ -65,9 +67,13 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
   bool isInit = true;
 
   bool isReserveButtonEnabled() {
+    print(_fromDate);
+    print(_toDate);
+    print(textController.text);
+    print(amountController.text);
+    print(selectedItem);
     if (_fromDate != null &&
         _toDate != null &&
-        _time != null &&
         textController.text.isNotEmpty &&
         amountController.text.isNotEmpty &&
         selectedItem != null) {
@@ -174,8 +180,11 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                             return Text(
                                 'Error: ${snapshot.error}'); // Show an error message if there's an error
                           }
-                          if (snapshot.connectionState == ConnectionState.done) {
-                            final items = context.watch<FacilityViewModel>().getViewModeItems;
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            final items = context
+                                .watch<FacilityViewModel>()
+                                .getViewModeItems;
                             if (items.isEmpty) {
                               return SizedBox(
                                 height: isMobileSite ? 80 : 120,
@@ -213,18 +222,17 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                                   child: Text(value.objectName),
                                 );
                               }).toList(),
-                            );    
+                            );
                           }
                           return SizedBox(
-                                height: isMobileSite ? 80 : 120,
-                                child: const Center(
-                                  child: DefaultTextStyle(
-                                    style: AppFontStyle.wb40R16,
-                                    child:
-                                        Text("Loading..."),
-                                  ),
-                                ),
-                              );
+                            height: isMobileSite ? 80 : 120,
+                            child: const Center(
+                              child: DefaultTextStyle(
+                                style: AppFontStyle.wb40R16,
+                                child: Text("Loading..."),
+                              ),
+                            ),
+                          );
                         })),
               ],
             ),
@@ -383,8 +391,45 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                   child: SizedBox(
                     height: isMobileSite ? 36 : 40,
                     child: TextButton(
-                      onPressed: () {
-                        if (isReserveButtonEnabled()) {}
+                      onPressed: () async {
+                        int? amount;
+                        try {
+                          amount = int.parse(amountController.text);
+                        } catch (e) {
+                          print(
+                              'Error: Failed to parse the string to an integer');
+                          amount = 0;
+                        }
+
+                        if (isReserveButtonEnabled() && amount != 0) {
+                          String userId =
+                              context.read<AppViewModel>().app.getUser.getId;
+                          final request = ItemReservation(
+                              objectName: selectedItem!.objectName,
+                              purpose: textController.text,
+                              amount: amount,
+                              startDate: _fromDate!,
+                              endDate: _toDate!,
+                              userId: userId,
+                              status: "Pending");
+                          final ticketTitle =
+                              "Request ${selectedItem!.objectName} for $amount ea.";
+                          final ticketDetail =
+                              "Request the use of ${selectedItem!.objectName} amount=$amount from date $_fromDate to date $_toDate for ${textController.text}. (Automatically sent)";
+                          const ticketPriority = 1;
+                          const ticketCategory = "การใช้งานอุปกรณ์";
+
+                          final List<dynamic> ticket = [
+                            ticketTitle,
+                            ticketDetail,
+                            ticketPriority,
+                            ticketCategory
+                          ];
+                          await context
+                              .read<FacilityViewModel>()
+                              .requestItems(request, ticket, context);
+                          Navigator.pop(context);
+                        }
                       },
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(

@@ -24,7 +24,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   int? _allTicket;
   int? _startTicket;
   int? _endTicket;
-  int? _selectedTicket; 
+  int? _selectedTicket;
   int _pageNumber = 1;
   bool _isReverse = false;
   List<String> _previousFirst = [];
@@ -39,11 +39,12 @@ class HelpDeskViewModel extends ChangeNotifier {
   set setIsFormNoti(bool state) {
     _isFromNoti = state;
     notifyListeners();
-  } 
+  }
 
   void addReplyDocId(String id) {
     _replyDocId.add(id);
   }
+
   get getReplyDocId => _replyDocId;
   void clearReplyDocId() => _replyDocId = [];
 
@@ -57,21 +58,23 @@ class HelpDeskViewModel extends ChangeNotifier {
   void setFirstDoc(DocumentSnapshot doc) {
     _firestDoc = doc;
   }
+
   DocumentSnapshot? get getLastDoc => _lastDoc;
   void setLastDoc(DocumentSnapshot doc) {
     _lastDoc = doc;
   }
+
   List<String> get getPreviousFirstList => _previousFirst;
   Future<DocumentSnapshot?> get getPreviousFirst async {
     if (_previousFirst.isNotEmpty) {
-      String docId = _previousFirst.removeAt(_pageNumber-1);
+      String docId = _previousFirst.removeAt(_pageNumber - 1);
       if (_pageNumber >= _previousFirst.length) {
-        _previousFirst.removeRange(_pageNumber-1, _previousFirst.length);
+        _previousFirst.removeRange(_pageNumber - 1, _previousFirst.length);
       }
       return await _serviceTicket.getDocumentById(docId);
-    } 
+    }
     return null;
-  } 
+  }
 
   get getPageNumber => _pageNumber;
   get getIsReverse => _isReverse;
@@ -80,6 +83,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       _pageNumber = index;
     }
   }
+
   set addPreviousFirst(String docId) {
     if (_pageNumber == 1) {
       _previousFirst = [];
@@ -108,17 +112,18 @@ class HelpDeskViewModel extends ChangeNotifier {
   set setIsReverse(bool state) {
     _isReverse = state;
   }
+
   void setIndicator(bool state, int limit) {
     if (state) {
       _startTicket = _startTicket! + limit;
-      _endTicket = (_startTicket! + limit) > _allTicket! 
-        ? _allTicket
-        : _startTicket! + limit - 1;
+      _endTicket = (_startTicket! + limit) > _allTicket!
+          ? _allTicket
+          : _startTicket! + limit - 1;
     } else {
       _startTicket = _startTicket! - limit;
-      _endTicket = (_startTicket! + limit) > _allTicket! 
-        ? _allTicket
-        : _startTicket! + limit - 1;
+      _endTicket = (_startTicket! + limit) > _allTicket!
+          ? _allTicket
+          : _startTicket! + limit - 1;
     }
     if (!_isShowMessagePage) {
       notifyListeners();
@@ -128,16 +133,16 @@ class HelpDeskViewModel extends ChangeNotifier {
   set setSelectedTicket(int index) {
     _selectedTicket = index;
     notifyListeners();
-  } 
+  }
 
-  void initTicket(int all, int limit)  {
+  void initTicket(int all, int limit) {
     if (_pageNumber == 1) {
       _startTicket = 1;
       _allTicket = all;
       _isReverse = false;
       _isSafeClick = true;
       if (_allTicket! < limit) {
-        _endTicket = _allTicket; 
+        _endTicket = _allTicket;
       } else {
         _endTicket = _startTicket! + limit - 1;
       }
@@ -145,10 +150,8 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<void> initTicketCategory() async {
-    final snapshot = await _serviceCategory.getDocumnetByKeyValuePair(
-      ["isHelpDesk"],
-      [true]
-    );
+    final snapshot = await _serviceCategory
+        .getDocumnetByKeyValuePair(["isHelpDesk"], [true]);
     _category = [];
     for (int i = 0; i < snapshot!.docs.length; i++) {
       _category.add(snapshot.docs[i].get("name"));
@@ -159,7 +162,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   void setShowMessagePageState(bool state) {
     _isShowMessagePage = state;
     notifyListeners();
-  } 
+  }
 
   String convertToString(bool isStatus, int taskState) {
     if (isStatus) {
@@ -189,7 +192,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   List<String> get getCategory => _category;
-  List<Map<String, dynamic>>  get getTask => _task;
+  List<Map<String, dynamic>> get getTask => _task;
 
   bool? getMobileMenuState(int index) {
     if (index >= 0 && index < 4) {
@@ -214,7 +217,8 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<String> getTaskDocId(String taskId) async {
-    final snapshot = await _serviceTicket.getDocumnetByKeyValuePair(["id"], [taskId]);
+    final snapshot =
+        await _serviceTicket.getDocumnetByKeyValuePair(["id"], [taskId]);
     return snapshot!.docs.first.id;
   }
 
@@ -237,27 +241,23 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> createTask(String title, String detail, int priority, String category) async {
+  Future<String> createTask(
+      String title, String detail, int priority, String category) async {
     List<String> responsibilityAdmin = [];
-    await FirebaseServices("user").getDocumentByKeyList("responsibility", [category]).then((value) {
+    await FirebaseServices("user")
+        .getDocumentByKeyList("responsibility", [category]).then((value) {
       for (int i = 0; i < value!.docs.length; i++) {
         if (value.docs[i].get("role") == 0) {
           responsibilityAdmin.add(value.docs[i].get("id"));
         }
       }
     });
-    Task task = Task(
-      FirebaseAuth.instance.currentUser!.uid,
-      title,
-      Content(detail),
-      priority,
-      category,
-      [],
-      responsibilityAdmin
-    );
+    Task task = Task(FirebaseAuth.instance.currentUser!.uid, title,
+        Content(detail), priority, category, [], responsibilityAdmin);
     _helpDeskModel.addTask(task);
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
-    List<String>? list = await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
+    List<String>? list =
+        await _getUserdetail(FirebaseAuth.instance.currentUser!.uid);
     String? objectId = await _algolia.addObject(docId, {
       "name": list![0],
       "email": list[1],
@@ -288,6 +288,8 @@ class HelpDeskViewModel extends ChangeNotifier {
     };
     taskDetail.addAll({"objectID": objectId!});
     await _serviceTicket.setDocument(docId, taskDetail);
+
+    return docId;
   }
 
   void clearModel() {
@@ -295,7 +297,8 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task = [];
   }
 
-  Future<void> setTicketResponsibility(String docId, String adminId, bool isAssignToOther) async {
+  Future<void> setTicketResponsibility(
+      String docId, String adminId, bool isAssignToOther) async {
     final snapshot = await _serviceTicket.getDocumentById(docId);
     await _serviceTicket.editDocument(docId, {
       "adminId": [adminId],
@@ -307,36 +310,26 @@ class HelpDeskViewModel extends ChangeNotifier {
     });
   }
 
-  Future<void> changeSeenStatus(String docId, String adminId, bool isAdmin) async {
+  Future<void> changeSeenStatus(
+      String docId, String adminId, bool isAdmin) async {
     if (isAdmin) {
       final snapshot = await _serviceTicket.getDocumentById(docId);
       List<dynamic> seen = snapshot!.get("isSeen") as List<dynamic>;
       if (!seen.contains(adminId)) {
         seen.add(adminId);
       }
-      await _algolia.updateObject(snapshot.get("objectID"), {
-        "isSeen": seen
-      });
-      await _serviceTicket.editDocument(docId, {
-        "isSeen": seen
-      });
+      await _algolia.updateObject(snapshot.get("objectID"), {"isSeen": seen});
+      await _serviceTicket.editDocument(docId, {"isSeen": seen});
     }
     for (int i = 0; i < _replyDocId.length; i++) {
-      await _serviceTicket.editSubDocument(docId, "replyChannel", _replyDocId[i], {
-        "seen": true
-      });
+      await _serviceTicket.editSubDocument(
+          docId, "replyChannel", _replyDocId[i], {"seen": true});
     }
   }
 
   Future<void> _changeTaskState(
-  String docId, 
-  String taskId, 
-  String objectId, 
-  int value,
-  bool isStatus,
-  {
-    DateTime? dateComplete
-  }) async {
+      String docId, String taskId, String objectId, int value, bool isStatus,
+      {DateTime? dateComplete}) async {
     if (!_isFromNoti) {
       _task.firstWhere((element) {
         return element.containsValue(taskId);
@@ -352,17 +345,21 @@ class HelpDeskViewModel extends ChangeNotifier {
       }
     }
     await _algolia.updateObject(
-      objectId, 
-      isStatus && value >= 2 
-      ? {isStatus ? "status" : "priority": value, "dateComplete": dateComplete}
-      : {isStatus ? "status" : "priority": value, "dateComplete": null}
-    );
+        objectId,
+        isStatus && value >= 2
+            ? {
+                isStatus ? "status" : "priority": value,
+                "dateComplete": dateComplete
+              }
+            : {isStatus ? "status" : "priority": value, "dateComplete": null});
     await _serviceTicket.editDocument(
-      docId, 
-      isStatus && value >= 2 
-      ? {isStatus ? "status" : "priority": value, "dateComplete": dateComplete}
-      : {isStatus ? "status" : "priority": value, "dateComplete": null}
-    );
+        docId,
+        isStatus && value >= 2
+            ? {
+                isStatus ? "status" : "priority": value,
+                "dateComplete": dateComplete
+              }
+            : {isStatus ? "status" : "priority": value, "dateComplete": null});
   }
 
   Future<void> editTask(String id, bool isStatus, int value) async {
@@ -384,7 +381,8 @@ class HelpDeskViewModel extends ChangeNotifier {
             }).changePriority(value);
           }
         }
-        await _changeTaskState(docId, taskId, objectId, value, isStatus, dateComplete: dateComplete);
+        await _changeTaskState(docId, taskId, objectId, value, isStatus,
+            dateComplete: dateComplete);
         notifyListeners();
       }
     } catch (e) {
@@ -392,27 +390,28 @@ class HelpDeskViewModel extends ChangeNotifier {
         print(e);
       }
     }
-    
   }
 
   // ------------- Listen to database and update data in application ---------------
   Future<void> _addQueryData(DocumentSnapshot snapshot) async {
     Task task = Task(
-      snapshot.get("ownerId"),
-      snapshot.get("title"),
-      Content(snapshot.get("detail")),
-      snapshot.get("priority"),
-      snapshot.get("category"),
-      snapshot.get("isSeen"),
-      snapshot.get("adminId"),
-      id: snapshot.get("id"),
-      dateCreate: snapshot.get("dateCreate").toDate(),
-      status: snapshot.get("status"),
-      dateComplete: snapshot.get("dateComplete") != null ? snapshot.get("dateComplete").toDate() : null
-    );
+        snapshot.get("ownerId"),
+        snapshot.get("title"),
+        Content(snapshot.get("detail")),
+        snapshot.get("priority"),
+        snapshot.get("category"),
+        snapshot.get("isSeen"),
+        snapshot.get("adminId"),
+        id: snapshot.get("id"),
+        dateCreate: snapshot.get("dateCreate").toDate(),
+        status: snapshot.get("status"),
+        dateComplete: snapshot.get("dateComplete") != null
+            ? snapshot.get("dateComplete").toDate()
+            : null);
     _helpDeskModel.addTask(task);
-    _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
-    _task[_helpDeskModel.getTask.length-1].addEntries({"docId": snapshot.id}.entries);
+    _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length - 1));
+    _task[_helpDeskModel.getTask.length - 1]
+        .addEntries({"docId": snapshot.id}.entries);
   }
 
   void _modifyQueryData(DocumentSnapshot snapshot, int index) {
@@ -428,7 +427,7 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task[index]["timeComplete"] = snapshot.get("dateComplete");
     _task[index]["isSeen"] = snapshot.get("isSeen");
   }
-  
+
   void _removeQueryData(int index) {
     _helpDeskModel.getTask.removeAt(index);
     _task.removeAt(index);
@@ -471,7 +470,9 @@ class HelpDeskViewModel extends ChangeNotifier {
           "title": item["title"],
           "ownerId": item["ownerId"],
           "time": date,
-          "completeTime": item["dateComplete"] != null ? DateTime.parse(item["dateComplete"]) : null,
+          "completeTime": item["dateComplete"] != null
+              ? DateTime.parse(item["dateComplete"])
+              : null,
           "category": item["category"],
           "priority": item["priority"],
           "status": item["status"],

@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class FacilityViewModel extends ChangeNotifier {
   final _roomService = FirebaseServices("rooms");
@@ -61,20 +64,39 @@ class FacilityViewModel extends ChangeNotifier {
     );
   }
 
-  Future<List<ItemModel>> getItems() async {
+  Future<void> getItems() async {
     final snapshot = await _itemService.getAllDocument();
-
-    List<ItemModel> items = [];
-
     for (QueryDocumentSnapshot doc in snapshot!.docs) {
       ItemModel item = ItemModel(objectName: doc['objectName']);
-      items.add(item);
+      List<ItemModel> hasItemList = _items
+          .where((element) => element.objectName == doc["objectName"])
+          .toList();
+      if (hasItemList.isEmpty) {
+        _items.add(item);
+      }
     }
-    return items;
   }
 
-  Future<bool> requestBookings() async {
-    return true;
+  Future<bool> requestItems(ItemReservation request, List<dynamic> ticket,
+      BuildContext context) async {
+    final ticketId = await context
+        .read<HelpDeskViewModel>()
+        .createTask(ticket[0], ticket[1], ticket[2], ticket[3]);
+    final userId = context.read<AppViewModel>().app.getUser.getId;
+
+    Map<String, dynamic> itemData = {
+      'objectName': request.objectName,
+      'amount': request.amount,
+      'startDate': Timestamp.fromDate(request.startDate),
+      'endDate': Timestamp.fromDate(request.endDate),
+      'purpose': request.purpose,
+      'status': "Pending",
+      'userId': userId,
+      'ticketId': ticketId
+    };
+    final result = await _itemReservation.addDocument(itemData);
+
+    return result;
   }
 
   Future<Booking> fetchBooking(String userId) async {
