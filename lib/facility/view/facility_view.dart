@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/facility/view/admin_room/admin_room.dart';
 import 'package:senior_project/facility/view/item_reservation/item_reservation.dart';
 import 'package:senior_project/facility/view/my_booking/my_booking.dart';
 import 'package:senior_project/facility/view/room_reservation/room_reservation_view.dart';
@@ -23,8 +26,8 @@ class _FacilityViewState extends State<FacilityView> {
     if (isMobileSite) {
       return TemplateMenuMobile(
           content: Column(
-        children: const [
-          FacilityViewTile(),
+        children: [
+          FacilityViewTile(isMobileSite: isMobileSite),
         ],
       ));
     } else {
@@ -34,8 +37,8 @@ class _FacilityViewState extends State<FacilityView> {
           home: true,
           useTemplatescroll: true,
           content: Column(
-            children: const [
-              FacilityViewTile(),
+            children: [
+              FacilityViewTile(isMobileSite: isMobileSite),
             ],
           ));
     }
@@ -43,12 +46,13 @@ class _FacilityViewState extends State<FacilityView> {
 }
 
 class FacilityViewTile extends StatelessWidget {
-  const FacilityViewTile({
-    Key? key,
-  }) : super(key: key);
+  final bool isMobileSite;
+  const FacilityViewTile({Key? key, required this.isMobileSite})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     return Column(
       children: [
         Card(
@@ -86,7 +90,20 @@ class FacilityViewTile extends StatelessWidget {
               })));
             },
           ),
-        )
+        ),
+        if (!isMobileSite && isAdmin)
+          Card(
+            child: ListTile(
+              title: Text("For Admin"),
+              subtitle: Text("See rooms"),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                  return const AdminRoom();
+                })));
+              },
+            ),
+          )
       ],
     );
   }

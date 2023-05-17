@@ -10,7 +10,6 @@ import 'package:senior_project/facility/model/facility_model.dart';
 import 'package:senior_project/facility/view/widget/facility_header.dart';
 import 'package:senior_project/facility/view/widget/facility_header_mobile.dart';
 import 'package:senior_project/facility/view_model/facility_view_model.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class ItemReservationView extends StatefulWidget {
   const ItemReservationView({super.key});
@@ -60,18 +59,12 @@ class ItemReservationForm extends StatefulWidget {
 class _ItemReservationFormState extends State<ItemReservationForm> {
   DateTime? _fromDate;
   DateTime? _toDate;
-  DateTime? _time;
   TextEditingController textController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   ItemModel? selectedItem;
   bool isInit = true;
 
   bool isReserveButtonEnabled() {
-    print(_fromDate);
-    print(_toDate);
-    print(textController.text);
-    print(amountController.text);
-    print(selectedItem);
     if (_fromDate != null &&
         _toDate != null &&
         textController.text.isNotEmpty &&

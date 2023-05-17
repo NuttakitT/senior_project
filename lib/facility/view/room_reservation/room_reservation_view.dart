@@ -64,9 +64,6 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
   TextEditingController textController = TextEditingController();
 
   bool isReserveButtonEnabled() {
-    print(_date);
-    print(_time);
-    print(textController.text);
     if (_date != null && _time != null && textController.text.isNotEmpty) {
       return true;
     }

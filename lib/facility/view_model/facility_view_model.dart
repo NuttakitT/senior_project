@@ -21,28 +21,23 @@ class FacilityViewModel extends ChangeNotifier {
     roomFromRaioForm = room;
   }
 
-  Future<List<RoomModel>> getAvailableRoom(DateTime? date, DateTime? time) async {
+  Future<List<RoomModel>> getAvailableRoom(
+      DateTime? date, DateTime? time) async {
     try {
       List<RoomModel> rooms = [];
       if (date != null && time != null) {
-        final roomSnapshot = await _roomService.getAllDocument(
-          orderingField: "name"
-        );
+        final roomSnapshot =
+            await _roomService.getAllDocument(orderingField: "name");
         for (int i = 0; i < roomSnapshot!.docs.length; i++) {
-          final reservationSnapshot = await _roomService.getSubDocumnetByKeyValuePair(
-            roomSnapshot.docs[i].id, 
-            "reservations", 
-            ["bookTime"], 
-            [combineDateTime(date, time)]
-          );
+          final reservationSnapshot = await _roomService
+              .getSubDocumnetByKeyValuePair(roomSnapshot.docs[i].id,
+                  "reservations", ["bookTime"], [combineDateTime(date, time)]);
           if (reservationSnapshot!.size == 0) {
-            rooms.add(RoomModel
-              (
-                name: roomSnapshot.docs[i].get("name"), 
-                type: roomSnapshot.docs[i].get("type"), 
-                capacity: roomSnapshot.docs[i].get("capacity"), 
-              )
-            );
+            rooms.add(RoomModel(
+              name: roomSnapshot.docs[i].get("name"),
+              type: roomSnapshot.docs[i].get("type"),
+              capacity: roomSnapshot.docs[i].get("capacity"),
+            ));
           }
         }
       }
@@ -125,52 +120,72 @@ class FacilityViewModel extends ChangeNotifier {
     return result;
   }
 
-  Future<Booking> fetchBooking(String userId) async {
-    final itemSnapshot =
-        await _itemReservation.getDocumentByKeyList("userId", [userId]);
+  Future<List<RoomReservation>> fetchMyRoomReservation() async {
+    List<RoomReservation> list = [];
     final roomSnapshot = await _roomService.getAllDocument();
 
-    final Booking booking = Booking(roomRes: [
-      RoomReservation(
-          purpose: "purpose",
-          dateCreate: DateTime.now(),
-          bookTime: DateTime.now(),
-          userId: userId,
-          status: "Approved",
-          room: "CPE1111"),
-      RoomReservation(
-          purpose: "purpose",
-          dateCreate: DateTime.now(),
-          bookTime: DateTime.now(),
-          userId: userId,
-          status: "Approved",
-          room: "CPE1112"),
-    ], itemRes: [
-      ItemReservation(
-          objectName: "objectName",
-          purpose: "purose",
-          amount: 3,
-          startDate: DateTime.now(),
-          endDate: DateTime.now(),
-          userId: userId,
-          status: "Approve"),
-      ItemReservation(
-          objectName: "Dog",
-          purpose: "purose",
-          amount: 3,
-          startDate: DateTime.now(),
-          endDate: DateTime.now(),
-          userId: userId,
-          status: "Approve"),
-      ItemReservation(
-          objectName: "Cat",
-          purpose: "purose",
-          amount: 3,
-          startDate: DateTime.now(),
-          endDate: DateTime.now(),
-          userId: userId,
-          status: "Approve"),
-    ]);
+    return list;
+  }
+
+  Future<List<ItemReservation>> fetchMyItemReservations(String userId) async {
+    final snapshot =
+        await _itemReservation.getDocumentByKeyList("userId", [userId]);
+
+    List<ItemReservation> list = [];
+
+    return list;
+  }
+
+  Future<Booking> fetchBooking(String userId) async {
+    final itemRes = await fetchMyItemReservations(userId);
+    final roomRes = await fetchMyRoomReservation();
+    final booking = Booking(roomRes: roomRes, itemRes: itemRes);
+    // final Booking booking = Booking(roomRes: [
+    //   RoomReservation(
+    //       purpose: "purpose",
+    //       dateCreate: DateTime.now(),
+    //       bookTime: DateTime.now(),
+    //       userId: userId,
+    //       status: "Approved",
+    //       room: "CPE1111"),
+    //   RoomReservation(
+    //       purpose: "purpose",
+    //       dateCreate: DateTime.now(),
+    //       bookTime: DateTime.now(),
+    //       userId: userId,
+    //       status: "Approved",
+    //       room: "CPE1112"),
+    // ], itemRes: [
+    //   ItemReservation(
+    //       objectName: "objectName",
+    //       purpose: "purose",
+    //       amount: 3,
+    //       startDate: DateTime.now(),
+    //       endDate: DateTime.now(),
+    //       userId: userId,
+    //       status: "Approve"),
+    //   ItemReservation(
+    //       objectName: "Dog",
+    //       purpose: "purose",
+    //       amount: 3,
+    //       startDate: DateTime.now(),
+    //       endDate: DateTime.now(),
+    //       userId: userId,
+    //       status: "Approve"),
+    //   ItemReservation(
+    //       objectName: "Cat",
+    //       purpose: "purose",
+    //       amount: 3,
+    //       startDate: DateTime.now(),
+    //       endDate: DateTime.now(),
+    //       userId: userId,
+    //       status: "Approve"),
+    // ]);
     return booking;
   }
+
+  Future<void> cancelBooking() async {}
+
+  // เพิ่มรายงานการจองห้อง ในแง่ของ เลขห้อง วันเวลา
+  Future<void> fetchRoomStatisticData() async {}
 }
