@@ -33,6 +33,7 @@ class _ChatInputState extends State<ChatInput> {
     }
     if (imageFile != null || controller.text.isNotEmpty) {
       await context.read<ReplyChannelViewModel>().createMessage(
+        context,
         context.read<ReplyChannelViewModel>().getTaskData["docId"], 
         {
           "ownerId": userId,

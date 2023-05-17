@@ -3,8 +3,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/model/help_desk_reply_model.dart';
 
 class ReplyChannelViewModel extends ChangeNotifier {
@@ -31,8 +35,16 @@ class ReplyChannelViewModel extends ChangeNotifier {
     _model = HelpDeskReplyModel();
   }
 
-  Future<bool> createMessage(String docId, Map<String, dynamic> detail) async {
+  Future<bool> createMessage(BuildContext context, String docId, Map<String, dynamic> detail) async {
     try {
+      bool isAdmin = context.read<AppViewModel>().app.getUser.getRole == 0;
+      if (isAdmin) {
+        await context.read<HelpDeskViewModel>().editTask(
+          getTaskData["docId"], 
+          true, 
+          1
+        );
+      }
       return await _service.setSubDocument(docId, "replyChannel", DateTime.now().millisecondsSinceEpoch.toString() ,detail);
     } catch (e) {
       if (kDebugMode) {

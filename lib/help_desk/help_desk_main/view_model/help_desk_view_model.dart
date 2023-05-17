@@ -385,7 +385,7 @@ class HelpDeskViewModel extends ChangeNotifier {
           }
         }
         await _changeTaskState(docId, taskId, objectId, value, isStatus, dateComplete: dateComplete);
-        notifyListeners();
+        // notifyListeners();
       }
     } catch (e) {
       if (kDebugMode) {
