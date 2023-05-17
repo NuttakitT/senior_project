@@ -472,8 +472,9 @@ class HelpDeskViewModel extends ChangeNotifier {
     for (var item in hits) {
       bool isTargetObject = false;
       String ownerId = item["ownerId"] as String;
-      List<dynamic> adminId = item["adminId"] as List<dynamic>;
-      if (isAdmin && adminId.contains(uid)) {
+      List<dynamic> relateAdmin = item["relateAdmin"] as List<dynamic>;
+      dynamic adminId = item["adminId"];
+      if (isAdmin && (relateAdmin.contains(uid) && (adminId == uid || adminId == null))) {
         isTargetObject = true;
       } else if (!isAdmin && ownerId == uid) {
         isTargetObject = true;

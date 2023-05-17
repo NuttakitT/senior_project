@@ -39,6 +39,9 @@ class _TextSearcResultMobileState extends State<TextSearcResultMobile> {
             context.read<HelpDeskViewModel>().clearModel();
             context.read<HelpDeskViewModel>().reconstructSearchResult(hits, isAdmin, uid);
             List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
+            if (data.isEmpty) {
+              return const LoaderStatus(text: "No result");
+            }
             return Column(
               children: generateContent(data)
             );
