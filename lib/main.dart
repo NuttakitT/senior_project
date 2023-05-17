@@ -1,4 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:js';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +11,8 @@ import 'package:senior_project/community_board/view/page/community_board_view.da
 import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/text_search.dart';
+import 'package:senior_project/facility/view/facility_view.dart';
+import 'package:senior_project/facility/view_model/facility_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -39,6 +43,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => TextSearch()),
         ChangeNotifierProvider(create: (context) => ApprovalViewModel()),
         ChangeNotifierProvider(create: (context) => UserProfileViewModel()),
+        ChangeNotifierProvider(create: (context) => FacilityViewModel())
       ],
       child: const MyApp(),
     ),
@@ -50,9 +55,7 @@ class MyApp extends StatelessWidget {
 
   Future<void> init(BuildContext context) async {
     await context.read<AppViewModel>().initializeLoginState(
-      context, 
-      !(FirebaseAuth.instance.currentUser == null)
-    );
+        context, !(FirebaseAuth.instance.currentUser == null));
     await context.read<TemplateDesktopViewModel>().getCategory();
   }
 
@@ -60,15 +63,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CPE Services',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: AppFontStyle.font
-      ),
+      theme:
+          ThemeData(primarySwatch: Colors.blue, fontFamily: AppFontStyle.font),
       home: FutureBuilder(
           future: init(context),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
-              return const CommunityBoardView();
+              return const FacilityView();
             }
             return Container();
           }),
