@@ -6,8 +6,6 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
-import 'package:senior_project/facility/view/item_reservation/drop_down.dart';
-import 'package:senior_project/facility/view/room_reservation/radio_form.dart';
 import 'package:senior_project/facility/view/widget/facility_header.dart';
 import 'package:senior_project/facility/view/widget/facility_header_mobile.dart';
 import 'package:senior_project/facility/view_model/facility_view_model.dart';
@@ -62,14 +60,16 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
   DateTime? _toDate;
   DateTime? _time;
   TextEditingController textController = TextEditingController();
-  RoomModel? selectedRoom;
+  TextEditingController amountController = TextEditingController();
+  ItemModel? selectedItem;
 
   bool isReserveButtonEnabled() {
     if (_fromDate != null &&
         _toDate != null &&
         _time != null &&
         textController.text.isNotEmpty &&
-        selectedRoom != null) {
+        amountController.text.isNotEmpty &&
+        selectedItem != null) {
       return true;
     }
     return false;
@@ -109,7 +109,7 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
 
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _fromDate!,
       firstDate: _fromDate!,
       lastDate: _fromDate!.add(const Duration(days: 3)),
       selectableDayPredicate: (DateTime day) {
@@ -124,61 +124,6 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
     if (pickedDate != null && pickedDate != _toDate) {
       setState(() {
         _toDate = pickedDate;
-      });
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    if (_fromDate == null) return;
-    const int interval = 60; // Interval in minutes
-    const int startHour = 9; // Start hour (24-hour format)
-    const int endHour = 17; // End hour (24-hour format)
-
-    final List<TimeOfDay> availableTimes = [];
-    for (int hour = startHour; hour <= endHour; hour++) {
-      for (int minute = 0; minute < 60; minute += interval) {
-        final TimeOfDay time = TimeOfDay(hour: hour, minute: minute);
-        availableTimes.add(time);
-      }
-    }
-
-    final TimeOfDay? pickedTime = await showDialog<TimeOfDay>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Time'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: availableTimes.length,
-              itemBuilder: (BuildContext context, int index) {
-                final TimeOfDay time = availableTimes[index];
-                final String timeText = time.format(context);
-                return ListTile(
-                  title: Text(timeText),
-                  onTap: () {
-                    Navigator.of(context).pop(time);
-                  },
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
-
-    if (pickedTime != null) {
-      final DateTime selectedDateTime = DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
-        pickedTime.hour,
-        pickedTime.minute,
-      );
-
-      setState(() {
-        _time = selectedDateTime;
       });
     }
   }
@@ -206,6 +151,7 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // items
             Row(
               children: [
                 Expanded(
@@ -223,21 +169,44 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                     child: FutureBuilder(
                         future: context.read<FacilityViewModel>().getItems(),
                         builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(
+                                'Error: ${snapshot.error}'); // Show an error message if there's an error
+                          }
                           final items = snapshot.data ?? [];
-                          // if (items.isEmpty) {
-                          //   return SizedBox(
-                          //     height: isMobileSite ? 80 : 120,
-                          //     child: const Center(
-                          //       child: DefaultTextStyle(
-                          //         style: AppFontStyle.wb40R16,
-                          //         child:
-                          //             Text("No room available at this time."),
-                          //       ),
-                          //     ),
-                          //   );
-                          // }
-                          return DropDownForm(
-                            items: items,
+                          if (items.isEmpty) {
+                            return SizedBox(
+                              height: isMobileSite ? 80 : 120,
+                              child: const Center(
+                                child: DefaultTextStyle(
+                                  style: AppFontStyle.wb40R16,
+                                  child:
+                                      Text("No item available at this time."),
+                                ),
+                              ),
+                            );
+                          }
+                          selectedItem = items.first;
+                          return DropdownButton<ItemModel>(
+                            value: selectedItem,
+                            icon: const Icon(Icons.arrow_downward),
+                            elevation: 16,
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            onChanged: (ItemModel? value) {
+                              setState(() {
+                                selectedItem = value!;
+                              });
+                            },
+                            items: items.map<DropdownMenuItem<ItemModel>>(
+                                (ItemModel value) {
+                              return DropdownMenuItem<ItemModel>(
+                                value: value,
+                                child: Text(value.objectName),
+                              );
+                            }).toList(),
                           );
                         })),
               ],
@@ -259,7 +228,8 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                 Expanded(
                   flex: isMobileSite ? 3 : 6,
                   child: TextField(
-                    controller: textController,
+                    keyboardType: TextInputType.number,
+                    controller: amountController,
                     onTap: () {},
                     decoration: const InputDecoration(
                       hintText: "Amount",
@@ -334,7 +304,7 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                   flex: isMobileSite ? 3 : 6,
                   child: GestureDetector(
                     onTap: () {
-                      _selectFromDate(context);
+                      _selectToDate(context);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -354,49 +324,6 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                 ),
               ],
             ),
-            // Time
-            // const SizedBox(height: 16),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       flex: isMobileSite ? 1 : 1,
-            //       child: SizedBox(
-            //         child: DefaultTextStyle(
-            //           style: isMobileSite
-            //               ? AppFontStyle.wb80R16
-            //               : AppFontStyle.wb80R24,
-            //           child: const Text("Select time"),
-            //         ),
-            //       ),
-            //     ),
-            //     SizedBox(width: isMobileSite ? 8 : 16),
-            //     Expanded(
-            //       flex: isMobileSite ? 3 : 6,
-            //       child: GestureDetector(
-            //         onTap: () {
-            //           _selectTime(context);
-            //           if (_time != null) {
-            //             // Call room loader
-            //           }
-            //         },
-            //         child: Container(
-            //           padding: const EdgeInsets.symmetric(
-            //               horizontal: 16, vertical: 8),
-            //           decoration: BoxDecoration(
-            //             color: ColorConstant.white,
-            //             borderRadius: BorderRadius.circular(8),
-            //             border: Border.all(color: ColorConstant.whiteBlack20),
-            //           ),
-            //           child: Text(
-            //             _time != null
-            //                 ? _formatTimeRange(TimeOfDay.fromDateTime(_time!))
-            //                 : 'Time in date',
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
             // Purpose
             const SizedBox(height: 16),
             Row(
@@ -430,61 +357,6 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
               ],
             ),
             const SizedBox(height: 16),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       flex: isMobileSite ? 1 : 1,
-            //       child: DefaultTextStyle(
-            //         style: isMobileSite
-            //             ? AppFontStyle.wb80R16
-            //             : AppFontStyle.wb80R24,
-            //         child: const Text("Room"),
-            //       ),
-            //     ),
-            //     SizedBox(width: isMobileSite ? 8 : 16),
-            //     Expanded(
-            //         flex: isMobileSite ? 3 : 6,
-            //         child: _fromDate == null || _time == null
-            //             ? Container()
-            //             : FutureBuilder(
-            //                 future: context
-            //                     .read<FacilityViewModel>()
-            //                     .getAvailableRoom(),
-            //                 builder: (context, snapshot) {
-            //                   final rooms = snapshot.data ?? [];
-            //                   if (rooms.isEmpty) {
-            //                     return SizedBox(
-            //                       height: isMobileSite ? 80 : 120,
-            //                       child: const Center(
-            //                         child: DefaultTextStyle(
-            //                           style: AppFontStyle.wb40R16,
-            //                           child: Text(
-            //                               "No room available at this time."),
-            //                         ),
-            //                       ),
-            //                     );
-            //                   }
-            //                   return RadioForm(
-            //                       rooms: rooms,
-            //                       onPressed: (rooms) {
-            //                         setState(() {
-            //                           selectedRoom = rooms;
-            //                         });
-            //                       });
-            //                 })),
-            //   ],
-            // ),
-            // if (_fromDate == null || _time == null)
-            //   SizedBox(
-            //     height: isMobileSite ? 80 : 120,
-            //     child: const Center(
-            //       child: DefaultTextStyle(
-            //         style: AppFontStyle.wb40R16,
-            //         child: Text("Please select date and time"),
-            //       ),
-            //     ),
-            //   ),
-
             SizedBox(width: isMobileSite ? 8 : 16),
             // Booking Button
             Row(

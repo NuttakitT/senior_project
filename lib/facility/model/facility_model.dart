@@ -48,3 +48,10 @@ class ItemReservation {
       required this.endDate,
       required this.status});
 }
+
+class Booking {
+  List<RoomReservation> roomRes;
+  List<ItemReservation> itemRes;
+
+  Booking({required this.roomRes, required this.itemRes});
+}

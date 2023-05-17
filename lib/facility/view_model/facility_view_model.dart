@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
 
 class FacilityViewModel extends ChangeNotifier {
+  final _roomService = FirebaseServices("rooms");
+  final _itemService = FirebaseServices("items");
+  final _itemReservation = FirebaseServices("itemReservations");
+
   Future<List<RoomModel>> getAvailableRoom() async {
     final rooms = [
       RoomModel(name: "CPE 1111", capacity: 20, type: "Lecture Room"),
@@ -9,6 +14,10 @@ class FacilityViewModel extends ChangeNotifier {
       RoomModel(name: "CPE 1113", capacity: 30, type: "Lecture Room"),
     ];
     return rooms;
+  }
+
+  Future<bool> reserveRoom(RoomReservation request) async {
+    return false;
   }
 
   Future<List<ItemModel>> getItems() async {
@@ -22,5 +31,10 @@ class FacilityViewModel extends ChangeNotifier {
     ];
 
     return items;
+  }
+
+  Future<Booking> fetchBookings() async {
+    final bookings = Booking(roomRes: [], itemRes: []);
+    return bookings;
   }
 }
