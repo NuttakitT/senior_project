@@ -12,6 +12,7 @@ class RoomModel {
 }
 
 class RoomReservation {
+  String? id;
   String purpose;
   DateTime dateCreate;
   DateTime bookTime;
@@ -20,12 +21,28 @@ class RoomReservation {
   String? room; // for watch bookings
 
   RoomReservation(
-      {required this.purpose,
+      {this.id,
+      required this.purpose,
       required this.dateCreate,
       required this.bookTime,
       required this.userId,
       required this.status,
       this.room});
+}
+
+class Schedule {
+  String? id;
+  String roomName;
+  int dayOfWeek;
+  DateTime startTime;
+  DateTime endTime;
+
+  Schedule(
+      {this.id,
+      required this.roomName,
+      required this.dayOfWeek,
+      required this.startTime,
+      required this.endTime});
 }
 
 class RoomReservationRequest {
@@ -48,6 +65,7 @@ class ItemModel {
 }
 
 class ItemReservation {
+  String? id;
   String objectName;
   String purpose;
   int amount;
@@ -57,7 +75,8 @@ class ItemReservation {
   String status;
 
   ItemReservation(
-      {required this.objectName,
+      {this.id,
+      required this.objectName,
       required this.purpose,
       required this.amount,
       required this.startDate,
