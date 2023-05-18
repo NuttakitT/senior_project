@@ -152,10 +152,20 @@ extension AppFontStyle on FontStyle {
       fontWeight: AppFontWeight.regular,
       fontSize: 20,
       color: ColorConstant.whiteBlack60);
+  static const wb60R24 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.regular,
+      fontSize: 24,
+      color: ColorConstant.whiteBlack60);
   static const wb60Md16 = TextStyle(
       fontFamily: font,
       fontWeight: AppFontWeight.medium,
       fontSize: 16,
+      color: ColorConstant.whiteBlack60);
+  static const wb60Md20 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.medium,
+      fontSize: 20,
       color: ColorConstant.whiteBlack60);
   static const wb60SemiB16 = TextStyle(
       fontFamily: font,
@@ -356,8 +366,18 @@ extension AppFontStyle on FontStyle {
       fontWeight: AppFontWeight.medium,
       color: ColorConstant.red40,
       fontSize: 14);
+  static const red40R16 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.medium,
+      color: ColorConstant.red40,
+      fontSize: 16);
 
   // blue
+  static const blue90Md24 = TextStyle(
+      fontFamily: font,
+      fontWeight: AppFontWeight.medium,
+      color: Color(0xFF64B5F6),
+      fontSize: 24);
   static const blue90B36 = TextStyle(
       fontFamily: font,
       fontWeight: AppFontWeight.bold,
