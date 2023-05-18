@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -26,23 +28,63 @@ class _MyBookingViewState extends State<MyBookingView> {
   Widget build(BuildContext context) {
     if (isMobileSite) {
       return TemplateMenuMobile(
-          content: Column(
+          content: Builder(
+            builder: (context) {
+              bool isLogin = context.watch<AppViewModel>().isLogin;
+              if (!isLogin) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Center(
+                    child: Text(
+                      "Please login to use the services",
+                      style: TextStyle(
+                          color: ColorConstant.orange60,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: AppFontStyle.font,
+                          fontSize: 18),
+                    ),
+                  ),
+                ); 
+              }
+              return Column(
         children: const [
-          FacilityHeaderMobile(title: "My Booking"),
-          MyBookingList()
+              FacilityHeaderMobile(title: "My Booking"),
+              MyBookingList()
         ],
-      ));
+      );
+            }
+          ));
     } else {
       return TemplateDesktop(
           helpdesk: false,
           helpdeskadmin: false,
           home: true,
           useTemplatescroll: true,
-          content: Column(
-            children: const [
-              FacilityHeader(title: "My Booking"),
-              MyBookingList()
-            ],
+          content: Builder(
+            builder: (context) {
+              bool isLogin = context.watch<AppViewModel>().isLogin;
+              if (!isLogin) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 100),
+                  child: Center(
+                    child: Text(
+                      "Please login to use the services",
+                      style: TextStyle(
+                          color: ColorConstant.orange60,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: AppFontStyle.font,
+                          fontSize: 24),
+                    ),
+                  ),
+                );
+              }
+              return Column(
+                children: const [
+                  FacilityHeader(title: "My Booking"),
+                  MyBookingList()
+                ],
+              );
+            }
           ));
     }
   }

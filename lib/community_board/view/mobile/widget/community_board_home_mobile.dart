@@ -114,7 +114,7 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                                     size: 12,
                                   ),
                                 ),
-                                Text("Create Post"),
+                                Text("Create FAQ"),
                               ],
                             ),
                           );
