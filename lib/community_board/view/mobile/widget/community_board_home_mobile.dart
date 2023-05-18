@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
+import 'package:senior_project/community_board/view/desktop/widget/create_post.dart';
 import 'package:senior_project/community_board/view/mobile/widget/create_post_mobile.dart';
 import 'package:senior_project/community_board/view/widget/post_loader.dart';
 import 'package:senior_project/community_board/view/widget/text_search_result.dart';
+import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/core/view_model/text_search.dart';
 
@@ -38,7 +40,7 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 16),
                   child: Text(
-                    "Community Board",
+                    "Frequently Ask Questions(CPE)",
                     style: TextStyle(
                         color: ColorConstant.whiteBlack90,
                         fontSize: 28,
@@ -86,7 +88,9 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                             onPressed: () {
                               Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                                  return const CreatePostMobile();
+                                  // return const CreatePostMobile();
+                                  // ignore: prefer_const_constructors
+                                  return TemplateMenuMobile(content: CreatePost(isEdit: false, detail: const {}, isFromReply: false,));
                               }));
                             },
                             style: TextButton.styleFrom(

@@ -22,8 +22,8 @@ class _ChatBarState extends State<ChatBar> {
       stream: FirebaseServices("ticket").listenToDocument(widget.docId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
-          List<dynamic> adminList = snapshot.data!.get("adminId");
-          if (snapshot.data!.get("status") < 2 || (isAdmin && adminList.length == 1 && adminList[0] == widget.userId && snapshot.data!.get("status") < 2)) {
+          dynamic adminId = snapshot.data!.get("adminId");
+          if (snapshot.data!.get("status") < 2 || (isAdmin && (adminId == widget.userId || adminId == null) && snapshot.data!.get("status") < 2)) {
             return const ChatInput();
           }
         }

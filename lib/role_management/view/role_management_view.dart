@@ -28,7 +28,7 @@ class _RoleManagementViewState extends State<RoleManagementView> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<TemplateDesktopViewModel>().changeState(context, 3, 1);
+    // context.read<TemplateDesktopViewModel>().changeState(context, 3, 1);
     if (widget.isAdmin && !isMobileSite) {
       return FutureBuilder(
           future: context.read<RoleManagementViewModel>().fetchPage(),

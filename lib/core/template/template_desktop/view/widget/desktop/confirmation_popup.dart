@@ -26,6 +26,9 @@ class ConfirmationPopup extends StatefulWidget {
 
 class _ConfirmationPopupState extends State<ConfirmationPopup> {
   bool isButtonEnabled = true;
+  bool isMobileSite = kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
 
   @override
   void initState() {
@@ -49,6 +52,7 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
           child: Padding(
             padding: EdgeInsets.all(isMobileSite ? 8 : 24),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
@@ -72,8 +76,8 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                 ),
                 widget.widget ?? Container(),
                 const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  runSpacing: 4,
                   children: [
                     Container(
                       height: 40,

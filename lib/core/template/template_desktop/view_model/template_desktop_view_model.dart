@@ -10,11 +10,11 @@ import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
-  List<bool> _navBarState = [true, false, false, false, false];
+  List<bool> _navBarState = [true, false, false, false, false, false, false, false, false, false];
   List<bool> _helpDeskTagBar = [true, false, false, false, false, false, false, false]; 
   List<bool> _homeTagBar = [true]; 
   List<Map<String, dynamic>> _home = [{
-    "name": "All tag post",
+    "name": "All FAQ",
     "description": ""
   }];
   List<bool> _faqTagBar = [true, false];
@@ -118,8 +118,10 @@ class TemplateDesktopViewModel extends ChangeNotifier {
           notifyListeners();
         }
       }
-      if (type == 2) {
+      else if (type == 2) {
         context.read<CommunityBoardViewModel>().clearPost();
+        notifyListeners();
+      } else {
         notifyListeners();
       }
     }
@@ -128,7 +130,7 @@ class TemplateDesktopViewModel extends ChangeNotifier {
   void clearHomeTagbar() {
     _home = [
       {
-        "name": _isApprovedPage ? "All post" : "Recent Post",
+        "name": "All FAQ",
         "description": ""
       }
     ];
@@ -138,29 +140,30 @@ class TemplateDesktopViewModel extends ChangeNotifier {
   Future<void> getCategory() async {
     _isSafeLoad = false;
     clearHomeTagbar();
-    final category = await FirebaseServices("category").getDocumnetByKeyValuePair(
-      _isApprovedPage ? ["isCommunity"] : ["isCommunity", "isApproved"], 
-      _isApprovedPage ? [true] : [true, true]
-    );
+    // final category = await FirebaseServices("category").getDocumnetByKeyValuePair(
+    //   _isApprovedPage ? ["isCommunity"] : ["isCommunity", "isApproved"], 
+    //   _isApprovedPage ? [true] : [true, true]
+    // );
+    final category = await FirebaseServices("category").getAllDocument();
     for (int i = 0; i < category!.docs.length; i++) {
-      if (_isApprovedPage) {
-        List<Map<String, dynamic>> hasTag = [];
-        if (_home.isNotEmpty) {
-          hasTag = _home.where((element) => element["name"] == category.docs[i].id).toList();
-        }
-        if (hasTag.isEmpty) {
-          _home.add({
-            "name": category.docs[i].id,
-            "description": category.docs[i].get("description")
-          });
-          _homeTagBar.add(false);
-        }
-      } else {
-        final post = await FirebaseServices("post").getDocumnetByKeyValuePair(
-        ["topics", "isApproved"], 
-        [[category.docs[i].id], true]
+      // if (_isApprovedPage) {
+      //   List<Map<String, dynamic>> hasTag = [];
+      //   if (_home.isNotEmpty) {
+      //     hasTag = _home.where((element) => element["name"] == category.docs[i].id).toList();
+      //   }
+      //   if (hasTag.isEmpty) {
+      //     _home.add({
+      //       "name": category.docs[i].id,
+      //       "description": category.docs[i].get("description")
+      //     });
+      //     _homeTagBar.add(false);
+      //   }
+      // } else {
+        final faq = await FirebaseServices("faq").getDocumnetByKeyValuePair(
+        ["category"], 
+        [category.docs[i].id]
         );
-        if (post!.docs.isNotEmpty) {
+        if (faq!.docs.isNotEmpty) {
           List<Map<String, dynamic>> hasTag = [];
           if (_home.isNotEmpty) {
             hasTag = _home.where((element) => element["name"] == category.docs[i].id).toList();
@@ -173,7 +176,7 @@ class TemplateDesktopViewModel extends ChangeNotifier {
             _homeTagBar.add(false);
           }
         }
-      }
+      // }
     }
   }
 

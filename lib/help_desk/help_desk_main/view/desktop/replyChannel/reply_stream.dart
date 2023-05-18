@@ -36,7 +36,7 @@ class _ReplyStreamState extends State<ReplyStream> {
             context.read<HelpDeskViewModel>().setLastDoc(streamSnapshot.data.docs.last);
             context.read<HelpDeskViewModel>().addPreviousFirst = context.read<HelpDeskViewModel>().getFirstDoc!.id;
             return FutureBuilder(
-              future: context.read<HelpDeskViewModel>().reconstructQueryData(streamSnapshot.data as QuerySnapshot),
+              future: context.read<HelpDeskViewModel>().reconstructQueryData(context, streamSnapshot.data as QuerySnapshot),
               builder: (context, futureSnapshot) {
                 if (futureSnapshot.connectionState == ConnectionState.done) {
                   return FutureBuilder(

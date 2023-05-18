@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
           future: init(context),
           builder: (context, _) {
             if (_.connectionState == ConnectionState.done) {
-              return const FacilityView();
+              return const CommunityBoardView();
             }
             return Container();
           }),

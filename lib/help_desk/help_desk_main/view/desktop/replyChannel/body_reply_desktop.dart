@@ -1,4 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
         : "Admin";
     String ownerId =
         context.watch<ReplyChannelViewModel>().getTaskData["ownerId"];
+    String category = context.watch<ReplyChannelViewModel>().getTaskData["category"];
     return StreamBuilder(
         stream: FirebaseServices("ticket")
             .listenToSubDocument(docId, "replyChannel"),
@@ -272,8 +274,8 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                                 height: snapshot.data!
                                                             .get("status") !=
                                                         2
-                                                    ? screenHeight - 560
-                                                    : screenHeight - 496,
+                                                    ? screenHeight - 498
+                                                    : screenHeight - 434,
                                                 decoration: const BoxDecoration(
                                                     color: ColorConstant
                                                         .whiteBlack5),
@@ -356,13 +358,12 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState ==
                                                 ConnectionState.active) {
-                                              List<dynamic> adminList =
+                                              dynamic adminId =
                                                   snapshot.data!.get("adminId");
                                               if ((!isAdmin && snapshot.data!.get("status") <
                                                       2) ||
                                                   (isAdmin &&
-                                                      adminList.length == 1 &&
-                                                      adminList[0] == userId &&
+                                                      (adminId == userId || adminId == null) &&
                                                       snapshot.data!
                                                               .get("status") <
                                                           2)) {
@@ -377,9 +378,18 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                               ),
                               Flexible(
                                   fit: FlexFit.tight,
-                                  child: DescriptionDesktop(
-                                    isAdmin: role == 0 ? true : false,
-                                  ))
+                                  child: FutureBuilder(
+                                    future: context.read<HelpDeskViewModel>().fetchQuestion(category),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.done) {
+                                        return DescriptionDesktop(
+                                          isAdmin: role == 0 ? true : false, q: snapshot.data!,
+                                        );
+                                      }
+                                      return Container();
+                                    },
+                                  )
+                              )
                             ],
                           ),
                         ],

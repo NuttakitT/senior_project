@@ -25,7 +25,7 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
   String stausValue = status[0];
   String? adminValue;
   String hintText = "Assign to";
-  List<dynamic> taskAdmin = [];
+  dynamic taskAdmin = "";
   
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
             builder: (context, streamSnapshot) {
               if (streamSnapshot.connectionState == ConnectionState.active) {
                 taskAdmin = streamSnapshot.data!.get("adminId");
-                if (taskAdmin.length == 1 && taskAdmin[0] == uid) {
+                if (taskAdmin == uid) {
                   hintText = "You";
                 }
                 return Row(
@@ -87,41 +87,49 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: Container(
-                        height: 32,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: ColorConstant.whiteBlack30)
-                        ),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: status[streamSnapshot.data!.get("status")],
-                            style: const TextStyle(
-                              fontFamily: AppFontStyle.font,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: ColorConstant.whiteBlack90
+                    Builder(
+                      builder: (context) {
+                        bool isItemRequest = context.watch<ReplyChannelViewModel>().getTaskData["isItemRequest"];
+                        if (isItemRequest) {
+                          return Container();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: Container(
+                            height: 32,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: ColorConstant.whiteBlack30)
                             ),
-                            items:
-                                status.map<DropdownMenuItem<String>>((value) {
-                              return DropdownMenuItem(
-                                  value: value, child: Text(value));
-                            }).toList(),
-                            onChanged: (value) async {
-                              await context.read<HelpDeskViewModel>().editTask(
-                                context.read<ReplyChannelViewModel>().getTaskData["docId"], 
-                                true, 
-                                status.indexOf(value!)
-                              );
-                            },
-                            borderRadius: BorderRadius.circular(4),
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                value: status[streamSnapshot.data!.get("status")],
+                                style: const TextStyle(
+                                  fontFamily: AppFontStyle.font,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16,
+                                  color: ColorConstant.whiteBlack90
+                                ),
+                                items:
+                                    status.map<DropdownMenuItem<String>>((value) {
+                                  return DropdownMenuItem(
+                                      value: value, child: Text(value));
+                                }).toList(),
+                                onChanged: (value) async {
+                                  await context.read<HelpDeskViewModel>().editTask(
+                                    context.read<ReplyChannelViewModel>().getTaskData["docId"], 
+                                    true, 
+                                    status.indexOf(value!)
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      }
                     ),
                     Container(
                       height: 32,
@@ -131,47 +139,62 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
                       ),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          hint: Text(
-                              hintText,
+                      child: Builder(
+                        builder: (context) {
+                          if (taskAdmin != uid && taskAdmin != null) {
+                            return Text(
+                              adminValue!,
                               style: const TextStyle(
                                 fontFamily: AppFontStyle.font,
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16,
                                 color: ColorConstant.whiteBlack90
                               ),
-                          ),
-                          value: adminValue,
-                          style: const TextStyle(
-                            fontFamily: AppFontStyle.font,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: ColorConstant.whiteBlack90
-                          ),
-                          items:
-                              admin.map<DropdownMenuItem<String>>((value) {
-                            return DropdownMenuItem(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              adminValue = value!;
-                            });
-                            int index = admin.indexOf(adminValue!);
-                            context.read<HelpDeskViewModel>().setTicketResponsibility(
-                              docId, 
-                              snapshot.data!.admins[index].userId,
-                              true
                             );
-                          },
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                          }
+                          return DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              hint: Text(
+                                  hintText,
+                                  style: const TextStyle(
+                                    fontFamily: AppFontStyle.font,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    color: ColorConstant.whiteBlack90
+                                  ),
+                              ),
+                              value: adminValue,
+                              style: const TextStyle(
+                                fontFamily: AppFontStyle.font,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                                color: ColorConstant.whiteBlack90
+                              ),
+                              items:
+                                  admin.map<DropdownMenuItem<String>>((value) {
+                                return DropdownMenuItem(
+                                    value: value, child: Text(value));
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  adminValue = value!;
+                                });
+                                int index = admin.indexOf(adminValue!);
+                                context.read<HelpDeskViewModel>().setTicketResponsibility(
+                                  docId, 
+                                  snapshot.data!.admins[index].userId,
+                                  true
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          );
+                        }
                       ),
                     ),
                     Builder(
                       builder: (context) {
-                        if (taskAdmin.length == 1 && taskAdmin[0] == uid) {
+                        if (taskAdmin == uid || taskAdmin != null) {
                           return Container();
                         } else {
                           return Padding(

@@ -4,10 +4,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/model/content.dart';
 import 'package:senior_project/core/model/help_desk/task.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/model/help_desk_main_model.dart';
 
 class HelpDeskViewModel extends ChangeNotifier {
@@ -242,7 +245,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<String> createTask(
-      String title, String detail, int priority, String category) async {
+      String title, String detail, int priority, String category, bool isItemRequest) async {
     List<String> responsibilityAdmin = [];
     await FirebaseServices("user")
         .getDocumentByKeyList("responsibility", [category]).then((value) {
@@ -253,7 +256,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       }
     });
     Task task = Task(FirebaseAuth.instance.currentUser!.uid, title,
-        Content(detail), priority, category, [], responsibilityAdmin);
+        Content(detail), priority, category, [], responsibilityAdmin, status: isItemRequest ? 1 : null);
     _helpDeskModel.addTask(task);
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list =
@@ -269,8 +272,10 @@ class HelpDeskViewModel extends ChangeNotifier {
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
-      "adminId": responsibilityAdmin,
+      "relateAdmin": responsibilityAdmin,
+      "adminId": null,
       "isSeen": [],
+      "isItemRequest": isItemRequest,
       "id": task.getId
     });
     Map<String, dynamic> taskDetail = {
@@ -283,7 +288,9 @@ class HelpDeskViewModel extends ChangeNotifier {
       "status": task.getStatus,
       "title": task.getTitle,
       "detail": detail,
-      "adminId": responsibilityAdmin,
+      "relateAdmin": responsibilityAdmin,
+      "isItemRequest": isItemRequest,
+      "adminId": null,
       "isSeen": []
     };
     taskDetail.addAll({"objectID": objectId!});
@@ -301,11 +308,11 @@ class HelpDeskViewModel extends ChangeNotifier {
       String docId, String adminId, bool isAssignToOther) async {
     final snapshot = await _serviceTicket.getDocumentById(docId);
     await _serviceTicket.editDocument(docId, {
-      "adminId": [adminId],
+      "adminId": adminId,
       "isSeen": isAssignToOther ? [] : [adminId]
     });
     await _algolia.updateObject(snapshot!.get("objectID"), {
-      "adminId": [adminId],
+      "adminId": adminId,
       "isSeen": isAssignToOther ? [] : [adminId]
     });
   }
@@ -381,9 +388,8 @@ class HelpDeskViewModel extends ChangeNotifier {
             }).changePriority(value);
           }
         }
-        await _changeTaskState(docId, taskId, objectId, value, isStatus,
-            dateComplete: dateComplete);
-        notifyListeners();
+        await _changeTaskState(docId, taskId, objectId, value, isStatus, dateComplete: dateComplete);
+        // notifyListeners();
       }
     } catch (e) {
       if (kDebugMode) {
@@ -393,25 +399,39 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   // ------------- Listen to database and update data in application ---------------
-  Future<void> _addQueryData(DocumentSnapshot snapshot) async {
-    Task task = Task(
+  Future<void> _addQueryData(BuildContext context, DocumentSnapshot snapshot) async {
+    bool isAdmin = context.read<AppViewModel>().app.getUser.getRole == 0;
+    bool pass = false;
+    if (isAdmin) {
+      String adminId = context.read<AppViewModel>().app.getUser.getId;
+      if (snapshot.get("adminId") == null || snapshot.get("adminId") == adminId) {
+        pass = true;
+      }
+    } else {
+      pass = true;
+    }
+    if (pass) {
+      Task task = Task(
         snapshot.get("ownerId"),
         snapshot.get("title"),
         Content(snapshot.get("detail")),
         snapshot.get("priority"),
         snapshot.get("category"),
         snapshot.get("isSeen"),
-        snapshot.get("adminId"),
+        snapshot.get("relateAdmin"),
         id: snapshot.get("id"),
         dateCreate: snapshot.get("dateCreate").toDate(),
         status: snapshot.get("status"),
-        dateComplete: snapshot.get("dateComplete") != null
-            ? snapshot.get("dateComplete").toDate()
-            : null);
-    _helpDeskModel.addTask(task);
-    _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length - 1));
-    _task[_helpDeskModel.getTask.length - 1]
-        .addEntries({"docId": snapshot.id}.entries);
+        dateComplete: snapshot.get("dateComplete") != null ? snapshot.get("dateComplete").toDate() : null
+      );
+      _helpDeskModel.addTask(task);
+      _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
+      _task[_helpDeskModel.getTask.length-1].addEntries(
+      {
+        "docId": snapshot.id, 
+        "isItemRequest": snapshot.get("isItemRequest"),
+      }.entries);
+    }
   }
 
   void _modifyQueryData(DocumentSnapshot snapshot, int index) {
@@ -433,11 +453,11 @@ class HelpDeskViewModel extends ChangeNotifier {
     _task.removeAt(index);
   }
 
-  Future<void> reconstructQueryData(dynamic snapshot) async {
+  Future<void> reconstructQueryData(BuildContext context, dynamic snapshot) async {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       DocumentSnapshot doc = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.added) {
-        await _addQueryData(doc);
+        await _addQueryData(context, doc);
       }
       if (snapshot.docChanges[i].type == DocumentChangeType.modified) {
         int index = snapshot.docChanges[i].newIndex;
@@ -451,37 +471,63 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   void reconstructSearchResult(List<dynamic> hits, bool isAdmin, String uid) {
-    for (var item in hits) {
-      bool isTargetObject = false;
-      String ownerId = item["ownerId"] as String;
-      List<dynamic> adminId = item["adminId"] as List<dynamic>;
-      if (isAdmin && adminId.contains(uid)) {
-        isTargetObject = true;
-      } else if (!isAdmin && ownerId == uid) {
-        isTargetObject = true;
+    try {
+      for (var item in hits) {
+        bool isTargetObject = false;
+        String ownerId = item["ownerId"] as String;
+        List<dynamic> relateAdmin = item["relateAdmin"] as List<dynamic>;
+        dynamic adminId = item["adminId"];
+        if (isAdmin && (relateAdmin.contains(uid) && (adminId == uid || adminId == null))) {
+          isTargetObject = true;
+        } else if (!isAdmin && ownerId == uid) {
+          isTargetObject = true;
+        }
+        if (isTargetObject) {
+          DateTime date = DateTime.parse(item["dateCreate"]);
+          _task.add({
+            "objectID": item["objectID"],
+            "email": item["email"],
+            "name": item["name"],
+            "detail": item["detail"],
+            "title": item["title"],
+            "ownerId": item["ownerId"],
+            "time": date,
+            "completeTime": item["dateComplete"] != null
+                ? DateTime.parse(item["dateComplete"])
+                : null,
+            "category": item["category"],
+            "priority": item["priority"],
+            "status": item["status"],
+            "adminId": item["adminId"],
+            "isSeen": item["isSeen"],
+            "docId": item["docId"],
+            "id": item["id"],
+            "isItemRequest": item["isItemRequest"],
+          });
+        }
       }
-      if (isTargetObject) {
-        DateTime date = DateTime.parse(item["dateCreate"]);
-        _task.add({
-          "objectID": item["objectID"],
-          "email": item["email"],
-          "name": item["name"],
-          "detail": item["detail"],
-          "title": item["title"],
-          "ownerId": item["ownerId"],
-          "time": date,
-          "completeTime": item["dateComplete"] != null
-              ? DateTime.parse(item["dateComplete"])
-              : null,
-          "category": item["category"],
-          "priority": item["priority"],
-          "status": item["status"],
-          "adminId": item["adminId"],
-          "isSeen": item["isSeen"],
-          "docId": item["docId"],
-          "id": item["id"],
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchQuestion(String category) async {
+    List<Map<String, dynamic>> question = [];
+    final snapshot = await  FirebaseServices("faq").getDocumnetByKeyValuePair(
+      ["category"], 
+      [category]
+    );
+    for (QueryDocumentSnapshot doc in snapshot!.docs) {
+      List<Map<String, dynamic>> hasItemList = question.where((element) => element["question"] == doc.get("question")).toList();
+      if (hasItemList.isEmpty) {
+        question.add({
+          "question": doc.get("question"),
+          "answer": doc.get("answer"),
         });
       }
     }
+    return question;
   }
 }

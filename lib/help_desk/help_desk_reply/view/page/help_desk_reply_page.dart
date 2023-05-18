@@ -19,6 +19,7 @@ class HelpDeskReplyPage extends StatefulWidget {
   final DateTime time;
   final List<dynamic> adminId;
   final String ownerId;
+  final bool isItemRequest;
   const HelpDeskReplyPage(
       {super.key,
       required this.docId,
@@ -30,7 +31,7 @@ class HelpDeskReplyPage extends StatefulWidget {
       required this.category,
       required this.time,
       required this.adminId,
-      required this.ownerId});
+      required this.ownerId, required this.isItemRequest});
 
   @override
   State<HelpDeskReplyPage> createState() => _HelpDeskReplyPageState();
@@ -55,6 +56,7 @@ class _HelpDeskReplyPageState extends State<HelpDeskReplyPage> {
       "category": widget.category,
       "time": widget.time,
       "adminId": widget.adminId,
+      "isItemRequest": widget.isItemRequest,
     };
 
     if (isMobile) {

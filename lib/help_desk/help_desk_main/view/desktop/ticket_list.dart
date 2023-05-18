@@ -25,7 +25,7 @@ Stream? query(
   limit ??= 5;
   if (type == 0) {
     return service.listenToDocumentByKeyValuePair(
-      [isAdmin ? "adminId" : "ownerId"], 
+      [isAdmin ? "relateAdmin" : "ownerId"], 
       [id],
       limit: limit, orderingField: 'dateCreate', descending: descending,
       startDoc: startDoc,
@@ -34,7 +34,7 @@ Stream? query(
   } 
   if (type > 3){
     return service.listenToDocumentByKeyValuePair(
-      [isAdmin ? "adminId" : "ownerId", "priority"], 
+      [isAdmin ? "relateAdmin" : "ownerId", "priority"], 
       [id, (type-7).abs()],
       limit: limit, orderingField: 'dateCreate', descending: descending,
       startDoc: startDoc,
@@ -42,7 +42,7 @@ Stream? query(
     );
   }
   return service.listenToDocumentByKeyValuePair(
-    [isAdmin ? "adminId" : "ownerId", "status"], 
+    [isAdmin ? "relateAdmin" : "ownerId", "status"], 
     [id, type-1],
     limit: limit, orderingField: 'dateCreate', descending: descending,
     startDoc: startDoc,

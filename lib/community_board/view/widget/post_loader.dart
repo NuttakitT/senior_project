@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view/desktop/widget/content_card_template.dart';
@@ -21,17 +20,20 @@ class PostLoader extends StatefulWidget {
 }
 
 class _PostLoaderState extends State<PostLoader> {
-  final postService = FirebaseServices("post");
+  // final postService = FirebaseServices("post");
+  final faqService = FirebaseServices("faq");
 
-  List<Widget> generateCardCommunityBoard(List<Map<String, dynamic>> listPost, bool isMobile) {
+  List<Widget> generateCardCommunityBoard(String category, List<Map<String, dynamic>> listPost, bool isMobile) {
     List<Widget> card = [];
     for (int i = 0; i < listPost.length; i++) {
       if (isMobile) {
         card.add(CommunityBoardContentCardMobile(
+          category: category,
           info: listPost[i],
         ));
       } else {
         card.add(ContentCardTemplate(
+          category: category,
           info: listPost[i],
         ));
       }
@@ -85,14 +87,12 @@ class _PostLoaderState extends State<PostLoader> {
             ),
           ),
           Column(
-            children: generateCardCommunityBoard(listPost, false),
+            children: generateCardCommunityBoard(topicName, listPost, false),
           ),
           StreamBuilder(
-            stream: postService.listenToDocumentByKeyValuePair(
-              ["topics", "isApproved"], 
-              [[topicName], true],
-              orderingField: "dateCreate",
-              descending: true
+            stream: faqService.listenToDocumentByKeyValuePair(
+              ["category"], 
+              [topicName],
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
@@ -124,8 +124,8 @@ class _PostLoaderState extends State<PostLoader> {
                         ],
                       ),
                     ),
-                    onTap: () {
-                      context.read<CommunityBoardViewModel>().getNextPost(topicName, nextPost);
+                    onTap: () async {
+                      await context.read<CommunityBoardViewModel>().getNextFaq(topicName, nextPost);
                     },
                   );
                 }
@@ -210,14 +210,12 @@ class _PostLoaderState extends State<PostLoader> {
                 ]),
           ),
           Column(
-            children: generateCardCommunityBoard(listPost, true),
+            children: generateCardCommunityBoard(topicName, listPost, true),
           ),
           StreamBuilder(
-            stream: postService.listenToDocumentByKeyValuePair(
-              ["topics", "isApproved"], 
-              [[topicName], true],
-              orderingField: "dateCreate",
-              descending: true
+            stream: faqService.listenToDocumentByKeyValuePair(
+              ["category"], 
+              [topicName],
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
@@ -249,7 +247,7 @@ class _PostLoaderState extends State<PostLoader> {
                       ),
                     ),
                     onTap: () {
-                      context.read<CommunityBoardViewModel>().getNextPost(topicName, nextPost);
+                      context.read<CommunityBoardViewModel>().getNextFaq(topicName, nextPost);
                     },
                   );
                 }
@@ -287,62 +285,71 @@ class _PostLoaderState extends State<PostLoader> {
     List<Widget> content = [];
     for (int i = 0; i < detail.length; i++) {
       if (isMobile) {
-        content.add(mobileContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"], detail[i]["lastDoc"]));
+        content.add(mobileContent(detail[i]["category"], detail[i]["description"], detail[i]["faq"], detail[i]["lastDoc"]));
       } else {
-        content.add(desktopContent(detail[i]["topic"], detail[i]["description"], detail[i]["post"], detail[i]["lastDoc"]));
+        content.add(desktopContent(detail[i]["category"], detail[i]["description"], detail[i]["faq"], detail[i]["lastDoc"]));
       }
     }
     return content;
   }
 
-  List<Map<String, dynamic>> getPostDetail() {
-    List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
-    List<Map<String, dynamic>> allPost = [];
-    for (int i = 0; i < post.length; i++) {
-      int index = post[i]["post"].getPost.length;
-      int allPostIndex = i;
-      if (post[i]["topic"] == "General") {
-        allPostIndex = 0;
-        allPost.insert(0, {
-          "topic": post[i]["topic"],
-          "description": post[i]["description"],
-          "post": <Map<String, dynamic>>[],
-          "lastDoc": post[i]["lastDoc"],
-        });
-      } else {
-        allPost.add({
-          "topic": post[i]["topic"],
-          "description": post[i]["description"],
-          "post": <Map<String, dynamic>>[],
-          "lastDoc": post[i]["lastDoc"],
-        });
-      }
+  // List<Map<String, dynamic>> getPostDetail() {
+    // List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
+    // List<Map<String, dynamic>> allPost = [];
+    // for (int i = 0; i < post.length; i++) {
+    //   int index = post[i]["post"].getPost.length;
+    //   int allPostIndex = i;
+    //   if (post[i]["topic"] == "General") {
+    //     allPostIndex = 0;
+    //     allPost.insert(0, {
+    //       "topic": post[i]["topic"],
+    //       "description": post[i]["description"],
+    //       "post": <Map<String, dynamic>>[],
+    //       "lastDoc": post[i]["lastDoc"],
+    //     });
+    //   } else {
+    //     allPost.add({
+    //       "topic": post[i]["topic"],
+    //       "description": post[i]["description"],
+    //       "post": <Map<String, dynamic>>[],
+    //       "lastDoc": post[i]["lastDoc"],
+    //     });
+    //   }
       
-      for (int j = 0; j < index; j++) {
-        String docId = post[i]["post"].getPost[j].getDocId;
-        String title = post[i]["post"].getPost[j].getContent.getText;
-        String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
-        String ownerName = post[i]["post"].getPost[j].getOwnerName;
-        String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
-        int comments = post[i]["post"].getPost[j].getComment;
-        String? imageUrl = post[i]["post"].getPost[j].getImageUrl;
-        List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
-        List<Map<String, dynamic>>  postDetail = allPost[allPostIndex]["post"];
-        postDetail.add({
-          "title": title,
-          "detail": detail,
-          "topic": topic,
-          "ownerName": ownerName.split(" ")[0],
-          "dateCreate": dateCreate,
-          "comments": comments,
-          "docId": docId,
-          "imageUrl": imageUrl
-        });
-        allPost[allPostIndex]["post"] = postDetail;
-      }
-    }
-    return allPost;
-  }
+    //   for (int j = 0; j < index; j++) {
+    //     String docId = post[i]["post"].getPost[j].getDocId;
+    //     String title = post[i]["post"].getPost[j].getContent.getText;
+    //     String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
+    //     String ownerName = post[i]["post"].getPost[j].getOwnerName;
+    //     String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
+    //     int comments = post[i]["post"].getPost[j].getComment;
+    //     String? imageUrl = post[i]["post"].getPost[j].getImageUrl;
+    //     List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
+    //     List<Map<String, dynamic>>  postDetail = allPost[allPostIndex]["post"];
+    //     postDetail.add({
+    //       "title": title,
+    //       "detail": detail,
+    //       "topic": topic,
+    //       "ownerName": ownerName.split(" ")[0],
+    //       "dateCreate": dateCreate,
+    //       "comments": comments,
+    //       "docId": docId,
+    //       "imageUrl": imageUrl
+    //     });
+    //     allPost[allPostIndex]["post"] = postDetail;
+    //   }
+    // }
+
+    // List<Map<String, dynamic>> faq = context.watch<CommunityBoardViewModel>().getFaq;
+    // List<Map<String, dynamic>> allFaq = [];
+    // print(faq);
+    // for (int i = 0; i < faq.length; i++) {
+    //   if (faq[i]["category"] == "General") {
+    //     allFaq.insert(0, element);
+    //   }
+    // }
+    // return allFaq;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -352,10 +359,10 @@ class _PostLoaderState extends State<PostLoader> {
     context.read<CommunityBoardViewModel>().setIsSafeClick = false;
 
     if (!isSafeLoad) {
-      List<Map<String, dynamic>> allPost = getPostDetail();
-      if (allPost.isEmpty) {
+      List<Map<String, dynamic>> allFaq = context.watch<CommunityBoardViewModel>().getFaq;
+      if (allFaq.isEmpty) {
         return const Text(
-          "No posts",
+          "No FAQ",
           style: TextStyle(
             fontFamily: AppFontStyle.font,
             fontWeight: AppFontWeight.medium,
@@ -370,7 +377,7 @@ class _PostLoaderState extends State<PostLoader> {
           builder: (context) {
             context.read<CommunityBoardViewModel>().setIsSafeClick = true;
             return Column(
-              children: generateContent(allPost, widget.isMobile),
+              children: generateContent(allFaq, widget.isMobile),
             );
           },
         ),
@@ -381,17 +388,20 @@ class _PostLoaderState extends State<PostLoader> {
       child: Column(
         children: [
           FutureBuilder(
-            future: context.read<CommunityBoardViewModel>().getPostByTopic(
-              tagBarSelected == 0 ? "" : tagBarName["name"].toString(),
-              isLoadAll: tagBarSelected == 0 ? true : false
+            // future: context.read<CommunityBoardViewModel>().getPostByTopic(
+            //   tagBarSelected == 0 ? "" : tagBarName["name"].toString(),
+            //   isLoadAll: tagBarSelected == 0 ? true : false
+            // ),
+            future: context.read<CommunityBoardViewModel>().fetchFaq(
+              tagBarSelected == 0 ? "" : tagBarName["name"]
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 context.read<CommunityBoardViewModel>().setIsSafeClick = true;
-                List<Map<String, dynamic>> allPost = getPostDetail();
-                if (allPost.isEmpty) {
+                List<Map<String, dynamic>> allFaq = context.watch<CommunityBoardViewModel>().getFaq;
+                if (allFaq.isEmpty) {
                   return const Text(
-                    "No posts",
+                    "No FAQ",
                     style: TextStyle(
                       fontFamily: AppFontStyle.font,
                       fontWeight: AppFontWeight.medium,
@@ -403,7 +413,7 @@ class _PostLoaderState extends State<PostLoader> {
                 return Builder(
                   builder: (context) {
                     return Column(
-                      children: generateContent(allPost, widget.isMobile),
+                      children: generateContent(allFaq, widget.isMobile),
                     );
                   },
                 );

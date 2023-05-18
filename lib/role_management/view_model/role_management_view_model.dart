@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/role_management/model/role_management_model.dart';
 
@@ -50,10 +51,14 @@ class RoleManagementViewModel extends ChangeNotifier {
         final snapshot = await _serviesTicket.getDocumnetByKeyValuePair(["category"], [responsibility[i]]);
         for (int j = 0; j < snapshot!.size; j ++) {
           if (snapshot.docs[j].get("status") == 0) {
-            List<dynamic> adminList = snapshot.docs[j].get("adminId");
+            List<dynamic> adminList = snapshot.docs[j].get("relateAdmin");
             if(!adminList.contains(uid)) {
               adminList.add(uid);
-              await _serviesTicket.editDocument(snapshot.docs[j].id, {"adminId": adminList});
+              await _serviesTicket.editDocument(snapshot.docs[j].id, {"relateAdmin": adminList});
+              await AlgoliaServices("ticket").updateObject(
+                snapshot.docs[i].get("objectID"), 
+                {"relateAdmin": adminList}
+              );
             }
           }
         }
@@ -81,11 +86,11 @@ class RoleManagementViewModel extends ChangeNotifier {
       for (int i = 0; i < responsibility.length; i++) {
         final snapshot = await _serviesTicket.getDocumnetByKeyValuePair(["category"], [responsibility[i]]);
         for (int j = 0; j < snapshot!.size; j ++) {
-          List<dynamic> adminList = snapshot.docs[j].get("adminId");
+          List<dynamic> adminList = snapshot.docs[j].get("relateAdmin");
           if (adminList.contains(uid)) {
             adminList.remove(uid);
             await _serviesTicket.editDocument(snapshot.docs[j].id, {
-              "adminId": adminList
+              "relateAdmin": adminList
             });
           }
         }

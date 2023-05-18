@@ -381,4 +381,154 @@ class CommunityBoardViewModel extends ChangeNotifier {
     }
     
   }
+
+// *****************************************************************************
+  final _serviceFaq = FirebaseServices("faq");
+  final AlgoliaServices _algoliaFaq = AlgoliaServices("faq");
+  List<Map<String, dynamic>> _faq = [];
+
+  get getFaq => _faq;
+
+  Future<void> createFaq(Map<String, dynamic> detail) async {
+    try {
+      String docId = DateTime.now().millisecondsSinceEpoch.toString();
+      detail.addAll({"id": docId});
+      String? objectId = await _algoliaFaq.addObject(docId, detail);
+      detail.addAll({"objectId": objectId});
+      _serviceFaq.setDocument(docId, detail);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> editFaq(String docId, Map<String, dynamic> detail) async {
+    try {
+      final snapshot =await _serviceFaq.getDocumentById(docId);
+      await _serviceFaq.editDocument(docId, detail);
+      await _algoliaFaq.updateObject(snapshot!.get("objectId"), detail);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> deleteFaq(String docId) async {
+    try {
+      final snapshot = await _serviceFaq.getDocumentById(docId);
+      await _algoliaFaq.deleteObject(snapshot!.get("objectId"));
+      await _serviceFaq.deleteDocument(docId);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> fetchFaq(String category) async {
+    try {
+      dynamic snapshot;
+      if (category.isNotEmpty) {
+        snapshot = await _serviceFaq.getDocumnetByKeyValuePair(
+          ["category"], 
+          [category]
+        );
+      } else {
+        snapshot = await _serviceFaq.getAllDocument();
+      }
+      if (snapshot!.size != 0) {
+        _faq = [];
+        _isSafeLoad = false;
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          List<Map<String, dynamic>> faqList = _faq.where((element) => element["category"] == snapshot.docs[i].get("category")).toList();
+          final categorySnapshot = await _serviceCategory.getDocumentById(snapshot.docs[i].get("category"));
+          if (faqList.isEmpty) {
+            _faq.add({
+              "category": snapshot.docs[i].get("category"),
+              "description": categorySnapshot!.get("description"),
+              "faq": [{
+                "id": snapshot.docs[i].id,
+                "question": snapshot.docs[i].get("question"),
+                "answer": snapshot.docs[i].get("answer")
+              }],
+              "lastDoc": snapshot.docs[i]
+            });
+          } else {
+            if (category.isEmpty && faqList[0]["faq"].length < 3) {
+              faqList[0]["lastDoc"] = snapshot.docs[i];
+              faqList[0]["faq"].add({
+                "id": snapshot.docs[i].id,
+                "question": snapshot.docs[i].get("question"),
+                "answer": snapshot.docs[i].get("answer")
+              });
+            } else if (category.isNotEmpty) {
+              faqList[0]["lastDoc"] = snapshot.docs[i];
+              faqList[0]["faq"].add({
+                "id": snapshot.docs[i].id,
+                "question": snapshot.docs[i].get("question"),
+                "answer": snapshot.docs[i].get("answer")
+              });
+            }
+          }
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("err $e");
+      }
+    }
+  }  
+
+  Future<void> getNextFaq(String topic, DocumentSnapshot? startDoc) async {
+    if (startDoc != null) {
+      final snapshot = await _serviceFaq.getDocumnetByKeyValuePair(
+        ["category"], 
+        [topic],
+        limit: 5,
+        startDoc: startDoc);
+      if (snapshot!.docs.isNotEmpty) {
+        List<Map<String, dynamic>> faqList = _faq.where((element) => element["category"] == topic).toList();
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          faqList[0]["faq"].add({
+            "id": snapshot.docs[i].id,
+            "question": snapshot.docs[i].get("question"),
+            "answer": snapshot.docs[i].get("answer")
+          });
+        }
+        faqList[0]["lastDoc"] = snapshot.docs.last;
+        notifyListeners();
+      }
+    }
+  }
+  
+  void reconstructSearchFaqResult(List<dynamic> hits, String category) {
+    try {
+      _faq = [];
+      clearController();
+      for (var item in hits) {
+        bool isTagetObject = false;
+        if (category.isNotEmpty) {
+          if (item["category"].toString().contains(category)) {
+            isTagetObject = true;
+          } 
+        } else {
+          isTagetObject = true;
+        }
+        if (isTagetObject) {
+          _faq.add({
+            "category": item["category"],
+            "id": item["id"],
+            "question": item["question"],
+            "answer": item["answer"]
+          });
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
 }

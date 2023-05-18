@@ -48,7 +48,7 @@ class TeacherContactView extends StatelessWidget {
               ],
             ));
           }
-          context.read<TemplateDesktopViewModel>().changeState(context, 2, 1);
+          // context.read<TemplateDesktopViewModel>().changeState(context, 2, 1);
           return TemplateDesktop(
               helpdesk: false,
               helpdeskadmin: false,
