@@ -30,6 +30,17 @@ class RoomReservation {
       this.room});
 }
 
+class RoomStatModel {
+  String roomName;
+  String roomCategory;
+  int amount;
+
+  RoomStatModel(
+      {required this.roomName,
+      required this.roomCategory,
+      required this.amount});
+}
+
 class Schedule {
   String? id;
   String roomName;
@@ -73,6 +84,7 @@ class ItemReservation {
   DateTime endDate;
   String userId;
   String status;
+  String? ticketId;
 
   ItemReservation(
       {this.id,
@@ -82,7 +94,8 @@ class ItemReservation {
       required this.startDate,
       required this.endDate,
       required this.userId,
-      required this.status});
+      required this.status,
+      this.ticketId});
 }
 
 class Booking {
