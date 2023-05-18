@@ -249,7 +249,7 @@ class _CreateTaskState extends State<CreateTask> {
                                   await context
                                       .read<HelpDeskViewModel>()
                                       .createTask(title, detail, priorityIndex,
-                                          categoryValue);
+                                          categoryValue, false);
                                   context
                                       .read<HelpDeskViewModel>()
                                       .clearModel();

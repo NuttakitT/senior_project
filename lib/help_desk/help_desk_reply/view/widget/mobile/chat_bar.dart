@@ -23,7 +23,7 @@ class _ChatBarState extends State<ChatBar> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           dynamic adminId = snapshot.data!.get("adminId");
-          if (snapshot.data!.get("status") < 2 || (isAdmin && adminId == widget.userId && snapshot.data!.get("status") < 2)) {
+          if (snapshot.data!.get("status") < 2 || (isAdmin && (adminId == widget.userId || adminId == null) && snapshot.data!.get("status") < 2)) {
             return const ChatInput();
           }
         }

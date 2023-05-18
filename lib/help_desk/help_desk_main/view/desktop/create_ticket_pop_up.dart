@@ -296,7 +296,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                       await context
                                           .read<HelpDeskViewModel>()
                                           .createTask(title, detail,
-                                              priorityIndex, categoryValue);
+                                              priorityIndex, categoryValue, false);
                                       context
                                           .read<HelpDeskViewModel>()
                                           .clearModel();

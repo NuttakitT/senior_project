@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:senior_project/core/datasource/algolia_services.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/role_management/model/role_management_model.dart';
 
@@ -54,6 +55,10 @@ class RoleManagementViewModel extends ChangeNotifier {
             if(!adminList.contains(uid)) {
               adminList.add(uid);
               await _serviesTicket.editDocument(snapshot.docs[j].id, {"relateAdmin": adminList});
+              await AlgoliaServices("ticket").updateObject(
+                snapshot.docs[i].get("objectID"), 
+                {"relateAdmin": adminList}
+              );
             }
           }
         }

@@ -203,7 +203,7 @@ class FacilityViewModel extends ChangeNotifier {
       BuildContext context) async {
     final ticketId = await context
         .read<HelpDeskViewModel>()
-        .createTask(ticket[0], ticket[1], ticket[2], ticket[3]);
+        .createTask(ticket[0], ticket[1], ticket[2], ticket[3], true);
     final userId = context.read<AppViewModel>().app.getUser.getId;
 
     Map<String, dynamic> itemData = {

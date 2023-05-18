@@ -8,6 +8,7 @@ import 'package:senior_project/community_board/view/desktop/widget/create_post.d
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_reply/view_model/reply_channel_view_model.dart';
 
 const List<String> priority = <String>['Urgent', 'High', 'Medium', 'Low'];
@@ -15,7 +16,8 @@ const List<String> status = <String>['Not start', 'Progress', 'Closed'];
 
 class DescriptionDesktop extends StatefulWidget {
   final bool isAdmin;
-  const DescriptionDesktop({super.key, required this.isAdmin});
+  final List<Map<String, dynamic>> q;
+  const DescriptionDesktop({super.key, required this.isAdmin, required this.q});
 
   @override
   State<DescriptionDesktop> createState() => _DescriptionDesktopState();
@@ -27,10 +29,25 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
   String selectedValue = "";
   bool isInit = true;
   Map<String, dynamic> answer = {};
+
+  @override
+  void initState() {
+    if (widget.q.isNotEmpty) {
+      selectedValue = "Q: ${widget.q[0]["question"]}";
+      for (int i = 0; i < widget.q.length; i++) {
+        answer.addAll({
+          "Q: ${widget.q[i]["question"]}": widget.q[i]["answer"]
+        });
+      }
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     String taskDetail = context.watch<ReplyChannelViewModel>().getTaskData["detail"];
     String category = context.watch<ReplyChannelViewModel>().getTaskData["category"];
+    String docId = context.watch<ReplyChannelViewModel>().getTaskData["docId"];
 
     return Column(
       children: [
@@ -127,159 +144,142 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
             if (!isAdmin) {
               return Container();
             }
-            return FutureBuilder(
-              future: FirebaseServices("faq").getDocumnetByKeyValuePair(
-                ["category"], 
-                [category]
-              ),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return Container();
-                }
-                if (snapshot.data!.size == 0) {
-                  return Container();
-                }
-                if (isInit) {
-                  selectedValue = snapshot.data!.docs.first.get("question");
-                }
-                answer = {};
-                for (int i = 0; i < snapshot.data!.docs.length; i++) {
-                  answer.addAll({
-                    snapshot.data!.docs[i].get("question"): snapshot.data!.docs[i].get("answer") 
-                  });
-                }
-                return Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: ColorConstant.whiteBlack5,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: const Offset(5, 5),
-                            color: ColorConstant.black.withOpacity(0.05),
-                            blurRadius: 10,
-                          ),
-                        ]),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: const Text(
-                            "FAQ",
-                            style: TextStyle(
-                                color: ColorConstant.whiteBlack90,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: ColorConstant.whiteBlack40)
-                            ),
-                            child: DropdownButton<String>(
-                              underline: Container(),
-                              isExpanded:  true,
-                              value: "Q: $selectedValue",
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedValue = value!;
-                                  isInit = false;
-                                });
-                              },
-                              items: snapshot.data!.docs.map((e) {
-                                return DropdownMenuItem<String>(
-                                  value: "Q: ${e.get("question")}",
-                                  child: Text("Q: ${e.get("question")}",),
-                                );
-                              }).toList(),
-                            )
-                          ),
-                        ),
-                        StreamBuilder(
-                          stream: FirebaseServices("ticket").listenToDocument(
-                            context.read<ReplyChannelViewModel>().getTaskData["docId"],
-                          ),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState != ConnectionState.active) {
-                              return Container();
-                            } else if (snapshot.data!.get("status") == 2) {
-                              return Container();
-                            }
-                            return Container(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context, 
-                                    builder: (context) {
-                                      return ConfirmationPopup(
-                                        detail: "", 
-                                        onCancel: () {
-                                          Navigator.pop(context);
-                                        }, 
-                                        onConfirm: () async {
-                                          String userId = context.read<AppViewModel>().app.getUser.getId;
-                                          await context.read<ReplyChannelViewModel>().createMessage(
-                                            context,
-                                            context.read<ReplyChannelViewModel>().getTaskData["docId"], 
-                                            {
-                                              "ownerId": userId,
-                                              "message": "FAQ\nQ: $selectedValue\nA: ${answer[selectedValue]}",
-                                              "time": DateTime.now(),
-                                              "seen": false,
-                                              "imageUrl": null
-                                            }
-                                          );
-                                          Navigator.pop(context);
-                                        }, 
-                                        title: "Are you sure to send FAQ?", 
-                                        widget: Text(
-                                          "Q: $selectedValue\nA: ${answer[selectedValue]}",
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: AppFontWeight.bold,
-                                            color: ColorConstant.whiteBlack60
-                                          ),
-                                        )
-                                      );
-                                    }
-                                  );
-                                },
-                                style: ButtonStyle(
-                                  fixedSize: MaterialStateProperty.all(
-                                    const Size(120, 32)
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    ColorConstant.orange50
-                                  )
-                                ),
-                                child: const Text(
-                                  "Send FAQ",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: AppFontWeight.bold
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                        ),
-                      ],
+            return Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: ColorConstant.whiteBlack5,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(5, 5),
+                        color: ColorConstant.black.withOpacity(0.05),
+                        blurRadius: 10,
+                      ),
+                    ]),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        "FAQ",
+                        style: TextStyle(
+                            color: ColorConstant.whiteBlack90,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                );
-              }
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: ColorConstant.whiteBlack40)
+                        ),
+                        child: DropdownButton<String>(
+                          underline: Container(),
+                          isExpanded:  true,
+                          value: selectedValue,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedValue = value!;
+                              isInit = false;
+                            });
+                          },
+                          items: widget.q.map((e) {
+                            return DropdownMenuItem<String>(
+                              value: "Q: ${e["question"]}",
+                              child: Text("Q: ${e["question"]}",),
+                            );
+                          }).toList(),
+                        )
+                      ),
+                    ),
+                    StreamBuilder(
+                      stream: FirebaseServices("ticket").listenToDocument(
+                        context.read<ReplyChannelViewModel>().getTaskData["docId"],
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState != ConnectionState.active) {
+                          return Container();
+                        } else if (snapshot.data!.get("status") == 2) {
+                          return Container();
+                        }
+                        return Container(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context, 
+                                builder: (context) {
+                                  return ConfirmationPopup(
+                                    detail: "", 
+                                    onCancel: () {
+                                      Navigator.pop(context);
+                                    }, 
+                                    onConfirm: () async {
+                                      String userId = context.read<AppViewModel>().app.getUser.getId;
+                                      await context.read<HelpDeskViewModel>().setTicketResponsibility(docId, userId, false);
+                                      await context.read<HelpDeskViewModel>().editTask(
+                                        docId, 
+                                        true, 
+                                        1
+                                      );
+                                      await context.read<ReplyChannelViewModel>().createMessage(
+                                        context,
+                                        context.read<ReplyChannelViewModel>().getTaskData["docId"], 
+                                        {
+                                          "ownerId": userId,
+                                          "message": "FAQ\nQ: $selectedValue\nA: ${answer[selectedValue]}",
+                                          "time": DateTime.now(),
+                                          "seen": false,
+                                          "imageUrl": null
+                                        }
+                                      );
+                                      Navigator.pop(context);
+                                    }, 
+                                    title: "Are you sure to send FAQ?", 
+                                    widget: Text(
+                                      "Q: $selectedValue\nA: ${answer[selectedValue]}",
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: AppFontWeight.bold,
+                                        color: ColorConstant.whiteBlack60
+                                      ),
+                                    )
+                                  );
+                                }
+                              );
+                            },
+                            style: ButtonStyle(
+                              fixedSize: MaterialStateProperty.all(
+                                const Size(120, 32)
+                              ),
+                              backgroundColor: MaterialStateProperty.all(
+                                ColorConstant.orange50
+                              )
+                            ),
+                            child: const Text(
+                              "Send FAQ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: AppFontWeight.bold
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    ),
+                  ],
+                ),
+              ),
             );
           }
         ),

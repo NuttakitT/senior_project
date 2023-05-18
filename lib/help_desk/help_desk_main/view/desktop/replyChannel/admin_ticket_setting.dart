@@ -131,47 +131,62 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
                       ),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          hint: Text(
-                              hintText,
+                      child: Builder(
+                        builder: (context) {
+                          if (taskAdmin != uid && taskAdmin != null) {
+                            return Text(
+                              adminValue!,
                               style: const TextStyle(
                                 fontFamily: AppFontStyle.font,
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16,
                                 color: ColorConstant.whiteBlack90
                               ),
-                          ),
-                          value: adminValue,
-                          style: const TextStyle(
-                            fontFamily: AppFontStyle.font,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: ColorConstant.whiteBlack90
-                          ),
-                          items:
-                              admin.map<DropdownMenuItem<String>>((value) {
-                            return DropdownMenuItem(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              adminValue = value!;
-                            });
-                            int index = admin.indexOf(adminValue!);
-                            context.read<HelpDeskViewModel>().setTicketResponsibility(
-                              docId, 
-                              snapshot.data!.admins[index].userId,
-                              true
                             );
-                          },
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                          }
+                          return DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              hint: Text(
+                                  hintText,
+                                  style: const TextStyle(
+                                    fontFamily: AppFontStyle.font,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    color: ColorConstant.whiteBlack90
+                                  ),
+                              ),
+                              value: adminValue,
+                              style: const TextStyle(
+                                fontFamily: AppFontStyle.font,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                                color: ColorConstant.whiteBlack90
+                              ),
+                              items:
+                                  admin.map<DropdownMenuItem<String>>((value) {
+                                return DropdownMenuItem(
+                                    value: value, child: Text(value));
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  adminValue = value!;
+                                });
+                                int index = admin.indexOf(adminValue!);
+                                context.read<HelpDeskViewModel>().setTicketResponsibility(
+                                  docId, 
+                                  snapshot.data!.admins[index].userId,
+                                  true
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          );
+                        }
                       ),
                     ),
                     Builder(
                       builder: (context) {
-                        if (taskAdmin == uid) {
+                        if (taskAdmin == uid || taskAdmin != null) {
                           return Container();
                         } else {
                           return Padding(

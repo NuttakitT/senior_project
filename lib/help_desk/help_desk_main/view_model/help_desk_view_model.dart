@@ -245,7 +245,7 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   Future<String> createTask(
-      String title, String detail, int priority, String category) async {
+      String title, String detail, int priority, String category, bool isItemRequest) async {
     List<String> responsibilityAdmin = [];
     await FirebaseServices("user")
         .getDocumentByKeyList("responsibility", [category]).then((value) {
@@ -275,6 +275,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "relateAdmin": responsibilityAdmin,
       "adminId": null,
       "isSeen": [],
+      "isItemRequest": isItemRequest,
       "id": task.getId
     });
     Map<String, dynamic> taskDetail = {
@@ -288,6 +289,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       "title": task.getTitle,
       "detail": detail,
       "relateAdmin": responsibilityAdmin,
+      "isItemRequest": isItemRequest,
       "adminId": null,
       "isSeen": []
     };
@@ -424,7 +426,11 @@ class HelpDeskViewModel extends ChangeNotifier {
       );
       _helpDeskModel.addTask(task);
       _task.add(_helpDeskModel.getTaskDetail(_helpDeskModel.getTask.length-1));
-      _task[_helpDeskModel.getTask.length-1].addEntries({"docId": snapshot.id}.entries);
+      _task[_helpDeskModel.getTask.length-1].addEntries(
+      {
+        "docId": snapshot.id, 
+        "isItemRequest": snapshot.get("isItemRequest"),
+      }.entries);
     }
   }
 
@@ -465,38 +471,63 @@ class HelpDeskViewModel extends ChangeNotifier {
   }
 
   void reconstructSearchResult(List<dynamic> hits, bool isAdmin, String uid) {
-    for (var item in hits) {
-      bool isTargetObject = false;
-      String ownerId = item["ownerId"] as String;
-      List<dynamic> relateAdmin = item["relateAdmin"] as List<dynamic>;
-      dynamic adminId = item["adminId"];
-      if (isAdmin && (relateAdmin.contains(uid) && (adminId == uid || adminId == null))) {
-        isTargetObject = true;
-      } else if (!isAdmin && ownerId == uid) {
-        isTargetObject = true;
+    try {
+      for (var item in hits) {
+        bool isTargetObject = false;
+        String ownerId = item["ownerId"] as String;
+        List<dynamic> relateAdmin = item["relateAdmin"] as List<dynamic>;
+        dynamic adminId = item["adminId"];
+        if (isAdmin && (relateAdmin.contains(uid) && (adminId == uid || adminId == null))) {
+          isTargetObject = true;
+        } else if (!isAdmin && ownerId == uid) {
+          isTargetObject = true;
+        }
+        if (isTargetObject) {
+          DateTime date = DateTime.parse(item["dateCreate"]);
+          _task.add({
+            "objectID": item["objectID"],
+            "email": item["email"],
+            "name": item["name"],
+            "detail": item["detail"],
+            "title": item["title"],
+            "ownerId": item["ownerId"],
+            "time": date,
+            "completeTime": item["dateComplete"] != null
+                ? DateTime.parse(item["dateComplete"])
+                : null,
+            "category": item["category"],
+            "priority": item["priority"],
+            "status": item["status"],
+            "adminId": item["adminId"],
+            "isSeen": item["isSeen"],
+            "docId": item["docId"],
+            "id": item["id"],
+            "isItemRequest": item["isItemRequest"],
+          });
+        }
       }
-      if (isTargetObject) {
-        DateTime date = DateTime.parse(item["dateCreate"]);
-        _task.add({
-          "objectID": item["objectID"],
-          "email": item["email"],
-          "name": item["name"],
-          "detail": item["detail"],
-          "title": item["title"],
-          "ownerId": item["ownerId"],
-          "time": date,
-          "completeTime": item["dateComplete"] != null
-              ? DateTime.parse(item["dateComplete"])
-              : null,
-          "category": item["category"],
-          "priority": item["priority"],
-          "status": item["status"],
-          "adminId": item["adminId"],
-          "isSeen": item["isSeen"],
-          "docId": item["docId"],
-          "id": item["id"],
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchQuestion(String category) async {
+    List<Map<String, dynamic>> question = [];
+    final snapshot = await  FirebaseServices("faq").getDocumnetByKeyValuePair(
+      ["category"], 
+      [category]
+    );
+    for (QueryDocumentSnapshot doc in snapshot!.docs) {
+      List<Map<String, dynamic>> hasItemList = question.where((element) => element["question"] == doc.get("question")).toList();
+      if (hasItemList.isEmpty) {
+        question.add({
+          "question": doc.get("question"),
+          "answer": doc.get("answer"),
         });
       }
     }
+    return question;
   }
 }

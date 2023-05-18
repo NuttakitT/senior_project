@@ -56,6 +56,20 @@ class _TextSearchResultState extends State<TextSearchResult> {
             context.read<HelpDeskViewModel>().reconstructSearchResult(hits, isAdmin, uid);
             List<Map<String, dynamic>> data = context.watch<HelpDeskViewModel>().getTask;
             context.read<HelpDeskViewModel>().setIsSafeLoad = true;
+            if (data.isEmpty) {
+              return Container(
+                height: widget.contentSize,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    bottom: BorderSide(color: ColorConstant.whiteBlack30),
+                  )
+                ),
+                alignment: Alignment.center,
+                child: const LoaderStatus(text: "No result")
+              );
+            }
             return SizedBox(
               width: double.infinity,
               child: Column(

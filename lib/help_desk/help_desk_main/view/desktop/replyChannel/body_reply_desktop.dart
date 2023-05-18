@@ -44,6 +44,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
         : "Admin";
     String ownerId =
         context.watch<ReplyChannelViewModel>().getTaskData["ownerId"];
+    String category = context.watch<ReplyChannelViewModel>().getTaskData["category"];
     return StreamBuilder(
         stream: FirebaseServices("ticket")
             .listenToSubDocument(docId, "replyChannel"),
@@ -362,7 +363,7 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                                               if ((!isAdmin && snapshot.data!.get("status") <
                                                       2) ||
                                                   (isAdmin &&
-                                                      adminId == userId &&
+                                                      (adminId == userId || adminId == null) &&
                                                       snapshot.data!
                                                               .get("status") <
                                                           2)) {
@@ -377,9 +378,18 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                               ),
                               Flexible(
                                   fit: FlexFit.tight,
-                                  child: DescriptionDesktop(
-                                    isAdmin: role == 0 ? true : false,
-                                  ))
+                                  child: FutureBuilder(
+                                    future: context.read<HelpDeskViewModel>().fetchQuestion(category),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.done) {
+                                        return DescriptionDesktop(
+                                          isAdmin: role == 0 ? true : false, q: snapshot.data!,
+                                        );
+                                      }
+                                      return Container();
+                                    },
+                                  )
+                              )
                             ],
                           ),
                         ],
