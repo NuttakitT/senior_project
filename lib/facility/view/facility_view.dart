@@ -8,6 +8,7 @@ import 'package:senior_project/facility/view/admin_room/admin_room.dart';
 import 'package:senior_project/facility/view/item_reservation/item_reservation.dart';
 import 'package:senior_project/facility/view/my_booking/my_booking.dart';
 import 'package:senior_project/facility/view/room_reservation/room_reservation_view.dart';
+import 'package:senior_project/facility/view/schedule/schedule_room.dart';
 
 class FacilityView extends StatefulWidget {
   const FacilityView({super.key});
@@ -100,6 +101,19 @@ class FacilityViewTile extends StatelessWidget {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: ((context) {
                   return const AdminRoom();
+                })));
+              },
+            ),
+          ),
+        if (!isMobileSite && isAdmin)
+          Card(
+            child: ListTile(
+              title: Text("Schedule Room"),
+              subtitle: Text("See rooms"),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                  return const ScheduleRoomView();
                 })));
               },
             ),
