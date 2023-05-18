@@ -397,6 +397,31 @@ class FirebaseServices {
     }
   }
 
+  // Get all documents in the sub-collection filter by date from to to, return null there are no
+  // document or collection in the database.
+  // parentId: String of the parent(top-level) document
+  // subCollectionName: name of the collection
+  Future<QuerySnapshot?> getSubDocumentByDateInterval(
+      String parentId,
+      String subCollectionName,
+      String dateField,
+      DateTime from,
+      DateTime to) async {
+    try {
+      return _collection
+          .doc(parentId)
+          .collection(subCollectionName)
+          .where(dateField, isGreaterThanOrEqualTo: from)
+          .where(dateField, isLessThanOrEqualTo: to)
+          .get();
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return null;
+    }
+  }
+
   //---------------------- Read operation(Real-time) ---------------------------
   // A stream listener used as a listener for a document in sub-collection
   // queried by key-value.

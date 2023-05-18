@@ -72,32 +72,39 @@ class _MyBookingListState extends State<MyBookingList> {
     return FutureBuilder(
       future: context.read<FacilityViewModel>().fetchBooking(userId),
       builder: (context, snapshot) {
-        List<RoomReservation> roomRes = snapshot.data?.roomRes ?? [];
-        List<ItemReservation> itemRes = snapshot.data?.itemRes ?? [];
-        List<dynamic> bookings = [];
-        bookings.addAll(roomRes);
-        bookings.addAll(itemRes);
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Display a loading indicator while waiting for data
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          List<RoomReservation> roomRes = snapshot.data?.roomRes ?? [];
+          List<ItemReservation> itemRes = snapshot.data?.itemRes ?? [];
+          List<dynamic> bookings = [];
+          bookings.addAll(roomRes);
+          bookings.addAll(itemRes);
 
-        return SizedBox(
-          height: MediaQuery.of(context).size.height - 150,
-          child: ListView.builder(
-              itemCount: bookings.length,
-              itemBuilder: ((context, index) {
-                return Padding(
-                    padding: isMobileSite ? mobilePadding : desktopPadding,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Card(
-                        child: Container(
-                            padding: isMobileSite
-                                ? mobileBoxPadding
-                                : desktopBoxPadding,
-                            child:
-                                BookingCardView(cardDetail: bookings[index])),
-                      ),
-                    ));
-              })),
-        );
+          return SizedBox(
+            height: MediaQuery.of(context).size.height - 150,
+            child: ListView.builder(
+                itemCount: bookings.length,
+                itemBuilder: ((context, index) {
+                  return Padding(
+                      padding: isMobileSite ? mobilePadding : desktopPadding,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Card(
+                          child: Container(
+                              padding: isMobileSite
+                                  ? mobileBoxPadding
+                                  : desktopBoxPadding,
+                              child:
+                                  BookingCardView(cardDetail: bookings[index])),
+                        ),
+                      ));
+                })),
+          );
+        }
       },
     );
   }
