@@ -34,11 +34,13 @@ class RoomStatModel {
   String roomName;
   String roomCategory;
   int amount;
+  List<RoomReservation> reservations;
 
   RoomStatModel(
       {required this.roomName,
       required this.roomCategory,
-      required this.amount});
+      required this.amount,
+      required this.reservations});
 }
 
 class Schedule {

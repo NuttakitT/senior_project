@@ -309,6 +309,7 @@ class FacilityViewModel extends ChangeNotifier {
     final roomSnapshot =
         await _roomService.getAllDocument(orderingField: "name");
     for (int i = 0; i < roomSnapshot!.docs.length; i++) {
+      List<RoomReservation> res = [];
       final reservationSnapshot =
           await _roomService.getSubDocumentByDateInterval(
               roomSnapshot.docs[i].id,
@@ -316,11 +317,33 @@ class FacilityViewModel extends ChangeNotifier {
               'bookTime',
               startDate,
               endDate);
-      print(reservationSnapshot?.docs.length);
+      if (reservationSnapshot!.size != 0) {
+        for (int j = 0; j < reservationSnapshot.docs.length; j++) {
+          Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
+          Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
+          String userId = reservationSnapshot.docs[j].get("userId");
+          String name = "user";
+          final nameSnapshot =
+              await FirebaseServices("user").getDocumentById(userId);
+          if (nameSnapshot!.exists) {
+            name = nameSnapshot.get("name") ?? "";
+          }
+
+          res.add(RoomReservation(
+              room: roomSnapshot.docs[i].get("name"),
+              purpose: reservationSnapshot.docs[j].get("purpose"),
+              dateCreate: dateCreate.toDate(),
+              bookTime: bookTime.toDate(),
+              userId: name,
+              status: reservationSnapshot.docs[j].get("status")));
+        }
+      }
+
       list.add(RoomStatModel(
           roomName: roomSnapshot.docs[i].get("name"),
           roomCategory: roomSnapshot.docs[i].get("type"),
-          amount: reservationSnapshot?.docs.length ?? 0));
+          amount: reservationSnapshot.docs.length,
+          reservations: res));
     }
     return list;
   }

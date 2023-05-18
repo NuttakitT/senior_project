@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
-import 'package:senior_project/facility/view/admin_room/room_stat_detail_table.dart';
+import 'package:senior_project/facility/view/widget/facility_header.dart';
+import 'package:senior_project/facility/view_model/facility_view_model.dart';
 
-class RoomStatTable extends StatefulWidget {
-  final List<RoomStatModel> rooms;
-  const RoomStatTable({super.key, required this.rooms});
+class RoomStatDetailView extends StatefulWidget {
+  final List<RoomReservation> res;
+  const RoomStatDetailView({super.key, required this.res});
 
   @override
-  State<RoomStatTable> createState() => _RoomStatTableState();
+  State<RoomStatDetailView> createState() => _RoomStatDetailViewState();
 }
 
-class _RoomStatTableState extends State<RoomStatTable> {
+class _RoomStatDetailViewState extends State<RoomStatDetailView> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        RoomStatDetailTable(widget: widget),
-      ],
-    );
+    return TemplateDesktop(
+        helpdesk: false,
+        helpdeskadmin: false,
+        home: true,
+        useTemplatescroll: true,
+        content: Column(
+          children: [
+            const FacilityHeader(title: "Room Statistical Section"),
+            RoomStatDetailTable(widget: widget),
+          ],
+        ));
   }
 }
 
@@ -29,7 +39,7 @@ class RoomStatDetailTable extends StatefulWidget {
     required this.widget,
   }) : super(key: key);
 
-  final RoomStatTable widget;
+  final RoomStatDetailView widget;
 
   @override
   State<RoomStatDetailTable> createState() => _RoomStatDetailTableState();
@@ -37,6 +47,13 @@ class RoomStatDetailTable extends StatefulWidget {
 
 class _RoomStatDetailTableState extends State<RoomStatDetailTable> {
   int number = 1;
+
+  String dateFormat(DateTime? date) {
+    if (date == null) {
+      return "";
+    }
+    return DateFormat('HH:mm dd MM yyyy').format(date);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,20 +66,21 @@ class _RoomStatDetailTableState extends State<RoomStatDetailTable> {
         child: Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           columnWidths: const {
-            0: FixedColumnWidth(200),
-            1: FixedColumnWidth(320),
-            2: FlexColumnWidth()
+            0: FixedColumnWidth(120),
+            1: FixedColumnWidth(250),
+            2: FlexColumnWidth(),
+            3: FixedColumnWidth(220)
           },
           children: [
-            buildRow([Consts.room, Consts.roomCat, Consts.amount], true, false,
-                null, context),
-            for (int i = 0; i < widget.widget.rooms.length; i++) ...[
+            buildRow([Consts.room, Consts.user, Consts.purpose, Consts.time],
+                true, false),
+            for (int i = 0; i < widget.widget.res.length; i++) ...[
               buildRow([
-                widget.widget.rooms[i].roomName,
-                widget.widget.rooms[i].roomCategory,
-                "${widget.widget.rooms[i].amount} ครั้ง"
-              ], false, i == widget.widget.rooms.length - 1,
-                  widget.widget.rooms[i].reservations, context),
+                "${widget.widget.res[i].room}",
+                widget.widget.res[i].userId,
+                widget.widget.res[i].purpose,
+                dateFormat(widget.widget.res[i].bookTime)
+              ], false, i == widget.widget.res.length - 1),
             ]
           ],
         ),
@@ -71,8 +89,7 @@ class _RoomStatDetailTableState extends State<RoomStatDetailTable> {
   }
 }
 
-TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex,
-    List<RoomReservation>? res, BuildContext context) {
+TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex) {
   return TableRow(
       decoration: BoxDecoration(
         border: Border(
@@ -96,23 +113,6 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (!isHeader &&
-                  cell == cells.last) // Add the button only for non-header rows
-                TextButton(
-                  onPressed: () {
-                    if (res != null) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: ((context) {
-                        return RoomStatDetailView(res: res);
-                      })));
-                    }
-                    // Handle button press
-                  },
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: ColorConstant.whiteBlack60,
-                  ),
-                ),
             ],
           ),
         );
@@ -120,10 +120,8 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex,
 }
 
 class Consts {
-  static String listCategoryLabel = "List Category";
-  static String addCategory = "Add Category";
-
   static String room = "รหัสห้อง";
-  static String roomCat = "ประเภท";
-  static String amount = "จำนวนการจอง";
+  static String user = "ชื่อ";
+  static String time = "เวลาการจอง";
+  static String purpose = "เหตุผล";
 }

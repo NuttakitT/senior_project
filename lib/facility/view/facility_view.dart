@@ -59,7 +59,7 @@ class FacilityViewTile extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text("Room Reservation"),
-            subtitle: Text("Reserve room in CPE"),
+            subtitle: Text("จองห้องเรียน"),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: ((context) {
@@ -71,7 +71,7 @@ class FacilityViewTile extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text("Request Hardware"),
-            subtitle: Text("Request Hardware in hardware house"),
+            subtitle: Text("ส่งคำขอยืมอุปกรณ์ Hardware ที่นี่"),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: ((context) {
@@ -83,7 +83,7 @@ class FacilityViewTile extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text("My Booking"),
-            subtitle: Text("See your booking"),
+            subtitle: Text("การจองห้องของคุณ"),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: ((context) {
@@ -95,8 +95,9 @@ class FacilityViewTile extends StatelessWidget {
         if (!isMobileSite && isAdmin)
           Card(
             child: ListTile(
-              title: Text("For Admin"),
-              subtitle: Text("See rooms"),
+              title: Text("Admin Dashboard"),
+              subtitle: Text(
+                  "ดูจำนวนการจองห้องเรียนตามวันเวลา ลงเวลาห้องเรียนรายสัปดาห์"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: ((context) {
@@ -109,7 +110,7 @@ class FacilityViewTile extends StatelessWidget {
           Card(
             child: ListTile(
               title: Text("Schedule Room"),
-              subtitle: Text("See rooms"),
+              subtitle: Text("เพิ่มและยกเลิกการลงเวลาห้องเรียนรายสัปดาห์"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: ((context) {
