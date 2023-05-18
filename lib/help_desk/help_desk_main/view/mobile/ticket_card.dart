@@ -55,6 +55,7 @@ class _TicketCardState extends State<TicketCard> {
                       .getTaskDocId(widget.detail["id"]);
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return HelpDeskReplyPage(
+                      isItemRequest: widget.detail["isItemRequest"],
                       docId: docId,
                       id: widget.detail["id"],
                       title: widget.detail["title"],

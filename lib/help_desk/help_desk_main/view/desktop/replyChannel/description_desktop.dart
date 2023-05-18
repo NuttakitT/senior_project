@@ -29,6 +29,7 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
   String selectedValue = "";
   bool isInit = true;
   Map<String, dynamic> answer = {};
+  final itemReservation = FirebaseServices("itemReservations");
 
   @override
   void initState() {
@@ -43,11 +44,25 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
     super.initState();
   }
 
+  Future<void> submitRequest(String docId, String adminId, bool isApprove) async {
+    await context.read<HelpDeskViewModel>().setTicketResponsibility(docId, adminId, false);
+    await context.read<HelpDeskViewModel>().editTask(docId, true, 2);
+    final snapshot = await itemReservation.getDocumnetByKeyValuePair(["ticketId"], [docId]);
+    if (snapshot!.size != 0) {
+      await itemReservation.editDocument(
+        snapshot.docs[0].id, 
+        {"status": isApprove ? "Approve": "Deny"}
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String taskDetail = context.watch<ReplyChannelViewModel>().getTaskData["detail"];
     String category = context.watch<ReplyChannelViewModel>().getTaskData["category"];
     String docId = context.watch<ReplyChannelViewModel>().getTaskData["docId"];
+    bool isItemRequest = context.watch<ReplyChannelViewModel>().getTaskData["isItemRequest"];
+    String userId = context.read<AppViewModel>().app.getUser.getId;
 
     return Column(
       children: [
@@ -144,6 +159,117 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
             if (!isAdmin) {
               return Container();
             }
+            if (isItemRequest) {
+              return StreamBuilder(
+                stream: FirebaseServices("ticket").listenToDocument(docId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    if (snapshot.data!.get("dateComplete") != null) {
+                      return StreamBuilder(
+                        stream: itemReservation.listenToDocumentByKeyValuePair(["ticketId"], [docId]),
+                        builder: (context, futureSnapshot) {
+                          if (futureSnapshot.connectionState == ConnectionState.active) {
+                            if (futureSnapshot.data!.size == 0) {
+                              return Container();
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: futureSnapshot.data!.docs[0].get("status") == "Approve"
+                                    ? ColorConstant.green50
+                                    : ColorConstant.red50,
+                                  borderRadius: BorderRadius.circular(8)
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  futureSnapshot.data!.docs[0].get("status"),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
+                      );
+                    } 
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: TextButton(
+                              onPressed: () async {
+                                submitRequest(docId, userId, true);
+                              }, 
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)
+                                  )
+                                ),
+                                backgroundColor: MaterialStateProperty.all(
+                                  ColorConstant.green50
+                                ),
+                                padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(16)
+                                )
+                              ),
+                              child: const Text(
+                                "Approve",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20
+                                ),
+                              )
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: TextButton(
+                              onPressed: () {
+                                submitRequest(docId, userId, false);
+                              }, 
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)
+                                  )
+                                ),
+                                backgroundColor: MaterialStateProperty.all(
+                                  ColorConstant.red50
+                                ),
+                                padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(16)
+                                )
+                              ),
+                              child: const Text(
+                                "Deny",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20
+                                ),
+                              )
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+              );
+            }
             return Padding(
               padding: const EdgeInsets.only(top: 16),
               child: Container(
@@ -224,7 +350,6 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                                       Navigator.pop(context);
                                     }, 
                                     onConfirm: () async {
-                                      String userId = context.read<AppViewModel>().app.getUser.getId;
                                       await context.read<HelpDeskViewModel>().setTicketResponsibility(docId, userId, false);
                                       await context.read<HelpDeskViewModel>().editTask(
                                         docId, 
@@ -286,7 +411,7 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
         Builder(
           builder: (context) {
             bool isAdmin = context.read<AppViewModel>().app.getUser.getRole == 0;
-            if (!isAdmin) {
+            if (!isAdmin || isItemRequest) {
               return Container();
             }
             return Padding(

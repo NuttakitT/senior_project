@@ -87,41 +87,49 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: Container(
-                        height: 32,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: ColorConstant.whiteBlack30)
-                        ),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: status[streamSnapshot.data!.get("status")],
-                            style: const TextStyle(
-                              fontFamily: AppFontStyle.font,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: ColorConstant.whiteBlack90
+                    Builder(
+                      builder: (context) {
+                        bool isItemRequest = context.watch<ReplyChannelViewModel>().getTaskData["isItemRequest"];
+                        if (isItemRequest) {
+                          return Container();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: Container(
+                            height: 32,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: ColorConstant.whiteBlack30)
                             ),
-                            items:
-                                status.map<DropdownMenuItem<String>>((value) {
-                              return DropdownMenuItem(
-                                  value: value, child: Text(value));
-                            }).toList(),
-                            onChanged: (value) async {
-                              await context.read<HelpDeskViewModel>().editTask(
-                                context.read<ReplyChannelViewModel>().getTaskData["docId"], 
-                                true, 
-                                status.indexOf(value!)
-                              );
-                            },
-                            borderRadius: BorderRadius.circular(4),
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                value: status[streamSnapshot.data!.get("status")],
+                                style: const TextStyle(
+                                  fontFamily: AppFontStyle.font,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16,
+                                  color: ColorConstant.whiteBlack90
+                                ),
+                                items:
+                                    status.map<DropdownMenuItem<String>>((value) {
+                                  return DropdownMenuItem(
+                                      value: value, child: Text(value));
+                                }).toList(),
+                                onChanged: (value) async {
+                                  await context.read<HelpDeskViewModel>().editTask(
+                                    context.read<ReplyChannelViewModel>().getTaskData["docId"], 
+                                    true, 
+                                    status.indexOf(value!)
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      }
                     ),
                     Container(
                       height: 32,

@@ -256,7 +256,7 @@ class HelpDeskViewModel extends ChangeNotifier {
       }
     });
     Task task = Task(FirebaseAuth.instance.currentUser!.uid, title,
-        Content(detail), priority, category, [], responsibilityAdmin);
+        Content(detail), priority, category, [], responsibilityAdmin, status: isItemRequest ? 1 : null);
     _helpDeskModel.addTask(task);
     String docId = task.getDateCreate.millisecondsSinceEpoch.toString();
     List<String>? list =
