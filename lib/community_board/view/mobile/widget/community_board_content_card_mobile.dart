@@ -46,7 +46,8 @@ class _CommunityBoardContentCardMobileState
                           color: ColorConstant.whiteBlack80, fontSize: 16),
                     ),
                   ),
-                  Padding(
+                  Container(
+                    width: 200,
                     padding: const EdgeInsets.only(bottom: 8),
                     child: DefaultTextStyle(
                       maxLines: null,
@@ -81,7 +82,7 @@ class _CommunityBoardContentCardMobileState
                         },
                         child: Row(
                           children: const [
-                            Icon(Icons.edit_rounded, color: ColorConstant.whiteBlack60,),
+                            Icon(Icons.edit_rounded, color: ColorConstant.whiteBlack60, size: 14,),
                             Padding(
                               padding: EdgeInsets.only(left: 8.0),
                               child: Text(
@@ -113,14 +114,17 @@ class _CommunityBoardContentCardMobileState
                       color: ColorConstant.whiteBlack70, fontSize: 12),
                 ),
               ),
-              DefaultTextStyle(
-                maxLines: null,
-                style: const TextStyle(
-                  color: ColorConstant.whiteBlack70, 
-                  fontSize: 12
-                ),
-                child: Text(
-                  widget.info["answer"],
+              SizedBox(
+                width: 200,
+                child: DefaultTextStyle(
+                  maxLines: null,
+                  style: const TextStyle(
+                    color: ColorConstant.whiteBlack70, 
+                    fontSize: 12
+                  ),
+                  child: Text(
+                    widget.info["answer"],
+                  ),
                 ),
               ),
             ],
