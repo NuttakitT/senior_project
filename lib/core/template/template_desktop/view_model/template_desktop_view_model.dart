@@ -10,7 +10,7 @@ import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 
 class TemplateDesktopViewModel extends ChangeNotifier {
-  List<bool> _navBarState = [true, false, false, false, false];
+  List<bool> _navBarState = [true, false, false, false, false, false, false, false, false, false];
   List<bool> _helpDeskTagBar = [true, false, false, false, false, false, false, false]; 
   List<bool> _homeTagBar = [true]; 
   List<Map<String, dynamic>> _home = [{
@@ -118,8 +118,10 @@ class TemplateDesktopViewModel extends ChangeNotifier {
           notifyListeners();
         }
       }
-      if (type == 2) {
+      else if (type == 2) {
         context.read<CommunityBoardViewModel>().clearPost();
+        notifyListeners();
+      } else {
         notifyListeners();
       }
     }

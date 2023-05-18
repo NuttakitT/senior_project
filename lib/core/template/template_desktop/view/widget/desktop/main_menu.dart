@@ -5,18 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/community_board/view/page/community_board_view.dart';
-import 'package:senior_project/community_board/view_model/community_board_view_model.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/edit_profile.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/notification_dropdown.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/notification_overlay.dart';
-import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/core/view_model/text_search.dart';
-import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
-import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
-import 'package:senior_project/role_management/view/role_management_view.dart';
-import 'package:senior_project/statistic/view/statistic_view.dart';
-import 'package:senior_project/teacher_contact/view/teacher_contact_view.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -31,181 +24,182 @@ class _MainMenuState extends State<MainMenu> {
       fontWeight: FontWeight.w600,
       fontSize: 20,
       color: state ? Colors.white : ColorConstant.whiteBlack30);
-  final ScrollController _controller = ScrollController();
+  // final ScrollController _controller = ScrollController();
   bool isNotificationEnabled = false;
   OverlayEntry overlayEntry = OverlayEntry(builder: (builder) {
     return Container();
   });
 
   Widget _navbar(BuildContext context) {
-    bool isHomeSelected =
-        context.watch<TemplateDesktopViewModel>().getNavBarState(0);
-    bool isHelpDeskSelected =
-        context.watch<TemplateDesktopViewModel>().getNavBarState(1);
-    bool isTeacherContactSelected =
-        context.watch<TemplateDesktopViewModel>().getNavBarState(2);
-    bool isRoleManageSelected =
-        context.watch<TemplateDesktopViewModel>().getNavBarState(3);
-    bool isStatisticSelected =
-        context.watch<TemplateDesktopViewModel>().getNavBarState(4);
+    // bool isHomeSelected =
+    //     context.watch<TemplateDesktopViewModel>().getNavBarState(0);
+    // bool isHelpDeskSelected =
+    //     context.watch<TemplateDesktopViewModel>().getNavBarState(1);
+    // bool isTeacherContactSelected =
+    //     context.watch<TemplateDesktopViewModel>().getNavBarState(2);
+    // bool isRoleManageSelected =
+    //     context.watch<TemplateDesktopViewModel>().getNavBarState(3);
+    // bool isStatisticSelected =
+    //     context.watch<TemplateDesktopViewModel>().getNavBarState(4);
     bool isLogin = context.watch<AppViewModel>().isLogin;
     return Row(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 40),
-                child: InkWell(
-                  onTap: () {
-                    context.read<TextSearch>().clearSearchText();
-                    context
-                        .read<CommunityBoardViewModel>()
-                        .setIsShowPostDetail(false, false, {});
-                    context.read<CommunityBoardViewModel>().clearController();
-                    context.read<CommunityBoardViewModel>().clearPost();
-                    context.read<TemplateDesktopViewModel>().setIsApprovedPage =
-                        false;
-                    context
-                        .read<TemplateDesktopViewModel>()
-                        .changeState(context, 0, 1);
-                    context
-                        .read<TemplateDesktopViewModel>()
-                        .changeState(context, 0, 2);
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const CommunityBoardView();
-                    }), (route) => false);
-                  },
-                  splashFactory: NoSplash.splashFactory,
-                  child: Text(
-                    "Home",
-                    style: _navbarTextStyle(isHomeSelected),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 40),
-                child: InkWell(
-                  splashFactory: NoSplash.splashFactory,
-                  child: Text(
-                    "Help-Desk",
-                    style: _navbarTextStyle(isHelpDeskSelected),
-                  ),
-                  onTap: () {
-                    context.read<HelpDeskViewModel>().setIsFormNoti = false;
-                    context.read<TextSearch>().clearSearchText();
-                    context.read<CommunityBoardViewModel>().setIsSafeClick =
-                        true;
-                    context
-                        .read<HelpDeskViewModel>()
-                        .setShowMessagePageState(false);
-                    context.read<HelpDeskViewModel>().clearContentController();
-                    context.read<HelpDeskViewModel>().clearModel();
-                    context.read<HelpDeskViewModel>().clearReplyDocId();
-                    context
-                        .read<TemplateDesktopViewModel>()
-                        .changeState(context, 1, 1);
-                    int? role =
-                        context.read<AppViewModel>().app.getUser.getRole;
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HelpDeskMainView(
-                                isAdmin: role == 0 ? true : false)),
-                        (route) => false);
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 40),
-                child: InkWell(
-                  splashFactory: NoSplash.splashFactory,
-                  child: Text(
-                    "Teacher Contact",
-                    style: _navbarTextStyle(isTeacherContactSelected),
-                  ),
-                  onTap: () {
-                    context.read<TextSearch>().clearSearchText();
-                    context
-                        .read<TemplateDesktopViewModel>()
-                        .changeState(context, 2, 1);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) {
-                      return TeacherContactView(
-                          isAdmin: context
-                                  .watch<AppViewModel>()
-                                  .app
-                                  .getUser
-                                  .getRole ==
-                              0);
-                    })));
-                  },
-                ),
-              ),
-              Builder(builder: (context) {
-                if (isLogin) {
-                  bool isAdmin =
-                      context.watch<AppViewModel>().app.getUser.getRole == 0;
-                  if (isAdmin) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 40),
-                      child: InkWell(
-                        splashFactory: NoSplash.splashFactory,
-                        child: Text(
-                          "Role Management",
-                          style: _navbarTextStyle(isRoleManageSelected),
-                        ),
-                        onTap: () {
-                          context.read<TextSearch>().clearSearchText();
-                          context
-                              .read<TemplateDesktopViewModel>()
-                              .changeState(context, 3, 1);
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(builder: (context) {
-                            return RoleManagementView(isAdmin: isAdmin);
-                          }), (route) => false);
-                        },
-                      ),
-                    );
-                  }
-                  return Container();
-                }
-                return Container();
-              }),
-              Builder(builder: (context) {
-                if (isLogin) {
-                  bool isAdmin =
-                      context.watch<AppViewModel>().app.getUser.getRole == 0;
-                  if (isAdmin) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 40),
-                      child: InkWell(
-                        splashFactory: NoSplash.splashFactory,
-                        child: Text(
-                          "Statistics",
-                          style: _navbarTextStyle(isStatisticSelected),
-                        ),
-                        onTap: () {
-                          context.read<TextSearch>().clearSearchText();
-                          context
-                              .read<TemplateDesktopViewModel>()
-                              .changeState(context, 4, 1);
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(builder: (context) {
-                            return StatisticView(isAdmin: isAdmin);
-                          }), (route) => false);
-                        },
-                      ),
-                    );
-                  }
-                  return Container();
-                }
-                return Container();
-              }),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Padding(
+          //       padding: const EdgeInsets.only(right: 40),
+          //       child: InkWell(
+          //         onTap: () {
+          //           context.read<TextSearch>().clearSearchText();
+          //           context
+          //               .read<CommunityBoardViewModel>()
+          //               .setIsShowPostDetail(false, false, {});
+          //           context.read<CommunityBoardViewModel>().clearController();
+          //           context.read<CommunityBoardViewModel>().clearPost();
+          //           context.read<TemplateDesktopViewModel>().setIsApprovedPage =
+          //               false;
+          //           context
+          //               .read<TemplateDesktopViewModel>()
+          //               .changeState(context, 0, 1);
+          //           context
+          //               .read<TemplateDesktopViewModel>()
+          //               .changeState(context, 0, 2);
+          //           Navigator.pushAndRemoveUntil(context,
+          //               MaterialPageRoute(builder: (context) {
+          //             return const CommunityBoardView();
+          //           }), (route) => false);
+          //         },
+          //         splashFactory: NoSplash.splashFactory,
+          //         child: Text(
+          //           "Home",
+          //           style: _navbarTextStyle(isHomeSelected),
+          //         ),
+          //       ),
+          //     ),
+          //     Padding(
+          //       padding: const EdgeInsets.only(right: 40),
+          //       child: InkWell(
+          //         splashFactory: NoSplash.splashFactory,
+          //         child: Text(
+          //           "Help-Desk",
+          //           style: _navbarTextStyle(isHelpDeskSelected),
+          //         ),
+          //         onTap: () {
+          //           context.read<HelpDeskViewModel>().setIsFormNoti = false;
+          //           context.read<TextSearch>().clearSearchText();
+          //           context.read<CommunityBoardViewModel>().setIsSafeClick =
+          //               true;
+          //           context
+          //               .read<HelpDeskViewModel>()
+          //               .setShowMessagePageState(false);
+          //           context.read<HelpDeskViewModel>().clearContentController();
+          //           context.read<HelpDeskViewModel>().clearModel();
+          //           context.read<HelpDeskViewModel>().clearReplyDocId();
+          //           context
+          //               .read<TemplateDesktopViewModel>()
+          //               .changeState(context, 1, 1);
+          //           int? role =
+          //               context.read<AppViewModel>().app.getUser.getRole;
+          //           Navigator.pushAndRemoveUntil(
+          //               context,
+          //               MaterialPageRoute(
+          //                   builder: (context) => HelpDeskMainView(
+          //                       isAdmin: role == 0 ? true : false)),
+          //               (route) => false);
+          //         },
+          //       ),
+          //     ),
+          //     Padding(
+          //       padding: const EdgeInsets.only(right: 40),
+          //       child: InkWell(
+          //         splashFactory: NoSplash.splashFactory,
+          //         child: Text(
+          //           "Teacher Contact",
+          //           style: _navbarTextStyle(isTeacherContactSelected),
+          //         ),
+          //         onTap: () {
+          //           context.read<TextSearch>().clearSearchText();
+          //           context
+          //               .read<TemplateDesktopViewModel>()
+          //               .changeState(context, 2, 1);
+          //           Navigator.push(context,
+          //               MaterialPageRoute(builder: ((context) {
+          //             return TeacherContactView(
+          //                 isAdmin: context
+          //                         .watch<AppViewModel>()
+          //                         .app
+          //                         .getUser
+          //                         .getRole ==
+          //                     0);
+          //           })));
+          //         },
+          //       ),
+          //     ),
+          //     Builder(builder: (context) {
+          //       if (isLogin) {
+          //         bool isAdmin =
+          //             context.watch<AppViewModel>().app.getUser.getRole == 0;
+          //         if (isAdmin) {
+          //           return Padding(
+          //             padding: const EdgeInsets.only(right: 40),
+          //             child: InkWell(
+          //               splashFactory: NoSplash.splashFactory,
+          //               child: Text(
+          //                 "Role Management",
+          //                 style: _navbarTextStyle(isRoleManageSelected),
+          //               ),
+          //               onTap: () {
+          //                 context.read<TextSearch>().clearSearchText();
+          //                 context
+          //                     .read<TemplateDesktopViewModel>()
+          //                     .changeState(context, 3, 1);
+          //                 Navigator.pushAndRemoveUntil(context,
+          //                     MaterialPageRoute(builder: (context) {
+          //                   return RoleManagementView(isAdmin: isAdmin);
+          //                 }), (route) => false);
+          //               },
+          //             ),
+          //           );
+          //         }
+          //         return Container();
+          //       }
+          //       return Container();
+          //     }),
+          //     Builder(builder: (context) {
+          //       if (isLogin) {
+          //         bool isAdmin =
+          //             context.watch<AppViewModel>().app.getUser.getRole == 0;
+          //         if (isAdmin) {
+          //           return Padding(
+          //             padding: const EdgeInsets.only(right: 40),
+          //             child: InkWell(
+          //               splashFactory: NoSplash.splashFactory,
+          //               child: Text(
+          //                 "Statistics",
+          //                 style: _navbarTextStyle(isStatisticSelected),
+          //               ),
+          //               onTap: () {
+          //                 context.read<TextSearch>().clearSearchText();
+          //                 context
+          //                     .read<TemplateDesktopViewModel>()
+          //                     .changeState(context, 4, 1);
+          //                 Navigator.pushAndRemoveUntil(context,
+          //                     MaterialPageRoute(builder: (context) {
+          //                   return StatisticView(isAdmin: isAdmin);
+          //                 }), (route) => false);
+          //               },
+          //             ),
+          //           );
+          //         }
+          //         return Container();
+          //       }
+          //       return Container();
+          //     }),
+          //   ],
+          // ),
           Builder(builder: (context) {
             if (!isLogin) {
               return TextButton(
@@ -431,22 +425,22 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    // double screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(
       padding: const EdgeInsets.only(left: 80),
       child: Builder(
         builder: (context) {
-          if (screenWidth < 1150) {
-            return Scrollbar(
-              controller: _controller,
-              child: SingleChildScrollView(
-                controller: _controller,
-                scrollDirection: Axis.horizontal,
-                child: _navbar(context),
-              ),
-            );
-          }
+          // if (screenWidth < 1150) {
+          //   return Scrollbar(
+          //     controller: _controller,
+          //     child: SingleChildScrollView(
+          //       controller: _controller,
+          //       scrollDirection: Axis.horizontal,
+          //       child: _navbar(context),
+          //     ),
+          //   );
+          // }
           return _navbar(context);
         },
       ),
