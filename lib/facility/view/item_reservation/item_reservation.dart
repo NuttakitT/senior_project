@@ -27,23 +27,63 @@ class _ItemReservationViewState extends State<ItemReservationView> {
   Widget build(BuildContext context) {
     if (isMobileSite) {
       return TemplateMenuMobile(
-          content: Column(
+          content: Builder(
+            builder: (context) {
+              bool isLogin = context.watch<AppViewModel>().isLogin;
+              if (!isLogin) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Center(
+                    child: Text(
+                      "Please login to use the services",
+                      style: TextStyle(
+                          color: ColorConstant.orange60,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: AppFontStyle.font,
+                          fontSize: 18),
+                    ),
+                  ),
+                );
+              }
+              return Column(
         children: const [
-          FacilityHeaderMobile(title: "Item Reservation"),
-          ItemReservationForm()
+              FacilityHeaderMobile(title: "Item Reservation"),
+              ItemReservationForm()
         ],
-      ));
+      );
+            }
+          ));
     } else {
       return TemplateDesktop(
           helpdesk: false,
           helpdeskadmin: false,
           home: true,
           useTemplatescroll: true,
-          content: Column(
-            children: const [
-              FacilityHeader(title: "Item Reservation"),
-              ItemReservationForm()
-            ],
+          content: Builder(
+            builder: (context) {
+              bool isLogin = context.watch<AppViewModel>().isLogin;
+              if (!isLogin) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 100),
+                  child: Center(
+                    child: Text(
+                      "Please login to use the services",
+                      style: TextStyle(
+                          color: ColorConstant.orange60,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: AppFontStyle.font,
+                          fontSize: 24),
+                    ),
+                  ),
+                ); 
+              }
+              return Column(
+                children: const [
+                  FacilityHeader(title: "Item Reservation"),
+                  ItemReservationForm()
+                ],
+              );
+            }
           ));
     }
   }

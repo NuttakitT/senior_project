@@ -43,7 +43,9 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
         context.watch<TemplateMobileViewModel>().getMenuState(1);
     bool roomState = context.watch<TemplateMobileViewModel>().getMenuState(2);
     bool profileState =
-        context.watch<TemplateMobileViewModel>().getMenuState(3);
+        context.watch<TemplateMobileViewModel>().getMenuState(4);
+    bool facilityState =
+        context.watch<TemplateMobileViewModel>().getMenuState(3);    
 
     return Scaffold(
       appBar: AppBar(
@@ -213,7 +215,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                       padding: const EdgeInsets.only(bottom: 16),
                       child: InkWell(
                         child: Container(
-                          decoration: profileState ? selectedStyle() : null,
+                          decoration: facilityState ? selectedStyle() : null,
                           child: Row(
                             children: [
                               Padding(
@@ -221,7 +223,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                                     top: 16, bottom: 16, left: 16, right: 8),
                                 child: Icon(
                                   Icons.corporate_fare_rounded,
-                                  color: profileState
+                                  color: facilityState
                                       ? ColorConstant.orange60
                                       : ColorConstant.whiteBlack80,
                                 ),
@@ -230,7 +232,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                                 'Facility',
                                 style: TextStyle(
                                   fontSize: 24,
-                                  color: profileState
+                                  color: facilityState
                                       ? ColorConstant.orange60
                                       : ColorConstant.whiteBlack80,
                                 ),
