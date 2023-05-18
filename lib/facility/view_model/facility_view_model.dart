@@ -16,6 +16,9 @@ class FacilityViewModel extends ChangeNotifier {
   List<ItemModel> _items = [];
   RoomModel? roomFromRaioForm;
 
+  DateTime startDate = DateTime.now().subtract(const Duration(days: 30));
+  DateTime endDate = DateTime.now();
+
   get getViewModeItems => _items;
   void clearItems() => _items = [];
 
@@ -300,5 +303,43 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   // เพิ่มรายงานการจองห้อง ในแง่ของ เลขห้อง วันเวลา
-  Future<void> fetchRoomStatisticData() async {}
+  Future<List<RoomStatModel>> fetchRoomStatisticData(
+      DateTime from, DateTime to) async {
+    List<RoomStatModel> list = [];
+    final roomSnapshot =
+        await _roomService.getAllDocument(orderingField: "name");
+    for (int i = 0; i < roomSnapshot!.docs.length; i++) {
+      final reservationSnapshot =
+          await _roomService.getSubDocumentByDateInterval(
+              roomSnapshot.docs[i].id,
+              'reservations',
+              'bookTime',
+              startDate,
+              endDate);
+      print(reservationSnapshot?.docs.length);
+      list.add(RoomStatModel(
+          roomName: roomSnapshot.docs[i].get("name"),
+          roomCategory: roomSnapshot.docs[i].get("type"),
+          amount: reservationSnapshot?.docs.length ?? 0));
+    }
+    return list;
+  }
+
+  void setStartDate(DateTime? date) {
+    if (date == null) {
+      return;
+    }
+    startDate = date;
+    // print(startDate);
+    notifyListeners();
+  }
+
+  void setEndDate(DateTime? date) {
+    if (date == null) {
+      return;
+    }
+    endDate = date;
+    // print(endDate);
+    notifyListeners();
+  }
 }

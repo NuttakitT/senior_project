@@ -30,6 +30,17 @@ class RoomReservation {
       this.room});
 }
 
+class RoomStatModel {
+  String roomName;
+  String roomCategory;
+  int amount;
+
+  RoomStatModel(
+      {required this.roomName,
+      required this.roomCategory,
+      required this.amount});
+}
+
 class Schedule {
   String? id;
   String roomName;

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
@@ -16,6 +17,13 @@ class BookingCardView extends StatefulWidget {
 }
 
 class _BookingCardViewState extends State<BookingCardView> {
+  String dateFormat(DateTime? date) {
+    if (date == null) {
+      return "";
+    }
+    return DateFormat('HH:mm dd/MM/yyyy').format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
     RoomReservation? roomCard;
@@ -34,9 +42,9 @@ class _BookingCardViewState extends State<BookingCardView> {
           const SizedBox(height: 4),
           BookCardViewCell(title: "Detail", detail: "Room ${roomCard?.room}"),
           BookCardViewCell(
-              title: "Create", detail: "${roomCard?.dateCreate.toString()}"),
+              title: "Create", detail: dateFormat(roomCard?.dateCreate)),
           BookCardViewCell(
-              title: "Book time", detail: "${roomCard?.bookTime.toString()}"),
+              title: "Book time", detail: dateFormat(roomCard?.bookTime)),
           BookCardViewCell(title: "Status", detail: "${roomCard?.status}"),
           Row(
             children: [
@@ -91,9 +99,9 @@ class _BookingCardViewState extends State<BookingCardView> {
               title: "Detail",
               detail: "${itemCard?.objectName} amount ${itemCard?.amount} ea."),
           BookCardViewCell(
-              title: "Start", detail: "${itemCard?.startDate.toString()}"),
+              title: "Start", detail: dateFormat(itemCard?.startDate)),
           BookCardViewCell(
-              title: "Until", detail: "${itemCard?.endDate.toString()}"),
+              title: "Until", detail: dateFormat(itemCard?.endDate)),
           BookCardViewCell(title: "Status", detail: "${itemCard?.status}"),
           Row(
             children: [
