@@ -7,6 +7,10 @@ import 'package:senior_project/community_board/view_model/community_board_view_m
 import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/core/view_model/text_search.dart';
+import 'package:senior_project/facility/view/admin_room/admin_room.dart';
+import 'package:senior_project/facility/view/item_reservation/item_reservation.dart';
+import 'package:senior_project/facility/view/my_booking/my_booking.dart';
+import 'package:senior_project/facility/view/room_reservation/room_reservation_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/role_management/view/role_management_view.dart';
@@ -126,7 +130,6 @@ class _TagBarState extends State<TagBar> {
               }), (route) => false);
               break;
             case 3:
-              context.read<TextSearch>().clearSearchText();
               Navigator.push(context,
                   MaterialPageRoute(builder: ((context) {
                 return TeacherContactView(
@@ -139,12 +142,24 @@ class _TagBarState extends State<TagBar> {
               })));
               break;
             case 4:
+              Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                return const RoomReservationView();
+              })));
               break;
             case 5:
+              Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                return const ItemReservationView();
+              })));
               break;
             case 6:
+              Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                return const MyBookingView();
+              })));
               break;
             case 7:
+              Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                return const AdminRoom();
+              })));
               break;
             case 8:
               Navigator.pushAndRemoveUntil(context,

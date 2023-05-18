@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class TemplateMobileViewModel extends ChangeNotifier {
-  List<bool> menu = [true, false, false, false];
+  List<bool> menu = [true, false, false, false, false];
 
   bool getMenuState(int index) => menu[index];
 

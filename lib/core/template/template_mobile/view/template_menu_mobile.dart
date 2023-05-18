@@ -8,6 +8,7 @@ import 'package:senior_project/community_board/view_model/community_board_view_m
 import 'package:senior_project/core/template/template_mobile/view/edit_profile_mobile.dart';
 import 'package:senior_project/core/template/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
+import 'package:senior_project/facility/view/facility_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/teacher_contact/view/teacher_contact_view.dart';
 import 'package:senior_project/user_profile/my_profile/view/my_profile_view.dart';
@@ -219,6 +220,55 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                                 padding: const EdgeInsets.only(
                                     top: 16, bottom: 16, left: 16, right: 8),
                                 child: Icon(
+                                  Icons.corporate_fare_rounded,
+                                  color: profileState
+                                      ? ColorConstant.orange60
+                                      : ColorConstant.whiteBlack80,
+                                ),
+                              ),
+                              Text(
+                                'Facility',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: profileState
+                                      ? ColorConstant.orange60
+                                      : ColorConstant.whiteBlack80,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          context
+                              .read<TemplateMobileViewModel>()
+                              .changeMenuState(3);
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const FacilityView();
+                              }
+                            )
+                          );
+                        },
+                      ),
+                    );
+                  }),
+                  Builder(builder: (context) {
+                    if (!isLogin) {
+                      return Container();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: InkWell(
+                        child: Container(
+                          decoration: profileState ? selectedStyle() : null,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 16, bottom: 16, left: 16, right: 8),
+                                child: Icon(
                                   Icons.account_circle_rounded,
                                   color: profileState
                                       ? ColorConstant.orange60
@@ -240,7 +290,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                         onTap: () {
                           context
                               .read<TemplateMobileViewModel>()
-                              .changeMenuState(3);
+                              .changeMenuState(4);
                           Navigator.push(
                             context, 
                             MaterialPageRoute(
