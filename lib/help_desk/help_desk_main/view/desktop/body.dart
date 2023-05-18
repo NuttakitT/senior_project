@@ -28,7 +28,7 @@ Stream? query(String id, int type, bool isAdmin, {
   bool descending = true;
   if (type == 0) {
     return service.listenToDocumentByKeyValuePair(
-      [isAdmin ? "adminId" : "ownerId"], 
+      [isAdmin ? "relateAdmin" : "ownerId"], 
       [id],
       limit: limit, orderingField: 'dateCreate', descending: descending,
       startDoc: startDoc,
@@ -37,7 +37,7 @@ Stream? query(String id, int type, bool isAdmin, {
   } 
   if (type > 3){
     return service.listenToDocumentByKeyValuePair(
-      [isAdmin ? "adminId" : "ownerId", "priority"], 
+      [isAdmin ? "relateAdmin" : "ownerId", "priority"], 
       [id, (type-7).abs()],
       limit: limit, orderingField: 'dateCreate', descending: descending,
       startDoc: startDoc,
@@ -45,7 +45,7 @@ Stream? query(String id, int type, bool isAdmin, {
     );
   }
   return service.listenToDocumentByKeyValuePair(
-    [isAdmin ? "adminId" : "ownerId", "status"], 
+    [isAdmin ? "relateAdmin" : "ownerId", "status"], 
     [id, type-1],
     limit: limit, orderingField: 'dateCreate', descending: descending,
     startDoc: startDoc,
@@ -189,7 +189,13 @@ class _BodyState extends State<Body> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.hasData) {
-            context.read<HelpDeskViewModel>().initTicket(snapshot.data!.docs.length, limit);
+            int docAmount = 0;
+            for (int i = 0; i < snapshot.data!.docs.length; i++) {
+              if (snapshot.data.docs[i].get("adminId") == null || snapshot.data.docs[i].get("adminId") == uid) {
+                docAmount++;
+              }
+            }
+            context.read<HelpDeskViewModel>().initTicket(docAmount, limit);
             int start = context.watch<HelpDeskViewModel>().getStartTicket as int;
             int end = context.watch<HelpDeskViewModel>().getEndTicket as int;
             int all = context.watch<HelpDeskViewModel>().getAllTicket ?? 0;
