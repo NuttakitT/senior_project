@@ -205,8 +205,10 @@ class FacilityViewModel extends ChangeNotifier {
         .read<HelpDeskViewModel>()
         .createTask(ticket[0], ticket[1], ticket[2], ticket[3]);
     final userId = context.read<AppViewModel>().app.getUser.getId;
+    final id = getUuid();
 
     Map<String, dynamic> itemData = {
+      'id': id,
       'objectName': request.objectName,
       'amount': request.amount,
       'startDate': Timestamp.fromDate(request.startDate),
@@ -221,30 +223,81 @@ class FacilityViewModel extends ChangeNotifier {
     return result;
   }
 
-  Future<List<RoomReservation>> fetchMyRoomReservation() async {
+  Future<List<RoomReservation>> fetchMyRoomReservation(String userId) async {
+    final now = DateTime.now();
     List<RoomReservation> list = [];
-    final roomSnapshot = await _roomService.getAllDocument();
-
+    final roomSnapshot =
+        await _roomService.getAllDocument(orderingField: "name");
+    for (int i = 0; i < roomSnapshot!.docs.length; i++) {
+      final reservationSnapshot = await _roomService
+          .getSubDocumnetByKeyValuePair(
+              roomSnapshot.docs[i].id, "reservations", ["userId"], [userId]);
+      if (reservationSnapshot!.size != 0) {
+        for (int j = 0; j < reservationSnapshot.docs.length; j++) {
+          Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
+          Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
+          if (bookTime.toDate().isAfter(now)) {
+            list.add(RoomReservation(
+                room: roomSnapshot.docs[i].get("name"),
+                id: reservationSnapshot.docs[j].id,
+                purpose: reservationSnapshot.docs[j].get("purpose"),
+                dateCreate: dateCreate.toDate(),
+                bookTime: bookTime.toDate(),
+                userId: userId,
+                status: reservationSnapshot.docs[j].get("status")));
+          }
+        }
+      }
+    }
     return list;
   }
 
-  Future<List<ItemReservation>> fetchMyItemReservations(String userId) async {
+  Future<List<ItemReservation>> fetchMyItemReservation(String userId) async {
+    final now = DateTime.now();
     final snapshot =
-        await _itemReservation.getDocumentByKeyList("userId", [userId]);
-
+        await _itemReservation.getDocumnetByKeyValuePair(["userId"], [userId]);
     List<ItemReservation> list = [];
-
+    if (snapshot!.size != 0) {
+      for (int i = 0; i < snapshot.docs.length; i++) {
+        Timestamp startDate = snapshot.docs[i].get("startDate");
+        Timestamp endDate = snapshot.docs[i].get("endDate");
+        if (endDate.toDate().isAfter(now)) {
+          list.add(ItemReservation(
+              id: snapshot.docs[i].id,
+              objectName: snapshot.docs[i].get("objectName"),
+              purpose: snapshot.docs[i].get("purpose"),
+              amount: snapshot.docs[i].get("amount"),
+              startDate: startDate.toDate(),
+              endDate: endDate.toDate(),
+              userId: snapshot.docs[i].get("userId"),
+              status: snapshot.docs[i].get("status")));
+        }
+      }
+    }
     return list;
   }
 
   Future<Booking> fetchBooking(String userId) async {
-    final itemRes = await fetchMyItemReservations(userId);
-    final roomRes = await fetchMyRoomReservation();
+    final itemRes = await fetchMyItemReservation(userId);
+    final roomRes = await fetchMyRoomReservation(userId);
     final booking = Booking(roomRes: roomRes, itemRes: itemRes);
     return booking;
   }
 
-  Future<void> cancelBooking() async {}
+  Future<void> cancelBooking(String id, bool isRoom, String? detail) async {
+    if (isRoom) {
+      final snapshot = await _roomService
+          .getDocumnetByKeyValuePair(["room"], [detail], limit: 1);
+      if (snapshot!.size != 0) {
+        final String roomName = snapshot.docs[0].get("name");
+        await _roomService.deleteSubDocument(
+            snapshot.docs[0].id, "reservations", id);
+      }
+    } else {
+      await _itemReservation.deleteDocument(id);
+    }
+    notifyListeners();
+  }
 
   // เพิ่มรายงานการจองห้อง ในแง่ของ เลขห้อง วันเวลา
   Future<void> fetchRoomStatisticData() async {}

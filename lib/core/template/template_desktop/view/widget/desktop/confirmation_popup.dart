@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
@@ -31,14 +34,20 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobileSite = kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.android);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return AlertDialog(
         backgroundColor: ColorConstant.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         content: SizedBox(
-          width: 450,
-          height: 320,
+          width: isMobileSite ? (width - 8) : width / 3,
+          height: isMobileSite ? (height / 3) : (height / 4),
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(isMobileSite ? 8 : 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -68,7 +77,7 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                   children: [
                     Container(
                       height: 40,
-                      width: 144,
+                      width: isMobileSite ? 80 : 144,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8.0),
@@ -85,7 +94,7 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                     const SizedBox(width: 16),
                     Container(
                       height: 40,
-                      width: 144,
+                      width: isMobileSite ? 80 : 144,
                       decoration: BoxDecoration(
                         color: ColorConstant.orange40,
                         borderRadius: BorderRadius.circular(8.0),
