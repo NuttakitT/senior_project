@@ -156,9 +156,9 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
         Builder(
           builder: (context) {
             bool isAdmin = context.read<AppViewModel>().app.getUser.getRole == 0;
-            if (!isAdmin) {
-              return Container();
-            }
+            // if (!isAdmin) {
+            //   return Container();
+            // }
             if (isItemRequest) {
               return StreamBuilder(
                 stream: FirebaseServices("ticket").listenToDocument(docId),
@@ -217,73 +217,75 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                         },
                       );
                     } 
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            fit: FlexFit.tight,
-                            child: TextButton(
-                              onPressed: () async {
-                                submitRequest(docId, userId, true);
-                              }, 
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)
+                    else if (isAdmin && snapshot.data!.get("dateComplete") == null) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              fit: FlexFit.tight,
+                              child: TextButton(
+                                onPressed: () async {
+                                  submitRequest(docId, userId, true);
+                                }, 
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)
+                                    )
+                                  ),
+                                  backgroundColor: MaterialStateProperty.all(
+                                    ColorConstant.green50
+                                  ),
+                                  padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(16)
                                   )
                                 ),
-                                backgroundColor: MaterialStateProperty.all(
-                                  ColorConstant.green50
-                                ),
-                                padding: MaterialStateProperty.all(
-                                  const EdgeInsets.all(16)
+                                child: const Text(
+                                  "Approve",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20
+                                  ),
                                 )
                               ),
-                              child: const Text(
-                                "Approve",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20
-                                ),
-                              )
                             ),
-                          ),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          Flexible(
-                            fit: FlexFit.tight,
-                            child: TextButton(
-                              onPressed: () {
-                                submitRequest(docId, userId, false);
-                              }, 
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            Flexible(
+                              fit: FlexFit.tight,
+                              child: TextButton(
+                                onPressed: () {
+                                  submitRequest(docId, userId, false);
+                                }, 
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)
+                                    )
+                                  ),
+                                  backgroundColor: MaterialStateProperty.all(
+                                    ColorConstant.red50
+                                  ),
+                                  padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(16)
                                   )
                                 ),
-                                backgroundColor: MaterialStateProperty.all(
-                                  ColorConstant.red50
-                                ),
-                                padding: MaterialStateProperty.all(
-                                  const EdgeInsets.all(16)
+                                child: const Text(
+                                  "Deny",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20
+                                  ),
                                 )
                               ),
-                              child: const Text(
-                                "Deny",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20
-                                ),
-                              )
-                            ),
-                          )
-                        ],
-                      ),
-                    );
+                            )
+                          ],
+                        ),
+                      );
+                    }
                   }
                   return Container();
                 },

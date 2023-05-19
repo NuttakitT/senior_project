@@ -66,26 +66,26 @@ class _SearchBarState extends State<SearchBar> {
             ),
           ),
         ),
-        AnimatedContainer(
-          duration: Duration(milliseconds: milisec),
-          width: isEditingText ? 45 : 0,
-          child: AnimatedOpacity(
-            opacity: isEditingText ? 1.0 : 0.0, 
-            duration: Duration(milliseconds: milisec * 2),
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: InkWell(
-                onTap: () {
+        // AnimatedContainer(
+        //   duration: Duration(milliseconds: milisec),
+        //   width: isEditingText ? 45 : 0,
+        //   child: AnimatedOpacity(
+        //     opacity: isEditingText ? 1.0 : 0.0, 
+        //     duration: Duration(milliseconds: milisec * 2),
+        //     child: Padding(
+        //       padding: const EdgeInsets.only(right: 16),
+        //       child: InkWell(
+        //         onTap: () {
                   
-                }, 
-                child: const Icon(
-                  Icons.search_rounded,
-                  color: ColorConstant.whiteBlack85,
-                ),
-              ),
-            )
-          ),
-        ),
+        //         }, 
+        //         child: const Icon(
+        //           Icons.search_rounded,
+        //           color: ColorConstant.whiteBlack85,
+        //         ),
+        //       ),
+        //     )
+        //   ),
+        // ),
       ],
     );
   }
