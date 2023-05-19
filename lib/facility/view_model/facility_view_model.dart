@@ -137,7 +137,7 @@ class FacilityViewModel extends ChangeNotifier {
         Timestamp endTime = snapshot.docs[i].get("endTime");
 
         list.add(Schedule(
-            id: snapshot.docs[i].get("id"),
+            id: snapshot.docs[i].id,
             roomName: snapshot.docs[i].get("roomName"),
             dayOfWeek: snapshot.docs[i].get("dayOfWeek"),
             startTime: startTime.toDate(),
@@ -149,7 +149,13 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   Future<void> deleteSchedule(String id) async {
-    await _scheduleService.deleteDocument(id);
+    try {
+      await _scheduleService.deleteDocument(id);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   Future<bool> reserveRoom(RoomReservationRequest request) async {

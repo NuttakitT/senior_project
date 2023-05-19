@@ -1,8 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
+import 'package:senior_project/facility/view/schedule/schedule_room.dart';
 import 'package:senior_project/facility/view_model/facility_view_model.dart';
 
 class ScheduleCardView extends StatefulWidget {
@@ -42,6 +48,7 @@ class _ScheduleCardViewState extends State<ScheduleCardView> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.cardDetail.id);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,11 +72,35 @@ class _ScheduleCardViewState extends State<ScheduleCardView> {
             Expanded(
               child: TextButton(
                   onPressed: () async {
-                    if (widget.cardDetail.id != null) {
-                      await context
-                          .read<FacilityViewModel>()
-                          .deleteSchedule(widget.cardDetail.id!);
-                    }
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                        return ConfirmationPopup(
+                          title: "Are you sure to delete this schedule?",
+                          detail: "This actoion can't be undone",
+                          widget: null,
+                          onCancel: () {
+                            Navigator.pop(context);
+                          },
+                          onConfirm: () async {
+                            if (widget.cardDetail.id != null) {
+                            await context
+                                .read<FacilityViewModel>()
+                                .deleteSchedule(widget.cardDetail.id!);
+                            Navigator.pushAndRemoveUntil(
+                              context, 
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const ScheduleRoomView();
+                                }
+                              ), 
+                              (route) => false
+                            );
+                          }
+                          },
+                        );
+                      }
+                    );
                   },
                   child: const DefaultTextStyle(
                     style: AppFontStyle.red40R16,
