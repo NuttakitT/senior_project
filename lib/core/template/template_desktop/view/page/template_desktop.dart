@@ -124,7 +124,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                         const Padding(
                           padding: EdgeInsets.only(top: 40, bottom: 8),
                           child: TagBar(
-                            name: "Home", 
+                            name: "Home(FAQ)", 
                             index: 0, 
                             type: 1
                           ),
@@ -132,7 +132,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                         const Padding(
                           padding: EdgeInsets.only(top: 8, bottom: 8),
                           child: TagBar(
-                            name: "Helpdesk", 
+                            name: "Help Desk", 
                             index: 1, 
                             type: 1
                           ),
@@ -263,7 +263,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                                 const Padding(
                                   padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
                                   child: TagBar(
-                                    name: "Help-desk system", 
+                                    name: "Ticket report", 
                                     index: 8, 
                                     type: 1
                                   ),
