@@ -353,21 +353,24 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
                                 .read<FacilityViewModel>()
                                 .getAvailableRoom(_date, _time),
                             builder: (context, snapshot) {
-                              final rooms = snapshot.data ?? [];
-                              if (rooms.isEmpty) {
-                                return SizedBox(
-                                  height: isMobileSite ? 80 : 120,
-                                  child: const Center(
-                                    child: DefaultTextStyle(
-                                      style: AppFontStyle.wb40R16,
-                                      child: Text(
-                                          "No room available at this time."),
+                              if (snapshot.connectionState == ConnectionState.done) {
+                                final rooms = snapshot.data ?? [];
+                                if (rooms.isEmpty) {
+                                  return SizedBox(
+                                    height: isMobileSite ? 80 : 120,
+                                    child: const Center(
+                                      child: DefaultTextStyle(
+                                        style: AppFontStyle.wb40R16,
+                                        child: Text(
+                                            "No room available at this time."),
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
+                                return RadioForm(
+                                    rooms: rooms, onPressed: (rooms) {});
                               }
-                              return RadioForm(
-                                  rooms: rooms, onPressed: (rooms) {});
+                              return const Text("Loading available room...");
                             })),
               ],
             ),
