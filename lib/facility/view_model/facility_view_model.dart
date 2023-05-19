@@ -272,7 +272,7 @@ class FacilityViewModel extends ChangeNotifier {
       for (int i = 0; i < snapshot.docs.length; i++) {
         Timestamp startDate = snapshot.docs[i].get("startDate");
         Timestamp endDate = snapshot.docs[i].get("endDate");
-        if (endDate.toDate().isAfter(now)) {
+        // if (endDate.toDate().isAfter(now)) {
           list.add(ItemReservation(
               id: snapshot.docs[i].id,
               objectName: snapshot.docs[i].get("objectName"),
@@ -282,7 +282,7 @@ class FacilityViewModel extends ChangeNotifier {
               endDate: endDate.toDate(),
               userId: snapshot.docs[i].get("userId"),
               status: snapshot.docs[i].get("status")));
-        }
+        // }
       }
     }
     return list;
