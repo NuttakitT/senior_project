@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
+import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
 import 'package:senior_project/facility/view/facility_view.dart';
@@ -26,6 +27,8 @@ class _BookingCardViewState extends State<BookingCardView> {
     }
     return DateFormat('HH:mm dd/MM/yyyy').format(date);
   }
+
+  final _itemReservation = FirebaseServices("itemReservations");
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +73,7 @@ class _BookingCardViewState extends State<BookingCardView> {
                                 onConfirm: () async {
                                   await context
                                       .read<FacilityViewModel>()
-                                      .cancelBooking(roomCard?.id ?? "", true,
+                                      .cancelBooking(context, roomCard?.id ?? "", true,
                                           roomCard?.room);
                                   Navigator.pushAndRemoveUntil(
                                     context, 
@@ -115,43 +118,54 @@ class _BookingCardViewState extends State<BookingCardView> {
           BookCardViewCell(
               title: "Until", detail: dateFormat(itemCard?.endDate)),
           BookCardViewCell(title: "Status", detail: "${itemCard?.status}"),
-          Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                    onPressed: () async {
-                      showDialog(
-                          context: (context),
-                          builder: ((context) {
-                            return ConfirmationPopup(
-                                title: "Cancel Request Item",
-                                detail:
-                                    "Are you sure you want to cancel the request?",
-                                widget: null,
-                                onCancel: () {
-                                  Navigator.pop(context);
-                                },
-                                onConfirm: () async {
-                                  await context
-                                      .read<FacilityViewModel>()
-                                      .cancelBooking(
-                                          itemCard?.id ?? "", false, null);
-                                  Navigator.pushAndRemoveUntil(
-                                    context, 
-                                    MaterialPageRoute(builder: (context) {
-                                      return const MyBookingView();
-                                    }), 
-                                    (route) => false
-                                  );
-                                });
-                          }));
-                    },
-                    child: const DefaultTextStyle(
-                      style: AppFontStyle.red40R16,
-                      child: Text("Cancel", textAlign: TextAlign.end),
-                    )),
-              ),
-            ],
+          StreamBuilder(
+            stream: _itemReservation.listenToDocument(itemCard!.id!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.active) {
+                return Container();
+              }
+              if (snapshot.data!.get("status") != "Pending") {
+                return Container();
+              }
+              return Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () async {
+                          showDialog(
+                              context: (context),
+                              builder: ((context) {
+                                return ConfirmationPopup(
+                                    title: "Cancel Request Item",
+                                    detail:
+                                        "Are you sure you want to cancel the request?",
+                                    widget: null,
+                                    onCancel: () {
+                                      Navigator.pop(context);
+                                    },
+                                    onConfirm: () async {
+                                      await context
+                                          .read<FacilityViewModel>()
+                                          .cancelBooking(context,
+                                              itemCard?.id ?? "", false, null);
+                                      Navigator.pushAndRemoveUntil(
+                                        context, 
+                                        MaterialPageRoute(builder: (context) {
+                                          return const MyBookingView();
+                                        }), 
+                                        (route) => false
+                                      );
+                                    });
+                              }));
+                        },
+                        child: const DefaultTextStyle(
+                          style: AppFontStyle.red40R16,
+                          child: Text("Cancel", textAlign: TextAlign.end),
+                        )),
+                  ),
+                ],
+              );
+            }
           )
         ],
       );

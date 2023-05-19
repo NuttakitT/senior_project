@@ -170,7 +170,26 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                         builder: (context, futureSnapshot) {
                           if (futureSnapshot.connectionState == ConnectionState.active) {
                             if (futureSnapshot.data!.size == 0) {
-                              return Container();
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color: ColorConstant.orange80),
+                                    borderRadius: BorderRadius.circular(8)
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: const Text(
+                                    "User canceled request",
+                                    style: TextStyle(
+                                      color: ColorConstant.orange80,
+                                      fontSize: 20
+                                    ),
+                                  ),
+                                ),
+                              );
                             }
                             return Padding(
                               padding: const EdgeInsets.only(top: 16),

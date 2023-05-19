@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -293,7 +295,7 @@ class FacilityViewModel extends ChangeNotifier {
     return booking;
   }
 
-  Future<void> cancelBooking(String id, bool isRoom, String? detail) async {
+  Future<void> cancelBooking(BuildContext context, String id, bool isRoom, String? detail) async {
     if (isRoom) {
       final snapshot = await _roomService
           .getDocumnetByKeyValuePair(["name"], [detail], limit: 1);
@@ -303,9 +305,10 @@ class FacilityViewModel extends ChangeNotifier {
       }
     } else {
       final snapshot = await _itemReservation.getDocumentById(id);
-      await FirebaseServices("ticket").editDocument(
+      context.read<HelpDeskViewModel>().editTask(
         snapshot!.get("ticketId"), 
-        {"status": 2}
+        true, 
+        2
       );
       await _itemReservation.deleteDocument(id);
     }
