@@ -15,6 +15,8 @@ class ContentCardTemplate extends StatefulWidget {
 }
 
 class _ContentCardTemplateState extends State<ContentCardTemplate> {
+  TextEditingController asnwerController = TextEditingController();
+
   List<Widget> getTopic(List<dynamic> topic) {
     List<Widget> topicWidget = [
       const Padding(
@@ -43,6 +45,7 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
 
   @override
   Widget build(BuildContext context) {
+    asnwerController.text = widget.info["answer"];
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -153,21 +156,22 @@ class _ContentCardTemplateState extends State<ContentCardTemplate> {
                         color: ColorConstant.whiteBlack80, fontSize: 20),
                   ),
                 ),
-                SizedBox(
-                  width: 940,
-                  child: RichText(
-                    maxLines: null,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: widget.info["answer"],
-                          style: const TextStyle(
-                            color: ColorConstant.whiteBlack50, 
-                            fontSize: 20
-                          ),
-                        )
-                      ]
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: SizedBox(
+                    width: 940,
+                    child: TextField(
+                      readOnly: true,
+                      maxLines: null,
+                      controller: asnwerController,
+                      decoration: const InputDecoration.collapsed(
+                        hintText: ""
+                      ),
+                      style: const TextStyle(
+                        color: ColorConstant.whiteBlack50, 
+                        fontSize: 20
+                      ),
+                    )
                   ),
                 ),
               ],

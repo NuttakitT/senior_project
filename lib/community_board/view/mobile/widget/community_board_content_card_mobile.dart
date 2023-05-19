@@ -18,8 +18,11 @@ class CommunityBoardContentCardMobile extends StatefulWidget {
 
 class _CommunityBoardContentCardMobileState
     extends State<CommunityBoardContentCardMobile> {
+  TextEditingController asnwerController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    asnwerController.text = widget.info["answer"];
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -114,16 +117,21 @@ class _CommunityBoardContentCardMobileState
                       color: ColorConstant.whiteBlack70, fontSize: 12),
                 ),
               ),
-              SizedBox(
-                width: 200,
-                child: DefaultTextStyle(
-                  maxLines: null,
-                  style: const TextStyle(
-                    color: ColorConstant.whiteBlack70, 
-                    fontSize: 12
-                  ),
-                  child: Text(
-                    widget.info["answer"],
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: SizedBox(
+                  width: 200,
+                  child: TextField(
+                    readOnly: true,
+                    maxLines: null,
+                    controller: asnwerController,
+                    decoration: const InputDecoration.collapsed(
+                      hintText: ""
+                    ),
+                    style: const TextStyle(
+                      color: ColorConstant.whiteBlack70, 
+                      fontSize: 12
+                    ),
                   ),
                 ),
               ),
