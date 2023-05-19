@@ -54,43 +54,51 @@ class _BookingCardViewState extends State<BookingCardView> {
           BookCardViewCell(
               title: "Book time", detail: dateFormat(roomCard?.bookTime)),
           BookCardViewCell(title: "Status", detail: "${roomCard?.status}"),
-          Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                    onPressed: () {
-                      showDialog(
-                          context: (context),
-                          builder: ((context) {
-                            return ConfirmationPopup(
-                                title: "Cancel Reservation?",
-                                detail:
-                                    "Are you sure you want to cancel this room?",
-                                widget: null,
-                                onCancel: () {
-                                  Navigator.pop(context);
-                                },
-                                onConfirm: () async {
-                                  await context
-                                      .read<FacilityViewModel>()
-                                      .cancelBooking(context, roomCard?.id ?? "", true,
-                                          roomCard?.room);
-                                  Navigator.pushAndRemoveUntil(
-                                    context, 
-                                    MaterialPageRoute(builder: (context) {
-                                      return const MyBookingView();
-                                    }), 
-                                    (route) => false
-                                  );
-                                });
-                          }));
-                    },
-                    child: const DefaultTextStyle(
-                      style: AppFontStyle.red40R16,
-                      child: Text("Cancel", textAlign: TextAlign.end),
-                    )),
-              ),
-            ],
+          Builder(
+            builder: (context) {
+              DateTime now = DateTime.now();
+              if (roomCard!.bookTime.isAfter(now)) {
+                return Container();
+              }
+              return Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () {
+                          showDialog(
+                              context: (context),
+                              builder: ((context) {
+                                return ConfirmationPopup(
+                                    title: "Cancel Reservation?",
+                                    detail:
+                                        "Are you sure you want to cancel this room?",
+                                    widget: null,
+                                    onCancel: () {
+                                      Navigator.pop(context);
+                                    },
+                                    onConfirm: () async {
+                                      await context
+                                          .read<FacilityViewModel>()
+                                          .cancelBooking(context, roomCard?.id ?? "", true,
+                                              roomCard?.room);
+                                      Navigator.pushAndRemoveUntil(
+                                        context, 
+                                        MaterialPageRoute(builder: (context) {
+                                          return const MyBookingView();
+                                        }), 
+                                        (route) => false
+                                      );
+                                    });
+                              }));
+                        },
+                        child: const DefaultTextStyle(
+                          style: AppFontStyle.red40R16,
+                          child: Text("Cancel", textAlign: TextAlign.end),
+                        )),
+                  ),
+                ],
+              );
+            }
           )
         ],
       );
