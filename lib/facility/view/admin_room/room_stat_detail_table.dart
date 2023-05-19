@@ -26,7 +26,7 @@ class _RoomStatDetailViewState extends State<RoomStatDetailView> {
         useTemplatescroll: true,
         content: Column(
           children: [
-            const FacilityHeader(title: "Room Statistical Section"),
+            const FacilityHeader(title: "Room Statistical Section", canPop: false,),
             RoomStatDetailTable(widget: widget),
           ],
         ));

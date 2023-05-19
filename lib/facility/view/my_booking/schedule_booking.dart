@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
-import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
-import 'package:senior_project/facility/view/my_booking/booking_card.dart';
 import 'package:senior_project/facility/view/my_booking/schedule_card.dart';
 import 'package:senior_project/facility/view/widget/facility_header.dart';
 import 'package:senior_project/facility/view/widget/facility_header_mobile.dart';
@@ -41,7 +39,7 @@ class _ScheduleBookingState extends State<ScheduleBooking> {
           useTemplatescroll: true,
           content: Column(
             children: const [
-              FacilityHeader(title: "Schedule"),
+              FacilityHeader(title: "Schedule", canPop: true,),
               MyBookingList()
             ],
           ));

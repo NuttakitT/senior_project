@@ -81,7 +81,7 @@ class _RoomReservationViewState extends State<RoomReservationView> {
               }
               return Column(
                 children: const [
-                  FacilityHeader(title: "Room Reservation"),
+                  FacilityHeader(title: "Room Reservation", canPop: false,),
                   RoomReservationForm()
                 ],
               );
@@ -332,6 +332,7 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
             ),
             const SizedBox(height: 16),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   flex: isMobileSite ? 1 : 1,

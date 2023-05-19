@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
-import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/template/template_mobile/view_model/template_mobile_view_model.dart';
 import 'package:senior_project/teacher_contact/view/widget/teacher_contact_desktop_card.dart';
@@ -52,7 +51,7 @@ class TeacherContactView extends StatelessWidget {
           return TemplateDesktop(
               helpdesk: false,
               helpdeskadmin: false,
-              home: false,
+              home: true,
               useTemplatescroll: true,
               content: Column(
                 children: [

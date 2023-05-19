@@ -24,7 +24,7 @@ class _AdminRoomState extends State<AdminRoom> {
         useTemplatescroll: true,
         content: Column(
           children: const [
-            FacilityHeader(title: "Room Statistical Section"),
+            FacilityHeader(title: "Room Statistical Section", canPop: false,),
             RoomDateFilterView(),
             AdminRoomStatisticView(),
           ],
