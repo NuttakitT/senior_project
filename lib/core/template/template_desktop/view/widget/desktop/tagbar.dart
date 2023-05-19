@@ -90,6 +90,9 @@ class _TagBarState extends State<TagBar> {
           context.read<TextSearch>().clearSearchText();
           switch (widget.index) {
             case 0:
+              if (state) {
+                break;
+              }
               context
                   .read<CommunityBoardViewModel>()
                   .setIsShowPostDetail(false, false, {});
@@ -106,6 +109,9 @@ class _TagBarState extends State<TagBar> {
               }), (route) => false);
               break;
             case 1:
+              if (state) {
+                break;
+              }
               context.read<HelpDeskViewModel>().setIsFormNoti = false;
               context.read<CommunityBoardViewModel>().setIsSafeClick =
                   true;
@@ -125,12 +131,18 @@ class _TagBarState extends State<TagBar> {
                   (route) => false);
               break;
             case 2:
+              if (state) {
+                break;
+              }
               Navigator.pushAndRemoveUntil(context,
                   MaterialPageRoute(builder: (context) {
                 return RoleManagementView(isAdmin: isAdmin);
               }), (route) => false);
               break;
             case 3:
+              if (state) {
+                break;
+              }
               Navigator.pushAndRemoveUntil(
                 context, 
                  MaterialPageRoute(builder: ((context) {
@@ -146,6 +158,9 @@ class _TagBarState extends State<TagBar> {
               );
               break;
             case 4:
+              if (state) {
+                break;
+              }
               Navigator.pushAndRemoveUntil(
                 context, 
                 MaterialPageRoute(builder: ((context) {
@@ -155,28 +170,42 @@ class _TagBarState extends State<TagBar> {
               );
               break;
             case 5:
-
+              if (state) {
+                break;
+              }
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) {
                 return const ItemReservationView();
               })), (route) => false);
               break;
             case 6:
+              if (state) {
+                break;
+              }
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) {
                 return const MyBookingView();
               })), (route) => false);
               break;
             case 7:
+              if (state) {
+                break;
+              }
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) {
                   return const ScheduleRoomView();
                 })), (route) => false);
               break;
             case 8:
+              if (state) {
+                break;
+              }
               Navigator.pushAndRemoveUntil(context,
                   MaterialPageRoute(builder: (context) {
                 return StatisticView(isAdmin: isAdmin);
               }), (route) => false);
               break;
             case 9:
+              if (state) {
+                break;
+              }
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) {
                 return const AdminRoom();
               })), (route) => false);
