@@ -54,12 +54,12 @@ class RoleManagementDetailTable extends StatelessWidget {
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           columnWidths: const {
             0: FixedColumnWidth(100),
-            1: FixedColumnWidth(220),
-            2: FixedColumnWidth(220),
+            1: FixedColumnWidth(120),
+            2: FixedColumnWidth(120),
             3: FixedColumnWidth(220),
-            4: FixedColumnWidth(120),
-            5: FlexColumnWidth(),
-            6: FixedColumnWidth(50)
+            // 4: FixedColumnWidth(120),
+            4: FlexColumnWidth(),
+            5: FixedColumnWidth(50)
           },
           children: [
             buildRow(
@@ -69,7 +69,7 @@ class RoleManagementDetailTable extends StatelessWidget {
               Consts.firstName,
               Consts.lastName,
               Consts.email,
-              Consts.role,
+              // Consts.role,
               Consts.responsibility,
               ""
             ], true, false, context),
@@ -81,7 +81,7 @@ class RoleManagementDetailTable extends StatelessWidget {
                 widget.admins[i].firstName,
                 widget.admins[i].lastName,
                 widget.admins[i].email,
-                widget.admins[i].role,
+                // widget.admins[i].role,
                 widget.admins[i].responsibility,
                 ""
               ], false, i == widget.admins.length - 1, context),

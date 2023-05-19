@@ -56,7 +56,7 @@ class TeacherContactDesktopCard extends StatelessWidget {
         // handle edit data
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
         decoration: BoxDecoration(
             border: Border.all(color: ColorConstant.orange50, width: 1),
             borderRadius: BorderRadius.circular(16.0),

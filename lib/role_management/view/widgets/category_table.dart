@@ -93,7 +93,7 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: cell.contains("isDes") ? 700 : null,
+                width: cell.contains("isDes") ? 450 : null,
                 child: Text(
                   cell.contains("isDes") ? cell.split("isDes ")[1] : cell,
                   style: isHeader ? AppFontStyle.wb80B20 : AppFontStyle.wb80R20,
