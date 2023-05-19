@@ -291,142 +291,145 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                 },
               );
             }
-            return Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: ColorConstant.whiteBlack5,
-                    boxShadow: [
-                      BoxShadow(
-                        offset: const Offset(5, 5),
-                        color: ColorConstant.black.withOpacity(0.05),
-                        blurRadius: 10,
-                      ),
-                    ]),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        "FAQ",
-                        style: TextStyle(
-                            color: ColorConstant.whiteBlack90,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        alignment: Alignment.centerLeft,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: ColorConstant.whiteBlack40)
+            if (isAdmin) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: ColorConstant.whiteBlack5,
+                      boxShadow: [
+                        BoxShadow(
+                          offset: const Offset(5, 5),
+                          color: ColorConstant.black.withOpacity(0.05),
+                          blurRadius: 10,
                         ),
-                        child: DropdownButton<String>(
-                          underline: Container(),
-                          isExpanded:  true,
-                          value: selectedValue,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValue = value!;
-                              isInit = false;
-                            });
-                          },
-                          items: widget.q.map((e) {
-                            return DropdownMenuItem<String>(
-                              value: "Q: ${e["question"]}",
-                              child: Text("Q: ${e["question"]}",),
-                            );
-                          }).toList(),
-                        )
+                      ]),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: const Text(
+                          "FAQ",
+                          style: TextStyle(
+                              color: ColorConstant.whiteBlack90,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    StreamBuilder(
-                      stream: FirebaseServices("ticket").listenToDocument(
-                        context.read<ReplyChannelViewModel>().getTaskData["docId"],
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState != ConnectionState.active) {
-                          return Container();
-                        } else if (snapshot.data!.get("status") == 2) {
-                          return Container();
-                        }
-                        return Container(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context, 
-                                builder: (context) {
-                                  return ConfirmationPopup(
-                                    detail: "", 
-                                    onCancel: () {
-                                      Navigator.pop(context);
-                                    }, 
-                                    onConfirm: () async {
-                                      await context.read<HelpDeskViewModel>().setTicketResponsibility(docId, userId, false);
-                                      await context.read<HelpDeskViewModel>().editTask(
-                                        docId, 
-                                        true, 
-                                        1
-                                      );
-                                      await context.read<ReplyChannelViewModel>().createMessage(
-                                        context,
-                                        context.read<ReplyChannelViewModel>().getTaskData["docId"], 
-                                        {
-                                          "ownerId": userId,
-                                          "message": "FAQ\nQ: $selectedValue\nA: ${answer[selectedValue]}",
-                                          "time": DateTime.now(),
-                                          "seen": false,
-                                          "imageUrl": null
-                                        }
-                                      );
-                                      Navigator.pop(context);
-                                    }, 
-                                    title: "Are you sure to send FAQ?", 
-                                    widget: Text(
-                                      "Q: $selectedValue\nA: ${answer[selectedValue]}",
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: AppFontWeight.bold,
-                                        color: ColorConstant.whiteBlack60
-                                      ),
-                                    )
-                                  );
-                                }
-                              );
-                            },
-                            style: ButtonStyle(
-                              fixedSize: MaterialStateProperty.all(
-                                const Size(120, 32)
-                              ),
-                              backgroundColor: MaterialStateProperty.all(
-                                ColorConstant.orange50
-                              )
-                            ),
-                            child: const Text(
-                              "Send FAQ",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: AppFontWeight.bold
-                              ),
-                            ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          alignment: Alignment.centerLeft,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: ColorConstant.whiteBlack40)
                           ),
-                        );
-                      }
-                    ),
-                  ],
+                          child: DropdownButton<String>(
+                            underline: Container(),
+                            isExpanded:  true,
+                            value: selectedValue,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValue = value!;
+                                isInit = false;
+                              });
+                            },
+                            items: widget.q.map((e) {
+                              return DropdownMenuItem<String>(
+                                value: "Q: ${e["question"]}",
+                                child: Text("Q: ${e["question"]}",),
+                              );
+                            }).toList(),
+                          )
+                        ),
+                      ),
+                      StreamBuilder(
+                        stream: FirebaseServices("ticket").listenToDocument(
+                          context.read<ReplyChannelViewModel>().getTaskData["docId"],
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState != ConnectionState.active) {
+                            return Container();
+                          } else if (snapshot.data!.get("status") == 2) {
+                            return Container();
+                          }
+                          return Container(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context, 
+                                  builder: (context) {
+                                    return ConfirmationPopup(
+                                      detail: "", 
+                                      onCancel: () {
+                                        Navigator.pop(context);
+                                      }, 
+                                      onConfirm: () async {
+                                        await context.read<HelpDeskViewModel>().setTicketResponsibility(docId, userId, false);
+                                        await context.read<HelpDeskViewModel>().editTask(
+                                          docId, 
+                                          true, 
+                                          1
+                                        );
+                                        await context.read<ReplyChannelViewModel>().createMessage(
+                                          context,
+                                          context.read<ReplyChannelViewModel>().getTaskData["docId"], 
+                                          {
+                                            "ownerId": userId,
+                                            "message": "FAQ\nQ: $selectedValue\nA: ${answer[selectedValue]}",
+                                            "time": DateTime.now(),
+                                            "seen": false,
+                                            "imageUrl": null
+                                          }
+                                        );
+                                        Navigator.pop(context);
+                                      }, 
+                                      title: "Are you sure to send FAQ?", 
+                                      widget: Text(
+                                        "Q: $selectedValue\nA: ${answer[selectedValue]}",
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: AppFontWeight.bold,
+                                          color: ColorConstant.whiteBlack60
+                                        ),
+                                      )
+                                    );
+                                  }
+                                );
+                              },
+                              style: ButtonStyle(
+                                fixedSize: MaterialStateProperty.all(
+                                  const Size(120, 32)
+                                ),
+                                backgroundColor: MaterialStateProperty.all(
+                                  ColorConstant.orange50
+                                )
+                              ),
+                              child: const Text(
+                                "Send FAQ",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: AppFontWeight.bold
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
+              );
+            }
+            return Container();
           }
         ),
         Builder(

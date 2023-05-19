@@ -25,13 +25,13 @@ class _ContentLoaderState extends State<ContentLoader> {
   @override
   Widget build(BuildContext context) {
     context.read<HelpDeskViewModel>().setIsSafeClick = false;
-    if (!context.watch<HelpDeskViewModel>().getIsSafeLoad) {
-      context.read<HelpDeskViewModel>().setIsSafeClick = true;
-      List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
-      return Column(
-        children: GenerateContent.generateContent(context, content, widget.contentSize)
-      );
-    }
+    // if (!context.watch<HelpDeskViewModel>().getIsSafeLoad) {
+    //   context.read<HelpDeskViewModel>().setIsSafeClick = true;
+    //   List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
+    //   return Column(
+    //     children: GenerateContent.generateContent(context, content, widget.contentSize)
+    //   );
+    // }
     return StreamBuilder(
       stream: widget.stream,
       builder: (context, snapshot) {

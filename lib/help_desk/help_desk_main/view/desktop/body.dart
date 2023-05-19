@@ -63,7 +63,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   double contentSize = 56;
-  int limit = 5;
+  int limit = 50;
   ScrollController controller = ScrollController();
   
   void nextTicket(bool ishowMesg, bool isNext) {
