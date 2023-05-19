@@ -45,6 +45,9 @@ class _AdminTicketSettingState extends State<AdminTicketSetting> {
             stream: FirebaseServices("ticket").listenToDocument(docId),
             builder: (context, streamSnapshot) {
               if (streamSnapshot.connectionState == ConnectionState.active) {
+                if (streamSnapshot.data!.get("status") >= 2) {
+                  return Container();
+                }
                 taskAdmin = streamSnapshot.data!.get("adminId");
                 if (taskAdmin == uid) {
                   hintText = "You";
