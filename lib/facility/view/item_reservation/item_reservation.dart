@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -468,7 +470,7 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                           } else {
                             context
                               .read<TemplateDesktopViewModel>() 
-                              .changeState(context, 5, 1);
+                              .changeState(context, 6, 1);
                             Navigator.push(context,
                               MaterialPageRoute(builder: ((context) {
                               return const MyBookingView();
