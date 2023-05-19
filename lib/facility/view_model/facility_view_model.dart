@@ -245,16 +245,16 @@ class FacilityViewModel extends ChangeNotifier {
         for (int j = 0; j < reservationSnapshot.docs.length; j++) {
           Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
           Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
-          if (bookTime.toDate().isAfter(now)) {
+          // if (bookTime.toDate().isAfter(now)) {
             list.add(RoomReservation(
-                room: roomSnapshot.docs[i].get("name"),
-                id: reservationSnapshot.docs[j].id,
-                purpose: reservationSnapshot.docs[j].get("purpose"),
-                dateCreate: dateCreate.toDate(),
-                bookTime: bookTime.toDate(),
-                userId: userId,
-                status: reservationSnapshot.docs[j].get("status")));
-          }
+              room: roomSnapshot.docs[i].get("name"),
+              id: reservationSnapshot.docs[j].id,
+              purpose: reservationSnapshot.docs[j].get("purpose"),
+              dateCreate: dateCreate.toDate(),
+              bookTime: bookTime.toDate(),
+              userId: userId,
+              status: reservationSnapshot.docs[j].get("status")));            
+          // }
         }
       }
     }
@@ -296,13 +296,17 @@ class FacilityViewModel extends ChangeNotifier {
   Future<void> cancelBooking(String id, bool isRoom, String? detail) async {
     if (isRoom) {
       final snapshot = await _roomService
-          .getDocumnetByKeyValuePair(["room"], [detail], limit: 1);
+          .getDocumnetByKeyValuePair(["name"], [detail], limit: 1);
       if (snapshot!.size != 0) {
-        final String roomName = snapshot.docs[0].get("name");
         await _roomService.deleteSubDocument(
             snapshot.docs[0].id, "reservations", id);
       }
     } else {
+      final snapshot = await _itemReservation.getDocumentById(id);
+      await FirebaseServices("ticket").editDocument(
+        snapshot!.get("ticketId"), 
+        {"status": 2}
+      );
       await _itemReservation.deleteDocument(id);
     }
     notifyListeners();

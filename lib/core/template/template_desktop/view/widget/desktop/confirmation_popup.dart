@@ -47,8 +47,8 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
         backgroundColor: ColorConstant.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         content: SizedBox(
-          width: isMobileSite ? (width - 8) : width / 3,
-          height: isMobileSite ? (height / 3) : (height / 4),
+          // width: isMobileSite ? (width - 8) : width / 3,
+          // height: isMobileSite ? (height / 3) : (height / 4),
           child: Padding(
             padding: EdgeInsets.all(isMobileSite ? 8 : 24),
             child: Column(
@@ -69,54 +69,55 @@ class _ConfirmationPopupState extends State<ConfirmationPopup> {
                         icon: const Icon(Icons.close))
                   ],
                 ),
-                const Spacer(),
                 DefaultTextStyle(
                   style: AppFontStyle.wb60L18,
                   child: Text(widget.detail, maxLines: 5),
                 ),
                 widget.widget ?? Container(),
-                const Spacer(),
-                Wrap(
-                  runSpacing: 4,
-                  children: [
-                    Container(
-                      height: 40,
-                      width: isMobileSite ? 80 : 144,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: ColorConstant.whiteBlack60),
+                Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Wrap(
+                    runSpacing: 4,
+                    children: [
+                      Container(
+                        height: 40,
+                        width: isMobileSite ? 80 : 144,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: ColorConstant.whiteBlack60),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            widget.onCancel();
+                          },
+                          child: Text(Consts.cancel,
+                              style: AppFontStyle.wb60SemiB16),
+                        ),
                       ),
-                      child: TextButton(
-                        onPressed: () {
-                          widget.onCancel();
-                        },
-                        child: Text(Consts.cancel,
-                            style: AppFontStyle.wb60SemiB16),
+                      const SizedBox(width: 16),
+                      Container(
+                        height: 40,
+                        width: isMobileSite ? 80 : 144,
+                        decoration: BoxDecoration(
+                          color: ColorConstant.orange40,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            if (isButtonEnabled) {
+                              widget.onConfirm();
+                              setState(() {
+                                isButtonEnabled = false;
+                              });
+                            }
+                          },
+                          child:
+                              Text(Consts.confirm, style: AppFontStyle.whiteB16),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Container(
-                      height: 40,
-                      width: isMobileSite ? 80 : 144,
-                      decoration: BoxDecoration(
-                        color: ColorConstant.orange40,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          if (isButtonEnabled) {
-                            widget.onConfirm();
-                            setState(() {
-                              isButtonEnabled = false;
-                            });
-                          }
-                        },
-                        child:
-                            Text(Consts.confirm, style: AppFontStyle.whiteB16),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 )
               ],
             ),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
+import 'package:senior_project/core/template/template_desktop/view_model/template_desktop_view_model.dart';
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
@@ -465,6 +466,9 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                           if (isMobileSite) {
                             Navigator.pop(context);
                           } else {
+                            context
+                              .read<TemplateDesktopViewModel>() 
+                              .changeState(context, 5, 1);
                             Navigator.push(context,
                               MaterialPageRoute(builder: ((context) {
                               return const MyBookingView();

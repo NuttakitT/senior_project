@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +8,7 @@ import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
 import 'package:senior_project/facility/view/facility_view.dart';
+import 'package:senior_project/facility/view/my_booking/my_booking.dart';
 import 'package:senior_project/facility/view_model/facility_view_model.dart';
 
 class BookingCardView extends StatefulWidget {
@@ -31,7 +34,9 @@ class _BookingCardViewState extends State<BookingCardView> {
       try {
         roomCard = widget.cardDetail;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -67,8 +72,13 @@ class _BookingCardViewState extends State<BookingCardView> {
                                       .read<FacilityViewModel>()
                                       .cancelBooking(roomCard?.id ?? "", true,
                                           roomCard?.room);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
+                                  Navigator.pushAndRemoveUntil(
+                                    context, 
+                                    MaterialPageRoute(builder: (context) {
+                                      return const MyBookingView();
+                                    }), 
+                                    (route) => false
+                                  );
                                 });
                           }));
                     },
@@ -86,7 +96,9 @@ class _BookingCardViewState extends State<BookingCardView> {
       try {
         itemCard = widget.cardDetail;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -124,8 +136,13 @@ class _BookingCardViewState extends State<BookingCardView> {
                                       .read<FacilityViewModel>()
                                       .cancelBooking(
                                           itemCard?.id ?? "", false, null);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
+                                  Navigator.pushAndRemoveUntil(
+                                    context, 
+                                    MaterialPageRoute(builder: (context) {
+                                      return const MyBookingView();
+                                    }), 
+                                    (route) => false
+                                  );
                                 });
                           }));
                     },
