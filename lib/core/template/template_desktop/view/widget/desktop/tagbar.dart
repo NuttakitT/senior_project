@@ -11,6 +11,7 @@ import 'package:senior_project/facility/view/admin_room/admin_room.dart';
 import 'package:senior_project/facility/view/item_reservation/item_reservation.dart';
 import 'package:senior_project/facility/view/my_booking/my_booking.dart';
 import 'package:senior_project/facility/view/room_reservation/room_reservation_view.dart';
+import 'package:senior_project/facility/view/schedule/schedule_room.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/page/help_desk_main_view.dart';
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/role_management/view/role_management_view.dart';
@@ -130,36 +131,44 @@ class _TagBarState extends State<TagBar> {
               }), (route) => false);
               break;
             case 3:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: ((context) {
-                return TeacherContactView(
-                    isAdmin: context
-                            .watch<AppViewModel>()
-                            .app
-                            .getUser
-                            .getRole ==
-                        0);
-              })));
+              Navigator.pushAndRemoveUntil(
+                context, 
+                 MaterialPageRoute(builder: ((context) {
+                  return TeacherContactView(
+                      isAdmin: context
+                              .watch<AppViewModel>()
+                              .app
+                              .getUser
+                              .getRole ==
+                          0);
+                })), 
+                (route) => false
+              );
               break;
             case 4:
-              Navigator.push(context, MaterialPageRoute(builder: ((context) {
-                return const RoomReservationView();
-              })));
+              Navigator.pushAndRemoveUntil(
+                context, 
+                MaterialPageRoute(builder: ((context) {
+                  return const RoomReservationView();
+                })), 
+                (route) => false
+              );
               break;
             case 5:
-              Navigator.push(context, MaterialPageRoute(builder: ((context) {
+
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) {
                 return const ItemReservationView();
-              })));
+              })), (route) => false);
               break;
             case 6:
-              Navigator.push(context, MaterialPageRoute(builder: ((context) {
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) {
                 return const MyBookingView();
-              })));
+              })), (route) => false);
               break;
             case 7:
-              Navigator.push(context, MaterialPageRoute(builder: ((context) {
-                return const AdminRoom();
-              })));
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) {
+                  return const ScheduleRoomView();
+                })), (route) => false);
               break;
             case 8:
               Navigator.pushAndRemoveUntil(context,
@@ -168,6 +177,9 @@ class _TagBarState extends State<TagBar> {
               }), (route) => false);
               break;
             case 9:
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) {
+                return const AdminRoom();
+              })), (route) => false);
               break;
             default:
           }

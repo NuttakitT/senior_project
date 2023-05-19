@@ -44,7 +44,7 @@ class _ScheduleRoomViewState extends State<ScheduleRoomView> {
           useTemplatescroll: true,
           content: Column(
             children: const [
-              FacilityHeader(title: "Room Scheduler"),
+              FacilityHeader(title: "Room Scheduler", canPop: false,),
               ScheduleRoomForm()
             ],
           ));
@@ -263,6 +263,7 @@ class _ScheduleRoomFormState extends State<ScheduleRoomForm> {
             // Room
             const SizedBox(height: 16),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   flex: isMobileSite ? 1 : 1,
@@ -313,6 +314,7 @@ class _ScheduleRoomFormState extends State<ScheduleRoomForm> {
                 Expanded(
                     flex: isMobileSite ? 3 : 6,
                     child: DropdownButton<int>(
+                      isExpanded: true,
                       value: selectedDayOfWeek,
                       icon: const Icon(Icons.arrow_downward),
                       elevation: 16,
@@ -443,8 +445,14 @@ class _ScheduleRoomFormState extends State<ScheduleRoomForm> {
                           await context
                               .read<FacilityViewModel>()
                               .scheduleRoom(request);
-
-                          Navigator.pop(context);
+                          if (isMobileSite) {
+                            Navigator.pop(context);
+                          } else {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: ((context) {
+                              return const ScheduleBooking();
+                            })));
+                          }
                         }
                       },
                       style: TextButton.styleFrom(

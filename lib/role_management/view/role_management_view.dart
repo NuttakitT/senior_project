@@ -42,7 +42,7 @@ class _RoleManagementViewState extends State<RoleManagementView> {
               return TemplateDesktop(
                   helpdesk: false,
                   helpdeskadmin: false,
-                  home: false,
+                  home: true,
                   useTemplatescroll: true,
                   content: SingleChildScrollView(
                     child: Column(

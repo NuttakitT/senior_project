@@ -268,14 +268,14 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                                     type: 1
                                   ),
                                 ),
-                                // const Padding(
-                                //   padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
-                                //   child: TagBar(
-                                //     name: "Room reservation", 
-                                //     index: 9, 
-                                //     type: 1
-                                //   ),
-                                // ),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
+                                  child: TagBar(
+                                    name: "Room reservation", 
+                                    index: 9, 
+                                    type: 1
+                                  ),
+                                ),
                               ],
                             );
                           },

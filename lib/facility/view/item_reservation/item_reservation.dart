@@ -7,6 +7,7 @@ import 'package:senior_project/core/template/template_desktop/view/page/template
 import 'package:senior_project/core/template/template_mobile/view/template_menu_mobile.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
+import 'package:senior_project/facility/view/my_booking/my_booking.dart';
 import 'package:senior_project/facility/view/widget/facility_header.dart';
 import 'package:senior_project/facility/view/widget/facility_header_mobile.dart';
 import 'package:senior_project/facility/view_model/facility_view_model.dart';
@@ -79,7 +80,7 @@ class _ItemReservationViewState extends State<ItemReservationView> {
               }
               return Column(
                 children: const [
-                  FacilityHeader(title: "Item Reservation"),
+                  FacilityHeader(title: "Item Reservation", canPop: false,),
                   ItemReservationForm()
                 ],
               );
@@ -461,7 +462,14 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                           await context
                               .read<FacilityViewModel>()
                               .requestItems(request, ticket, context);
-                          Navigator.pop(context);
+                          if (isMobileSite) {
+                            Navigator.pop(context);
+                          } else {
+                            Navigator.push(context,
+                              MaterialPageRoute(builder: ((context) {
+                              return const MyBookingView();
+                            })));
+                          }
                         }
                       },
                       style: TextButton.styleFrom(

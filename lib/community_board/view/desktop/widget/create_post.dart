@@ -338,29 +338,6 @@ class _CreatePostState extends State<CreatePost> {
                       width: double.infinity,
                       alignment: Alignment.center,
                       height: 40,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                          color: ColorConstant.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: ColorConstant.orange50)),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(
-                            color: ColorConstant.orange50,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      )),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                InkWell(
-                  child: Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      height: 40,
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
                           color: ColorConstant.orange50,
@@ -437,6 +414,29 @@ class _CreatePostState extends State<CreatePost> {
                         )
                       );
                     }
+                  },
+                ),
+                InkWell(
+                  child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      height: 40,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                          color: ColorConstant.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: ColorConstant.orange50)),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                            color: ColorConstant.orange50,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      )),
+                  onTap: () {
+                    Navigator.pop(context);
                   },
                 ),
               ],

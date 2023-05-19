@@ -80,7 +80,7 @@ class _MyBookingViewState extends State<MyBookingView> {
               }
               return Column(
                 children: const [
-                  FacilityHeader(title: "My Booking"),
+                  FacilityHeader(title: "My Booking", canPop: false,),
                   MyBookingList()
                 ],
               );
