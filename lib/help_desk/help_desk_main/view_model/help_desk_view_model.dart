@@ -470,6 +470,11 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
+  String? _selectedCategory;
+  int? _selectedStatus;
+  set setSelectedCategory(String? category) => _selectedCategory = category;
+  set setSelectedStatus(int? status) => _selectedStatus = status;
+
   void reconstructSearchResult(List<dynamic> hits, bool isAdmin, String uid) {
     try {
       for (var item in hits) {
@@ -478,9 +483,31 @@ class HelpDeskViewModel extends ChangeNotifier {
         List<dynamic> relateAdmin = item["relateAdmin"] as List<dynamic>;
         dynamic adminId = item["adminId"];
         if (isAdmin && (relateAdmin.contains(uid) && (adminId == uid || adminId == null))) {
-          isTargetObject = true;
+          if (_selectedCategory != null) {
+            if (item["category"] == _serviceCategory) {
+              isTargetObject = true;
+            }
+          }
+          if (_selectedStatus != null) {
+            if (item["status"] == _selectedStatus) {
+              isTargetObject = true;
+            }
+          } else {
+            isTargetObject = true;
+          }
         } else if (!isAdmin && ownerId == uid) {
-          isTargetObject = true;
+          if (_selectedCategory != null) {
+            if (item["category"] == _serviceCategory) {
+              isTargetObject = true;
+            }
+          }
+          if (_selectedStatus != null) {
+            if (item["status"] == _selectedStatus) {
+              isTargetObject = true;
+            }
+          } else {
+            isTargetObject = true;
+          }
         }
         if (isTargetObject) {
           DateTime date = DateTime.parse(item["dateCreate"]);

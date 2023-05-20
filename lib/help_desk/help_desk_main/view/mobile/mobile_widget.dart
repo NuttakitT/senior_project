@@ -87,7 +87,7 @@ class _MobileWidgetState extends State<MobileWidget> {
     double pixelWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height - 90,
+      // height: MediaQuery.of(context).size.height - 90,
       child: Stack(alignment: AlignmentDirectional.bottomEnd, children: [
         Column(
           children: [
@@ -285,71 +285,69 @@ class _MobileWidgetState extends State<MobileWidget> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Scrollbar(
-                controller: _vContraoller,
-                thumbVisibility: true,
-                child: SingleChildScrollView(
-                    controller: _vContraoller,
-                    child: Builder(builder: (context) {
-                      String searchText =
-                          context.watch<TextSearch>().getSearchText;
-                      if (searchText.isEmpty) {
-                        context.read<HelpDeskViewModel>().clearModel();
-                        int tagBarSelected = context
-                            .watch<HelpDeskViewModel>()
-                            .getSelectedMobileMenu();
-                        String id =
-                            context.watch<AppViewModel>().app.getUser.getId;
-                        return StreamBuilder(
-                          stream: query(id, tagBarSelected, widget.isAdmin),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return const LoaderStatus(text: "Error occurred");
-                            }
-                            if (snapshot.connectionState ==
-                                ConnectionState.active) {
-                              if (snapshot.data!.docs.isNotEmpty) {
-                                return FutureBuilder(
-                                  future: context
-                                      .read<HelpDeskViewModel>()
-                                      .reconstructQueryData(context,
-                                          snapshot.data as QuerySnapshot),
-                                  builder: (context, futureSnapshot) {
-                                    if (futureSnapshot.connectionState ==
-                                        ConnectionState.done) {
-                                      List<Map<String, dynamic>> content =
-                                          context
-                                              .watch<HelpDeskViewModel>()
-                                              .getTask;
-                                      if (content.isEmpty) {
-                                        return const LoaderStatus(
-                                    text: "No task in this section");
-                                      }
-                                      return Column(
-                                          children: generateContent(content));
-                                    }
-                                    return Container();
-                                  },
-                                );
-                              } else {
-                                context.read<HelpDeskViewModel>().clearModel();
-                                return const LoaderStatus(
-                                    text: "No task in this section");
-                              }
-                            } else {
-                              return const LoaderStatus(text: "Loading...");
-                            }
-                          },
-                        );
+              child: Builder(builder: (context) {
+                String searchText =
+                    context.watch<TextSearch>().getSearchText;
+                int tagBarSelected = context
+                  .watch<HelpDeskViewModel>()
+                  .getSelectedMobileMenu();
+                context.read<HelpDeskViewModel>().setSelectedStatus = tagBarSelected == 0 ? null : tagBarSelected-1;
+                if (searchText.isEmpty) {
+                  context.read<HelpDeskViewModel>().clearModel();
+                  int tagBarSelected = context
+                      .watch<HelpDeskViewModel>()
+                      .getSelectedMobileMenu();
+                  String id =
+                      context.watch<AppViewModel>().app.getUser.getId;
+                  return StreamBuilder(
+                    stream: query(id, tagBarSelected, widget.isAdmin),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const LoaderStatus(text: "Error occurred");
                       }
-                      context.read<TextSearch>().initHitSearcher("ticket");
-                      context
-                          .read<TextSearch>()
-                          .getHitsSearcher
-                          .query(searchText);
-                      return const TextSearcResultMobile();
-                    })),
-              ),
+                      if (snapshot.connectionState ==
+                          ConnectionState.active) {
+                        if (snapshot.data!.docs.isNotEmpty) {
+                          return FutureBuilder(
+                            future: context
+                                .read<HelpDeskViewModel>()
+                                .reconstructQueryData(context,
+                                    snapshot.data as QuerySnapshot),
+                            builder: (context, futureSnapshot) {
+                              if (futureSnapshot.connectionState ==
+                                  ConnectionState.done) {
+                                List<Map<String, dynamic>> content =
+                                    context
+                                        .watch<HelpDeskViewModel>()
+                                        .getTask;
+                                if (content.isEmpty) {
+                                  return const LoaderStatus(
+                              text: "No task in this section");
+                                }
+                                return Column(
+                                    children: generateContent(content));
+                              }
+                              return Container();
+                            },
+                          );
+                        } else {
+                          context.read<HelpDeskViewModel>().clearModel();
+                          return const LoaderStatus(
+                              text: "No task in this section");
+                        }
+                      } else {
+                        return const LoaderStatus(text: "Loading...");
+                      }
+                    },
+                  );
+                }
+                context.read<TextSearch>().initHitSearcher("ticket");
+                context
+                    .read<TextSearch>()
+                    .getHitsSearcher
+                    .query(searchText);
+                return const TextSearcResultMobile();
+              }),
             )
           ],
         ),

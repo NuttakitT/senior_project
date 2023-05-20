@@ -23,6 +23,12 @@ class _TextSearcResultMobileState extends State<TextSearcResultMobile> {
   }
 
   @override
+  void initState() {
+    context.read<TextSearch>().initHitSearcher("ticket");
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     String uid = context.watch<AppViewModel>().app.getUser.getId;

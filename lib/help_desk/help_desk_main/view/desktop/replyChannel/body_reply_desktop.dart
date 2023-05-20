@@ -88,8 +88,8 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                  width: 500,
+                                Container(
+                                  constraints: const BoxConstraints(maxWidth: 500),
                                   child: Padding(
                                     padding: const EdgeInsets.only(right: 24),
                                     child: DefaultTextStyle(
