@@ -12,7 +12,8 @@ import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_vie
 
 class CreateTask extends StatefulWidget {
   final bool isAdmin;
-  const CreateTask({super.key, required this.isAdmin});
+  final Map<String, dynamic>? detail;
+  const CreateTask({super.key, required this.isAdmin, this.detail});
 
   @override
   State<CreateTask> createState() => _CreateTaskState();
@@ -24,15 +25,22 @@ class _CreateTaskState extends State<CreateTask> {
   late List<String> category;
   String priorityValue = priority.first;
   late String categoryValue;
-  String title = "";
-  String detail = "";
+  // String title = "";
+  // String detail = "";
+  TextEditingController titleController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
   bool isTitleEmpty = false;
   bool isDetailEmpty = false;
 
   @override
   void initState() {
-    category = context.read<HelpDeskViewModel>().getCategory;
-    categoryValue = category.first;
+    if (widget.detail != null) {
+      titleController.text = widget.detail!["title"];
+      categoryValue = widget.detail!["category"];
+    } else {
+      category = context.read<HelpDeskViewModel>().getCategory;
+      categoryValue = category.first;
+    }
     super.initState();
   }
 
@@ -52,7 +60,7 @@ class _CreateTaskState extends State<CreateTask> {
             Padding(
               padding: const EdgeInsets.only(bottom: 2),
               child: Text(
-                "Create tasks ${widget.isAdmin ? "" : "to admin"}",
+                "Create ticket ${widget.isAdmin ? "" : "to admin"}",
                 style: AppFontStyle.wb80R24,
               ),
             ),
@@ -83,17 +91,28 @@ class _CreateTaskState extends State<CreateTask> {
                 alignment: AlignmentDirectional.centerStart,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: TextField(
-                  decoration: const InputDecoration.collapsed(
-                      hintText: "Ex. caption", hintStyle: AppFontStyle.wb30R14),
-                  onChanged: (value) {
-                    title = value;
-                  },
-                  onTap: () {
-                    setState(() {
-                      isTitleEmpty = false;
-                    });
-                  },
+                child: Builder(
+                  builder: (context) {
+                    if (widget.detail != null) {
+                      return Text(
+                        titleController.text,
+                        style: AppFontStyle.wb80R14,
+                      );
+                    }
+                    return TextField(
+                      controller: titleController,
+                      decoration: const InputDecoration.collapsed(
+                          hintText: "Ex. caption", hintStyle: AppFontStyle.wb30R14),
+                      // onChanged: (value) {
+                      //   title = value;
+                      // },
+                      onTap: () {
+                        setState(() {
+                          isTitleEmpty = false;
+                        });
+                      },
+                    );
+                  }
                 ),
               ),
             ),
@@ -161,20 +180,30 @@ class _CreateTaskState extends State<CreateTask> {
                     borderRadius: BorderRadius.circular(4)),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    value: categoryValue,
-                    style: AppFontStyle.wb80R16,
-                    items: category.map<DropdownMenuItem>((value) {
-                      return DropdownMenuItem(value: value, child: Text(value));
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        categoryValue = value!;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(4),
-                  ),
+                child: Builder(
+                  builder: (context) {
+                    if (widget.detail != null) {
+                      return Text(
+                        categoryValue,
+                        style: AppFontStyle.wb80R16,
+                      );
+                    }
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        value: categoryValue,
+                        style: AppFontStyle.wb80R16,
+                        items: category.map<DropdownMenuItem>((value) {
+                          return DropdownMenuItem(value: value, child: Text(value));
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            categoryValue = value!;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    );
+                  }
                 ),
               ),
             ),
@@ -198,13 +227,14 @@ class _CreateTaskState extends State<CreateTask> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: TextField(
+                  controller: detailController,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   decoration: const InputDecoration.collapsed(
                       hintText: "Ex. caption", hintStyle: AppFontStyle.wb30R14),
-                  onChanged: (value) {
-                    detail = value;
-                  },
+                  // onChanged: (value) {
+                  //   detail = value;
+                  // },
                   onTap: () {
                     setState(() {
                       isDetailEmpty = false;
@@ -221,17 +251,17 @@ class _CreateTaskState extends State<CreateTask> {
                 height: 40,
                 child: TextButton(
                   onPressed: () async {
-                    if (title.isEmpty) {
+                    if (titleController.text.isEmpty) {
                       setState(() {
                         isTitleEmpty = true;
                       });
                     }
-                    if (detail.isEmpty) {
+                    if (detailController.text.isEmpty) {
                       setState(() {
                         isDetailEmpty = true;
                       });
                     }
-                    if (title.isNotEmpty && detail.isNotEmpty) {
+                    if (titleController.text.isNotEmpty && detailController.text.isNotEmpty) {
                       int priorityIndex = priority.indexOf(priorityValue);
                       showDialog(
                           context: context,
@@ -247,20 +277,33 @@ class _CreateTaskState extends State<CreateTask> {
                                 },
                                 onConfirm: () async {
                                   await context
-                                      .read<HelpDeskViewModel>()
-                                      .createTask(title, detail, priorityIndex,
-                                          categoryValue, false);
+                                    .read<HelpDeskViewModel>()
+                                    .createTask(
+                                      titleController.text, 
+                                      widget.detail != null 
+                                        ? "${widget.detail!["room"]} รอบการใช้งาน ${widget.detail!["bookTime"]}\n\n${detailController.text}"
+                                        : detailController.text, 
+                                      priorityIndex,
+                                      categoryValue, 
+                                      false
+                                    );
                                   context
                                       .read<HelpDeskViewModel>()
                                       .clearModel();
                                   context
                                       .read<HelpDeskViewModel>()
                                       .setIsSafeLoad = true;
-                                  Navigator.pushAndRemoveUntil(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return HelpDeskMainView(
-                                        isAdmin: widget.isAdmin);
-                                  }), (route) => false);
+                                  if (widget.detail != null) {
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.pop(context);
+                                    }
+                                  } else {
+                                    Navigator.pushAndRemoveUntil(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return HelpDeskMainView(
+                                          isAdmin: widget.isAdmin);
+                                    }), (route) => false);
+                                  }
                                 });
                           });
                     }
