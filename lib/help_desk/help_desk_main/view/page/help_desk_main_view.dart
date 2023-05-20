@@ -23,7 +23,6 @@ class HelpDeskMainView extends StatefulWidget {
 }
 
 class _HelpDeskMainViewState extends State<HelpDeskMainView> {
-  String selectedValue = "All Ticket";
   bool isMobileSite = kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.android);
@@ -35,8 +34,6 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
     int? role = context.watch<AppViewModel>().app.getUser.getRole;
     bool isLogin = context.watch<AppViewModel>().isLogin;
     // context.read<HelpDeskViewModel>().setIsMobile = isMobileSite;
-
-    List<String> list = ["All Ticket", "Not Start", "In Progress", "Closed"];
 
     return FutureBuilder(
       future: context.read<HelpDeskViewModel>().initTicketCategory(),
@@ -62,6 +59,8 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
               );
             }));
           }
+          List<String> categoryList = ["All category"];
+          categoryList.addAll(context.watch<HelpDeskViewModel>().getCategory);
           context.read<TemplateDesktopViewModel>().changeState(context, 1, 1);
           return TemplateDesktop(
               helpdesk: !widget.isAdmin,
@@ -89,84 +88,9 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
                       child: Column(
                         children: [
                           Header.widget(context, widget.isAdmin),
-                          Builder(
-                            builder: (context) {
-                              if (context.watch<HelpDeskViewModel>().getIsShowMessagePage) {
-                                return Container();
-                              }
-                              return Padding(
-                                padding: const EdgeInsets.only(left: 43, bottom: 40, right: 40),
-                                child: Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 6),
-                                      child: Icon(Icons.filter_alt_rounded, size: 16, color: ColorConstant.whiteBlack60,),
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 20),
-                                      child: Text(
-                                        "Filter",
-                                        style: TextStyle(
-                                          fontWeight: AppFontWeight.regular,
-                                          fontSize: 20,
-                                          color: ColorConstant.whiteBlack60
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(color: ColorConstant.whiteBlack40),
-                                        color: Colors.white
-                                      ),
-                                      width: 300,
-                                      height: 40,
-                                      alignment: Alignment.center,
-                                      child: DropdownButton<String>(
-                                        underline: Container(),
-                                        isExpanded: true,
-                                        value: selectedValue,
-                                        items: list.map((e) {
-                                          return DropdownMenuItem<String>(
-                                            value: e,
-                                            child: Text(e)
-                                          );
-                                        }).toList(),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedValue = value!;
-                                          });
-                                          context.read<HelpDeskViewModel>().setIsFormNoti = false;
-                                          context.read<TemplateDesktopViewModel>().changeState(context, list.indexOf(selectedValue), 4);
-                                          context.read<HelpDeskViewModel>().setShowMessagePageState(false);
-                                          context.read<HelpDeskViewModel>().clearContentController();
-                                          context.read<HelpDeskViewModel>().clearModel();
-                                          context.read<HelpDeskViewModel>().clearReplyDocId();
-                                        }
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: ColorConstant.white,
-                                        borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(color: ColorConstant.whiteBlack40),
-                                      ),
-                                      width: 280,
-                                      height: 50,
-                                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                                      child: const SearchBar(
-                                        isHelpDeskPage: true
-                                      )
-                                    )
-                                  ],
-                                ),
-                              );
-                            }
-                          ),
                           Body(
                             isAdmin: widget.isAdmin,
+                            categoty: categoryList,
                           )
                         ],
                       ),

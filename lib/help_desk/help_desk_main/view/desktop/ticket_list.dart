@@ -18,15 +18,16 @@ Stream? query(
   {
     DocumentSnapshot? startDoc, 
     bool isReverse = false,
-    int? limit
+    int? limit,
+    String? category
   }) {
   final FirebaseServices service = FirebaseServices("ticket");
   bool descending = true;
   limit ??= 5;
   if (type == 0) {
     return service.listenToDocumentByKeyValuePair(
-      [isAdmin ? "relateAdmin" : "ownerId"], 
-      [id],
+      category == null ? [isAdmin ? "relateAdmin" : "ownerId"] : [isAdmin ? "relateAdmin" : "ownerId", "category"], 
+      category == null ? [id] : [id, category],
       limit: limit, orderingField: 'dateCreate', descending: descending,
       startDoc: startDoc,
       isReverse: isReverse
@@ -34,16 +35,16 @@ Stream? query(
   } 
   if (type > 3){
     return service.listenToDocumentByKeyValuePair(
-      [isAdmin ? "relateAdmin" : "ownerId", "priority"], 
-      [id, (type-7).abs()],
+      category == null ? [isAdmin ? "relateAdmin" : "ownerId", "priority"] : [isAdmin ? "relateAdmin" : "ownerId", "priority", "category"], 
+      category == null ? [id, (type-7).abs()] : [id, (type-7).abs(), category],
       limit: limit, orderingField: 'dateCreate', descending: descending,
       startDoc: startDoc,
       isReverse: isReverse
     );
   }
   return service.listenToDocumentByKeyValuePair(
-    [isAdmin ? "relateAdmin" : "ownerId", "status"], 
-    [id, type-1],
+    category == null ? [isAdmin ? "relateAdmin" : "ownerId", "status"] : [isAdmin ? "relateAdmin" : "ownerId", "status", "category"], 
+    category == null ? [id, type-1] : [id, type-1, category],
     limit: limit, orderingField: 'dateCreate', descending: descending,
     startDoc: startDoc,
     isReverse: isReverse
@@ -51,8 +52,9 @@ Stream? query(
 }
 
 class TicketList extends StatefulWidget {
+  final String? selectedCategory;
   final int? limit;
-  const TicketList({super.key, required this.limit});
+  const TicketList({super.key, required this.limit, this.selectedCategory});
 
   @override
   State<TicketList> createState() => _TicketListState();
@@ -70,13 +72,14 @@ class _TicketListState extends State<TicketList> {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
     String uid = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
-    _firestPageStream = query(uid, tagBarSelected, isAdmin, limit: widget.limit);
+    _firestPageStream = query(uid, tagBarSelected, isAdmin, limit: widget.limit, category: widget.selectedCategory);
     _loadOlderStream = query(
       uid, 
       tagBarSelected, 
       isAdmin, 
       startDoc: context.watch<HelpDeskViewModel>().getLastDoc,
-      limit: widget.limit
+      limit: widget.limit,
+      category: widget.selectedCategory
     );
     super.didChangeDependencies();
   }
@@ -123,7 +126,8 @@ class _TicketListState extends State<TicketList> {
                                 tagBarSelected, 
                                 isAdmin, 
                                 startDoc: snapshot.data, 
-                                isReverse: true
+                                isReverse: true,
+                                category: widget.selectedCategory
                               ), 
                             );
                           }
