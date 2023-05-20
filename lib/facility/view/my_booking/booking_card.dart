@@ -7,10 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
 import 'package:senior_project/facility/view/facility_view.dart';
 import 'package:senior_project/facility/view/my_booking/my_booking.dart';
 import 'package:senior_project/facility/view_model/facility_view_model.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/desktop/create_ticket_pop_up.dart';
+import 'package:senior_project/help_desk/help_desk_main/view/mobile/create_task.dart';
 
 class BookingCardView extends StatefulWidget {
   final dynamic cardDetail;
@@ -57,12 +60,13 @@ class _BookingCardViewState extends State<BookingCardView> {
           Builder(
             builder: (context) {
               DateTime now = DateTime.now();
-              if (roomCard!.bookTime.isAfter(now)) {
+              if (!roomCard!.bookTime.isAfter(now)) {
                 return Container();
               }
               return Row(
                 children: [
-                  Expanded(
+                  Flexible(
+                    fit: FlexFit.tight,
                     child: TextButton(
                         onPressed: () {
                           showDialog(
@@ -96,6 +100,49 @@ class _BookingCardViewState extends State<BookingCardView> {
                           child: Text("Cancel", textAlign: TextAlign.end),
                         )),
                   ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: TextButton(
+                      onPressed: () {
+                        bool isMobileSite = kIsWeb &&
+                          (defaultTargetPlatform == TargetPlatform.iOS ||
+                              defaultTargetPlatform == TargetPlatform.android);
+                        bool isAdmin = context.read<AppViewModel>().app.getUser.getRole == 0;
+                        if (isMobileSite) {
+                          Navigator.pushAndRemoveUntil(
+                            context, 
+                            MaterialPageRoute(builder: (context) {
+                              return CreateTask(isAdmin: isAdmin, detail: {
+                                "title": "Automatically sent ticket: แจ้งปัญหาการใช้งานห้อง ${roomCard!.room}",
+                                "category": "การใช้งานห้องเรียน",
+                                "room": roomCard.room,
+                                "bookTime": DateFormat("dd MMMM - hh:mm a")
+                                      .format(roomCard.bookTime) 
+                              },);
+                            }), 
+                            (route) => false
+                          );
+                        }
+                        showDialog(
+                            context: (context),
+                            builder: ((context) {
+                              return CreateTicketPopup(detail: {
+                                "title": "Automatically sent ticket: แจ้งปัญหาการใช้งานห้อง ${roomCard!.room}",
+                                "category": "การใช้งานห้องเรียน",
+                                "room": roomCard.room,
+                                "bookTime": DateFormat("dd MMMM - hh:mm a")
+                                      .format(roomCard.bookTime) 
+                              },);
+                            }
+                          )
+                        );
+                      },
+                      child: const DefaultTextStyle(
+                        style: AppFontStyle.orange50R16,
+                        child: Text("แจ้งปัญหากับเจ้าหน้าที่", textAlign: TextAlign.end),
+                      )
+                    ),
+                  )
                 ],
               );
             }

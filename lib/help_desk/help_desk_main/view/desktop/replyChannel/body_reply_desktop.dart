@@ -86,15 +86,20 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 24, horizontal: 24),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 24),
-                                  child: Text(
-                                    taskTitle,
-                                    style: const TextStyle(
+                                SizedBox(
+                                  width: 500,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 24),
+                                    child: DefaultTextStyle(
+                                      maxLines: null,
+                                      style: const TextStyle(
                                         fontSize: 28,
                                         fontWeight: FontWeight.w500,
                                         color: ColorConstant.whiteBlack90),
+                                      child: Text(taskTitle),
+                                    ),
                                   ),
                                 ),
                                 StreamBuilder(

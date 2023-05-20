@@ -148,10 +148,11 @@ class _BodyState extends State<Body> {
   }
 
   Widget bodyReply(double screenHeight) {
-    return ConstrainedBox(
+    return Container(
       constraints: BoxConstraints(
         maxHeight: screenHeight < 500 ? 500 : screenHeight - 300
       ),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Scrollbar(
         controller: controller,
         thumbVisibility: true,

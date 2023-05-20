@@ -291,7 +291,7 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                 },
               );
             }
-            if (isAdmin) {
+            if (isAdmin && answer.isNotEmpty ) {
               return Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: Container(
@@ -383,7 +383,7 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                                           context.read<ReplyChannelViewModel>().getTaskData["docId"], 
                                           {
                                             "ownerId": userId,
-                                            "message": "FAQ\nQ: $selectedValue\nA: ${answer[selectedValue]}",
+                                            "message": "FAQ\n$selectedValue\nA: ${answer[selectedValue]}",
                                             "time": DateTime.now(),
                                             "seen": false,
                                             "imageUrl": null

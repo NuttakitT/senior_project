@@ -213,7 +213,7 @@ class _MainMenuState extends State<MainMenu> {
                       padding: MaterialStateProperty.all(
                           const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 10.5)),
-                      fixedSize: MaterialStateProperty.all(const Size(227, 40)),
+                      fixedSize: MaterialStateProperty.all(const Size(250, 40)),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)))),
                   child: const Text(

@@ -10,7 +10,8 @@ import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_vie
 import 'package:senior_project/assets/font_style.dart';
 
 class CreateTicketPopup extends StatefulWidget {
-  const CreateTicketPopup({super.key});
+  final Map<String, dynamic>? detail;
+  const CreateTicketPopup({super.key, this.detail});
 
   @override
   State<CreateTicketPopup> createState() => _CreateTicketPopupState();
@@ -21,15 +22,22 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
   late List<String> category;
   String priorityValue = priority.first;
   late String categoryValue;
-  String title = "";
-  String detail = "";
+  // String title = "";
+  // String detail = "";
+  TextEditingController titleController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
   bool isTitleEmpty = false;
   bool isDetailEmpty = false;
 
   @override
   void initState() {
-    category = context.read<HelpDeskViewModel>().getCategory;
-    categoryValue = category.first;
+    if (widget.detail != null) {
+      titleController.text = widget.detail!["title"];
+      categoryValue = widget.detail!["category"];
+    } else {
+      category = context.read<HelpDeskViewModel>().getCategory;
+      categoryValue = category.first;
+    }
     super.initState();
   }
 
@@ -81,19 +89,30 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                               color: isTitleEmpty
                                   ? ColorConstant.red50
                                   : ColorConstant.whiteBlack40)),
-                      padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
-                      child: TextField(
-                        decoration: const InputDecoration.collapsed(
-                            hintText: "Ex. caption",
-                            hintStyle: AppFontStyle.wb30R14),
-                        onChanged: (value) {
-                          title = value;
-                        },
-                        onTap: () {
-                          setState(() {
-                            isTitleEmpty = false;
-                          });
-                        },
+                      padding: EdgeInsets.fromLTRB(16, widget.detail != null ? 8 : 12, 0, 12),
+                      child: Builder(
+                        builder: (context) {
+                          if (widget.detail != null) {
+                            return Text(
+                              titleController.text,
+                              style: AppFontStyle.wb60R14,
+                            );
+                          }
+                          return TextField(
+                            controller: titleController,
+                            decoration: const InputDecoration.collapsed(
+                                hintText: "Ex. caption",
+                                hintStyle: AppFontStyle.wb30R14),
+                            // onChanged: (value) {
+                            //   title = value;
+                            // },
+                            onTap: () {
+                              setState(() {
+                                isTitleEmpty = false;
+                              });
+                            },
+                          );
+                        }
                       ),
                     ),
                   ),
@@ -168,22 +187,32 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                           border:
                               Border.all(color: ColorConstant.whiteBlack40)),
                       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          value: categoryValue,
-                          style: AppFontStyle.wb60R16,
-                          items:
-                              category.map<DropdownMenuItem<String>>((value) {
-                            return DropdownMenuItem(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              categoryValue = value!;
-                            });
-                          },
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                      child: Builder(
+                        builder: (context) {
+                          if (widget.detail != null) {
+                            return Text(
+                              categoryValue,
+                              style: AppFontStyle.wb60R16,
+                            );
+                          }
+                          return DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              value: categoryValue,
+                              style: AppFontStyle.wb60R16,
+                              items:
+                                  category.map<DropdownMenuItem<String>>((value) {
+                                return DropdownMenuItem(
+                                    value: value, child: Text(value));
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  categoryValue = value!;
+                                });
+                              },
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          );
+                        }
                       ),
                     ),
                   ),
@@ -217,14 +246,15 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                   : ColorConstant.whiteBlack40)),
                       padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
                       child: TextField(
+                        controller: detailController,
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
                         decoration: const InputDecoration.collapsed(
                             hintText: "Fill your information...",
                             hintStyle: AppFontStyle.wb30R14),
-                        onChanged: (value) {
-                          detail = value;
-                        },
+                        // onChanged: (value) {
+                        //   detail = value;
+                        // },
                         onTap: () {
                           setState(() {
                             isDetailEmpty = false;
@@ -268,17 +298,17 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                     height: 40,
                     child: TextButton(
                       onPressed: () async {
-                        if (title.isEmpty) {
+                        if (titleController.text.isEmpty) {
                           setState(() {
                             isTitleEmpty = true;
                           });
                         }
-                        if (detail.isEmpty) {
+                        if (detailController.text.isEmpty) {
                           setState(() {
                             isDetailEmpty = true;
                           });
                         }
-                        if (title.isNotEmpty && detail.isNotEmpty) {
+                        if (titleController.text.isNotEmpty && detailController.text.isNotEmpty) {
                           int priorityIndex = priority.indexOf(priorityValue);
                           showDialog(
                               context: context,
@@ -294,9 +324,16 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                     },
                                     onConfirm: () async {
                                       await context
-                                          .read<HelpDeskViewModel>()
-                                          .createTask(title, detail,
-                                              priorityIndex, categoryValue, false);
+                                        .read<HelpDeskViewModel>()
+                                        .createTask(
+                                          titleController.text, 
+                                          widget.detail != null 
+                                            ? "${widget.detail!["room"]} รอบการใช้งาน ${widget.detail!["bookTime"]}\n\n${detailController.text}"
+                                            : detailController.text,
+                                          priorityIndex, 
+                                          categoryValue, 
+                                          false
+                                        );
                                       context
                                           .read<HelpDeskViewModel>()
                                           .clearModel();
@@ -306,16 +343,21 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                       context
                                           .read<HelpDeskViewModel>()
                                           .setIsSafeLoad = true;
-                                      Navigator.pushAndRemoveUntil(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return HelpDeskMainView(
-                                            isAdmin: context
-                                                    .watch<AppViewModel>()
-                                                    .app
-                                                    .getUser
-                                                    .getRole ==
-                                                0);
-                                      }), (route) => false);
+                                      if (widget.detail != null) {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      } else {
+                                        Navigator.pushAndRemoveUntil(context,
+                                            MaterialPageRoute(builder: (context) {
+                                          return HelpDeskMainView(
+                                              isAdmin: context
+                                                      .watch<AppViewModel>()
+                                                      .app
+                                                      .getUser
+                                                      .getRole ==
+                                                  0);
+                                        }), (route) => false);
+                                      }
                                     });
                               });
                         }
