@@ -393,7 +393,7 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                                       }, 
                                       title: "Are you sure to send FAQ?", 
                                       widget: Text(
-                                        "Q: $selectedValue\nA: ${answer[selectedValue]}",
+                                        "$selectedValue\nA: ${answer[selectedValue]}",
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: AppFontWeight.bold,
