@@ -77,7 +77,7 @@ class _RoomStatDetailTableState extends State<RoomStatDetailTable> {
             for (int i = 0; i < widget.widget.res.length; i++) ...[
               buildRow([
                 "${widget.widget.res[i].room}",
-                widget.widget.res[i].userId,
+                "isDes ${widget.widget.res[i].userId}",
                 widget.widget.res[i].purpose,
                 dateFormat(widget.widget.res[i].bookTime)
               ], false, i == widget.widget.res.length - 1),
@@ -106,7 +106,7 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: cell.contains("isDes") ? 700 : null,
+                width: cell.contains("isDes") ? 200 : null,
                 child: Text(
                   cell.contains("isDes") ? cell.split("isDes ")[1] : cell,
                   style: isHeader ? AppFontStyle.wb80B20 : AppFontStyle.wb80R20,
