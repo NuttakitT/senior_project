@@ -132,7 +132,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                         const Padding(
                           padding: EdgeInsets.only(top: 8, bottom: 8),
                           child: TagBar(
-                            name: "Help Desk", 
+                            name: "Ticket", 
                             index: 1, 
                             type: 1
                           ),

@@ -139,7 +139,7 @@ class _TemplateMenuMobileState extends State<TemplateMenuMobile> {
                               ),
                             ),
                             Text(
-                              'HelpDesk',
+                              'Ticket',
                               style: TextStyle(
                                 fontSize: 24,
                                 color: helpDeskState
