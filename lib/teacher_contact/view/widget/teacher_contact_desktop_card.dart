@@ -101,34 +101,36 @@ class TeacherContactDesktopCard extends StatelessWidget {
             // right column
             Expanded(
               child: Stack(children: [
-                Column(
-                  children: [
-                    TeachContactDesktopDetailCell(
-                      title: "Mail",
-                      detail: cardDetail['email'],
-                      isClickable: false,
-                    ),
-                    TeachContactDesktopDetailCell(
-                      title: "Phone",
-                      detail: cardDetail['phone'],
-                      isClickable: false,
-                    ),
-                    TeachContactDesktopDetailCell(
-                      title: "Office Hours",
-                      detail: cardDetail['officeHours'],
-                      isClickable: false,
-                    ),
-                    TeachContactDesktopDetailCell(
-                      title: "Subject",
-                      detail: cardDetail['subjectId'].join('\n'),
-                      isClickable: false,
-                    ),
-                    TeachContactDesktopDetailCell(
-                      title: "Facebook link",
-                      detail: cardDetail['facebookLink'],
-                      isClickable: true,
-                    ),
-                  ],
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      TeachContactDesktopDetailCell(
+                        title: "Mail",
+                        detail: cardDetail['email'],
+                        isClickable: false,
+                      ),
+                      TeachContactDesktopDetailCell(
+                        title: "Phone",
+                        detail: cardDetail['phone'],
+                        isClickable: false,
+                      ),
+                      TeachContactDesktopDetailCell(
+                        title: "Office Hours",
+                        detail: cardDetail['officeHours'],
+                        isClickable: false,
+                      ),
+                      TeachContactDesktopDetailCell(
+                        title: "Subject",
+                        detail: cardDetail['subjectId'].join('\n'),
+                        isClickable: false,
+                      ),
+                      TeachContactDesktopDetailCell(
+                        title: "Facebook link",
+                        detail: cardDetail['facebookLink'],
+                        isClickable: true,
+                      ),
+                    ],
+                  ),
                 ),
               ]),
             )

@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/widget/desktop/confirmation_popup.dart';
+import 'package:senior_project/core/view_model/app_view_model.dart';
 import 'package:senior_project/teacher_contact/model/teacher_contact_model.dart';
+import 'package:senior_project/teacher_contact/view/teacher_contact_view.dart';
 import 'package:senior_project/teacher_contact/view/widget/multi_select_subject.dart';
 import 'package:senior_project/teacher_contact/view_model/teacher_contact_view_model.dart';
 import 'package:uuid/uuid.dart';
@@ -35,22 +37,22 @@ class _AddContactPopupState extends State<AddContactPopup> {
   TimeOfDay startTime = const TimeOfDay(hour: 8, minute: 30);
   TimeOfDay endTime = const TimeOfDay(hour: 17, minute: 30);
 
-  String firstName = "";
+  // String firstName = "";
   bool isFirstNameEmpty = false;
-  String lastName = "";
+  // String lastName = "";
   bool isLastNameEmpty = false;
-  String firstNameThai = "";
+  // String firstNameThai = "";
   bool isFirstNameThaiEmpty = false;
-  String lastNameThai = "";
+  // String lastNameThai = "";
   bool isLastNameThaiEmpty = false;
-  String email = "";
+  // String email = "";
   bool isEmailEmpty = false;
-  String phoneNumber = "";
+  // String phoneNumber = "";
   bool isPhoneNumberEmpty = false;
-  String startHours = "";
-  String endHours = "";
+  // String startHours = "";
+  // String endHours = "";
   String officeHourDay = daysOfWeek.first;
-  String facebookLink = "";
+  // String facebookLink = "";
   bool isFacebookLinkEmpty = false;
   List<String> selectedSubjectStringlist = [];
   bool isSubjectEmpty = false;
@@ -215,9 +217,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                           const InputDecoration.collapsed(
                                               hintText: "First Name eg. Nick"),
                                       onChanged: (value) {
-                                        setState(() {
-                                          firstName = value;
-                                        });
+                                        // setState(() {
+                                        //   firstName = value;
+                                        // });
                                       },
                                       onTap: () {
                                         setState(() {
@@ -259,9 +261,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       decoration:
                                           const InputDecoration.collapsed(
                                               hintText: ""),
-                                      onChanged: (value) {
-                                        lastName = value;
-                                      },
+                                      // onChanged: (value) {
+                                      //   lastName = value;
+                                      // },
                                       onTap: () {
                                         setState(() {
                                           isLastNameEmpty = false;
@@ -309,9 +311,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       decoration:
                                           const InputDecoration.collapsed(
                                               hintText: ""),
-                                      onChanged: (value) {
-                                        firstNameThai = value;
-                                      },
+                                      // onChanged: (value) {
+                                      //   firstNameThai = value;
+                                      // },
                                       onTap: () {
                                         setState(() {
                                           isFirstNameThaiEmpty = false;
@@ -352,9 +354,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       decoration:
                                           const InputDecoration.collapsed(
                                               hintText: ""),
-                                      onChanged: (value) {
-                                        lastNameThai = value;
-                                      },
+                                      // onChanged: (value) {
+                                      //   lastNameThai = value;
+                                      // },
                                       onTap: () {
                                         setState(() {
                                           isLastNameThaiEmpty = false;
@@ -401,9 +403,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       decoration:
                                           const InputDecoration.collapsed(
                                               hintText: ""),
-                                      onChanged: (value) {
-                                        email = value;
-                                      },
+                                      // onChanged: (value) {
+                                      //   email = value;
+                                      // },
                                       onTap: () {
                                         setState(() {
                                           isEmailEmpty = false;
@@ -444,9 +446,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       decoration:
                                           const InputDecoration.collapsed(
                                               hintText: ""),
-                                      onChanged: (value) {
-                                        phoneNumber = value;
-                                      },
+                                      // onChanged: (value) {
+                                      //   phoneNumber = value;
+                                      // },
                                       onTap: () {
                                         setState(() {
                                           isPhoneNumberEmpty = false;
@@ -636,9 +638,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       decoration:
                                           const InputDecoration.collapsed(
                                               hintText: ""),
-                                      onChanged: (value) {
-                                        facebookLink = value;
-                                      },
+                                      // onChanged: (value) {
+                                      //   facebookLink = value;
+                                      // },
                                       onTap: () {
                                         setState(() {
                                           isFacebookLinkEmpty = false;
@@ -685,6 +687,9 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                           selectedSubjectStringlist = context
                                               .read<TeacherContactViewModel>()
                                               .getSubjectStrings(selectedList);
+                                          // context.read<TeacherContactViewModel>().setSelectedSubject = context
+                                          //   .read<TeacherContactViewModel>()
+                                          //   .getSubjectStrings(selectedList);
                                         },
                                         initValue: userSelectedsubjects,
                                       );
@@ -803,75 +808,93 @@ class _AddContactPopupState extends State<AddContactPopup> {
                         height: 40,
                         child: TextButton(
                           onPressed: () async {
-                            if (firstName.isEmpty ||
+                            if (firstNameController.text.isEmpty ||
                                 context
                                         .read<TeacherContactViewModel>()
-                                        .validateNameField(firstName) ==
+                                        .validateNameField(firstNameController.text) ==
                                     false) {
                               setState(() {
                                 isFirstNameEmpty = true;
                               });
                             }
-                            if (lastName.isEmpty ||
+                            if (lastNameController.text.isEmpty ||
                                 context
                                         .read<TeacherContactViewModel>()
-                                        .validateNameField(lastName) ==
+                                        .validateNameField(lastNameController.text) ==
                                     false) {
                               setState(() {
                                 isLastNameEmpty = true;
                               });
                             }
-                            if (firstNameThai.isEmpty ||
+                            if (firstNameThaiController.text.isEmpty ||
                                 context
                                         .read<TeacherContactViewModel>()
-                                        .validateNameField(firstNameThai) ==
+                                        .validateNameField(firstNameThaiController.text) ==
                                     false) {
                               setState(() {
                                 isFirstNameThaiEmpty = true;
                               });
                             }
-                            if (lastNameThai.isEmpty ||
+                            if (lastNameThaiController.text.isEmpty ||
                                 context
                                         .read<TeacherContactViewModel>()
-                                        .validateNameField(lastNameThai) ==
+                                        .validateNameField(lastNameThaiController.text) ==
                                     false) {
                               setState(() {
                                 isLastNameThaiEmpty = true;
                               });
                             }
-                            if (email.isEmpty ||
+                            if (emailTextController.text.isEmpty ||
                                 context
                                         .read<TeacherContactViewModel>()
-                                        .validateEmailField(email) ==
+                                        .validateEmailField(emailTextController.text) ==
                                     false) {
                               setState(() {
                                 isEmailEmpty = true;
                               });
                             }
-                            if (phoneNumber.isEmpty ||
+                            if (phoneController.text.isEmpty ||
                                 context
                                         .read<TeacherContactViewModel>()
-                                        .validatePhoneNumber(phoneNumber) ==
+                                        .validatePhoneNumber(phoneController.text) ==
                                     false) {
                               setState(() {
                                 isPhoneNumberEmpty = true;
                               });
                             }
-                            if (facebookLink.isEmpty) {
+                            if (facebookController.text.isEmpty) {
                               setState(() {
                                 isFacebookLinkEmpty = true;
                               });
                             }
+                            List<String> subject = [];
                             if (selectedSubjectStringlist.isEmpty) {
+                              if (userSelectedsubjects.isEmpty) {
+                                setState(() {
+                                  isSubjectEmpty = true;
+                                });  
+                              } else {
+                                subject = context
+                                  .read<TeacherContactViewModel>()
+                                  .getSubjectStrings(userSelectedsubjects);
+                                setState(() {
+                                  isSubjectEmpty = false;
+                                });
+                              }
+                            } else {
+                              subject = selectedSubjectStringlist;
                               setState(() {
-                                isSubjectEmpty = true;
+                                isSubjectEmpty = false;
                               });
                             }
-                            final imageUrl = await context
+                            String? imageUrl;
+                            if (imageFile != null) {
+                              imageUrl = await context
                                 .read<TeacherContactViewModel>()
                                 .getImageUrl(imageFile, const Uuid().v1());
-                            if (imageUrl == null) {
-                              isImageError = true;
+                              if (imageUrl == null) {
+                                isImageError = true;
+                              }
                             }
                             if (allFieldNotError) {
                               final officeHours =
@@ -879,27 +902,32 @@ class _AddContactPopupState extends State<AddContactPopup> {
 
                               final request = AddTeacherContactRequest(
                                 imageUrl: imageUrl ?? "",
-                                firstName: firstName,
-                                lastName: lastName,
-                                thaiName: firstNameThai,
-                                thaiLastName: lastNameThai,
-                                email: email,
-                                phone: phoneNumber,
+                                firstName: firstNameController.text,
+                                lastName: lastNameController.text,
+                                thaiName: firstNameThaiController.text,
+                                thaiLastName: lastNameThaiController.text,
+                                email: emailTextController.text,
+                                phone: phoneController.text,
                                 officeHours: officeHours,
-                                facebookLink: facebookLink,
-                                subjectId: selectedSubjectStringlist,
+                                facebookLink: facebookController.text,
+                                subjectId: subject,
                               );
                               if (widget.id != null) {
                                 String? id = widget.id!;
                                 await context
                                     .read<TeacherContactViewModel>()
                                     .editContact(id, request);
-                              }
-                              await context
+                              } else {
+                                await context
                                   .read<TeacherContactViewModel>()
                                   .createNewContact(request);
-
-                              Navigator.pop(context);
+                              }
+                              bool isAdmin = context.read<AppViewModel>().app.getUser.getRole == 0;
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return TeacherContactView(isAdmin: isAdmin);
+                                }
+                              ));
                             }
                           },
                           style: ButtonStyle(
