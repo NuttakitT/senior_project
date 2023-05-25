@@ -109,7 +109,7 @@ class _BookingCardViewState extends State<BookingCardView> {
                               defaultTargetPlatform == TargetPlatform.android);
                         bool isAdmin = context.read<AppViewModel>().app.getUser.getRole == 0;
                         if (isMobileSite) {
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                             context, 
                             MaterialPageRoute(builder: (context) {
                               return CreateTask(isAdmin: isAdmin, detail: {
@@ -120,10 +120,9 @@ class _BookingCardViewState extends State<BookingCardView> {
                                       .format(roomCard.bookTime) 
                               },);
                             }), 
-                            (route) => false
                           );
-                        }
-                        showDialog(
+                        } else {
+                          showDialog(
                             context: (context),
                             builder: ((context) {
                               return CreateTicketPopup(detail: {
@@ -136,6 +135,7 @@ class _BookingCardViewState extends State<BookingCardView> {
                             }
                           )
                         );
+                        }
                       },
                       child: const DefaultTextStyle(
                         style: AppFontStyle.orange50R16,
