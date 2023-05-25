@@ -59,7 +59,7 @@ class Header {
                     showDialog(
                         context: context,
                         builder: (context) {
-                          return const CreateTicketPopup();
+                          return const CreateTicketPopup(detail: null,);
                         });
                   },
                   style: ButtonStyle(
