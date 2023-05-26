@@ -92,7 +92,7 @@ class TeacherContactViewModel extends ChangeNotifier {
     // if (input.isEmpty) {
     //   return false;
     // }
-    return int.tryParse(input) != null;
+    return int.tryParse(input) != null || input.isEmpty;
   }
 
   String getUuid() {
