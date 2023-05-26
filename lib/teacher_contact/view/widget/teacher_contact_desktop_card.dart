@@ -65,37 +65,40 @@ class TeacherContactDesktopCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             // left column
-            SizedBox(
-              width: 200,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(
-                      cardDetail['imageUrl'],
-                      width: 140.0,
-                      height: 140.0,
-                      fit: BoxFit.cover,
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: SizedBox(
+                width: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.network(
+                        cardDetail['imageUrl'],
+                        width: 140.0,
+                        height: 140.0,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  DefaultTextStyle(
-                    style: AppFontStyle.wb80Md24,
-                    child: Text(
-                      cardDetail['name'],
-                      textAlign: TextAlign.center,
+                    const SizedBox(height: 4.0),
+                    DefaultTextStyle(
+                      style: AppFontStyle.wb80Md24,
+                      child: Text(
+                        cardDetail['name'],
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                  DefaultTextStyle(
-                    style: AppFontStyle.wb70R16,
-                    child: Text(
-                      cardDetail['thaiName'],
-                      textAlign: TextAlign.center,
+                    DefaultTextStyle(
+                      style: AppFontStyle.wb70R16,
+                      child: Text(
+                        cardDetail['thaiName'],
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4.0),
-                ],
+                    const SizedBox(height: 4.0),
+                  ],
+                ),
               ),
             ),
             // right column
