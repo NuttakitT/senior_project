@@ -106,6 +106,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
     emailTextController = TextEditingController(text: widget.data?.email);
     phoneController = TextEditingController(text: widget.data?.phone);
     facebookController = TextEditingController(text: widget.data?.facebookLink);
+    imageUrl = widget.data?.imageUrl;
     fetchSubjects();
   }
 
@@ -887,7 +888,6 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 isSubjectEmpty = false;
                               });
                             }
-                            String? imageUrl;
                             if (imageFile != null) {
                               imageUrl = await context
                                 .read<TeacherContactViewModel>()
