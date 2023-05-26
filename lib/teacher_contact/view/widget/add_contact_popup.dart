@@ -82,7 +82,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
       !isFirstNameThaiEmpty &&
       !isLastNameThaiEmpty &&
       !isEmailEmpty &&
-      // !isPhoneNumberEmpty &&
+      !isPhoneNumberEmpty &&
       // !isFacebookLinkEmpty &&
       !isImageError &&
       !isSubjectEmpty;
@@ -443,6 +443,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       horizontal: 8.0),
                                   child: Center(
                                     child: TextField(
+                                      keyboardType: TextInputType.phone,
                                       controller: phoneController,
                                       decoration:
                                           const InputDecoration.collapsed(
@@ -854,15 +855,14 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 isEmailEmpty = true;
                               });
                             }
-                            // if (phoneController.text.isEmpty ||
-                            //     context
-                            //             .read<TeacherContactViewModel>()
-                            //             .validatePhoneNumber(phoneController.text) ==
-                            //         false) {
-                            //   setState(() {
-                            //     isPhoneNumberEmpty = true;
-                            //   });
-                            // }
+                            if (context
+                                        .read<TeacherContactViewModel>()
+                                        .validatePhoneNumber(phoneController.text) ==
+                                    false) {
+                              setState(() {
+                                isPhoneNumberEmpty = true;
+                              });
+                            }
                             // if (facebookController.text.isEmpty) {
                             //   setState(() {
                             //     isFacebookLinkEmpty = true;

@@ -111,7 +111,7 @@ class TeacherContactDesktopCard extends StatelessWidget {
                       ),
                       TeachContactDesktopDetailCell(
                         title: "Phone",
-                        detail: cardDetail['phone'],
+                        detail: cardDetail['phone'].toString().isEmpty ? "-" : cardDetail['phone'],
                         isClickable: false,
                       ),
                       TeachContactDesktopDetailCell(
@@ -126,8 +126,8 @@ class TeacherContactDesktopCard extends StatelessWidget {
                       ),
                       TeachContactDesktopDetailCell(
                         title: "Facebook link",
-                        detail: cardDetail['facebookLink'],
-                        isClickable: true,
+                        detail: cardDetail['facebookLink'].toString().isEmpty ? "-" : cardDetail['facebookLink'],
+                        isClickable: cardDetail['facebookLink'].toString().isEmpty ? false : true,
                       ),
                     ],
                   ),
