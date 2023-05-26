@@ -114,7 +114,7 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
   }
 
   String _formatTimeRange(TimeOfDay startTime) {
-    final endTime = startTime.replacing(hour: startTime.hour + 1);
+    final endTime = startTime.replacing(hour: startTime.hour + 1, minute: 20);
     final formattedStartTime = startTime.format(context);
     final formattedEndTime = endTime.format(context);
     return '$formattedStartTime - $formattedEndTime';
@@ -125,7 +125,7 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 7)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
       selectableDayPredicate: (DateTime day) {
         // Exclude Saturdays and Sundays
         if (day.weekday == DateTime.saturday ||
@@ -144,14 +144,19 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
 
   Future<void> _selectTime(BuildContext context) async {
     if (_date == null) return;
-    const int interval = 60; // Interval in minutes
     const int startHour = 9; // Start hour (24-hour format)
-    const int endHour = 17; // End hour (24-hour format)
+    const int endHour = 15; // End hour (24-hour format)
+    final now = DateTime.now();
 
     final List<TimeOfDay> availableTimes = [];
     for (int hour = startHour; hour <= endHour; hour++) {
-      for (int minute = 0; minute < 60; minute += interval) {
-        final TimeOfDay time = TimeOfDay(hour: hour, minute: minute);
+      if (_date!.day == now.day && _date!.month == now.month && _date!.year == now.year) {
+        if (hour >= now.hour) {
+          final TimeOfDay time = TimeOfDay(hour: hour, minute: 30);
+          availableTimes.add(time);
+        }
+      } else {
+        final TimeOfDay time = TimeOfDay(hour: hour, minute: 30);
         availableTimes.add(time);
       }
     }
@@ -168,7 +173,8 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
               itemCount: availableTimes.length,
               itemBuilder: (BuildContext context, int index) {
                 final TimeOfDay time = availableTimes[index];
-                final String timeText = time.format(context);
+                TimeOfDay end = TimeOfDay(hour: time.hour+1, minute: 20);
+                final String timeText = "${time.format(context)} - ${end.format(context)}";
                 return ListTile(
                   title: Text(timeText),
                   onTap: () {
