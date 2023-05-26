@@ -28,11 +28,16 @@ class _StatisticViewState extends State<StatisticView> {
   @override
   Widget build(BuildContext context) {
     if (widget.isAdmin && !isMobileSite) {
-      return FutureBuilder(
+      return TemplateDesktop(
+        helpdesk: false,
+        helpdeskadmin: false,
+        home: false,
+        useTemplatescroll: true,
+        content: FutureBuilder(
           future: context.read<StatisticViewModel>().fetchPage(
               context.watch<StatisticViewModel>().startDate,
               context.watch<StatisticViewModel>().endDate),
-          builder: ((context, snapshot) {
+          builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Has error ${snapshot.error}');
             }
@@ -48,31 +53,29 @@ class _StatisticViewState extends State<StatisticView> {
               data.add(ticketPriority);
               data.add(ticketCategory);
               data.add(defaultStatistics);
-
-              return TemplateDesktop(
-                  helpdesk: false,
-                  helpdeskadmin: false,
-                  home: false,
-                  useTemplatescroll: true,
-                  content: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        StatisticGridView(
-                          data: data,
-                          commentData: comments,
-                        )
-                      ],
-                    ),
-                  ));
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    StatisticGridView(
+                      data: data,
+                      commentData: comments,
+                    )
+                  ],
+                ),
+              );
             }
-            return const Center(
-              child: SizedBox(
-                width: 100,
-                height: 100,
-                child: CircularProgressIndicator(),
+            return const Padding(
+              padding: EdgeInsets.only(top: 36),
+              child: Center(
+                child: SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: CircularProgressIndicator(),
+                ),
               ),
             );
-          }));
+          }
+        ));
     } else {
       return Container();
     }
