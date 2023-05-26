@@ -1,4 +1,5 @@
 import 'dart:js';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -51,18 +52,21 @@ class FacilityViewModel extends ChangeNotifier {
     try {
       List<RoomModel> rooms = [];
       if (date != null && time != null) {
-        final roomSnapshot =
-            await _roomService.getAllDocument(orderingField: "name");
+        final roomSnapshot = await _roomService.getAllDocument(orderingField: "name");
         for (int i = 0; i < roomSnapshot!.docs.length; i++) {
-          final reservationSnapshot = await _roomService
-              .getSubDocumnetByKeyValuePair(roomSnapshot.docs[i].id,
-                  "reservations", ["bookTime"], [combineDateTime(date, time)]);
+          final reservationSnapshot = await _roomService.getSubDocumnetByKeyValuePair(
+            roomSnapshot.docs[i].id,
+            "reservations", 
+            ["bookTime"], 
+            [combineDateTime(date, time)]
+          );
           if (reservationSnapshot!.size == 0) {
             // start check schedules
             List<Schedule> schedules = [];
-            final scheduleSnapshot = await _scheduleService
-                .getDocumnetByKeyValuePair(["roomName", "dayOfWeek"],
-                    [roomSnapshot.docs[i].get("name"), date.weekday]);
+            final scheduleSnapshot = await _scheduleService.getDocumnetByKeyValuePair(
+              ["roomName", "dayOfWeek"],
+              [roomSnapshot.docs[i].get("name"), date.weekday]
+            );
             if (scheduleSnapshot!.size != 0) {
               for (int i = 0; i < scheduleSnapshot.docs.length; i++) {
                 Timestamp startTime = scheduleSnapshot.docs[i].get("startTime");
@@ -103,10 +107,12 @@ class FacilityViewModel extends ChangeNotifier {
     }
     for (Schedule sch in schedules) {
       DateTime startTime =
-          DateTime(time.year, time.month, time.day, sch.startTime.hour);
+          DateTime(time.year, time.month, time.day, sch.startTime.hour, sch.startTime.minute);
       DateTime endTime =
-          DateTime(time.year, time.month, time.day, sch.endTime.hour);
-      bool isAfterStartTime = time.isAfter(startTime);
+          DateTime(time.year, time.month, time.day, sch.endTime.hour, sch.endTime.minute);
+      DateTime endTimeBooking =
+          DateTime(time.year, time.month, time.day, time.hour+1, 20);
+      bool isAfterStartTime = time.isAfter(startTime) || endTimeBooking.isAfter(startTime);
       bool isTheSameAsStartTime = time.isAtSameMomentAs(startTime);
       bool isBeforeEndTime = time.isBefore(endTime);
       if ((isAfterStartTime && isBeforeEndTime) || isTheSameAsStartTime) {

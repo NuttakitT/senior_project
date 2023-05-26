@@ -445,16 +445,29 @@ class CommunityBoardViewModel extends ChangeNotifier {
           List<Map<String, dynamic>> faqList = _faq.where((element) => element["category"] == snapshot.docs[i].get("category")).toList();
           final categorySnapshot = await _serviceCategory.getDocumentById(snapshot.docs[i].get("category"));
           if (faqList.isEmpty) {
-            _faq.add({
-              "category": snapshot.docs[i].get("category"),
-              "description": categorySnapshot!.get("description"),
-              "faq": [{
-                "id": snapshot.docs[i].id,
-                "question": snapshot.docs[i].get("question"),
-                "answer": snapshot.docs[i].get("answer")
-              }],
-              "lastDoc": snapshot.docs[i]
-            });
+            if (snapshot.docs[i].get("category") == "General") {
+              _faq.insert(0, {
+                "category": snapshot.docs[i].get("category"),
+                "description": categorySnapshot!.get("description"),
+                "faq": [{
+                  "id": snapshot.docs[i].id,
+                  "question": snapshot.docs[i].get("question"),
+                  "answer": snapshot.docs[i].get("answer")
+                }],
+                "lastDoc": snapshot.docs[i]
+              });
+            } else {
+              _faq.add({
+                "category": snapshot.docs[i].get("category"),
+                "description": categorySnapshot!.get("description"),
+                "faq": [{
+                  "id": snapshot.docs[i].id,
+                  "question": snapshot.docs[i].get("question"),
+                  "answer": snapshot.docs[i].get("answer")
+                }],
+                "lastDoc": snapshot.docs[i]
+              });
+            }
           } else {
             if (category.isEmpty && faqList[0]["faq"].length < 3) {
               faqList[0]["lastDoc"] = snapshot.docs[i];

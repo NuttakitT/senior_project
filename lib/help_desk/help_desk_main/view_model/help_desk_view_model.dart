@@ -540,21 +540,18 @@ class HelpDeskViewModel extends ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchQuestion(String category) async {
-    List<Map<String, dynamic>> question = [];
-    final snapshot = await  FirebaseServices("faq").getDocumnetByKeyValuePair(
-      ["category"], 
-      [category]
-    );
-    for (QueryDocumentSnapshot doc in snapshot!.docs) {
-      List<Map<String, dynamic>> hasItemList = question.where((element) => element["question"] == doc.get("question")).toList();
-      if (hasItemList.isEmpty) {
-        question.add({
-          "question": doc.get("question"),
-          "answer": doc.get("answer"),
-        });
-      }
-    }
-    return question;
-  }
+  // Future<List<Map<String, dynamic>>> fetchQuestion(String category) async {
+  //   List<Map<String, dynamic>> question = [];
+  //   final snapshot = await  FirebaseServices("faq").getDocumnetByKeyValuePair(
+  //     ["category"], 
+  //     [category]
+  //   );
+  //   for (QueryDocumentSnapshot doc in snapshot!.docs) {
+  //     question.add({
+  //       "question": doc.get("question"),
+  //       "answer": doc.get("answer"),
+  //     });
+  //   }
+  //   return question;
+  // }
 }

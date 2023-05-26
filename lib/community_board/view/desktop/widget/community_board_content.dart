@@ -151,19 +151,23 @@ class _TemplateCommunityBoardContentState extends State<CommunityBoardContent> {
                   }
                 ),
               ),
-              const Spacer(),
-              Container(
-                decoration: BoxDecoration(
-                  color: ColorConstant.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: ColorConstant.whiteBlack40),
+              Expanded(
+                child: Padding(
+                  padding:  const EdgeInsets.only(left: 16),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: ColorConstant.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: ColorConstant.whiteBlack40),
+                    ),
+                    width: 280,
+                    height: 50,
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: const SearchBar(
+                      isHelpDeskPage: false
+                    )
+                  ),
                 ),
-                width: 280,
-                height: 50,
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: const SearchBar(
-                  isHelpDeskPage: false
-                )
               )
             ],
           ),

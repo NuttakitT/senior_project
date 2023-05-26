@@ -293,64 +293,6 @@ class _PostLoaderState extends State<PostLoader> {
     return content;
   }
 
-  // List<Map<String, dynamic>> getPostDetail() {
-    // List<Map<String, dynamic>> post = context.watch<CommunityBoardViewModel>().getPost;
-    // List<Map<String, dynamic>> allPost = [];
-    // for (int i = 0; i < post.length; i++) {
-    //   int index = post[i]["post"].getPost.length;
-    //   int allPostIndex = i;
-    //   if (post[i]["topic"] == "General") {
-    //     allPostIndex = 0;
-    //     allPost.insert(0, {
-    //       "topic": post[i]["topic"],
-    //       "description": post[i]["description"],
-    //       "post": <Map<String, dynamic>>[],
-    //       "lastDoc": post[i]["lastDoc"],
-    //     });
-    //   } else {
-    //     allPost.add({
-    //       "topic": post[i]["topic"],
-    //       "description": post[i]["description"],
-    //       "post": <Map<String, dynamic>>[],
-    //       "lastDoc": post[i]["lastDoc"],
-    //     });
-    //   }
-      
-    //   for (int j = 0; j < index; j++) {
-    //     String docId = post[i]["post"].getPost[j].getDocId;
-    //     String title = post[i]["post"].getPost[j].getContent.getText;
-    //     String detail = post[i]["post"].getPost[j].getContent.getOptionalString;
-    //     String ownerName = post[i]["post"].getPost[j].getOwnerName;
-    //     String dateCreate = DateFormat("d MMMM.").format(post[i]["post"].getPost[j].getDateCreate).toString();
-    //     int comments = post[i]["post"].getPost[j].getComment;
-    //     String? imageUrl = post[i]["post"].getPost[j].getImageUrl;
-    //     List<dynamic> topic = post[i]["post"].getPost[j].getTopic;
-    //     List<Map<String, dynamic>>  postDetail = allPost[allPostIndex]["post"];
-    //     postDetail.add({
-    //       "title": title,
-    //       "detail": detail,
-    //       "topic": topic,
-    //       "ownerName": ownerName.split(" ")[0],
-    //       "dateCreate": dateCreate,
-    //       "comments": comments,
-    //       "docId": docId,
-    //       "imageUrl": imageUrl
-    //     });
-    //     allPost[allPostIndex]["post"] = postDetail;
-    //   }
-    // }
-
-    // List<Map<String, dynamic>> faq = context.watch<CommunityBoardViewModel>().getFaq;
-    // List<Map<String, dynamic>> allFaq = [];
-    // print(faq);
-    // for (int i = 0; i < faq.length; i++) {
-    //   if (faq[i]["category"] == "General") {
-    //     allFaq.insert(0, element);
-    //   }
-    // }
-    // return allFaq;
-  // }
-
   @override
   Widget build(BuildContext context) {
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(2);
@@ -388,10 +330,6 @@ class _PostLoaderState extends State<PostLoader> {
       child: Column(
         children: [
           FutureBuilder(
-            // future: context.read<CommunityBoardViewModel>().getPostByTopic(
-            //   tagBarSelected == 0 ? "" : tagBarName["name"].toString(),
-            //   isLoadAll: tagBarSelected == 0 ? true : false
-            // ),
             future: context.read<CommunityBoardViewModel>().fetchFaq(
               tagBarSelected == 0 ? "" : tagBarName["name"]
             ),

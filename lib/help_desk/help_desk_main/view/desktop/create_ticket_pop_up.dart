@@ -11,7 +11,7 @@ import 'package:senior_project/assets/font_style.dart';
 
 class CreateTicketPopup extends StatefulWidget {
   final Map<String, dynamic>? detail;
-  const CreateTicketPopup({super.key, this.detail});
+  const CreateTicketPopup({super.key, required this.detail});
 
   @override
   State<CreateTicketPopup> createState() => _CreateTicketPopupState();
@@ -344,6 +344,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                           .read<HelpDeskViewModel>()
                                           .setIsSafeLoad = true;
                                       if (widget.detail != null) {
+                                        Navigator.pop(context);
                                         Navigator.pop(context);
                                         Navigator.pop(context);
                                       } else {

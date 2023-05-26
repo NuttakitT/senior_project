@@ -77,16 +77,18 @@ class _ScheduleRoomFormState extends State<ScheduleRoomForm> {
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
-    const int interval = 60; // Interval in minutes
     const int startHour = 9; // Start hour (24-hour format)
-    const int endHour = 17; // End hour (24-hour format)
+    const int endHour = 21; // End hour (24-hour format)
 
     final List<TimeOfDay> availableTimes = [];
     for (int hour = startHour; hour <= endHour; hour++) {
-      for (int minute = 0; minute < 60; minute += interval) {
-        final TimeOfDay time = TimeOfDay(hour: hour, minute: minute);
-        availableTimes.add(time);
-      }
+      final TimeOfDay time = TimeOfDay(hour: hour, minute: 00);
+      availableTimes.add(time);
+      late final TimeOfDay time30;
+      if (hour != endHour) {
+        time30 = TimeOfDay(hour: hour, minute: 30);
+        availableTimes.add(time30);
+      } 
     }
 
     final TimeOfDay? pickedTime = await showDialog<TimeOfDay>(
@@ -126,22 +128,45 @@ class _ScheduleRoomFormState extends State<ScheduleRoomForm> {
 
       setState(() {
         _startTime = selectedDateTime;
+        if (_startTime!.hour == 21) {
+          setState(() {
+            _endTime = DateTime(
+              DateTime.now().year,
+              DateTime.now().month,
+              DateTime.now().day,
+              21,
+              30,
+            );
+          });
+        }
       });
     }
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
-    if (_startTime == null) return;
-    const int interval = 60; // Interval in minutes
-    const int startHour = 9; // Start hour (24-hour format)
+    if (_startTime == null || _startTime!.hour == 21)  {
+      if (_startTime!.hour == 21) {
+        setState(() {
+          _endTime = DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+            21,
+            30,
+          );
+        });
+      }
+      return;
+    }
+    final int startHour = _startTime!.hour + 1; // Start hour (24-hour format)
     const int endHour = 17; // End hour (24-hour format)
 
     final List<TimeOfDay> availableTimes = [];
     for (int hour = startHour; hour <= endHour; hour++) {
-      for (int minute = 0; minute < 60; minute += interval) {
-        final TimeOfDay time = TimeOfDay(hour: hour, minute: minute);
-        availableTimes.add(time);
-      }
+      final TimeOfDay time = TimeOfDay(hour: hour, minute: 00);
+      final TimeOfDay time30 = TimeOfDay(hour: hour, minute: 30);
+      availableTimes.add(time);
+      availableTimes.add(time30);
     }
 
     final TimeOfDay? pickedTime = await showDialog<TimeOfDay>(

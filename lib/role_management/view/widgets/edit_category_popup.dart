@@ -85,7 +85,7 @@ class _EditCategoryPopupState extends State<EditCategoryPopup> {
                               }, 
                               onConfirm: () async {
                                 await context.read<RoleManagementViewModel>().deleteCategory(
-                                  widget.title
+                                  widget.title, false
                                 );
                                 Navigator.pushAndRemoveUntil(
                                   context, 
@@ -152,6 +152,7 @@ class _EditCategoryPopupState extends State<EditCategoryPopup> {
                               ),
                               child: TextField(
                                 maxLength: 25,
+                                readOnly: widget.title == "General" || widget.title == "การใช้และยืมอุปกรณ์" || widget.title == "การใช้งานห้องเรียน",
                                 controller: titleController,
                                 style: const TextStyle(
                                   fontWeight: AppFontWeight.regular,

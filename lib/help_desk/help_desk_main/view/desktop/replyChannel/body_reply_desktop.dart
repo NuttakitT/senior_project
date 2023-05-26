@@ -1,4 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +30,6 @@ class BodyReplyDesktop extends StatefulWidget {
 class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
   @override
   Widget build(BuildContext context) {
-    int? role = context.watch<AppViewModel>().app.getUser.getRole;
     String userId = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -383,17 +383,37 @@ class _BodyReplyDesktopState extends State<BodyReplyDesktop> {
                               ),
                               Flexible(
                                   fit: FlexFit.tight,
-                                  child: FutureBuilder(
-                                    future: context.read<HelpDeskViewModel>().fetchQuestion(category),
+                                  child: 
+                                  StreamBuilder(
+                                    stream: FirebaseServices("faq").listenToDocumentByKeyValuePair(["category"], [category]),
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.done) {
-                                        return DescriptionDesktop(
-                                          isAdmin: role == 0 ? true : false, q: snapshot.data!,
-                                        );
+                                      if (snapshot.connectionState == ConnectionState.active) {
+                                        List<Map<String, dynamic>> faq = [];
+                                        for (QueryDocumentSnapshot doc in snapshot.data!.docs) {
+                                          faq.add(
+                                            {
+                                              "id": doc.id,
+                                              "question": doc.get("question"),
+                                              "answer": doc.get("answer"),
+                                            }
+                                          );
+                                        }
+                                        return DescriptionDesktop(isAdmin: isAdmin, faq: faq);
                                       }
                                       return Container();
                                     },
                                   )
+                                  // FutureBuilder(
+                                  //   future: context.read<HelpDeskViewModel>().fetchQuestion(category),
+                                  //   builder: (context, snapshot) {
+                                  //     if (snapshot.connectionState == ConnectionState.done) {
+                                  //       return DescriptionDesktop(
+                                  //         isAdmin: isAdmin, faq: snapshot.data!,
+                                  //       );
+                                  //     }
+                                  //     return Container();
+                                  //   },
+                                  // )
                               )
                             ],
                           ),

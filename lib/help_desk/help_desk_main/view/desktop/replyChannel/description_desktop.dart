@@ -16,8 +16,8 @@ const List<String> status = <String>['Not start', 'Progress', 'Closed'];
 
 class DescriptionDesktop extends StatefulWidget {
   final bool isAdmin;
-  final List<Map<String, dynamic>> q;
-  const DescriptionDesktop({super.key, required this.isAdmin, required this.q});
+  final List<Map<String, dynamic>> faq;
+  const DescriptionDesktop({super.key, required this.isAdmin, required this.faq});
 
   @override
   State<DescriptionDesktop> createState() => _DescriptionDesktopState();
@@ -33,13 +33,8 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
 
   @override
   void initState() {
-    if (widget.q.isNotEmpty) {
-      selectedValue = "Q: ${widget.q[0]["question"]}";
-      for (int i = 0; i < widget.q.length; i++) {
-        answer.addAll({
-          "Q: ${widget.q[i]["question"]}": widget.q[i]["answer"]
-        });
-      }
+    if (widget.faq.isNotEmpty) {
+      selectedValue = "Q: ${widget.faq[0]["question"]} \$${widget.faq[0]["id"]}";
     }
     super.initState();
   }
@@ -63,6 +58,11 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
     String docId = context.watch<ReplyChannelViewModel>().getTaskData["docId"];
     bool isItemRequest = context.watch<ReplyChannelViewModel>().getTaskData["isItemRequest"];
     String userId = context.read<AppViewModel>().app.getUser.getId;
+    for (int i = 0; i < widget.faq.length; i++) {
+      answer.addAll({
+        "${widget.faq[i]["id"]}": widget.faq[i]["answer"]
+      });
+    }
 
     return Column(
       children: [
@@ -340,9 +340,9 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                                 isInit = false;
                               });
                             },
-                            items: widget.q.map((e) {
+                            items: widget.faq.map((e) {
                               return DropdownMenuItem<String>(
-                                value: "Q: ${e["question"]}",
+                                value: "Q: ${e["question"]} \$${e["id"]}",
                                 child: Text("Q: ${e["question"]}",),
                               );
                             }).toList(),
@@ -383,7 +383,7 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                                           context.read<ReplyChannelViewModel>().getTaskData["docId"], 
                                           {
                                             "ownerId": userId,
-                                            "message": "FAQ\n$selectedValue\nA: ${answer[selectedValue]}",
+                                            "message": "FAQ\n${selectedValue.split(" \$")[0]}\nA: ${answer[selectedValue.split(" \$")[1]]}",
                                             "time": DateTime.now(),
                                             "seen": false,
                                             "imageUrl": null
@@ -393,7 +393,7 @@ class _DescriptionDesktopState extends State<DescriptionDesktop> {
                                       }, 
                                       title: "Are you sure to send FAQ?", 
                                       widget: Text(
-                                        "$selectedValue\nA: ${answer[selectedValue]}",
+                                        "${selectedValue.split(" \$")[0]}\nA: ${answer[selectedValue.split(" \$")[1]]}",
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: AppFontWeight.bold,
