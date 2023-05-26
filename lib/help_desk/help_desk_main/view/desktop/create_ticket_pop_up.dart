@@ -346,6 +346,7 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                       if (widget.detail != null) {
                                         Navigator.pop(context);
                                         Navigator.pop(context);
+                                        Navigator.pop(context);
                                       } else {
                                         Navigator.pushAndRemoveUntil(context,
                                             MaterialPageRoute(builder: (context) {

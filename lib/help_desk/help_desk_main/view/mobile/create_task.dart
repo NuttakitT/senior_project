@@ -81,7 +81,7 @@ class _CreateTaskState extends State<CreateTask> {
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Container(
-                height: 40,
+                // height: 40,
                 decoration: BoxDecoration(
                     border: Border.all(
                         color: isTitleEmpty
@@ -295,6 +295,8 @@ class _CreateTaskState extends State<CreateTask> {
                                       .setIsSafeLoad = true;
                                   if (widget.detail != null) {
                                     if (Navigator.canPop(context)) {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
                                       Navigator.pop(context);
                                     }
                                   } else {
