@@ -42,6 +42,10 @@ class _ContentLoaderState extends State<ContentLoader> {
           return const LoaderStatus(text: "Error occurred");
         } 
         if (snapshot.connectionState == ConnectionState.active) {
+          // print(snapshot.data.docs.length);
+          // for (var doc in snapshot.data.docs) {
+          //   print(doc.id);
+          // }
           if (snapshot.data!.docs.isNotEmpty) {
             context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
             context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);

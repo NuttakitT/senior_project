@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:senior_project/core/datasource/algolia_services.dart';
@@ -12,6 +13,7 @@ class RoleManagementViewModel extends ChangeNotifier {
   final FirebaseServices _serviesCategory = FirebaseServices("category");
   final FirebaseServices _serviesTicket = FirebaseServices("ticket");
   final FirebaseServices _servicesUser = FirebaseServices("user");
+  final FirebaseServices _servicesFAQ = FirebaseServices("faq");
   List<String> _alluser = [];
   RoleManagementModel _model = RoleManagementModel();
 
@@ -167,13 +169,23 @@ class RoleManagementViewModel extends ChangeNotifier {
     return model;
   }
 
-  Future<void> deleteCategory(String docId) async {
+  Future<void> deleteCategory(String docId, bool isEdit) async {
     await _serviesCategory.deleteDocument(docId);
+    if (!isEdit) {
+      final snapshot = await _servicesFAQ.getDocumnetByKeyValuePair(["category"], [docId]);
+      if (snapshot!.size != 0) {
+        for (QueryDocumentSnapshot doc in snapshot.docs) {
+          await _servicesFAQ.editDocument(doc.id, {
+            "category": "General"
+          });
+        }
+      }
+    }
   }
 
   Future<void> editCategory(String docId, String title, String detail) async {
     if (title != docId) {
-      await deleteCategory(docId);
+      await deleteCategory(docId, true);
       await _serviesCategory.setDocument(title, {
         "name": title,
         "description": detail,
@@ -181,6 +193,14 @@ class RoleManagementViewModel extends ChangeNotifier {
         "isCommunity": false,
         "isApproved": false
       });
+      final snapshot = await _servicesFAQ.getDocumnetByKeyValuePair(["category"], [docId]);
+      if (snapshot!.size != 0) {
+        for (QueryDocumentSnapshot doc in snapshot.docs) {
+          await _servicesFAQ.editDocument(doc.id, {
+            "category": title
+          });
+        }
+      }
     } else {
       await _serviesCategory.editDocument(docId, {
         "description": detail,
