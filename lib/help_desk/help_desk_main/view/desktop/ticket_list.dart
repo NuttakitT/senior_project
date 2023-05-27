@@ -127,6 +127,7 @@ class _TicketListState extends State<TicketList> {
                                 isAdmin, 
                                 startDoc: snapshot.data, 
                                 isReverse: true,
+                                limit: widget.limit,
                                 category: widget.selectedCategory
                               ), 
                             );

@@ -454,7 +454,7 @@ class _ItemReservationFormState extends State<ItemReservationForm> {
                           final ticketDetail =
                               "Request the use of ${selectedItem!.objectName} amount=$amount from date $_fromDate to date $_toDate for ${textController.text}. (Automatically sent)";
                           const ticketPriority = 1;
-                          const ticketCategory = "การใช้งานอุปกรณ์";
+                          const ticketCategory = "การใช้และยืมอุปกรณ์";
 
                           final List<dynamic> ticket = [
                             ticketTitle,

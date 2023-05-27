@@ -23,14 +23,15 @@ import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChanne
 Stream? query(String id, int type, bool isAdmin, {
   DocumentSnapshot? startDoc,
   bool isReverse = false,
-  int? limit
+  int? limit,
+  String? category
 }) {
   final FirebaseServices service = FirebaseServices("ticket");
   bool descending = true;
   if (type == 0) {
     return service.listenToDocumentByKeyValuePair(
-      [isAdmin ? "relateAdmin" : "ownerId"], 
-      [id],
+      category == null ? [isAdmin ? "relateAdmin" : "ownerId"] : [isAdmin ? "relateAdmin" : "ownerId", "category"], 
+      category == null ? [id] : [id, category],
       limit: limit, orderingField: 'dateCreate', descending: descending,
       startDoc: startDoc,
       isReverse: isReverse
@@ -38,16 +39,16 @@ Stream? query(String id, int type, bool isAdmin, {
   } 
   if (type > 3){
     return service.listenToDocumentByKeyValuePair(
-      [isAdmin ? "relateAdmin" : "ownerId", "priority"], 
-      [id, (type-7).abs()],
+      category == null ? [isAdmin ? "relateAdmin" : "ownerId", "priority"] : [isAdmin ? "relateAdmin" : "ownerId", "priority", "category"], 
+      category == null ? [id, (type-7).abs()] : [id, (type-7).abs(), category],
       limit: limit, orderingField: 'dateCreate', descending: descending,
       startDoc: startDoc,
       isReverse: isReverse
     );
   }
   return service.listenToDocumentByKeyValuePair(
-    [isAdmin ? "relateAdmin" : "ownerId", "status"], 
-    [id, type-1],
+    category == null ? [isAdmin ? "relateAdmin" : "ownerId", "status"] : [isAdmin ? "relateAdmin" : "ownerId", "status", "category"], 
+    category == null ? [id, type-1] : [id, type-1, category],
     limit: limit, orderingField: 'dateCreate', descending: descending,
     startDoc: startDoc,
     isReverse: isReverse
@@ -70,6 +71,7 @@ class _BodyState extends State<Body> {
   
   void nextTicket(bool ishowMesg, bool isNext) {
     if (!ishowMesg) {
+      context.read<HelpDeskViewModel>().clearModel();
       context.read<HelpDeskViewModel>().setIndicator(isNext, limit);
       context.read<HelpDeskViewModel>().setIsReverse = !isNext;
       context.read<HelpDeskViewModel>().setIsSafeLoad = true;
@@ -196,6 +198,7 @@ class _BodyState extends State<Body> {
     String uid = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
     int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+    String? categoryFilter = selectedCategory == "All category" ? null : selectedCategory;
 
     return Column(
       children: [
@@ -326,7 +329,12 @@ class _BodyState extends State<Body> {
           }
         ),
         StreamBuilder(
-          stream: query(uid, tagBarSelected, isAdmin),
+          stream: query(
+            uid, 
+            tagBarSelected, 
+            isAdmin,
+            category: categoryFilter
+          ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
@@ -380,6 +388,7 @@ class _BodyState extends State<Body> {
                                         context.read<HelpDeskViewModel>().setIsSafeClick = false;
                                         context.read<HelpDeskViewModel>().setIsSafeLoad = true;
                                       } else {
+                                        context.read<HelpDeskViewModel>().clearModel();
                                         context.read<HelpDeskViewModel>().clearContentController();
                                         context.read<TextSearch>().clearSearchText();
                                       }
