@@ -89,31 +89,30 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                               color: isTitleEmpty
                                   ? ColorConstant.red50
                                   : ColorConstant.whiteBlack40)),
-                      padding: EdgeInsets.fromLTRB(16, widget.detail != null ? 8 : 12, 0, 12),
-                      child: Builder(
-                        builder: (context) {
-                          if (widget.detail != null) {
-                            return Text(
-                              titleController.text,
-                              style: AppFontStyle.wb60R14,
-                            );
-                          }
-                          return TextField(
-                            controller: titleController,
-                            decoration: const InputDecoration.collapsed(
-                                hintText: "Ex. caption",
-                                hintStyle: AppFontStyle.wb30R14),
-                            // onChanged: (value) {
-                            //   title = value;
-                            // },
-                            onTap: () {
-                              setState(() {
-                                isTitleEmpty = false;
-                              });
-                            },
+                      padding: EdgeInsets.fromLTRB(
+                          16, widget.detail != null ? 8 : 12, 0, 12),
+                      child: Builder(builder: (context) {
+                        if (widget.detail != null) {
+                          return Text(
+                            titleController.text,
+                            style: AppFontStyle.wb60R14,
                           );
                         }
-                      ),
+                        return TextField(
+                          controller: titleController,
+                          decoration: const InputDecoration.collapsed(
+                              hintText: "Ex. caption",
+                              hintStyle: AppFontStyle.wb30R14),
+                          // onChanged: (value) {
+                          //   title = value;
+                          // },
+                          onTap: () {
+                            setState(() {
+                              isTitleEmpty = false;
+                            });
+                          },
+                        );
+                      }),
                     ),
                   ),
                 ],
@@ -187,33 +186,31 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                           border:
                               Border.all(color: ColorConstant.whiteBlack40)),
                       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
-                      child: Builder(
-                        builder: (context) {
-                          if (widget.detail != null) {
-                            return Text(
-                              categoryValue,
-                              style: AppFontStyle.wb60R16,
-                            );
-                          }
-                          return DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              value: categoryValue,
-                              style: AppFontStyle.wb60R16,
-                              items:
-                                  category.map<DropdownMenuItem<String>>((value) {
-                                return DropdownMenuItem(
-                                    value: value, child: Text(value));
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  categoryValue = value!;
-                                });
-                              },
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                      child: Builder(builder: (context) {
+                        if (widget.detail != null) {
+                          return Text(
+                            categoryValue,
+                            style: AppFontStyle.wb60R16,
                           );
                         }
-                      ),
+                        return DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            value: categoryValue,
+                            style: AppFontStyle.wb60R16,
+                            items:
+                                category.map<DropdownMenuItem<String>>((value) {
+                              return DropdownMenuItem(
+                                  value: value, child: Text(value));
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                categoryValue = value!;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        );
+                      }),
                     ),
                   ),
                 ],
@@ -308,7 +305,8 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                             isDetailEmpty = true;
                           });
                         }
-                        if (titleController.text.isNotEmpty && detailController.text.isNotEmpty) {
+                        if (titleController.text.isNotEmpty &&
+                            detailController.text.isNotEmpty) {
                           int priorityIndex = priority.indexOf(priorityValue);
                           showDialog(
                               context: context,
@@ -324,16 +322,15 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                     },
                                     onConfirm: () async {
                                       await context
-                                        .read<HelpDeskViewModel>()
-                                        .createTask(
-                                          titleController.text, 
-                                          widget.detail != null 
-                                            ? "${widget.detail!["room"]} รอบการใช้งาน ${widget.detail!["bookTime"]}\n\n${detailController.text}"
-                                            : detailController.text,
-                                          priorityIndex, 
-                                          categoryValue, 
-                                          false
-                                        );
+                                          .read<HelpDeskViewModel>()
+                                          .createTask(
+                                              titleController.text,
+                                              widget.detail != null
+                                                  ? "${widget.detail!["room"]} รอบการใช้งาน ${widget.detail!["bookTime"]}\n\n${detailController.text}"
+                                                  : detailController.text,
+                                              priorityIndex,
+                                              categoryValue,
+                                              false);
                                       context
                                           .read<HelpDeskViewModel>()
                                           .clearModel();
@@ -348,16 +345,18 @@ class _CreateTicketPopupState extends State<CreateTicketPopup> {
                                         Navigator.pop(context);
                                         Navigator.pop(context);
                                       } else {
-                                        Navigator.pushAndRemoveUntil(context,
-                                            MaterialPageRoute(builder: (context) {
-                                          return HelpDeskMainView(
-                                              isAdmin: context
-                                                      .watch<AppViewModel>()
-                                                      .app
-                                                      .getUser
-                                                      .getRole ==
-                                                  0);
-                                        }), (route) => false);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        // Navigator.pushAndRemoveUntil(context,
+                                        //     MaterialPageRoute(builder: (context) {
+                                        //   return HelpDeskMainView(
+                                        //       isAdmin: context
+                                        //               .watch<AppViewModel>()
+                                        //               .app
+                                        //               .getUser
+                                        //               .getRole ==
+                                        //           0);
+                                        // }), (route) => false);
                                       }
                                     });
                               });
