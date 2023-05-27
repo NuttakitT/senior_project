@@ -89,10 +89,10 @@ class TeacherContactViewModel extends ChangeNotifier {
   }
 
   bool validatePhoneNumber(String input) {
-    if (input.isEmpty) {
-      return false;
-    }
-    return int.tryParse(input) != null;
+    // if (input.isEmpty) {
+    //   return false;
+    // }
+    return int.tryParse(input) != null || input.isEmpty;
   }
 
   String getUuid() {

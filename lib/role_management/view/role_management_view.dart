@@ -30,37 +30,41 @@ class _RoleManagementViewState extends State<RoleManagementView> {
   Widget build(BuildContext context) {
     // context.read<TemplateDesktopViewModel>().changeState(context, 3, 1);
     if (widget.isAdmin && !isMobileSite) {
-      return FutureBuilder(
-          future: context.read<RoleManagementViewModel>().fetchPage(),
-          builder: ((context, snapshot) {
-            if (snapshot.hasError) {
-              return Text('Has error ${snapshot.error}');
+      return TemplateDesktop(
+        helpdesk: false,
+        helpdeskadmin: false,
+        home: true,
+        useTemplatescroll: true,
+        content: SingleChildScrollView(
+          child: FutureBuilder(
+            future: context.read<RoleManagementViewModel>().fetchPage(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text('Has error ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.done) {
+                final admins = snapshot.data?.admins ?? [];
+                final categories = snapshot.data?.categories ?? [];
+                return Column(
+                  children: [
+                    RoleManagementTable(admins: admins),
+                    CategoryTable(categories: categories)
+                  ],
+                );
+              }
+              return const Padding(
+                padding: EdgeInsets.only(top:36),
+                child: Center(
+                  child: SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              );
             }
-            if (snapshot.connectionState == ConnectionState.done) {
-              final admins = snapshot.data?.admins ?? [];
-              final categories = snapshot.data?.categories ?? [];
-              return TemplateDesktop(
-                  helpdesk: false,
-                  helpdeskadmin: false,
-                  home: true,
-                  useTemplatescroll: true,
-                  content: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        RoleManagementTable(admins: admins),
-                        CategoryTable(categories: categories)
-                      ],
-                    ),
-                  ));
-            }
-            return const Center(
-              child: SizedBox(
-                width: 100,
-                height: 100,
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }));
+          ),
+        ));
     }
     return Container();
   }

@@ -83,7 +83,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
       !isLastNameThaiEmpty &&
       !isEmailEmpty &&
       !isPhoneNumberEmpty &&
-      !isFacebookLinkEmpty &&
+      // !isFacebookLinkEmpty &&
       !isImageError &&
       !isSubjectEmpty;
 
@@ -106,6 +106,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
     emailTextController = TextEditingController(text: widget.data?.email);
     phoneController = TextEditingController(text: widget.data?.phone);
     facebookController = TextEditingController(text: widget.data?.facebookLink);
+    imageUrl = widget.data?.imageUrl;
     fetchSubjects();
   }
 
@@ -442,6 +443,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                       horizontal: 8.0),
                                   child: Center(
                                     child: TextField(
+                                      keyboardType: TextInputType.phone,
                                       controller: phoneController,
                                       decoration:
                                           const InputDecoration.collapsed(
@@ -853,8 +855,7 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 isEmailEmpty = true;
                               });
                             }
-                            if (phoneController.text.isEmpty ||
-                                context
+                            if (context
                                         .read<TeacherContactViewModel>()
                                         .validatePhoneNumber(phoneController.text) ==
                                     false) {
@@ -862,11 +863,11 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 isPhoneNumberEmpty = true;
                               });
                             }
-                            if (facebookController.text.isEmpty) {
-                              setState(() {
-                                isFacebookLinkEmpty = true;
-                              });
-                            }
+                            // if (facebookController.text.isEmpty) {
+                            //   setState(() {
+                            //     isFacebookLinkEmpty = true;
+                            //   });
+                            // }
                             List<String> subject = [];
                             if (selectedSubjectStringlist.isEmpty) {
                               if (userSelectedsubjects.isEmpty) {
@@ -887,7 +888,6 @@ class _AddContactPopupState extends State<AddContactPopup> {
                                 isSubjectEmpty = false;
                               });
                             }
-                            String? imageUrl;
                             if (imageFile != null) {
                               imageUrl = await context
                                 .read<TeacherContactViewModel>()
