@@ -24,7 +24,7 @@ class _ContentLoaderState extends State<ContentLoader> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<HelpDeskViewModel>().setIsSafeClick = false;
+    // context.read<HelpDeskViewModel>().setIsSafeClick = false;
     // if (!context.watch<HelpDeskViewModel>().getIsSafeLoad) {
     //   context.read<HelpDeskViewModel>().setIsSafeClick = true;
     //   List<Map<String, dynamic>> content = context.watch<HelpDeskViewModel>().getTask;
@@ -42,15 +42,10 @@ class _ContentLoaderState extends State<ContentLoader> {
           return const LoaderStatus(text: "Error occurred");
         } 
         if (snapshot.connectionState == ConnectionState.active) {
-          // print(snapshot.data.docs.length);
-          // for (var doc in snapshot.data.docs) {
-          //   print(doc.id);
-          // }
           if (snapshot.data!.docs.isNotEmpty) {
             context.read<HelpDeskViewModel>().setLastDoc(snapshot.data.docs.last);
             context.read<HelpDeskViewModel>().setFirstDoc(snapshot.data.docs.first);
             context.read<HelpDeskViewModel>().addPreviousFirst = context.read<HelpDeskViewModel>().getFirstDoc!.id;
-            context.read<HelpDeskViewModel>().clearModel();
             return FutureBuilder(
               future: context.read<HelpDeskViewModel>().reconstructQueryData(context, snapshot.data as QuerySnapshot),
               builder: (context, futureSnapshot) {
