@@ -86,7 +86,8 @@ class _CommunityBoardHomeMobileState extends State<CommunityBoardHomeMobile> {
                       Builder(
                         builder: (context) {
                           bool isLogin = context.watch<AppViewModel>().isLogin;
-                          if (!isLogin) {
+                          bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
+                          if (!isLogin || !isAdmin) {
                             return Container();
                           }
                           return Padding(
