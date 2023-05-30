@@ -20,39 +20,49 @@ import 'package:senior_project/help_desk/help_desk_main/view/widget/loader_statu
 import 'package:senior_project/help_desk/help_desk_main/view_model/help_desk_view_model.dart';
 import 'package:senior_project/help_desk/help_desk_main/view/desktop/replyChannel/body_reply_desktop.dart';
 
-Stream? query(String id, int type, bool isAdmin, {
-  DocumentSnapshot? startDoc,
-  bool isReverse = false,
-  int? limit,
-  String? category
-}) {
+Stream? query(String id, int type, bool isAdmin,
+    {DocumentSnapshot? startDoc,
+    bool isReverse = false,
+    int? limit,
+    String? category}) {
   final FirebaseServices service = FirebaseServices("ticket");
   bool descending = true;
   if (type == 0) {
     return service.listenToDocumentByKeyValuePair(
-      category == null ? [isAdmin ? "relateAdmin" : "ownerId"] : [isAdmin ? "relateAdmin" : "ownerId", "category"], 
-      category == null ? [id] : [id, category],
-      limit: limit, orderingField: 'dateCreate', descending: descending,
-      startDoc: startDoc,
-      isReverse: isReverse
-    );
-  } 
-  if (type > 3){
+        category == null
+            ? [isAdmin ? "relateAdmin" : "ownerId"]
+            : [isAdmin ? "relateAdmin" : "ownerId", "category"],
+        category == null ? [id] : [id, category],
+        limit: limit,
+        orderingField: 'dateCreate',
+        descending: descending,
+        startDoc: startDoc,
+        isReverse: isReverse);
+  }
+  if (type > 3) {
     return service.listenToDocumentByKeyValuePair(
-      category == null ? [isAdmin ? "relateAdmin" : "ownerId", "priority"] : [isAdmin ? "relateAdmin" : "ownerId", "priority", "category"], 
-      category == null ? [id, (type-7).abs()] : [id, (type-7).abs(), category],
-      limit: limit, orderingField: 'dateCreate', descending: descending,
-      startDoc: startDoc,
-      isReverse: isReverse
-    );
+        category == null
+            ? [isAdmin ? "relateAdmin" : "ownerId", "priority"]
+            : [isAdmin ? "relateAdmin" : "ownerId", "priority", "category"],
+        category == null
+            ? [id, (type - 7).abs()]
+            : [id, (type - 7).abs(), category],
+        limit: limit,
+        orderingField: 'dateCreate',
+        descending: descending,
+        startDoc: startDoc,
+        isReverse: isReverse);
   }
   return service.listenToDocumentByKeyValuePair(
-    category == null ? [isAdmin ? "relateAdmin" : "ownerId", "status"] : [isAdmin ? "relateAdmin" : "ownerId", "status", "category"], 
-    category == null ? [id, type-1] : [id, type-1, category],
-    limit: limit, orderingField: 'dateCreate', descending: descending,
-    startDoc: startDoc,
-    isReverse: isReverse
-  );
+      category == null
+          ? [isAdmin ? "relateAdmin" : "ownerId", "status"]
+          : [isAdmin ? "relateAdmin" : "ownerId", "status", "category"],
+      category == null ? [id, type - 1] : [id, type - 1, category],
+      limit: limit,
+      orderingField: 'dateCreate',
+      descending: descending,
+      startDoc: startDoc,
+      isReverse: isReverse);
 }
 
 class Body extends StatefulWidget {
@@ -68,7 +78,7 @@ class _BodyState extends State<Body> {
   double contentSize = 56;
   int limit = 20;
   ScrollController controller = ScrollController();
-  
+
   void nextTicket(bool ishowMesg, bool isNext) {
     if (!ishowMesg) {
       context.read<HelpDeskViewModel>().clearModel();
@@ -76,19 +86,24 @@ class _BodyState extends State<Body> {
       context.read<HelpDeskViewModel>().setIsReverse = !isNext;
       context.read<HelpDeskViewModel>().setIsSafeLoad = true;
       if (isNext) {
-        context.read<HelpDeskViewModel>().setPageNumber = context.read<HelpDeskViewModel>().getPageNumber + 1;
+        context.read<HelpDeskViewModel>().setPageNumber =
+            context.read<HelpDeskViewModel>().getPageNumber + 1;
       } else {
-        context.read<HelpDeskViewModel>().setPageNumber = context.read<HelpDeskViewModel>().getPageNumber - 1;
+        context.read<HelpDeskViewModel>().setPageNumber =
+            context.read<HelpDeskViewModel>().getPageNumber - 1;
       }
     }
     if (ishowMesg && isNext) {
-      context.read<HelpDeskViewModel>().setSelectedTicket = context.read<HelpDeskViewModel>().getSelectedTicket! + 1;
+      context.read<HelpDeskViewModel>().setSelectedTicket =
+          context.read<HelpDeskViewModel>().getSelectedTicket! + 1;
     } else if (ishowMesg && !isNext) {
-      context.read<HelpDeskViewModel>().setSelectedTicket = context.read<HelpDeskViewModel>().getSelectedTicket! - 1;
-    } 
+      context.read<HelpDeskViewModel>().setSelectedTicket =
+          context.read<HelpDeskViewModel>().getSelectedTicket! - 1;
+    }
   }
 
-  Widget _iconLoader(bool isShowMessagePage, int start, int end, int all, int limit) {
+  Widget _iconLoader(
+      bool isShowMessagePage, int start, int end, int all, int limit) {
     String srearchText = context.watch<TextSearch>().getSearchText;
     int? msgIndex;
 
@@ -105,15 +120,15 @@ class _BodyState extends State<Body> {
       children: [
         Builder(
           builder: (context) {
-            if ((!isShowMessagePage && start != 1) || (isShowMessagePage && msgIndex != 1)) {
+            if ((!isShowMessagePage && start != 1) ||
+                (isShowMessagePage && msgIndex != 1)) {
               return IconButton(
-                onPressed: () {
-                  if (context.read<HelpDeskViewModel>().getIsSafeClick) {
-                    nextTicket(isShowMessagePage, false);
-                  }
-                }, 
-                icon: const Icon(Icons.keyboard_arrow_left_rounded)
-              );
+                  onPressed: () {
+                    if (context.read<HelpDeskViewModel>().getIsSafeClick) {
+                      nextTicket(isShowMessagePage, false);
+                    }
+                  },
+                  icon: const Icon(Icons.keyboard_arrow_left_rounded));
             }
             return Container();
           },
@@ -121,28 +136,25 @@ class _BodyState extends State<Body> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            isShowMessagePage 
-            ? "$msgIndex of $all"
-            : "$start-$end of $all",
+            isShowMessagePage ? "$msgIndex of $all" : "$start-$end of $all",
             style: const TextStyle(
-              fontFamily: AppFontStyle.font,
-              fontWeight: FontWeight.normal,
-              fontSize: 16,
-              color: ColorConstant.whiteBlack70
-            ),
+                fontFamily: AppFontStyle.font,
+                fontWeight: FontWeight.normal,
+                fontSize: 16,
+                color: ColorConstant.whiteBlack70),
           ),
         ),
         Builder(
           builder: (context) {
-            if ((!isShowMessagePage && end != all) || (isShowMessagePage && msgIndex != all)) {
+            if ((!isShowMessagePage && end != all) ||
+                (isShowMessagePage && msgIndex != all)) {
               return IconButton(
-                onPressed: () {
-                  if (context.read<HelpDeskViewModel>().getIsSafeClick) {
-                    nextTicket(isShowMessagePage, true);
-                  }
-                }, 
-                icon: const Icon(Icons.keyboard_arrow_right_rounded)
-              );
+                  onPressed: () {
+                    if (context.read<HelpDeskViewModel>().getIsSafeClick) {
+                      nextTicket(isShowMessagePage, true);
+                    }
+                  },
+                  icon: const Icon(Icons.keyboard_arrow_right_rounded));
             }
             return Container();
           },
@@ -153,37 +165,32 @@ class _BodyState extends State<Body> {
 
   Widget bodyReply(double screenHeight) {
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: screenHeight < 500 ? 500 : screenHeight - 300
-      ),
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Scrollbar(
-        controller: controller,
-        thumbVisibility: true,
-        child: SingleChildScrollView(
+        constraints: BoxConstraints(
+            maxHeight: screenHeight < 500 ? 500 : screenHeight - 300),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Scrollbar(
           controller: controller,
-          scrollDirection: Axis.vertical,
-          child: const BodyReplyDesktop()
-        ),
-      )
-    );
+          thumbVisibility: true,
+          child: SingleChildScrollView(
+              controller: controller,
+              scrollDirection: Axis.vertical,
+              child: const BodyReplyDesktop()),
+        ));
   }
 
   Widget loadingWidget(double screenHeight) {
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: screenHeight < 500 ? 500 : screenHeight - 300
-      ),
-      color: Colors.white,
-      alignment: Alignment.center,
-      child: const LoaderStatus(text: "Loading..")
-    );
+        constraints: BoxConstraints(
+            maxHeight: screenHeight < 500 ? 500 : screenHeight - 300),
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: const LoaderStatus(text: "Loading.."));
   }
 
   String selectedValue = "All Ticket";
   List<String> list = ["All Ticket", "Not Start", "In Progress", "Closed"];
   late String selectedCategory;
-  
+
   @override
   void initState() {
     selectedCategory = widget.categoty.first;
@@ -197,120 +204,133 @@ class _BodyState extends State<Body> {
     bool isFromNoti = context.watch<HelpDeskViewModel>().getIsFromNoti;
     String uid = context.watch<AppViewModel>().app.getUser.getId;
     bool isAdmin = context.watch<AppViewModel>().app.getUser.getRole == 0;
-    int tagBarSelected = context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
-    String? categoryFilter = selectedCategory == "All category" ? null : selectedCategory;
+    int tagBarSelected =
+        context.watch<TemplateDesktopViewModel>().selectedTagBar(4);
+    String? categoryFilter =
+        selectedCategory == "All category" ? null : selectedCategory;
 
     return Column(
       children: [
-        Builder(
-          builder: (context) {
-            if (context.watch<HelpDeskViewModel>().getIsShowMessagePage) {
-              return Container();
-            }
-            return Padding(
-              padding: const EdgeInsets.only(left: 43, bottom: 40, right: 40),
-              child: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 6),
-                    child: Icon(Icons.filter_alt_rounded, size: 16, color: ColorConstant.whiteBlack60,),
+        Builder(builder: (context) {
+          if (context.watch<HelpDeskViewModel>().getIsShowMessagePage) {
+            return Container();
+          }
+          return Padding(
+            padding: const EdgeInsets.only(left: 43, bottom: 40, right: 40),
+            child: Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(right: 6),
+                  child: Icon(
+                    Icons.filter_alt_rounded,
+                    size: 16,
+                    color: ColorConstant.whiteBlack60,
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: Text(
-                      "Filter",
-                      style: TextStyle(
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: Text(
+                    "Filter",
+                    style: TextStyle(
                         fontWeight: AppFontWeight.regular,
                         fontSize: 20,
-                        color: ColorConstant.whiteBlack60
-                      ),
-                    ),
+                        color: ColorConstant.whiteBlack60),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: ColorConstant.whiteBlack40),
-                      color: Colors.white
-                    ),
-                    width: 300,
-                    height: 40,
-                    alignment: Alignment.center,
-                    child: DropdownButton<String>(
+                      color: Colors.white),
+                  width: 300,
+                  height: 40,
+                  alignment: Alignment.center,
+                  child: DropdownButton<String>(
                       underline: Container(),
                       isExpanded: true,
                       value: selectedValue,
                       items: list.map((e) {
                         return DropdownMenuItem<String>(
-                          value: e,
-                          child: Text(e)
-                        );
+                            value: e, child: Text(e));
                       }).toList(),
                       onChanged: (value) {
                         setState(() {
                           selectedValue = value!;
                         });
-                        int? status = value == "All Ticket" ? null : list.indexOf(value!)-1;
+                        int? status = value == "All Ticket"
+                            ? null
+                            : list.indexOf(value!) - 1;
                         context.read<HelpDeskViewModel>().setIsFormNoti = false;
-                        context.read<TemplateDesktopViewModel>().changeState(context, list.indexOf(selectedValue), 4);
-                        context.read<HelpDeskViewModel>().setShowMessagePageState(false);
-                        context.read<HelpDeskViewModel>().clearContentController();
+                        context.read<TemplateDesktopViewModel>().changeState(
+                            context, list.indexOf(selectedValue), 4);
+                        context
+                            .read<HelpDeskViewModel>()
+                            .setShowMessagePageState(false);
+                        context
+                            .read<HelpDeskViewModel>()
+                            .clearContentController();
                         context.read<HelpDeskViewModel>().clearModel();
                         context.read<HelpDeskViewModel>().clearReplyDocId();
                         context.read<HelpDeskViewModel>().setIsSafeLoad = true;
-                        context.read<HelpDeskViewModel>().setSelectedStatus = status;
-                      }
+                        context.read<HelpDeskViewModel>().setSelectedStatus =
+                            status;
+                      }),
+                ),
+                Builder(builder: (context) {
+                  if (widget.categoty.isEmpty) {
+                    return Container();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: ColorConstant.whiteBlack40),
+                          color: Colors.white),
+                      width: 300,
+                      height: 40,
+                      alignment: Alignment.center,
+                      child: DropdownButton<String>(
+                          underline: Container(),
+                          isExpanded: true,
+                          value: selectedCategory,
+                          items: widget.categoty.map((e) {
+                            return DropdownMenuItem<String>(
+                                value: e, child: Text(e));
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCategory = value!;
+                            });
+                            String? category =
+                                value == "All category" ? null : value;
+                            context.read<HelpDeskViewModel>().setIsFormNoti =
+                                false;
+                            context
+                                .read<TemplateDesktopViewModel>()
+                                .changeState(
+                                    context, list.indexOf(selectedValue), 4);
+                            context
+                                .read<HelpDeskViewModel>()
+                                .setShowMessagePageState(false);
+                            context
+                                .read<HelpDeskViewModel>()
+                                .clearContentController();
+                            context.read<HelpDeskViewModel>().clearModel();
+                            context.read<HelpDeskViewModel>().clearReplyDocId();
+                            context.read<HelpDeskViewModel>().setIsSafeLoad =
+                                true;
+                            context
+                                .read<HelpDeskViewModel>()
+                                .setSelectedCategory = category;
+                          }),
                     ),
-                  ),
-                  Builder(
-                    builder: (context) {
-                      if (widget.categoty.isEmpty) {
-                        return Container();
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: ColorConstant.whiteBlack40),
-                            color: Colors.white
-                          ),
-                          width: 300,
-                          height: 40,
-                          alignment: Alignment.center,
-                          child: 
-                          DropdownButton<String>(
-                            underline: Container(),
-                            isExpanded: true,
-                            value: selectedCategory,
-                            items: widget.categoty.map((e) {
-                              return DropdownMenuItem<String>(
-                                value: e,
-                                child: Text(e)
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedCategory = value!;
-                              });
-                              String? category = value == "All category" ? null : value;
-                              context.read<HelpDeskViewModel>().setIsFormNoti = false;
-                              context.read<TemplateDesktopViewModel>().changeState(context, list.indexOf(selectedValue), 4);
-                              context.read<HelpDeskViewModel>().setShowMessagePageState(false);
-                              context.read<HelpDeskViewModel>().clearContentController();
-                              context.read<HelpDeskViewModel>().clearModel();
-                              context.read<HelpDeskViewModel>().clearReplyDocId();
-                              context.read<HelpDeskViewModel>().setIsSafeLoad = true;
-                              context.read<HelpDeskViewModel>().setSelectedCategory  = category;
-                            }
-                          ),
-                        ),
-                      );
-                    }
-                  ),
-                  const Spacer(),
-                  Container(
+                  );
+                }),
+                const Spacer(),
+                Container(
                     decoration: BoxDecoration(
                       color: ColorConstant.white,
                       borderRadius: BorderRadius.circular(16),
@@ -319,48 +339,46 @@ class _BodyState extends State<Body> {
                     width: 280,
                     height: 50,
                     padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: const SearchBar(
-                      isHelpDeskPage: true
-                    )
-                  )
-                ],
-              ),
-            );
-          }
-        ),
+                    child: const SearchBar(isHelpDeskPage: true))
+              ],
+            ),
+          );
+        }),
         StreamBuilder(
-          stream: query(
-            uid, 
-            tagBarSelected, 
-            isAdmin,
-            category: categoryFilter
-          ),
+          stream: query(uid, tagBarSelected, isAdmin, category: categoryFilter),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
+              print(snapshot.data!.docs.length);
               if (snapshot.hasData) {
                 int docAmount = 0;
                 for (int i = 0; i < snapshot.data!.docs.length; i++) {
-                  if (snapshot.data.docs[i].get("adminId") == null || snapshot.data.docs[i].get("adminId") == uid) {
-                    docAmount++;
+                  if (isAdmin) {
+                    if (snapshot.data.docs[i].get("adminId") == null ||
+                        snapshot.data.docs[i].get("adminId") == uid) {
+                      docAmount++;
+                    }
+                  } else {
+                    docAmount = snapshot.data!.docs.length;
+                    break;
                   }
                 }
                 context.read<HelpDeskViewModel>().initTicket(docAmount, limit);
-                int start = context.watch<HelpDeskViewModel>().getStartTicket as int;
-                int end = context.watch<HelpDeskViewModel>().getEndTicket as int;
+                int start =
+                    context.watch<HelpDeskViewModel>().getStartTicket as int;
+                int end =
+                    context.watch<HelpDeskViewModel>().getEndTicket as int;
                 int all = context.watch<HelpDeskViewModel>().getAllTicket ?? 0;
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Column(
-                    children: [
-                      Stack(
-                        children: [
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
+                      children: [
+                        Stack(children: [
                           Container(
                             height: 73,
                             decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: ColorConstant.whiteBlack40)
-                              )
-                            ),
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: ColorConstant.whiteBlack40))),
                           ),
                           Container(
                             height: 72,
@@ -380,98 +398,135 @@ class _BodyState extends State<Body> {
                                   child: IconButton(
                                     onPressed: () {
                                       if (isFromNoti) {
-                                        context.read<HelpDeskViewModel>().setIsFormNoti = false;
-                                      }
-                                      else if (isShowMesg) {
-                                        context.read<HelpDeskViewModel>().setShowMessagePageState(false);
-                                        context.read<HelpDeskViewModel>().clearModel();
-                                        context.read<HelpDeskViewModel>().setIsSafeClick = false;
-                                        context.read<HelpDeskViewModel>().setIsSafeLoad = true;
+                                        context
+                                            .read<HelpDeskViewModel>()
+                                            .setIsFormNoti = false;
+                                      } else if (isShowMesg) {
+                                        context
+                                            .read<HelpDeskViewModel>()
+                                            .setShowMessagePageState(false);
+                                        context
+                                            .read<HelpDeskViewModel>()
+                                            .clearModel();
+                                        context
+                                            .read<HelpDeskViewModel>()
+                                            .setIsSafeClick = false;
+                                        context
+                                            .read<HelpDeskViewModel>()
+                                            .setIsSafeLoad = true;
                                       } else {
-                                        context.read<HelpDeskViewModel>().clearModel();
-                                        context.read<HelpDeskViewModel>().clearContentController();
-                                        context.read<TextSearch>().clearSearchText();
+                                        context
+                                            .read<HelpDeskViewModel>()
+                                            .clearModel();
+                                        context
+                                            .read<HelpDeskViewModel>()
+                                            .clearContentController();
+                                        context
+                                            .read<TextSearch>()
+                                            .clearSearchText();
                                       }
                                     },
                                     icon: Icon(
-                                      isShowMesg || context.watch<HelpDeskViewModel>().getIsFromNoti
-                                      ?  Icons.arrow_back_rounded
-                                      : Icons.refresh_rounded, 
+                                      isShowMesg ||
+                                              context
+                                                  .watch<HelpDeskViewModel>()
+                                                  .getIsFromNoti
+                                          ? Icons.arrow_back_rounded
+                                          : Icons.refresh_rounded,
                                       color: ColorConstant.whiteBlack70,
                                     ),
                                   ),
                                 ),
-                                Builder(
-                                  builder: (context) {
-                                    if ((isShowMesg || isFromNoti) && widget.isAdmin) {
-                                      return const AdminTicketSetting();
-                                    }
-                                    return Container();
+                                Builder(builder: (context) {
+                                  if ((isShowMesg || isFromNoti) &&
+                                      widget.isAdmin) {
+                                    return const AdminTicketSetting();
                                   }
-                                ),
+                                  return Container();
+                                }),
                                 const Spacer(),
                                 _iconLoader(isShowMesg, start, end, all, limit),
                               ],
                             ),
                           ),
-                        ]
-                      ),
-                      Builder(
-                        builder: (context) {
+                        ]),
+                        Builder(builder: (context) {
                           if (isFromNoti) {
                             return bodyReply(screenHeight);
                           }
                           if (isShowMesg) {
-                            int selectedTicket = context.watch<HelpDeskViewModel>().getSelectedTicket!;
-                            int calculatedPage = (selectedTicket / (limit)).ceil();
-                            int pageNumber = context.read<HelpDeskViewModel>().getPageNumber;
-                            context.read<HelpDeskViewModel>().addPreviousFirst = context.read<HelpDeskViewModel>().getFirstDoc!.id;
-                            context.read<HelpDeskViewModel>().setIsReverse = true;
+                            int selectedTicket = context
+                                .watch<HelpDeskViewModel>()
+                                .getSelectedTicket!;
+                            int calculatedPage =
+                                (selectedTicket / (limit)).ceil();
+                            int pageNumber =
+                                context.read<HelpDeskViewModel>().getPageNumber;
+                            context.read<HelpDeskViewModel>().addPreviousFirst =
+                                context
+                                    .read<HelpDeskViewModel>()
+                                    .getFirstDoc!
+                                    .id;
+                            context.read<HelpDeskViewModel>().setIsReverse =
+                                true;
                             if (calculatedPage == pageNumber) {
                               SetReply.setReplyPageData(context, limit);
-                            } 
+                            }
                             if (calculatedPage > pageNumber) {
                               if (calculatedPage > pageNumber) {
-                                context.read<HelpDeskViewModel>().setIndicator(true, limit);
-                              } else if ((selectedTicket / (limit)).ceil() < pageNumber) {
-                                context.read<HelpDeskViewModel>().setIndicator(false, limit);
+                                context
+                                    .read<HelpDeskViewModel>()
+                                    .setIndicator(true, limit);
+                              } else if ((selectedTicket / (limit)).ceil() <
+                                  pageNumber) {
+                                context
+                                    .read<HelpDeskViewModel>()
+                                    .setIndicator(false, limit);
                               }
-                              context.read<HelpDeskViewModel>().setPageNumber = calculatedPage;
+                              context.read<HelpDeskViewModel>().setPageNumber =
+                                  calculatedPage;
                               return ReplyStream(
                                 stream: query(
-                                  uid, 
-                                  tagBarSelected, 
-                                  isAdmin, 
-                                  startDoc: context.watch<HelpDeskViewModel>().getLastDoc,
+                                  uid,
+                                  tagBarSelected,
+                                  isAdmin,
+                                  startDoc: context
+                                      .watch<HelpDeskViewModel>()
+                                      .getLastDoc,
                                   limit: limit,
-                                ), 
+                                ),
                                 limit: limit,
                                 body: bodyReply(screenHeight),
                                 loder: loadingWidget(screenHeight),
                               );
-                            } 
-                            else if (calculatedPage < pageNumber) {
+                            } else if (calculatedPage < pageNumber) {
                               if (calculatedPage > pageNumber) {
-                                context.read<HelpDeskViewModel>().setIndicator(true, limit);
-                              } else if ((selectedTicket / (limit)).ceil() < pageNumber) {
-                                context.read<HelpDeskViewModel>().setIndicator(false, limit);
+                                context
+                                    .read<HelpDeskViewModel>()
+                                    .setIndicator(true, limit);
+                              } else if ((selectedTicket / (limit)).ceil() <
+                                  pageNumber) {
+                                context
+                                    .read<HelpDeskViewModel>()
+                                    .setIndicator(false, limit);
                               }
-                              context.read<HelpDeskViewModel>().setPageNumber = calculatedPage;
+                              context.read<HelpDeskViewModel>().setPageNumber =
+                                  calculatedPage;
                               return FutureBuilder(
-                                future: context.read<HelpDeskViewModel>().getPreviousFirst,
+                                future: context
+                                    .read<HelpDeskViewModel>()
+                                    .getPreviousFirst,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.done) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
                                     return ReplyStream(
                                       stream: query(
-                                        uid, 
-                                        tagBarSelected, 
-                                        isAdmin, 
-                                        startDoc: snapshot.data,
-                                        limit: limit,
-                                        isReverse: true
-                                      ), 
-                                      limit: limit, 
-                                      body: bodyReply(screenHeight), 
+                                          uid, tagBarSelected, isAdmin,
+                                          startDoc: snapshot.data,
+                                          limit: limit,
+                                          isReverse: true),
+                                      limit: limit,
+                                      body: bodyReply(screenHeight),
                                       loder: loadingWidget(screenHeight),
                                     );
                                   }
@@ -479,39 +534,41 @@ class _BodyState extends State<Body> {
                                 },
                               );
                             }
-                            context.read<HelpDeskViewModel>().setIsSafeClick = true;
+                            context.read<HelpDeskViewModel>().setIsSafeClick =
+                                true;
                             return bodyReply(screenHeight);
                           }
-                          return TicketList(limit: limit, selectedCategory: selectedCategory == "All category" ? null : selectedCategory,);
-                        }
-                      ),
-                      Builder(
-                        builder: (context) {
+                          return TicketList(
+                            limit: limit,
+                            selectedCategory: selectedCategory == "All category"
+                                ? null
+                                : selectedCategory,
+                          );
+                        }),
+                        Builder(builder: (context) {
                           if (!isShowMesg && !isFromNoti) {
                             return Container(
-                              height: 56,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
-                                )
-                              ),
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  _iconLoader(isShowMesg, start, end, all, limit),
-                                ],
-                              )
-                            );
+                                height: 56,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(16),
+                                      bottomRight: Radius.circular(16),
+                                    )),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    _iconLoader(
+                                        isShowMesg, start, end, all, limit),
+                                  ],
+                                ));
                           }
                           return Container();
-                        }
-                      )
-                    ],
-                  )
-                );
+                        })
+                      ],
+                    ));
               }
             }
             return Container();
