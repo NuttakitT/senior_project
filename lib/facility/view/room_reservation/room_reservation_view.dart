@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
@@ -104,20 +104,15 @@ class RoomReservationForm extends StatefulWidget {
 class _RoomReservationFormState extends State<RoomReservationForm> {
   DateTime? _date;
   DateTime? _time;
+  DateTime? endTime;
+  int hour = 1;
   TextEditingController textController = TextEditingController();
 
   bool isReserveButtonEnabled() {
-    if (_date != null && _time != null && textController.text.isNotEmpty) {
+    if (_date != null && _time != null && endTime != null && textController.text.isNotEmpty) {
       return true;
     }
     return false;
-  }
-
-  String _formatTimeRange(TimeOfDay startTime) {
-    final endTime = startTime.replacing(hour: startTime.hour + 1, minute: 20);
-    final formattedStartTime = startTime.format(context);
-    final formattedEndTime = endTime.format(context);
-    return '$formattedStartTime - $formattedEndTime';
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -145,7 +140,7 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
   Future<void> _selectTime(BuildContext context) async {
     if (_date == null) return;
     const int startHour = 9; // Start hour (24-hour format)
-    const int endHour = 15; // End hour (24-hour format)
+    const int endHour = 20; // End hour (24-hour format)
     final now = DateTime.now();
 
     final List<TimeOfDay> availableTimes = [];
@@ -153,11 +148,17 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
       if (_date!.day == now.day && _date!.month == now.month && _date!.year == now.year) {
         if (hour >= now.hour) {
           final TimeOfDay time = TimeOfDay(hour: hour, minute: 30);
-          availableTimes.add(time);
+          availableTimes.add(TimeOfDay(hour: hour, minute: 0));
+          if (hour != 20) {
+            availableTimes.add(time);
+          }
         }
       } else {
         final TimeOfDay time = TimeOfDay(hour: hour, minute: 30);
-        availableTimes.add(time);
+        availableTimes.add(TimeOfDay(hour: hour, minute: 0));
+        if (hour != 20) {
+          availableTimes.add(time);
+        }
       }
     }
 
@@ -173,8 +174,7 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
               itemCount: availableTimes.length,
               itemBuilder: (BuildContext context, int index) {
                 final TimeOfDay time = availableTimes[index];
-                TimeOfDay end = TimeOfDay(hour: time.hour+1, minute: 20);
-                final String timeText = "${time.format(context)} - ${end.format(context)}";
+                final String timeText = time.format(context);
                 return ListTile(
                   title: Text(timeText),
                   onTap: () {
@@ -199,6 +199,8 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
 
       setState(() {
         _time = selectedDateTime;
+        endTime = selectedDateTime.add(const Duration(hours: 1));
+        hour = 1;
       });
     }
   }
@@ -299,12 +301,128 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
                       ),
                       child: Text(
                         _time != null
-                            ? _formatTimeRange(TimeOfDay.fromDateTime(_time!))
+                            ? DateFormat('kk:mm').format(_time!)
                             : 'Time in date',
                       ),
                     ),
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: DefaultTextStyle(
+                    style: isMobileSite
+                        ? AppFontStyle.wb80R16
+                        : AppFontStyle.wb80R24,
+                    child: const Text("Hour"),
+                  ),
+                ),
+                SizedBox(width: isMobileSite ? 8 : 16),
+                Expanded(
+                  flex: isMobileSite ? 3 : 6,
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          if (_date != null && _time != null) {
+                            setState(() {
+                              if (hour > 1) {
+                                hour--;
+                                endTime = endTime!.subtract(const Duration(hours: 1));
+                              }
+                            });
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: ColorConstant.orange40,
+                            borderRadius: BorderRadius.circular(8)
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: DefaultTextStyle(
+                            style: isMobileSite
+                                ? AppFontStyle.wb80R16
+                                : AppFontStyle.wb80R24,
+                            child: const Icon(
+                              Icons.remove_rounded,
+                              color: Colors.white,
+                            )
+                          )
+                        ),
+                      ),
+                      SizedBox(width: isMobileSite ? 8 : 16),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: ColorConstant.whiteBlack20),
+                          borderRadius: BorderRadius.circular(8)
+                        ),
+                        padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
+                        width: 70,
+                        alignment: Alignment.center,
+                        child: DefaultTextStyle(
+                          style: isMobileSite
+                              ? AppFontStyle.wb80R16
+                              : AppFontStyle.wb80R24,
+                          child: Text(hour.toString()),
+                        )
+                      ),
+                      SizedBox(width: isMobileSite ? 8 : 16),
+                      InkWell(
+                        onTap: () {
+                          if (_date != null && _time != null) {
+                            if ((endTime!.minute == 30 && endTime!.hour <  20) ||
+                            (endTime!.minute == 0 && endTime!.hour < 21)) {
+                              setState(() {
+                                if (hour < 6) {
+                                  hour++;
+                                  endTime = endTime!.add(const Duration(hours: 1));
+                                }
+                              });
+                            }
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: ColorConstant.orange40,
+                            borderRadius: BorderRadius.circular(8)
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: DefaultTextStyle(
+                            style: isMobileSite
+                                ? AppFontStyle.wb80R16
+                                : AppFontStyle.wb80R24,
+                            child: const Icon(
+                              Icons.add_rounded,
+                              color: Colors.white,
+                            )
+                          )
+                        ),
+                      ),
+                      SizedBox(width: isMobileSite ? 8 : 16),
+                      Builder(
+                        builder: (context) {
+                          if (endTime == null) {
+                            return Container();
+                          }
+                          return Text(
+                            "Finish at ${DateFormat('kk:mm').format(endTime!)}",
+                            style: const TextStyle(
+                              color: ColorConstant.whiteBlack70,
+                              fontSize: 18,
+                              fontWeight: AppFontWeight.regular
+                            ),
+                          );
+                        }
+                      )
+                    ],
+                  ),
+                ),            
               ],
             ),
             // Purpose
@@ -410,6 +528,7 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
                               purpose: textController.text,
                               bookDate: _date!,
                               bookTime: _time!,
+                              endTime: endTime!,
                               userId: id);
                           await context
                               .read<FacilityViewModel>()

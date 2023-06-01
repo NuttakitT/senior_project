@@ -185,6 +185,8 @@ class FacilityViewModel extends ChangeNotifier {
       'dateCreate': Timestamp.now(),
       'bookTime': Timestamp.fromDate(
           combineDateTime(request.bookDate, request.bookTime)),
+      'endTime': Timestamp.fromDate(
+          combineDateTime(request.bookDate, request.endTime)),
       'userId': request.userId,
       'status': "Approve",
     };

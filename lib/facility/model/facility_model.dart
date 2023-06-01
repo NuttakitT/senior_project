@@ -62,12 +62,14 @@ class RoomReservationRequest {
   String purpose;
   DateTime bookDate;
   DateTime bookTime;
+  DateTime endTime;
   String userId;
 
   RoomReservationRequest(
       {required this.purpose,
       required this.bookDate,
       required this.bookTime,
+      required this.endTime,
       required this.userId});
 }
 
