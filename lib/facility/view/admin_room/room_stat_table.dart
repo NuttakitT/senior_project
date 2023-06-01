@@ -3,7 +3,6 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
 import 'package:senior_project/facility/view/admin_room/room_stat_by_month.dart';
-import 'package:senior_project/facility/view/admin_room/room_stat_detail_table.dart';
 
 class RoomStatTable extends StatefulWidget {
   final List<RoomStatNewModel> months;
