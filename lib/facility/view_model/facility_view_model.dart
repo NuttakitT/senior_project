@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:js';
 import 'dart:math';
 
@@ -243,7 +245,6 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   Future<List<RoomReservation>> fetchMyRoomReservation(String userId) async {
-    final now = DateTime.now();
     List<RoomReservation> list = [];
     final roomSnapshot =
         await _roomService.getAllDocument(orderingField: "name");
@@ -272,7 +273,6 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   Future<List<ItemReservation>> fetchMyItemReservation(String userId) async {
-    final now = DateTime.now();
     final snapshot =
         await _itemReservation.getDocumnetByKeyValuePair(["userId"], [userId]);
     List<ItemReservation> list = [];
