@@ -87,6 +87,7 @@ class _TicketListState extends State<TicketList> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    context.read<HelpDeskViewModel>().clearModel();
 
     return ConstrainedBox(
       constraints: BoxConstraints(
