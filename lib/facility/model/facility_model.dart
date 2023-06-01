@@ -19,6 +19,7 @@ class RoomReservation {
   String userId;
   String status;
   String? room; // for watch bookings
+  String? email;
 
   RoomReservation(
       {this.id,
@@ -27,7 +28,8 @@ class RoomReservation {
       required this.bookTime,
       required this.userId,
       required this.status,
-      this.room});
+      this.room,
+      this.email});
 }
 
 class RoomStatModel {
@@ -39,6 +41,19 @@ class RoomStatModel {
   RoomStatModel(
       {required this.roomName,
       required this.roomCategory,
+      required this.amount,
+      required this.reservations});
+}
+
+class RoomStatNewModel {
+  DateTime month;
+  String monthAndYearLabel;
+  int amount;
+  List<RoomReservation> reservations;
+
+  RoomStatNewModel(
+      {required this.month,
+      required this.monthAndYearLabel,
       required this.amount,
       required this.reservations});
 }

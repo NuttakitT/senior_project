@@ -24,8 +24,10 @@ class _AdminRoomState extends State<AdminRoom> {
         useTemplatescroll: true,
         content: Column(
           children: const [
-            FacilityHeader(title: "Room Statistical Section", canPop: false,),
-            RoomDateFilterView(),
+            FacilityHeader(
+              title: "Room Statistical Section",
+              canPop: false,
+            ),
             AdminRoomStatisticView(),
           ],
         ));
@@ -46,17 +48,18 @@ class _AdminRoomStatisticViewState extends State<AdminRoomStatisticView> {
     // DateTime to = DateTime(2023, 5, 20, 12, 0, 0);
 
     return FutureBuilder(
-      future: context.watch<FacilityViewModel>().fetchRoomStatisticData(
-          context.watch<FacilityViewModel>().startDate,
-          context.watch<FacilityViewModel>().endDate),
+      future: context.watch<FacilityViewModel>().fetchBookingData(
+          // context.watch<FacilityViewModel>().startDate,
+          // context.watch<FacilityViewModel>().endDate
+          ),
       builder: ((context, snapshot) {
         if (snapshot.hasError) {
           return Text('Has error ${snapshot.error}');
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          List<RoomStatModel> roomStat = snapshot.data ?? [];
+          List<RoomStatNewModel> roomStat = snapshot.data ?? [];
           return Column(
-            children: [RoomStatTable(rooms: roomStat)],
+            children: [RoomStatTable(months: roomStat)],
           );
         }
         return const Center(

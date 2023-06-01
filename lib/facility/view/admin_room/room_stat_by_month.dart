@@ -5,50 +5,83 @@ import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/core/template/template_desktop/view/page/template_desktop.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
+import 'package:senior_project/facility/view/admin_room/room_stat_detail_table.dart';
 import 'package:senior_project/facility/view/widget/facility_header.dart';
 import 'package:senior_project/facility/view_model/facility_view_model.dart';
+import 'package:collection/collection.dart';
 
-class RoomStatDetailView extends StatefulWidget {
+class RoomStatByMonthView extends StatefulWidget {
   final List<RoomReservation> res;
-  const RoomStatDetailView({super.key, required this.res});
+  const RoomStatByMonthView({super.key, required this.res});
 
   @override
-  State<RoomStatDetailView> createState() => _RoomStatDetailViewState();
+  State<RoomStatByMonthView> createState() => _RoomStatByMonthViewState();
 }
 
-class _RoomStatDetailViewState extends State<RoomStatDetailView> {
+class _RoomStatByMonthViewState extends State<RoomStatByMonthView> {
+  String dayFormat(DateTime? date) {
+    if (date == null) {
+      return "";
+    }
+    return DateFormat('d MMMM yyyy').format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
+    Map<DateTime, List<RoomReservation>> reservationsByDay =
+        groupBy(widget.res, (reservation) {
+      DateTime bookTime = reservation.bookTime;
+      return DateTime(bookTime.year, bookTime.month, bookTime.day);
+    });
+
+    List<DateTime> sortedDays = reservationsByDay.keys.toList()
+      ..sort((a, b) => a.day.compareTo(b.day));
+
+    // Create table for each day
+
     return TemplateDesktop(
-        helpdesk: false,
-        helpdeskadmin: false,
-        home: true,
-        useTemplatescroll: true,
-        content: Column(
-          children: [
-            const FacilityHeader(
-              title: "Room Statistical Section",
-              canPop: true,
+      helpdesk: false,
+      helpdeskadmin: false,
+      home: true,
+      useTemplatescroll: true,
+      content: Column(
+        children: [
+          const FacilityHeader(
+              title: "รายงานการขอใช้ห้องเรียนรายวัน", canPop: true),
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 70,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 24),
+              child: ListView.builder(
+                  itemCount: sortedDays.length,
+                  itemBuilder: (context, index) {
+                    DateTime day = sortedDays[index];
+                    List<RoomReservation> reservations =
+                        reservationsByDay[day]!;
+                    return Column(
+                      children: [
+                        FacilityHeader(title: dayFormat(day), canPop: false),
+                        RoomStatByMonthTable(res: reservations)
+                      ],
+                    );
+                  }),
             ),
-            RoomStatDetailTable(widget: widget),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
 
-class RoomStatDetailTable extends StatefulWidget {
-  const RoomStatDetailTable({
-    Key? key,
-    required this.widget,
-  }) : super(key: key);
-
-  final RoomStatDetailView widget;
+class RoomStatByMonthTable extends StatefulWidget {
+  final List<RoomReservation> res;
+  const RoomStatByMonthTable({Key? key, required this.res}) : super(key: key);
 
   @override
-  State<RoomStatDetailTable> createState() => _RoomStatDetailTableState();
+  State<RoomStatByMonthTable> createState() => _RoomStatByMonthTableState();
 }
 
-class _RoomStatDetailTableState extends State<RoomStatDetailTable> {
+class _RoomStatByMonthTableState extends State<RoomStatByMonthTable> {
   int number = 1;
 
   String dateFormat(DateTime? date) {
@@ -85,16 +118,15 @@ class _RoomStatDetailTableState extends State<RoomStatDetailTable> {
               Consts.startTime,
               Consts.endTime
             ], true, false),
-            for (int i = 0; i < widget.widget.res.length; i++) ...[
+            for (int i = 0; i < widget.res.length; i++) ...[
               buildRow([
-                "${widget.widget.res[i].room}",
-                "isDes ${widget.widget.res[i].userId}",
-                "isDes ${widget.widget.res[i].email}",
-                widget.widget.res[i].purpose,
-                dateFormat(widget.widget.res[i].bookTime),
-                dateFormat(
-                    widget.widget.res[i].bookTime), // Fix here (room-stat)
-              ], false, i == widget.widget.res.length - 1),
+                "${widget.res[i].room}",
+                "isDes ${widget.res[i].userId}",
+                "isDes ${widget.res[i].email}",
+                "isDes ${widget.res[i].purpose}",
+                dateFormat(widget.res[i].bookTime),
+                dateFormat(widget.res[i].bookTime), // Fix here (room-stat)
+              ], false, i == widget.res.length - 1),
             ]
           ],
         ),
