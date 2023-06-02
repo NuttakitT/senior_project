@@ -122,7 +122,7 @@ class _RoomStatByMonthTableState extends State<RoomStatByMonthTable> {
                 "isDes ${widget.res[i].email}",
                 "isDes ${widget.res[i].purpose}",
                 dateFormat(widget.res[i].bookTime),
-                dateFormat(widget.res[i].bookTime), // Fix here (room-stat)
+                dateFormat(widget.res[i].endTime),
               ], false, i == widget.res.length - 1),
             ]
           ],
