@@ -83,7 +83,6 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
                 return Container(
                   alignment: AlignmentDirectional.topCenter,
                   child: Builder(builder: (context) {
-                    // if (screenHeight < 500) {
                     return SingleChildScrollView(
                       child: Column(
                         children: [
@@ -95,15 +94,6 @@ class _HelpDeskMainViewState extends State<HelpDeskMainView> {
                         ],
                       ),
                     );
-                    // }
-                    // return Column(
-                    //   children: [
-                    //     Header.widget(context, widget.isAdmin),
-                    //     Body(
-                    //       isAdmin: widget.isAdmin,
-                    //     )
-                    //   ],
-                    // );
                   }),
                 );
               }));

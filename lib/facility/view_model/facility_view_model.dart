@@ -1,6 +1,4 @@
-import 'dart:js';
-import 'dart:math';
-
+// ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -49,17 +47,50 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   Future<List<RoomModel>> getAvailableRoom(
-      DateTime? date, DateTime? time) async {
+      DateTime? date, DateTime? time, DateTime? endTime) async {
     try {
       List<RoomModel> rooms = [];
       if (date != null && time != null) {
         final roomSnapshot =
             await _roomService.getAllDocument(orderingField: "name");
         for (int i = 0; i < roomSnapshot!.docs.length; i++) {
-          final reservationSnapshot = await _roomService
-              .getSubDocumnetByKeyValuePair(roomSnapshot.docs[i].id,
-                  "reservations", ["bookTime"], [combineDateTime(date, time)]);
-          if (reservationSnapshot!.size == 0) {
+          // final reservationSnapshot = await _roomService
+          //     .getSubDocumnetByKeyValuePair(roomSnapshot.docs[i].id,
+          //         "reservations", ["bookTime"], [combineDateTime(date, time)]);
+          DateTime startTime = combineDateTime(date, time);
+          endTime = combineDateTime(date, endTime!);
+          // startTime in range of resevaed room
+          final endTimeRangeSnapshot = await FirebaseFirestore
+            .instance
+            .collection("rooms")
+            .doc(roomSnapshot.docs[i].id)
+            .collection("reservations")
+            // .where("bookTime", isLessThanOrEqualTo: startTime)
+            .where("endTime", isGreaterThan: startTime)
+            .get();
+          final startTimeRangeSnapshot = await FirebaseFirestore
+            .instance
+            .collection("rooms")
+            .doc(roomSnapshot.docs[i].id)
+            .collection("reservations")
+            .where("bookTime", isLessThanOrEqualTo: startTime)
+            .get();
+          // endTime in range of reserved room
+          final endTimeCheckSnapshot = await FirebaseFirestore
+            .instance
+            .collection("rooms")
+            .doc(roomSnapshot.docs[i].id)
+            .collection("reservations")
+            .where("bookTime", isLessThan: endTime)
+            .get();
+          final endTimeCheckSnapshot2 = await FirebaseFirestore
+            .instance
+            .collection("rooms")
+            .doc(roomSnapshot.docs[i].id)
+            .collection("reservations")
+            .where("endTime", isGreaterThan: endTime)
+            .get();
+          if ((endTimeRangeSnapshot.size == 0 || startTimeRangeSnapshot.size == 0) && (endTimeCheckSnapshot.size == 0 || endTimeCheckSnapshot2.size == 0)) {
             // start check schedules
             List<Schedule> schedules = [];
             final scheduleSnapshot = await _scheduleService
@@ -184,6 +215,8 @@ class FacilityViewModel extends ChangeNotifier {
       'dateCreate': Timestamp.now(),
       'bookTime': Timestamp.fromDate(
           combineDateTime(request.bookDate, request.bookTime)),
+      'endTime': Timestamp.fromDate(
+          combineDateTime(request.bookDate, request.endTime)),
       'userId': request.userId,
       'status': "Approve",
     };
@@ -240,7 +273,6 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   Future<List<RoomReservation>> fetchMyRoomReservation(String userId) async {
-    final now = DateTime.now();
     List<RoomReservation> list = [];
     final roomSnapshot =
         await _roomService.getAllDocument(orderingField: "name");
@@ -251,6 +283,7 @@ class FacilityViewModel extends ChangeNotifier {
       if (reservationSnapshot!.size != 0) {
         for (int j = 0; j < reservationSnapshot.docs.length; j++) {
           Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
+          Timestamp endTime = reservationSnapshot.docs[j].get("endTime");
           Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
           // if (bookTime.toDate().isAfter(now)) {
           list.add(RoomReservation(
@@ -260,7 +293,8 @@ class FacilityViewModel extends ChangeNotifier {
               dateCreate: dateCreate.toDate(),
               bookTime: bookTime.toDate(),
               userId: userId,
-              status: reservationSnapshot.docs[j].get("status")));
+              status: reservationSnapshot.docs[j].get("status"), 
+              endTime: endTime.toDate()));
           // }
         }
       }
@@ -269,7 +303,6 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   Future<List<ItemReservation>> fetchMyItemReservation(String userId) async {
-    final now = DateTime.now();
     final snapshot =
         await _itemReservation.getDocumnetByKeyValuePair(["userId"], [userId]);
     List<ItemReservation> list = [];
@@ -376,6 +409,7 @@ class FacilityViewModel extends ChangeNotifier {
         for (int j = 0; j < reservationSnapshot.docs.length; j++) {
           Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
           Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
+          Timestamp endTime = reservationSnapshot.docs[j].get("endTime");
           String userId = reservationSnapshot.docs[j].get("userId");
           String name = "user";
           String email = "email";
@@ -391,6 +425,7 @@ class FacilityViewModel extends ChangeNotifier {
               purpose: reservationSnapshot.docs[j].get("purpose"),
               dateCreate: dateCreate.toDate(),
               bookTime: bookTime.toDate(),
+              endTime: endTime.toDate(),
               userId: name,
               email: email,
               status: reservationSnapshot.docs[j].get("status")));

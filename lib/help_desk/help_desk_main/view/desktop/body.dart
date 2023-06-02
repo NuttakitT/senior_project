@@ -348,7 +348,6 @@ class _BodyState extends State<Body> {
           stream: query(uid, tagBarSelected, isAdmin, category: categoryFilter),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
-              print(snapshot.data!.docs.length);
               if (snapshot.hasData) {
                 int docAmount = 0;
                 for (int i = 0; i < snapshot.data!.docs.length; i++) {
