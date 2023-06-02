@@ -478,7 +478,7 @@ class _RoomReservationFormState extends State<RoomReservationForm> {
                         : FutureBuilder(
                             future: context
                                 .read<FacilityViewModel>()
-                                .getAvailableRoom(_date, _time),
+                                .getAvailableRoom(_date, _time, endTime),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done) {
                                 final rooms = snapshot.data ?? [];

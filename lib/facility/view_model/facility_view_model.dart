@@ -1,8 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:js';
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -51,17 +47,50 @@ class FacilityViewModel extends ChangeNotifier {
   }
 
   Future<List<RoomModel>> getAvailableRoom(
-      DateTime? date, DateTime? time) async {
+      DateTime? date, DateTime? time, DateTime? endTime) async {
     try {
       List<RoomModel> rooms = [];
       if (date != null && time != null) {
         final roomSnapshot =
             await _roomService.getAllDocument(orderingField: "name");
         for (int i = 0; i < roomSnapshot!.docs.length; i++) {
-          final reservationSnapshot = await _roomService
-              .getSubDocumnetByKeyValuePair(roomSnapshot.docs[i].id,
-                  "reservations", ["bookTime"], [combineDateTime(date, time)]);
-          if (reservationSnapshot!.size == 0) {
+          // final reservationSnapshot = await _roomService
+          //     .getSubDocumnetByKeyValuePair(roomSnapshot.docs[i].id,
+          //         "reservations", ["bookTime"], [combineDateTime(date, time)]);
+          DateTime startTime = combineDateTime(date, time);
+          endTime = combineDateTime(date, endTime!);
+          // startTime in range of resevaed room
+          final endTimeRangeSnapshot = await FirebaseFirestore
+            .instance
+            .collection("rooms")
+            .doc(roomSnapshot.docs[i].id)
+            .collection("reservations")
+            // .where("bookTime", isLessThanOrEqualTo: startTime)
+            .where("endTime", isGreaterThan: startTime)
+            .get();
+          final startTimeRangeSnapshot = await FirebaseFirestore
+            .instance
+            .collection("rooms")
+            .doc(roomSnapshot.docs[i].id)
+            .collection("reservations")
+            .where("bookTime", isLessThanOrEqualTo: startTime)
+            .get();
+          // endTime in range of reserved room
+          final endTimeCheckSnapshot = await FirebaseFirestore
+            .instance
+            .collection("rooms")
+            .doc(roomSnapshot.docs[i].id)
+            .collection("reservations")
+            .where("bookTime", isLessThan: endTime)
+            .get();
+          final endTimeCheckSnapshot2 = await FirebaseFirestore
+            .instance
+            .collection("rooms")
+            .doc(roomSnapshot.docs[i].id)
+            .collection("reservations")
+            .where("endTime", isGreaterThan: endTime)
+            .get();
+          if ((endTimeRangeSnapshot.size == 0 || startTimeRangeSnapshot.size == 0) && (endTimeCheckSnapshot.size == 0 || endTimeCheckSnapshot2.size == 0)) {
             // start check schedules
             List<Schedule> schedules = [];
             final scheduleSnapshot = await _scheduleService
