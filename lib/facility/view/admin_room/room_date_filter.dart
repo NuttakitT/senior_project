@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/facility/view_model/facility_view_model.dart';
-import 'package:senior_project/statistic/view_model/statistic_view_model.dart';
 
 class RoomDateFilterView extends StatefulWidget {
   const RoomDateFilterView({super.key});

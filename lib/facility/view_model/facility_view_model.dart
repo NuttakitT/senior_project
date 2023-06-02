@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:senior_project/core/datasource/firebase_services.dart';
 import 'package:senior_project/core/view_model/app_view_model.dart';
@@ -54,21 +55,18 @@ class FacilityViewModel extends ChangeNotifier {
     try {
       List<RoomModel> rooms = [];
       if (date != null && time != null) {
-        final roomSnapshot = await _roomService.getAllDocument(orderingField: "name");
+        final roomSnapshot =
+            await _roomService.getAllDocument(orderingField: "name");
         for (int i = 0; i < roomSnapshot!.docs.length; i++) {
-          final reservationSnapshot = await _roomService.getSubDocumnetByKeyValuePair(
-            roomSnapshot.docs[i].id,
-            "reservations", 
-            ["bookTime"], 
-            [combineDateTime(date, time)]
-          );
+          final reservationSnapshot = await _roomService
+              .getSubDocumnetByKeyValuePair(roomSnapshot.docs[i].id,
+                  "reservations", ["bookTime"], [combineDateTime(date, time)]);
           if (reservationSnapshot!.size == 0) {
             // start check schedules
             List<Schedule> schedules = [];
-            final scheduleSnapshot = await _scheduleService.getDocumnetByKeyValuePair(
-              ["roomName", "dayOfWeek"],
-              [roomSnapshot.docs[i].get("name"), date.weekday]
-            );
+            final scheduleSnapshot = await _scheduleService
+                .getDocumnetByKeyValuePair(["roomName", "dayOfWeek"],
+                    [roomSnapshot.docs[i].get("name"), date.weekday]);
             if (scheduleSnapshot!.size != 0) {
               for (int i = 0; i < scheduleSnapshot.docs.length; i++) {
                 Timestamp startTime = scheduleSnapshot.docs[i].get("startTime");
@@ -108,13 +106,14 @@ class FacilityViewModel extends ChangeNotifier {
       return true;
     }
     for (Schedule sch in schedules) {
-      DateTime startTime =
-          DateTime(time.year, time.month, time.day, sch.startTime.hour, sch.startTime.minute);
-      DateTime endTime =
-          DateTime(time.year, time.month, time.day, sch.endTime.hour, sch.endTime.minute);
+      DateTime startTime = DateTime(time.year, time.month, time.day,
+          sch.startTime.hour, sch.startTime.minute);
+      DateTime endTime = DateTime(time.year, time.month, time.day,
+          sch.endTime.hour, sch.endTime.minute);
       DateTime endTimeBooking =
-          DateTime(time.year, time.month, time.day, time.hour+1, 20);
-      bool isAfterStartTime = time.isAfter(startTime) || endTimeBooking.isAfter(startTime);
+          DateTime(time.year, time.month, time.day, time.hour + 1, 20);
+      bool isAfterStartTime =
+          time.isAfter(startTime) || endTimeBooking.isAfter(startTime);
       bool isTheSameAsStartTime = time.isAtSameMomentAs(startTime);
       bool isBeforeEndTime = time.isBefore(endTime);
       if ((isAfterStartTime && isBeforeEndTime) || isTheSameAsStartTime) {
@@ -257,14 +256,14 @@ class FacilityViewModel extends ChangeNotifier {
           Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
           Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
           // if (bookTime.toDate().isAfter(now)) {
-            list.add(RoomReservation(
+          list.add(RoomReservation(
               room: roomSnapshot.docs[i].get("name"),
               id: reservationSnapshot.docs[j].id,
               purpose: reservationSnapshot.docs[j].get("purpose"),
               dateCreate: dateCreate.toDate(),
               bookTime: bookTime.toDate(),
               userId: userId,
-              status: reservationSnapshot.docs[j].get("status")));            
+              status: reservationSnapshot.docs[j].get("status")));
           // }
         }
       }
@@ -281,15 +280,15 @@ class FacilityViewModel extends ChangeNotifier {
         Timestamp startDate = snapshot.docs[i].get("startDate");
         Timestamp endDate = snapshot.docs[i].get("endDate");
         // if (endDate.toDate().isAfter(now)) {
-          list.add(ItemReservation(
-              id: snapshot.docs[i].id,
-              objectName: snapshot.docs[i].get("objectName"),
-              purpose: snapshot.docs[i].get("purpose"),
-              amount: snapshot.docs[i].get("amount"),
-              startDate: startDate.toDate(),
-              endDate: endDate.toDate(),
-              userId: snapshot.docs[i].get("userId"),
-              status: snapshot.docs[i].get("status")));
+        list.add(ItemReservation(
+            id: snapshot.docs[i].id,
+            objectName: snapshot.docs[i].get("objectName"),
+            purpose: snapshot.docs[i].get("purpose"),
+            amount: snapshot.docs[i].get("amount"),
+            startDate: startDate.toDate(),
+            endDate: endDate.toDate(),
+            userId: snapshot.docs[i].get("userId"),
+            status: snapshot.docs[i].get("status")));
         // }
       }
     }
@@ -303,7 +302,8 @@ class FacilityViewModel extends ChangeNotifier {
     return booking;
   }
 
-  Future<void> cancelBooking(BuildContext context, String id, bool isRoom, String? detail) async {
+  Future<void> cancelBooking(
+      BuildContext context, String id, bool isRoom, String? detail) async {
     if (isRoom) {
       final snapshot = await _roomService
           .getDocumnetByKeyValuePair(["name"], [detail], limit: 1);
@@ -313,42 +313,80 @@ class FacilityViewModel extends ChangeNotifier {
       }
     } else {
       final snapshot = await _itemReservation.getDocumentById(id);
-      context.read<HelpDeskViewModel>().editTask(
-        snapshot!.get("ticketId"), 
-        true, 
-        2
-      );
+      context
+          .read<HelpDeskViewModel>()
+          .editTask(snapshot!.get("ticketId"), true, 2);
       await _itemReservation.deleteDocument(id);
     }
     notifyListeners();
   }
 
   // เพิ่มรายงานการจองห้อง ในแง่ของ เลขห้อง วันเวลา
-  Future<List<RoomStatModel>> fetchRoomStatisticData(
-      DateTime from, DateTime to) async {
-    List<RoomStatModel> list = [];
+  // Future<List<RoomStatModel>> fetchRoomStatisticData(
+  //     DateTime from, DateTime to) async {
+  //   List<RoomStatModel> list = [];
+  //   final roomSnapshot =
+  //       await _roomService.getAllDocument(orderingField: "name");
+  //   for (int i = 0; i < roomSnapshot!.docs.length; i++) {
+  //     List<RoomReservation> res = [];
+  //     final reservationSnapshot =
+  //         await _roomService.getSubDocumentByDateInterval(
+  //             roomSnapshot.docs[i].id,
+  //             'reservations',
+  //             'bookTime',
+  //             startDate,
+  //             endDate);
+  //     if (reservationSnapshot!.size != 0) {
+  //       for (int j = 0; j < reservationSnapshot.docs.length; j++) {
+  //         Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
+  //         Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
+  //         String userId = reservationSnapshot.docs[j].get("userId");
+  //         String name = "user";
+  //         final nameSnapshot =
+  //             await FirebaseServices("user").getDocumentById(userId);
+  //         if (nameSnapshot!.exists) {
+  //           name = nameSnapshot.get("name") ?? "";
+  //         }
+
+  //         res.add(RoomReservation(
+  //             room: roomSnapshot.docs[i].get("name"),
+  //             purpose: reservationSnapshot.docs[j].get("purpose"),
+  //             dateCreate: dateCreate.toDate(),
+  //             bookTime: bookTime.toDate(),
+  //             userId: name,
+  //             status: reservationSnapshot.docs[j].get("status")));
+  //       }
+  //     }
+
+  //     list.add(RoomStatModel(
+  //         roomName: roomSnapshot.docs[i].get("name"),
+  //         roomCategory: roomSnapshot.docs[i].get("type"),
+  //         amount: reservationSnapshot.docs.length,
+  //         reservations: res));
+  //   }
+  //   return list;
+  // }
+
+  Future<List<RoomReservation>> fetchRoomStatisticData() async {
+    List<RoomReservation> res = [];
     final roomSnapshot =
         await _roomService.getAllDocument(orderingField: "name");
     for (int i = 0; i < roomSnapshot!.docs.length; i++) {
-      List<RoomReservation> res = [];
-      final reservationSnapshot =
-          await _roomService.getSubDocumentByDateInterval(
-              roomSnapshot.docs[i].id,
-              'reservations',
-              'bookTime',
-              startDate,
-              endDate);
+      final reservationSnapshot = await _roomService.getAllSubDocument(
+          roomSnapshot.docs[i].id, 'reservations');
       if (reservationSnapshot!.size != 0) {
         for (int j = 0; j < reservationSnapshot.docs.length; j++) {
           Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
           Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
           String userId = reservationSnapshot.docs[j].get("userId");
           String name = "user";
+          String email = "email";
           final nameSnapshot =
               await FirebaseServices("user").getDocumentById(userId);
           if (nameSnapshot!.exists) {
             name = nameSnapshot.get("name") ?? "";
-          }
+            email = nameSnapshot.get("email") ?? "";
+          } else {}
 
           res.add(RoomReservation(
               room: roomSnapshot.docs[i].get("name"),
@@ -356,17 +394,47 @@ class FacilityViewModel extends ChangeNotifier {
               dateCreate: dateCreate.toDate(),
               bookTime: bookTime.toDate(),
               userId: name,
+              email: email,
               status: reservationSnapshot.docs[j].get("status")));
         }
       }
-
-      list.add(RoomStatModel(
-          roomName: roomSnapshot.docs[i].get("name"),
-          roomCategory: roomSnapshot.docs[i].get("type"),
-          amount: reservationSnapshot.docs.length,
-          reservations: res));
     }
-    return list;
+    return res;
+  }
+
+  Future<List<RoomStatNewModel>> fetchBookingData() async {
+    List<RoomStatNewModel> roomStats = [];
+    List<RoomReservation> res = await fetchRoomStatisticData();
+
+    for (var reservation in res) {
+      DateTime month =
+          DateTime(reservation.bookTime.year, reservation.bookTime.month);
+      bool foundMonth = false;
+      for (var roomStat in roomStats) {
+        if (roomStat.month == month) {
+          roomStat.reservations.add(reservation);
+          roomStat.amount++;
+          foundMonth = true;
+          break;
+        }
+      }
+      if (!foundMonth) {
+        roomStats.add(
+          RoomStatNewModel(
+            month: month,
+            monthAndYearLabel: DateFormat('MMMM yyyy').format(month),
+            amount: 1,
+            reservations: [reservation],
+          ),
+        );
+      }
+    }
+
+    roomStats.sort(((a, b) {
+      return b.month.compareTo(a.month);
+    }));
+
+    return roomStats;
   }
 
   void setStartDate(DateTime? date) {

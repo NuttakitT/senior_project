@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/assets/color_constant.dart';
 import 'package:senior_project/assets/font_style.dart';
 import 'package:senior_project/facility/model/facility_model.dart';
-import 'package:senior_project/facility/view/admin_room/room_stat_detail_table.dart';
+import 'package:senior_project/facility/view/admin_room/room_stat_by_month.dart';
 
 class RoomStatTable extends StatefulWidget {
-  final List<RoomStatModel> rooms;
-  const RoomStatTable({super.key, required this.rooms});
+  final List<RoomStatNewModel> months;
+  const RoomStatTable({super.key, required this.months});
 
   @override
   State<RoomStatTable> createState() => _RoomStatTableState();
@@ -48,21 +48,15 @@ class _RoomStatDetailTableState extends State<RoomStatDetailTable> {
             borderRadius: BorderRadius.circular(16)),
         child: Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          columnWidths: const {
-            0: FixedColumnWidth(200),
-            1: FixedColumnWidth(320),
-            2: FlexColumnWidth()
-          },
+          columnWidths: const {0: FixedColumnWidth(280), 1: FlexColumnWidth()},
           children: [
-            buildRow([Consts.room, Consts.roomCat, Consts.amount], true, false,
-                null, context),
-            for (int i = 0; i < widget.widget.rooms.length; i++) ...[
+            buildRow([Consts.room, Consts.amount], true, false, null, context),
+            for (int i = 0; i < widget.widget.months.length; i++) ...[
               buildRow([
-                widget.widget.rooms[i].roomName,
-                widget.widget.rooms[i].roomCategory,
-                "${widget.widget.rooms[i].amount} ครั้ง"
-              ], false, i == widget.widget.rooms.length - 1,
-                  widget.widget.rooms[i].reservations, context),
+                widget.widget.months[i].monthAndYearLabel,
+                "${widget.widget.months[i].amount} ครั้ง"
+              ], false, i == widget.widget.months.length - 1,
+                  widget.widget.months[i].reservations, context),
             ]
           ],
         ),
@@ -103,7 +97,7 @@ TableRow buildRow(List<String> cells, bool isHeader, bool isLastIndex,
                     if (res != null) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: ((context) {
-                        return RoomStatDetailView(res: res);
+                        return RoomStatByMonthView(res: res);
                       })));
                     }
                     // Handle button press
@@ -123,7 +117,7 @@ class Consts {
   static String listCategoryLabel = "List Category";
   static String addCategory = "Add Category";
 
-  static String room = "รหัสห้อง";
+  static String room = "เดือน";
   static String roomCat = "ประเภท";
   static String amount = "จำนวนการจอง";
 }
