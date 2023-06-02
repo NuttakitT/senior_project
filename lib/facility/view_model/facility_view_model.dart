@@ -283,6 +283,7 @@ class FacilityViewModel extends ChangeNotifier {
       if (reservationSnapshot!.size != 0) {
         for (int j = 0; j < reservationSnapshot.docs.length; j++) {
           Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
+          Timestamp endTime = reservationSnapshot.docs[j].get("endTime");
           Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
           // if (bookTime.toDate().isAfter(now)) {
           list.add(RoomReservation(
@@ -292,7 +293,8 @@ class FacilityViewModel extends ChangeNotifier {
               dateCreate: dateCreate.toDate(),
               bookTime: bookTime.toDate(),
               userId: userId,
-              status: reservationSnapshot.docs[j].get("status")));
+              status: reservationSnapshot.docs[j].get("status"), 
+              endTime: endTime.toDate()));
           // }
         }
       }
@@ -407,6 +409,7 @@ class FacilityViewModel extends ChangeNotifier {
         for (int j = 0; j < reservationSnapshot.docs.length; j++) {
           Timestamp dateCreate = reservationSnapshot.docs[j].get("dateCreate");
           Timestamp bookTime = reservationSnapshot.docs[j].get("bookTime");
+          Timestamp endTime = reservationSnapshot.docs[j].get("endTime");
           String userId = reservationSnapshot.docs[j].get("userId");
           String name = "user";
           String email = "email";
@@ -422,6 +425,7 @@ class FacilityViewModel extends ChangeNotifier {
               purpose: reservationSnapshot.docs[j].get("purpose"),
               dateCreate: dateCreate.toDate(),
               bookTime: bookTime.toDate(),
+              endTime: endTime.toDate(),
               userId: name,
               email: email,
               status: reservationSnapshot.docs[j].get("status")));

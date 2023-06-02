@@ -16,6 +16,7 @@ class RoomReservation {
   String purpose;
   DateTime dateCreate;
   DateTime bookTime;
+  DateTime endTime;
   String userId;
   String status;
   String? room; // for watch bookings
@@ -26,6 +27,7 @@ class RoomReservation {
       required this.purpose,
       required this.dateCreate,
       required this.bookTime,
+      required this.endTime,
       required this.userId,
       required this.status,
       this.room,

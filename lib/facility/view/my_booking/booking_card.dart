@@ -53,6 +53,8 @@ class _BookingCardViewState extends State<BookingCardView> {
               title: "Create", detail: dateFormat(roomCard?.dateCreate)),
           BookCardViewCell(
               title: "Book time", detail: dateFormat(roomCard?.bookTime)),
+          BookCardViewCell(
+              title: "End time", detail: dateFormat(roomCard?.endTime)),
           BookCardViewCell(title: "Status", detail: "${roomCard?.status}"),
           Builder(
             builder: (context) {
