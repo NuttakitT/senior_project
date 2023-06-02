@@ -59,7 +59,7 @@ class _BookingCardViewState extends State<BookingCardView> {
           Builder(
             builder: (context) {
               DateTime now = DateTime.now();
-              if (!roomCard!.bookTime.isAfter(now)) {
+              if (!roomCard!.endTime.isAfter(now)) {
                 return Container();
               }
               return Row(
