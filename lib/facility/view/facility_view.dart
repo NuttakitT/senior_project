@@ -73,9 +73,9 @@ class FacilityViewTile extends StatelessWidget {
       children: [
         Card(
           child: ListTile(
-            title: Text("Room Reservation"),
-            subtitle: Text("จองห้องเรียน"),
-            trailing: Icon(Icons.arrow_forward_ios),
+            title: const Text("Room Reservation"),
+            subtitle: const Text("จองห้องเรียน"),
+            trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: ((context) {
                 return const RoomReservationView();
@@ -85,9 +85,9 @@ class FacilityViewTile extends StatelessWidget {
         ),
         Card(
           child: ListTile(
-            title: Text("Request Hardware"),
-            subtitle: Text("ส่งคำขอยืมอุปกรณ์ Hardware ที่นี่"),
-            trailing: Icon(Icons.arrow_forward_ios),
+            title: const Text("Item reservation"),
+            subtitle: const Text("ส่งคำขอยืมอุปกรณ์ Hardware ที่นี่"),
+            trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: ((context) {
                 return const ItemReservationView();
@@ -97,9 +97,9 @@ class FacilityViewTile extends StatelessWidget {
         ),
         Card(
           child: ListTile(
-            title: Text("My Booking"),
-            subtitle: Text("การจองห้องของคุณ"),
-            trailing: Icon(Icons.arrow_forward_ios),
+            title: const Text("My Booking"),
+            subtitle: const Text("การจองห้องของคุณ"),
+            trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: ((context) {
                 return const MyBookingView();
@@ -110,10 +110,10 @@ class FacilityViewTile extends StatelessWidget {
         if (!isMobileSite && isAdmin)
           Card(
             child: ListTile(
-              title: Text("Admin Dashboard"),
-              subtitle: Text(
+              title: const Text("Admin Dashboard"),
+              subtitle: const Text(
                   "ดูจำนวนการจองห้องเรียนตามวันเวลา ลงเวลาห้องเรียนรายสัปดาห์"),
-              trailing: Icon(Icons.arrow_forward_ios),
+              trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: ((context) {
                   return const AdminRoom();
@@ -124,9 +124,9 @@ class FacilityViewTile extends StatelessWidget {
         if (!isMobileSite && isAdmin)
           Card(
             child: ListTile(
-              title: Text("Schedule Room"),
-              subtitle: Text("เพิ่มและยกเลิกการลงเวลาห้องเรียนรายสัปดาห์"),
-              trailing: Icon(Icons.arrow_forward_ios),
+              title: const Text("Schedule Room"),
+              subtitle: const Text("เพิ่มและยกเลิกการลงเวลาห้องเรียนรายสัปดาห์"),
+              trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: ((context) {
                   return const ScheduleRoomView();

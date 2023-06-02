@@ -190,7 +190,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                         const Padding(
                           padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
                           child: TagBar(
-                            name: "Room booking", 
+                            name: "Room reservation", 
                             index: 4, 
                             type: 1
                           ),
@@ -198,7 +198,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                         const Padding(
                           padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
                           child: TagBar(
-                            name: "Equipment booking", 
+                            name: "Item reservation", 
                             index: 5, 
                             type: 1
                           ),
@@ -219,7 +219,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                             return const Padding(
                               padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
                               child: TagBar(
-                                name: "Schedule room", 
+                                name: "Room scheduler", 
                                 index: 7, 
                                 type: 1
                               ),
@@ -263,7 +263,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                                 const Padding(
                                   padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
                                   child: TagBar(
-                                    name: "Ticket report", 
+                                    name: "Ticket statistic", 
                                     index: 8, 
                                     type: 1
                                   ),
@@ -271,7 +271,7 @@ class _TemplateDesktopState extends State<TemplateDesktop> {
                                 const Padding(
                                   padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
                                   child: TagBar(
-                                    name: "Room reservation", 
+                                    name: "Room statistic", 
                                     index: 9, 
                                     type: 1
                                   ),
