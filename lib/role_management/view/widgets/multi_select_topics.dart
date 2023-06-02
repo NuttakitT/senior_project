@@ -42,7 +42,7 @@ class _MultiSelectTopicsState extends State<MultiSelectTopics> {
             searchable: true,
           ),
         );
-        if (selectedList != null) {
+        if (selectedList!.isNotEmpty) {
           setState(() {
             selectedValues = selectedList;
           });
